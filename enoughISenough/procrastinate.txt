@@ -1,0 +1,16 @@
+List of the things not to do
+
+- grab an item
+- drop the item (gravity added later) 
+- launch the item (for now without gravity) / launch is different from drop because of speed
+- item hit another thing and destroy
+- particle on destroy
+- spawn di item
+- create 3d font letter
+- print 3d text with those models
+- model mr not
+- model player station
+- model some prop
+- create score (based on time survived?)
+- create menu (only start)
+
