@@ -1,8 +1,6 @@
 WL.registerComponent('eie-grab-old', {
 }, {
     init: function() {
-        WL.canvas.addEventListener('mousedown', this.startGrab.bind(this));
-        WL.canvas.addEventListener('mouseup', this.endGrab.bind(this));
     },
     update: function(dt) {
     },

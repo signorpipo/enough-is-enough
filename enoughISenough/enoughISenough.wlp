@@ -332,9 +332,6 @@
                     "input": {
                         "type": "hand right"
                     }
-                },
-                {
-                    "type": "eie-grab"
                 }
             ],
             "transformation": [
