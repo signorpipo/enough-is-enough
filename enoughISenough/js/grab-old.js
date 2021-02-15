@@ -1,4 +1,4 @@
-WL.registerComponent('eie-grab', {
+WL.registerComponent('eie-grab-old', {
 }, {
     init: function() {
         WL.canvas.addEventListener('mousedown', this.startGrab.bind(this));
@@ -32,11 +32,13 @@ WL.registerComponent('eie-grab', {
         s.addEventListener('selectstart', this.startGrab.bind(this));
 
         s.addEventListener('selectend', this.endGrab.bind(this));
+
+
     },
     startGrab: function(e) {
-        console.log('start grab');
+        console.log('start grab old');
     },
     endGrab: function(e) {
-        console.log('end grab');
+        console.log('end grab old');
     },
 });
