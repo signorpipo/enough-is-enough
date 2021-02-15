@@ -1,13 +1,24 @@
-WL.registerComponent('eie-grab-old', {
-}, {
-    init: function() {
-    },
-    update: function(dt) {
-    },
-    start: function() {
+class Gamepad{
+    constructor() {        
+        this.startGrabEvents=[]
+        this.endGrabEvents=[]
+    }
+
+    start(){
         WL.onXRSessionStart.push(this.setupVREvents.bind(this));
-    },
-    setupVREvents: function(s) {
+    }
+
+    registerStartGrab(callback)
+    {
+        this.startGrabEvents.push(callback)      
+    }
+    
+    registerEndGrab(callback)
+    {
+        this.endGrabEvents.push(callback)      
+    }
+
+    setupVREvents(s) {
         this.session = s;
         s.addEventListener('end', function(e) {
             this.session = null;
@@ -27,16 +38,14 @@ WL.registerComponent('eie-grab-old', {
         }
         }.bind(this));
 
-        s.addEventListener('selectstart', this.startGrab.bind(this));
+        s.addEventListener('selectstart', this.forwardEvent.bind(this, this.startGrabEvents));
 
-        s.addEventListener('selectend', this.endGrab.bind(this));
+        s.addEventListener('selectend', this.forwardEvent.bind(this,this.endGrabEvents));
+    }
 
-
-    },
-    startGrab: function(e) {
-        console.log('start grab old');
-    },
-    endGrab: function(e) {
-        console.log('end grab old');
-    },
-});
+    forwardEvent(callbackList, event){
+        callbackList.forEach(function (element) {
+            element(event)
+        });
+    }
+}
