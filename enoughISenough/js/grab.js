@@ -1,12 +1,12 @@
 WL.registerComponent('eie-grab', {
 }, {
     init: function() {
-        this.gamepad = new Gamepad();
-        this.gamepad.registerStartGrab(this.startGrab);
-        this.gamepad.registerEndGrab(this.endGrab);
+        var input = this.object.getComponent("input");
+
+        MM.gamepadManager.registerStartSelect(this.startGrab, input.handedness);
+        MM.gamepadManager.registerEndSelect(this.endGrab, input.handedness);
     },
     start: function() {
-        this.gamepad.start()
     },
     update: function(dt) {
     },
