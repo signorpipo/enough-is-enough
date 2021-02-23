@@ -1,25 +1,43 @@
 WL.registerComponent('eie-grab', {
 }, {
-    init: function() {
-        var input = this.object.getComponent("input");
+    init: function () {
+        let input = this.object.getComponent("input");
 
-        MM.gamepadManager.registerStartSelect(this.startGrab.bind(this), input.handedness);
-        MM.gamepadManager.registerEndSelect(this.endGrab.bind(this), input.handedness);
-        
-        this.collider = utilities.getComponentWithChildren(this.object, 'physx', 1);
-        this.collider.onCollision(this.onCollision.bind(this));
+        if (input) {
+            MM.gamepadManager.registerStartSelect(this.startGrab.bind(this), input.handedness);
+            MM.gamepadManager.registerEndSelect(this.endGrab.bind(this), input.handedness);
+        }
+
+        this.collider = utilities.getComponentWithChildren(this.object, 'collision', 1);
+
+        this.grabbed = null;
+        this.grabbedParent = null;
     },
-    start: function() {
+    start: function () {
     },
-    update: function(dt) {
+    update: function (dt) {
     },
-    startGrab: function(e) {
+    startGrab: function (e) {
         console.log('start grab');
+
+        if (!this.grabbed) {
+            let collidingComps = this.collider.queryOverlaps();
+            if (collidingComps.length > 0) {
+                this.grabbed = collidingComps[0].object;
+                this.grabbedParent = this.grabbed.parent;
+
+                utilities.reparentKeepTransform(this.grabbed, this.object);
+            }
+        }
     },
-    endGrab: function(e) {
+    endGrab: function (e) {
         console.log('end grab');
-    },
-    onCollision: function(a,b){
-        console.log('collision');
+
+        if (this.grabbed) {
+            utilities.reparentKeepTransform(this.grabbed, this.grabbedParent);
+
+            this.grabbed = null;
+            this.grabbedParent = null;
+        }
     }
 });
