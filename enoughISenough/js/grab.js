@@ -8,10 +8,9 @@ WL.registerComponent('eie-grab', {
             MM.gamepadManager.registerEndSelect(this.endGrab.bind(this), input.handedness);
         }
 
-        this.collider = utilities.getComponentWithChildren(this.object, 'collision', 1);
+        this.collider = this.object.getComponent('collision');
 
         this.grabbed = null;
-        this.grabbedParent = null;
     },
     start: function () {
     },
@@ -22,11 +21,13 @@ WL.registerComponent('eie-grab', {
 
         if (!this.grabbed) {
             let collidingComps = this.collider.queryOverlaps();
-            if (collidingComps.length > 0) {
-                this.grabbed = collidingComps[0].object;
-                this.grabbedParent = this.grabbed.parent;
-
-                utilities.reparentKeepTransform(this.grabbed, this.object);
+            for(let i=0; i< collidingComps.length; i++){
+                let grabbable = collidingComps[i].object.getComponent("eie-grabbable");
+                if(grabbable){
+                    this.grabbed = grabbable;
+                    this.grabbed.grab(this.object);
+                    break;
+                }
             }
         }
     },
@@ -34,10 +35,8 @@ WL.registerComponent('eie-grab', {
         console.log('end grab');
 
         if (this.grabbed) {
-            utilities.reparentKeepTransform(this.grabbed, this.grabbedParent);
-
+            this.grabbed.release();
             this.grabbed = null;
-            this.grabbedParent = null;
         }
     }
 });
