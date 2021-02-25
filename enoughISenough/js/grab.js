@@ -1,4 +1,5 @@
-WL.registerComponent('eie-grab', {
+WL.registerComponent('eie-grab', {    
+  releaseMomentumMultiplier: {type: WL.Type.Float, default: 1.0}
 }, {
     init: function () {
         let input = this.object.getComponent("input");
@@ -35,7 +36,7 @@ WL.registerComponent('eie-grab', {
         console.log('end grab');
 
         if (this.grabbed) {
-            this.grabbed.release();
+            this.grabbed.release(this.releaseMomentumMultiplier, this.releaseMomentumMultiplier);
             this.grabbed = null;
         }
     }

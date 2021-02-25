@@ -4,7 +4,7 @@ WL.registerComponent('eie-grabbable', {
         this.physx = this.object.getComponent('physx');
         this.isGrabbed = false;
     },
-    grab(grabber) {
+    grab: function(grabber) {
         if (!this.isGrabbed) {
             if (this.physx) {
                 this.oldKinematic = this.physx.kinematic;
@@ -17,15 +17,33 @@ WL.registerComponent('eie-grabbable', {
             this.isGrabbed = true;
         }
     },
-    release() {
+    release: function(linearVelocityMultiplier, angularVelocityMultiplier) {
         if (this.isGrabbed) {
+            this._ungrab();
+            
             if (this.physx) {
-                this.physx.kinematic = this.oldKinematic;
+                this.physx.linearVelocity = glMatrix.vec3.scale(this.physx.linearVelocity, this.physx.linearVelocity, linearVelocityMultiplier);
+                this.physx.angularVelocity = glMatrix.vec3.scale(this.physx.angularVelocity, this.physx.angularVelocity, angularVelocityMultiplier);
             }
-
-            utilities.reparentKeepTransform(this.object, this.parent);
-
-            this.isGrabbed = false;
         }
+    },
+    throw: function(linearVelocity, angularVelocity) {
+        if (this.isGrabbed) {
+            this._ungrab();
+
+            if (this.physx) {
+                this.physx.linearVelocity = linearVelocity;
+                this.physx.angularVelocity = angularVelocity;
+            }
+        }
+    },
+    _ungrab: function() {
+        if (this.physx) {
+            this.physx.kinematic = this.oldKinematic;
+        }
+
+        utilities.reparentKeepTransform(this.object, this.parent);
+
+        this.isGrabbed = false;
     }
 });
