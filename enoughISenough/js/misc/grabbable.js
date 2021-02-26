@@ -12,7 +12,7 @@ WL.registerComponent('eie-grabbable', {
             }
 
             this.parent = this.object.parent;
-            utilities.reparentKeepTransform(this.object, grabber);
+            PP.utilities.reparentKeepTransform(this.object, grabber);
 
             this.isGrabbed = true;
         }
@@ -42,7 +42,7 @@ WL.registerComponent('eie-grabbable', {
             this.physx.kinematic = this.oldKinematic;
         }
 
-        utilities.reparentKeepTransform(this.object, this.parent);
+        PP.utilities.reparentKeepTransform(this.object, this.parent);
 
         this.isGrabbed = false;
     }

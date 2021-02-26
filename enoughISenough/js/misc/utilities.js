@@ -1,4 +1,4 @@
-var utilities = {
+PP.utilities = {
 
     // Negative depth means all the hierarchy
     getComponentWithChildren: function (object, componentName, depth) {
@@ -33,4 +33,4 @@ var utilities = {
         object.transformLocal.set(tempTransform);
     }
 
-}
+};

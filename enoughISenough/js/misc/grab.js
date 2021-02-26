@@ -5,8 +5,8 @@ WL.registerComponent('eie-grab', {
         let input = this.object.getComponent("input");
 
         if (input) {
-            MM.gamepadManager.registerStartSelect(this.startGrab.bind(this), input.handedness);
-            MM.gamepadManager.registerEndSelect(this.endGrab.bind(this), input.handedness);
+            PP.masterMind.gamepadManager.registerStartSqueeze(this.startGrab.bind(this), input.handedness);
+            PP.masterMind.gamepadManager.registerEndSqueeze(this.endGrab.bind(this), input.handedness);
         }
 
         this.collider = this.object.getComponent('collision');

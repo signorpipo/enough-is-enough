@@ -1,10 +1,12 @@
 WL.registerComponent('eie-mastermind', {
 }, {
     init: function() {
+        PP.masterMind = new PP.MasterMind();
     },
     start: function() {
-        MM.start();
+        PP.masterMind.start();
     },
     update: function(dt) {
+        PP.masterMind.update(dt);
     },
 });
