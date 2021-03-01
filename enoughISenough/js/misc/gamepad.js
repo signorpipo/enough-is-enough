@@ -65,15 +65,9 @@ PP.Gamepad = class Gamepad {
         }
     }
 
-    isButtonPressed(buttonType) { }
-
-    getButtonValue(buttonType) { }
-
     getButtonInfo(buttonType) {
         return this.myButtonInfos[buttonType];
     }
-
-    getButtonPressedState(buttonType) { }
 
     //Callback parameters are (ButtonInfo, Gamepad)
     registerButtonEvent(buttonType, buttonEvent, id, callback) {
@@ -94,7 +88,8 @@ PP.Gamepad = class Gamepad {
     }
 
     isGamepadActive() {
-        return this.myGamepad != null;
+        //connected == null is to fix webxr emulator that leaves that field undefined
+        return this.myGamepad != null && (this.myGamepad.connected == null || this.myGamepad.connected);
     }
 
     start() {
@@ -222,16 +217,16 @@ PP.Gamepad = class Gamepad {
 
         this.mySession.addEventListener('inputsourceschange', function (event) {
             if (event.added) {
-                for (let i = 0; i < event.added.length; i++) {
-                    if (event.added[i].handedness == this.myHandedness) {
-                        this.myGamepad = event.added[i].gamepad;
+                for (let item of event.added) {
+                    if (item.handedness == this.myHandedness) {
+                        this.myGamepad = item.gamepad;
                     }
                 }
             }
 
             if (event.removed) {
-                for (let i = 0; i < event.added.length; i++) {
-                    if (event.added[i].handedness == this.myHandedness) {
+                for (let item of event.removed) {
+                    if (item.handedness == this.myHandedness) {
                         this.myGamepad = null;
                     }
                 }
