@@ -6,12 +6,6 @@ PP.ButtonType = {
     BUTTON_2: 5  // B or Y button
 };
 
-PP.ButtonState = {
-    INACTIVE: 0,
-    JUST_ACTIVATED: 1,
-    ACTIVE: 2,
-    JUST_DEACTIVATED: 3
-};
 
 PP.ButtonEvent = {
     PRESSED_START: 0,
@@ -28,8 +22,12 @@ PP.ButtonEvent = {
 
 PP.ButtonInfo = class ButtonInfo {
     constructor() {
-        this.myPressedState = PP.ButtonState.INACTIVE;
-        this.myTouchedState = PP.ButtonState.INACTIVE;
+        this.myPressed = false;
+        this.myPrevPressed = false;
+
+        this.myTouched = false;
+        this.myPrevTouched = false;
+
         this.myValue = 0.0;
         this.myPrevValue = 0.0;
     }
@@ -126,23 +124,21 @@ PP.Gamepad = class Gamepad {
     //This sadly must be done this way to be the most compatible
     _updateSelectAndSqueezePressed() {
         let buttonSelect = this.myButtonInfos[PP.ButtonType.SELECT];
+
+        if (this._mySelectStart) {
+            buttonSelect.myPressed = true;
+        }
+        if (this._mySelectEnd) {
+            buttonSelect.myPressed = false;
+        }
+
         let buttonSqueeze = this.myButtonInfos[PP.ButtonType.SQUEEZE];
-
-        //pressed
-        if (this._mySelectStart && buttonSelect.myPressedState != PP.ButtonState.ACTIVE) {
-            buttonSelect.myPressedState = PP.ButtonState.JUST_ACTIVATED;
+        if (this._mySqueezeStart) {
+            buttonSqueeze.myPressed = true;
         }
 
-        if (this._mySelectEnd && buttonSelect.myPressedState != PP.ButtonState.INACTIVE) {
-            buttonSelect.myPressedState = PP.ButtonState.JUST_DEACTIVATED;
-        }
-
-        if (this._mySqueezeStart && buttonSqueeze.myPressedState != PP.ButtonState.ACTIVE) {
-            buttonSqueeze.myPressedState = PP.ButtonState.JUST_ACTIVATED;
-        }
-
-        if (this._mySqueezeEnd && buttonSqueeze.myPressedState != PP.ButtonState.INACTIVE) {
-            buttonSqueeze.myPressedState = PP.ButtonState.JUST_DEACTIVATED;
+        if (this._mySqueezeEnd) {
+            buttonSqueeze.myPressed = false;
         }
     }
 
@@ -151,44 +147,17 @@ PP.Gamepad = class Gamepad {
         let internalButton = this._getInternalButton(buttonType);
 
         if (updatePressed) {
-            if (internalButton.pressed) {
-                if (button.myPressedState != PP.ButtonState.ACTIVE) {
-                    button.myPressedState = PP.ButtonState.JUST_ACTIVATED;
-                }
-            } else {
-                if (button.myPressedState != PP.ButtonState.INACTIVE) {
-                    button.myPressedState = PP.ButtonState.JUST_DEACTIVATED;
-                }
-            }
+            button.myPressed = internalButton.pressed;
         }
 
-        if (internalButton.touched) {
-            if (button.myTouchedState != PP.ButtonState.ACTIVE) {
-                button.myTouchedState = PP.ButtonState.JUST_ACTIVATED;
-            }
-        } else {
-            if (button.myTouchedState != PP.ButtonState.INACTIVE) {
-                button.myTouchedState = PP.ButtonState.JUST_DEACTIVATED;
-            }
-        }
-
+        button.myTouched = internalButton.touched;
         button.myValue = internalButton.value;
     }
 
     _preUpdateButtonInfos() {
         this.myButtonInfos.forEach(function (item) {
-            if (item.myPressedState == PP.ButtonState.JUST_ACTIVATED) {
-                item.myPressedState = PP.ButtonState.ACTIVE;
-            } else if (item.myPressedState == PP.ButtonState.JUST_DEACTIVATED) {
-                item.myPressedState = PP.ButtonState.INACTIVE;
-            }
-
-            if (item.myTouchedState == PP.ButtonState.JUST_ACTIVATED) {
-                item.myTouchedState = PP.ButtonState.ACTIVE;
-            } else if (item.myTouchedState == PP.ButtonState.JUST_DEACTIVATED) {
-                item.myTouchedState = PP.ButtonState.INACTIVE;
-            }
-
+            item.myPrevPressed = item.myPressed;
+            item.myPrevTouched = item.myTouched;
             item.myPrevValue = item.myValue;
         });
     }
@@ -198,16 +167,16 @@ PP.Gamepad = class Gamepad {
             let buttonInfo = this.myButtonInfos[PP.ButtonType[typeKey]];
             let buttonCallbacks = this.myCallbacks[PP.ButtonType[typeKey]];
 
-            if (buttonInfo.myPressedState == PP.ButtonState.JUST_ACTIVATED) {
+            if (buttonInfo.myPressed && !buttonInfo.myPrevPressed) {
                 let callbacksMap = buttonCallbacks[PP.ButtonEvent.PRESSED_START];
-                for(let value of callbacksMap.values()) {
+                for (let value of callbacksMap.values()) {
                     value(buttonInfo, this);
                 }
             }
 
-            if (buttonInfo.myPressedState == PP.ButtonState.JUST_DEACTIVATED) {
+            if (!buttonInfo.myPressed && buttonInfo.myPrevPressed) {
                 let callbacksMap = buttonCallbacks[PP.ButtonEvent.PRESSED_END];
-                for(let value of callbacksMap.values()) {
+                for (let value of callbacksMap.values()) {
                     value(buttonInfo, this);
                 }
             }
