@@ -1,12 +1,13 @@
-WL.registerComponent('eie-grab', {    
-  releaseMomentumMultiplier: {type: WL.Type.Float, default: 1.0}
+WL.registerComponent('eie-grab', {
+    releaseMomentumMultiplier: { type: WL.Type.Float, default: 1.0 }
 }, {
     init: function () {
         let input = this.object.getComponent("input");
 
         if (input) {
-            PP.masterMind.gamepadManager.registerStartSqueeze(this.startGrab.bind(this), input.handedness);
-            PP.masterMind.gamepadManager.registerEndSqueeze(this.endGrab.bind(this), input.handedness);
+            let gamepad = PP.masterMind.inputManager.getGamepad(input.handedness);
+            gamepad.registerButtonEvent(PP.ButtonType.SELECT, PP.ButtonEvent.PRESSED_START, this, this.startGrab.bind(this));
+            gamepad.registerButtonEvent(PP.ButtonType.SELECT, PP.ButtonEvent.PRESSED_END, this, this.endGrab.bind(this));
         }
 
         this.collider = this.object.getComponent('collision');
@@ -22,9 +23,9 @@ WL.registerComponent('eie-grab', {
 
         if (!this.grabbed) {
             let collidingComps = this.collider.queryOverlaps();
-            for(let i=0; i< collidingComps.length; i++){
+            for (let i = 0; i < collidingComps.length; i++) {
                 let grabbable = collidingComps[i].object.getComponent("eie-grabbable");
-                if(grabbable){
+                if (grabbable) {
                     this.grabbed = grabbable;
                     this.grabbed.grab(this.object);
                     break;

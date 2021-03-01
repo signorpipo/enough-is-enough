@@ -1,13 +1,13 @@
 PP.MasterMind = class MasterMind {
     constructor() {        
-        this.gamepadManager = new PP.GamepadManager();
+        this.inputManager = new PP.InputManager();
     }
 
     start(){
-        this.gamepadManager.start();
+        this.inputManager.start();
     }
 
     update(dt){
-        this.gamepadManager.update(dt);
+        this.inputManager.update(dt);
     }
 }; 
