@@ -18,7 +18,13 @@ PP.ButtonEvent = {
     NOT_TOUCHED: 7, //Every frame that it is not touched
     VALUE_CHANGED: 8,
     ALWAYS: 9, //callback every frame for this button
-}
+};
+
+PP.Handedness =
+{
+    LEFT: "left",
+    RIGHT: "right"
+};
 
 PP.ButtonInfo = class ButtonInfo {
     constructor() {
@@ -31,12 +37,6 @@ PP.ButtonInfo = class ButtonInfo {
         this.myValue = 0.0;
         this.myPrevValue = 0.0;
     }
-};
-
-PP.Handedness =
-{
-    LEFT: "left",
-    RIGHT: "right"
 };
 
 PP.Gamepad = class Gamepad {
@@ -107,6 +107,14 @@ PP.Gamepad = class Gamepad {
 
     }
 
+    _preUpdateButtonInfos() {
+        this.myButtonInfos.forEach(function (item) {
+            item.myPrevPressed = item.myPressed;
+            item.myPrevTouched = item.myTouched;
+            item.myPrevValue = item.myValue;
+        });
+    }
+
     _updateButtonInfos() {
         this._updateSelectAndSqueezePressed();
         this._updateSingleButtonInfo(PP.ButtonType.SELECT, false);
@@ -149,34 +157,58 @@ PP.Gamepad = class Gamepad {
         button.myValue = internalButton.value;
     }
 
-    _preUpdateButtonInfos() {
-        this.myButtonInfos.forEach(function (item) {
-            item.myPrevPressed = item.myPressed;
-            item.myPrevTouched = item.myTouched;
-            item.myPrevValue = item.myValue;
-        });
-    }
-
     _postUpdateButtonInfos() {
         for (let typeKey in PP.ButtonType) {
             let buttonInfo = this.myButtonInfos[PP.ButtonType[typeKey]];
             let buttonCallbacks = this.myCallbacks[PP.ButtonType[typeKey]];
 
+            //PRESSED
             if (buttonInfo.myPressed && !buttonInfo.myPrevPressed) {
                 let callbacksMap = buttonCallbacks[PP.ButtonEvent.PRESSED_START];
-                for (let value of callbacksMap.values()) {
-                    value(buttonInfo, this);
-                }
+                this._triggerCallbacks(callbacksMap, buttonInfo);
             }
 
             if (!buttonInfo.myPressed && buttonInfo.myPrevPressed) {
                 let callbacksMap = buttonCallbacks[PP.ButtonEvent.PRESSED_END];
-                for (let value of callbacksMap.values()) {
-                    value(buttonInfo, this);
-                }
+                this._triggerCallbacks(callbacksMap, buttonInfo);
             }
 
-            //All other events
+            if (buttonInfo.myPressed) {
+                let callbacksMap = buttonCallbacks[PP.ButtonEvent.PRESSED];
+                this._triggerCallbacks(callbacksMap, buttonInfo);
+            } else {
+                let callbacksMap = buttonCallbacks[PP.ButtonEvent.NOT_PRESSED];
+                this._triggerCallbacks(callbacksMap, buttonInfo);
+            }
+
+            //TOUCHED
+            if (buttonInfo.myTouched && !buttonInfo.myPrevTouched) {
+                let callbacksMap = buttonCallbacks[PP.ButtonEvent.TOUCHED_START];
+                this._triggerCallbacks(callbacksMap, buttonInfo);
+            }
+
+            if (!buttonInfo.myTouched && buttonInfo.myPrevTouched) {
+                let callbacksMap = buttonCallbacks[PP.ButtonEvent.TOUCHED_END];
+                this._triggerCallbacks(callbacksMap, buttonInfo);
+            }
+
+            if (buttonInfo.myTouched) {
+                let callbacksMap = buttonCallbacks[PP.ButtonEvent.TOUCHED];
+                this._triggerCallbacks(callbacksMap, buttonInfo);
+            } else {
+                let callbacksMap = buttonCallbacks[PP.ButtonEvent.NOT_TOUCHED];
+                this._triggerCallbacks(callbacksMap, buttonInfo);
+            }
+
+            //VALUE
+            if (buttonInfo.myValue != buttonInfo.myPrevValue) {
+                let callbacksMap = buttonCallbacks[PP.ButtonEvent.VALUE_CHANGED];
+                this._triggerCallbacks(callbacksMap, buttonInfo);
+            }
+
+            //ALWAYS
+            let callbacksMap = buttonCallbacks[PP.ButtonEvent.ALWAYS];
+            this._triggerCallbacks(callbacksMap, buttonInfo);
         }
 
         this._mySelectStart = false;
@@ -262,6 +294,12 @@ PP.Gamepad = class Gamepad {
     _squeezeEnd(event) {
         if (event.inputSource.handedness == this.myHandedness) {
             this._mySqueezeEnd = true;
+        }
+    }
+
+    _triggerCallbacks(callbacksMap, buttonInfo) {
+        for (let value of callbacksMap.values()) {
+            value(buttonInfo, this);
         }
     }
 };
