@@ -1,17 +1,9 @@
 {
     "objects": {
         "14": {
-            "name": "PoorHuman",
-            "components": [
-                {
-                    "type": "wasd-controls",
-                    "wasd-controls": {
-                        "headObject": "17"
-                    }
-                }
-            ],
+            "name": "Player",
             "transformation": [
-                0.9999998807907105,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
@@ -21,14 +13,14 @@
                 0.0,
                 0.0,
                 0.0,
-                0.9999998807907105,
+                1.0,
                 0.0,
-                -2.226900815963745,
-                1.2589921951293946,
-                3.3047924041748049,
+                0.0,
+                0.0,
+                0.0,
                 1.0
             ],
-            "parent": "43"
+            "parent": "32"
         },
         "15": {
             "name": "FloorPlane",
@@ -59,7 +51,8 @@
                 1.192092895507813e-7,
                 1.0
             ],
-            "parent": "43"
+            "parent": "32",
+            "deleted": true
         },
         "16": {
             "name": "Cube",
@@ -70,55 +63,35 @@
                         "mesh": "8",
                         "material": "22"
                     }
-                },
-                {
-                    "type": "physx",
-                    "physx": {
-                        "gravity": false,
-                        "shape": "box",
-                        "box": {
-                            "extents": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    }
-                },
-                {
-                    "type": "eie-grab"
                 }
             ],
             "transformation": [
-                1.0,
+                0.5,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                0.5,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                0.5,
                 0.0,
-                2.109281539916992,
-                1.4382890462875369,
-                0.3859779536724091,
+                2.9802322387695329e-8,
+                0.4999999403953552,
+                5.960464477539065e-8,
                 1.0
             ],
-            "parent": "43",
+            "parent": "32",
             "deleted": true
         },
         "17": {
-            "name": "NonVrCamera",
-            "parent": "44",
+            "name": "Non Vr Camera",
+            "parent": "84",
             "components": [
                 {
                     "type": "view"
-                },
-                {
-                    "type": "mouse-look"
                 }
             ],
             "transformation": [
@@ -134,15 +107,15 @@
                 0.0,
                 1.0,
                 0.0,
-                2.384185791015625e-7,
                 0.0,
-                -2.384185791015625e-7,
+                0.0,
+                0.0,
                 1.0
             ]
         },
         "18": {
-            "name": "EyeLeft",
-            "parent": "44",
+            "name": "Eye Left",
+            "parent": "84",
             "components": [
                 {
                     "type": "view"
@@ -167,15 +140,15 @@
                 0.0,
                 1.0,
                 0.0,
-                2.384185791015625e-7,
                 0.0,
-                -2.384185791015625e-7,
+                0.0,
+                0.0,
                 1.0
             ]
         },
         "19": {
-            "name": "EyeRight",
-            "parent": "44",
+            "name": "Eye Right",
+            "parent": "84",
             "components": [
                 {
                     "type": "view"
@@ -200,14 +173,14 @@
                 0.0,
                 1.0,
                 0.0,
-                2.384185791015625e-7,
                 0.0,
-                -2.384185791015625e-7,
+                0.0,
+                0.0,
                 1.0
             ]
         },
         "21": {
-            "name": "Light",
+            "name": "Light 1",
             "components": [
                 {
                     "type": "light",
@@ -229,15 +202,15 @@
                 0.0,
                 1.0,
                 0.0,
-                4.656612873077393e-10,
+                1.0,
                 3.0,
-                2.0,
+                1.0,
                 1.0
             ],
-            "parent": "43"
+            "parent": "32"
         },
         "23": {
-            "name": "Light.000",
+            "name": "Light 2",
             "components": [
                 {
                     "type": "light",
@@ -264,7 +237,7 @@
                 -1.0,
                 1.0
             ],
-            "parent": "43"
+            "parent": "32"
         },
         "24": {
             "name": "Cone",
@@ -295,7 +268,8 @@
                 -1.4901161193847657e-8,
                 1.0
             ],
-            "parent": "43"
+            "parent": "32",
+            "deleted": true
         },
         "27": {
             "name": "Sphere",
@@ -326,867 +300,286 @@
                 -1.25,
                 1.0
             ],
-            "parent": "43"
+            "parent": "32",
+            "deleted": true
         },
         "32": {
-            "name": "Hands",
-            "parent": "14"
-        },
-        "33": {
-            "name": "Right",
-            "parent": "32",
-            "components": [
-                {
-                    "type": "input",
-                    "input": {
-                        "type": "hand right"
-                    }
-                },
-                {
-                    "type": "eie-grab",
-                    "eie-grab": {
-                        "releaseMomentumMultiplier": 0.10000000149011612
-                    }
-                },
-                {
-                    "type": "collision",
-                    "collision": {
-                        "collider": "box",
-                        "sphere": {
-                            "radius": 0.04100000113248825
-                        },
-                        "box": {
-                            "extents": [
-                                0.014999999664723874,
-                                0.03500000014901161,
-                                0.05999999865889549
-                            ]
-                        }
-                    }
-                }
-            ],
-            "transformation": [
-                1.0,
-                0.0,
-                1.192092895507813e-7,
-                0.0,
-                0.0,
-                1.0,
-                0.0,
-                0.0,
-                -1.192092895507813e-7,
-                0.0,
-                1.0,
-                0.0,
-                0.3346673250198364,
-                9.5367431640625e-7,
-                -0.41965651512146,
-                1.0
-            ]
-        },
-        "34": {
-            "name": "Left",
-            "parent": "32",
-            "components": [
-                {
-                    "type": "mesh",
-                    "mesh": {
-                        "mesh": "8",
-                        "material": "25"
-                    }
-                },
-                {
-                    "type": "input",
-                    "input": {
-                        "type": "hand left"
-                    }
-                }
-            ],
-            "transformation": [
-                0.009999999776482582,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0020000000949949028,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.009999999776482582,
-                0.0,
-                0.0000022649769562121948,
-                7.152557373046875e-7,
-                -4.76837158203125e-7,
-                1.0
-            ],
-            "deleted": true
-        },
-        "35": {
-            "name": "Mesh",
-            "parent": "33",
-            "components": [
-                {
-                    "type": "mesh",
-                    "mesh": {
-                        "mesh": "8",
-                        "material": "26"
-                    }
-                }
-            ],
-            "transformation": [
-                -8.761774950016844e-8,
-                0.03499957174062729,
-                1.522784884855355e-7,
-                0.0,
-                -0.015000006183981896,
-                -3.755094013513372e-8,
-                4.190951941041021e-8,
-                0.0,
-                1.676386318649748e-7,
-                -2.610514684420196e-7,
-                0.0599999949336052,
-                0.0,
-                -0.0026580095291137697,
-                0.00001239776611328125,
-                -0.0001800060272216797,
-                1.0
-            ]
-        },
-        "36": {
-            "name": "Left",
-            "parent": "32",
-            "components": [
-                {
-                    "type": "input",
-                    "input": {
-                        "type": "hand left"
-                    }
-                },
-                {
-                    "type": "eie-grab"
-                },
-                {
-                    "type": "collision",
-                    "collision": {
-                        "collider": "box",
-                        "box": {
-                            "extents": [
-                                0.014999999664723874,
-                                0.03500000014901161,
-                                0.05999999865889549
-                            ]
-                        }
-                    }
-                }
-            ],
-            "transformation": [
-                1.0,
-                0.0,
-                1.192092895507813e-7,
-                0.0,
-                0.0,
-                1.0,
-                0.0,
-                0.0,
-                -1.192092895507813e-7,
-                0.0,
-                1.0,
-                0.0,
-                -0.7060377597808838,
-                9.5367431640625e-7,
-                -0.4105703830718994,
-                1.0
-            ]
-        },
-        "37": {
-            "name": "Right",
-            "parent": "32",
-            "components": [
-                {
-                    "type": "input",
-                    "input": {
-                        "type": "hand right"
-                    }
-                }
-            ],
-            "transformation": [
-                1.0,
-                0.0,
-                7.450581307466565e-8,
-                0.0,
-                0.0,
-                1.0,
-                0.0,
-                0.0,
-                -7.450581307466565e-8,
-                0.0,
-                1.0,
-                0.0,
-                0.9517266750335692,
-                7.152557373046875e-7,
-                0.006464719772338867,
-                1.0
-            ],
-            "deleted": true
-        },
-        "38": {
-            "name": "Mesh",
-            "parent": "36",
-            "components": [
-                {
-                    "type": "mesh",
-                    "mesh": {
-                        "mesh": "8",
-                        "material": "25"
-                    }
-                }
-            ],
-            "transformation": [
-                -6.888006254257564e-8,
-                0.03499976545572281,
-                1.3853778568773129e-7,
-                0.0,
-                -0.015000044368207457,
-                -2.9504382936806913e-8,
-                4.14438545703888e-8,
-                0.0,
-                1.6391277313232425e-7,
-                -2.342462295246151e-7,
-                0.06000000238418579,
-                0.0,
-                -0.000009447336196899414,
-                0.000006556510925292969,
-                -2.384185791015625e-7,
-                1.0
-            ]
-        },
-        "39": {
-            "deleted": true
-        },
-        "40": {
-            "name": "Hands",
-            "parent": "14",
-            "deleted": true
-        },
-        "41": {
-            "name": "Trigger",
-            "parent": "33",
-            "components": [
-                {
-                    "type": "physx",
-                    "physx": {
-                        "gravity": false,
-                        "shape": "box",
-                        "box": {
-                            "extents": [
-                                0.014999999664723874,
-                                0.03500000014901161,
-                                0.05999999865889549
-                            ]
-                        }
-                    }
-                }
-            ],
-            "deleted": true
-        },
-        "42": {
-            "name": "Trigger",
-            "parent": "36",
-            "deleted": true
-        },
-        "43": {
             "name": "Scene",
+            "parent": null,
             "components": [
                 {
-                    "type": "eie-mastermind"
+                    "type": "gamepads-manager"
                 }
             ]
-        },
-        "44": {
-            "name": "View",
-            "parent": "14"
-        },
-        "45": {
-            "name": "Cube",
-            "components": [
-                {
-                    "type": "mesh",
-                    "mesh": {
-                        "mesh": "8",
-                        "material": "22"
-                    }
-                },
-                {
-                    "type": "physx",
-                    "physx": {
-                        "gravity": false,
-                        "groups": 2,
-                        "sphere": {
-                            "radius": 1.649999976158142
-                        },
-                        "static": true
-                    }
-                }
-            ],
-            "transformation": [
-                0.07000002264976502,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.14000004529953004,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.07000002264976502,
-                0.0,
-                -2.2061829566955568,
-                3.968937635421753,
-                1.467384457588196,
-                1.0
-            ],
-            "parent": "43",
-            "deleted": true
-        },
-        "46": {
-            "name": "Mesh.000",
-            "parent": "43",
-            "components": [
-                {
-                    "type": "mesh",
-                    "mesh": {
-                        "mesh": "8",
-                        "material": "20"
-                    }
-                },
-                {
-                    "type": "physx"
-                }
-            ],
-            "transformation": [
-                0.26654404401779177,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.26654404401779177,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.26654404401779177,
-                0.0,
-                -0.456082820892334,
-                0.6730749607086182,
-                0.314058929681778,
-                1.0
-            ],
-            "deleted": true
-        },
-        "47": {
-            "name": "Mesh.000",
-            "parent": "43",
-            "components": [
-                {
-                    "type": "mesh",
-                    "mesh": {
-                        "mesh": "8",
-                        "material": "20"
-                    }
-                },
-                {
-                    "type": "physx"
-                }
-            ],
-            "transformation": [
-                0.26654404401779177,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.26654404401779177,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.26654404401779177,
-                0.0,
-                -0.456082820892334,
-                1.524531364440918,
-                0.314058929681778,
-                1.0
-            ],
-            "deleted": true
-        },
-        "48": {
-            "name": "PhysicsBody",
-            "parent": "15",
-            "components": [
-                {
-                    "type": "physx",
-                    "physx": {
-                        "shape": "plane",
-                        "gravity": false,
-                        "static": true
-                    }
-                }
-            ],
-            "transformation": [
-                -0.0000021159651169000428,
-                -0.0004039407649543136,
-                1.0000001192092896,
-                0.0,
-                0.0004095733165740967,
-                0.9999999403953552,
-                0.0004037916660308838,
-                0.0,
-                -1.0000029802322388,
-                0.0004097243072465062,
-                -0.0000018013816998063704,
-                0.0,
-                0.0,
-                -1.5987211554602255e-14,
-                -5.336009412104659e-15,
-                1.0
-            ]
-        },
-        "49": {
-            "name": "Cube",
-            "components": [
-                {
-                    "type": "physx",
-                    "physx": {
-                        "gravity": true,
-                        "shape": "box",
-                        "box": {
-                            "extents": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    }
-                },
-                {
-                    "type": "mesh",
-                    "mesh": {
-                        "mesh": "9",
-                        "material": "20"
-                    }
-                }
-            ],
-            "transformation": [
-                1.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                1.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                1.0,
-                0.0,
-                -2.2061829566955568,
-                1.271833896636963,
-                -0.22827404737472538,
-                1.0
-            ],
-            "parent": "43",
-            "deleted": true
         },
         "50": {
-            "name": "Empty",
-            "parent": "49",
+            "link": {
+                "name": "Left_Quest_Controller",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            },
+            "parent": "84",
             "components": [
                 {
-                    "type": "mesh",
-                    "mesh": {
-                        "mesh": "8",
-                        "material": "22"
+                    "type": "input",
+                    "input": {
+                        "type": "hand left"
+                    }
+                },
+                {
+                    "type": "gamepad-animator",
+                    "gamepad-animator": {
+                        "_mySelect": "54",
+                        "_mySqueeze": "55",
+                        "_myThumbstick": "56",
+                        "_myBottomButton": "52",
+                        "_myTopButton": "57"
+                    }
+                },
+                {
+                    "type": "console-vr",
+                    "console-vr": {
+                        "_myPlaneMaterial": "66",
+                        "_myTextMaterial": "DefaultFontMaterial",
+                        "_myHandedness": "left"
+                    },
+                    "active": true
+                },
+                {
+                    "type": "easy-tune",
+                    "easy-tune": {
+                        "_myShowVisibilityButton": true,
+                        "_myHandedness": "left",
+                        "_myPlaneMaterial": "66",
+                        "_myTextMaterial": "DefaultFontMaterial"
                     }
                 }
             ],
-            "deleted": true
+            "name": "Hand Left",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -0.10000000149011612,
+                0.0,
+                0.0,
+                1.0
+            ]
         },
         "51": {
-            "name": "Cube",
-            "components": [
-                {
-                    "type": "physx",
-                    "physx": {
-                        "gravity": true,
-                        "shape": "box",
-                        "box": {
-                            "extents": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    }
-                },
-                {
-                    "type": "mesh",
-                    "mesh": {
-                        "mesh": "9",
-                        "material": "20"
-                    }
-                }
-            ],
-            "transformation": [
-                1.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                1.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                1.0,
-                0.0,
-                -2.2061829566955568,
-                1.271833896636963,
-                -0.22827404737472538,
-                1.0
-            ],
-            "parent": "43",
-            "deleted": true
+            "link": {
+                "name": "Left_Body<Left_Quest_Controller",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            },
+            "parent": "50"
         },
         "52": {
-            "name": "Cube",
-            "components": [
-                {
-                    "type": "physx",
-                    "physx": {
-                        "gravity": true,
-                        "shape": "box",
-                        "box": {
-                            "extents": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    }
-                },
-                {
-                    "type": "mesh",
-                    "mesh": {
-                        "mesh": "9",
-                        "material": "20"
-                    }
-                }
-            ],
+            "link": {
+                "name": "Left_Bottom_Button<Left_Quest_Controller",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            },
+            "parent": "50",
             "transformation": [
-                1.0,
+                -0.010000000707805157,
+                3.176836793628013e-9,
+                1.8074238772314287e-9,
                 0.0,
+                -3.176836793628013e-9,
+                -0.005109270568937063,
+                -0.008596241474151612,
                 0.0,
+                -1.8074240992760334e-9,
+                -0.008596241474151612,
+                0.005109269637614489,
                 0.0,
-                0.0,
-                1.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                1.0,
-                0.0,
-                -2.2061829566955568,
-                3.4171292781829836,
-                -0.22827404737472538,
+                -0.001501418650150299,
+                0.0001231105998158455,
+                -0.0252592284232378,
                 1.0
-            ],
-            "parent": "43",
-            "deleted": true
+            ]
         },
         "53": {
-            "name": "Cube",
-            "components": [
-                {
-                    "type": "physx",
-                    "physx": {
-                        "gravity": true,
-                        "shape": "box",
-                        "box": {
-                            "extents": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    }
-                },
-                {
-                    "type": "mesh",
-                    "mesh": {
-                        "mesh": "9",
-                        "material": "20"
-                    }
-                }
-            ],
-            "transformation": [
-                1.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                1.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                1.0,
-                0.0,
-                -2.2061829566955568,
-                1.271833896636963,
-                -0.22827404737472538,
-                1.0
-            ],
-            "parent": "43",
-            "deleted": true
+            "link": {
+                "name": "Left_Option_Button<Left_Quest_Controller",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            },
+            "parent": "50"
         },
         "54": {
-            "name": "Cube",
-            "components": [
-                {
-                    "type": "physx",
-                    "physx": {
-                        "gravity": true,
-                        "shape": "box",
-                        "box": {
-                            "extents": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        },
-                        "trigger": false
-                    }
-                },
-                {
-                    "type": "mesh",
-                    "mesh": {
-                        "mesh": "9",
-                        "material": "20"
-                    }
-                },
-                {
-                    "type": "eie-grab"
-                }
-            ],
-            "transformation": [
-                1.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                1.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                1.0,
-                0.0,
-                -2.2061829566955568,
-                3.891192197799683,
-                -0.22827401757240296,
-                1.0
-            ],
-            "parent": "43",
-            "deleted": true
+            "link": {
+                "name": "Left_Select<Left_Quest_Controller",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            },
+            "parent": "50"
         },
         "55": {
-            "name": "Mesh.001",
-            "parent": "43",
-            "components": [
-                {
-                    "type": "mesh",
-                    "mesh": {
-                        "mesh": "8",
-                        "material": "22"
-                    }
-                },
-                {
-                    "type": "collision",
-                    "collision": {
-                        "collider": "box"
-                    }
-                }
-            ],
-            "transformation": [
-                1.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                1.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                1.0,
-                0.0,
-                -2.065460681915283,
-                1.3316566944122317,
-                -0.6921467185020447,
-                1.0
-            ]
+            "link": {
+                "name": "Left_Squeeze<Left_Quest_Controller",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            },
+            "parent": "50"
         },
         "56": {
-            "name": "Mesh.001",
-            "parent": "43",
-            "components": [
-                {
-                    "type": "mesh",
-                    "mesh": {
-                        "mesh": "8",
-                        "material": "22"
-                    }
-                },
-                {
-                    "type": "collision",
-                    "collision": {
-                        "collider": "box",
-                        "box": {
-                            "extents": [
-                                0.05000000074505806,
-                                0.05000000074505806,
-                                0.05000000074505806
-                            ]
-                        }
-                    }
-                }
-            ],
-            "transformation": [
-                0.05000000074505806,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.05000000074505806,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.05000000074505806,
-                0.0,
-                -2.2520925998687746,
-                1.3316566944122317,
-                2.065319776535034,
-                1.0
-            ]
+            "link": {
+                "name": "Left_Thumbstick<Left_Quest_Controller",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            },
+            "parent": "50"
         },
         "57": {
-            "name": "Mesh.001",
-            "parent": "43",
+            "link": {
+                "name": "Left_Top_Button<Left_Quest_Controller",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            },
+            "parent": "50"
+        },
+        "58": {
+            "link": {
+                "name": "Right_Quest_Controller",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            },
+            "parent": "84",
             "components": [
                 {
-                    "type": "mesh",
-                    "mesh": {
-                        "mesh": "8",
-                        "material": "22"
+                    "type": "input",
+                    "input": {
+                        "type": "hand right"
                     }
                 },
                 {
-                    "type": "collision",
-                    "collision": {
-                        "collider": "box",
-                        "box": {
-                            "extents": [
-                                0.05000000074505806,
-                                0.05000000074505806,
-                                0.05000000074505806
-                            ]
-                        }
+                    "type": "gamepad-animator",
+                    "gamepad-animator": {
+                        "_myHandedness": "right",
+                        "_mySelect": "62",
+                        "_mySqueeze": "63",
+                        "_myThumbstick": "64",
+                        "_myBottomButton": "60",
+                        "_myTopButton": "65"
                     }
                 },
                 {
-                    "type": "physx",
-                    "physx": {
-                        "shape": "box",
-                        "box": {
-                            "extents": [
-                                0.05000000074505806,
-                                0.05000000074505806,
-                                0.05000000074505806
-                            ]
-                        },
-                        "mass": 3.0,
-                        "linearDamping": 0.05000000074505806
+                    "type": "tool-cursor",
+                    "tool-cursor": {
+                        "_myHandedness": "right",
+                        "_myCursorMesh": "9",
+                        "_myCursorMaterial": "66",
+                        "_myShowFingerCursor": false
                     }
-                },
-                {
-                    "type": "eie-grabbable"
                 }
             ],
+            "name": "Hand Right",
             "transformation": [
-                0.05000000074505806,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.05000000074505806,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.05000000074505806,
+                1.0,
                 0.0,
-                -1.684649109840393,
-                0.8464992642402649,
-                2.7299342155456545,
+                0.10000000149011612,
+                0.0,
+                0.0,
                 1.0
             ]
         },
-        "58": {
-            "name": "Mesh.002",
-            "parent": "43",
+        "59": {
+            "link": {
+                "name": "Right_Body<Right_Quest_Controller",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            },
+            "parent": "58"
+        },
+        "60": {
+            "link": {
+                "name": "Right_Bottom_Button<Right_Quest_Controller",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            },
+            "parent": "58"
+        },
+        "61": {
+            "link": {
+                "name": "Right_Option_Button<Right_Quest_Controller",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            },
+            "parent": "58"
+        },
+        "62": {
+            "link": {
+                "name": "Right_Select<Right_Quest_Controller",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            },
+            "parent": "58"
+        },
+        "63": {
+            "link": {
+                "name": "Right_Squeeze<Right_Quest_Controller",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            },
+            "parent": "58"
+        },
+        "64": {
+            "link": {
+                "name": "Right_Thumbstick<Right_Quest_Controller",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            },
+            "parent": "58"
+        },
+        "65": {
+            "link": {
+                "name": "Right_Top_Button<Right_Quest_Controller",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            },
+            "parent": "58"
+        },
+        "67": {
+            "name": "Empty",
+            "parent": "32",
             "components": [
                 {
                     "type": "mesh",
                     "mesh": {
-                        "mesh": "8",
-                        "material": "25"
-                    }
-                },
-                {
-                    "type": "physx",
-                    "physx": {
-                        "shape": "box",
-                        "gravity": false,
-                        "static": true,
-                        "box": {
-                            "extents": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
+                        "material": "66"
                     }
                 }
             ],
-            "transformation": [
-                1.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                1.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                1.0,
-                0.0,
-                -1.438338041305542,
-                -0.24032951891422273,
-                2.2268245220184328,
-                1.0
+            "deleted": true
+        },
+        "84": {
+            "name": "Tracked Space",
+            "parent": "14",
+            "components": [
+                {
+                    "type": "player-height",
+                    "player-height": {
+                        "height": 1.649999976158142
+                    }
+                }
+            ]
+        },
+        "85": {
+            "name": "Head",
+            "parent": "84",
+            "components": [
+                {
+                    "type": "set-head-transform",
+                    "set-head-transform": {
+                        "_myLeftEye": "18",
+                        "_myRightEye": "19"
+                    }
+                }
             ]
         }
     },
@@ -1226,6 +619,90 @@
                 "name": "PrimitiveCircle",
                 "file": "default"
             }
+        },
+        "36": {
+            "link": {
+                "name": "Mesh",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            }
+        },
+        "37": {
+            "link": {
+                "name": "Mesh.002",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            }
+        },
+        "38": {
+            "link": {
+                "name": "Mesh.003",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            }
+        },
+        "39": {
+            "link": {
+                "name": "Mesh.005",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            }
+        },
+        "40": {
+            "link": {
+                "name": "Mesh.006",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            }
+        },
+        "41": {
+            "link": {
+                "name": "Mesh.004",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            }
+        },
+        "42": {
+            "link": {
+                "name": "Mesh.001",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            }
+        },
+        "43": {
+            "link": {
+                "name": "Mesh.007",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            }
+        },
+        "44": {
+            "link": {
+                "name": "Mesh.009",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            }
+        },
+        "45": {
+            "link": {
+                "name": "Mesh.010",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            }
+        },
+        "46": {
+            "link": {
+                "name": "Mesh.012",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            }
+        },
+        "47": {
+            "link": {
+                "name": "Mesh.013",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            }
+        },
+        "48": {
+            "link": {
+                "name": "Mesh.011",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            }
+        },
+        "49": {
+            "link": {
+                "name": "Mesh.008",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            }
         }
     },
     "textures": {
@@ -1237,7 +714,14 @@
             "name": "DefaultFont"
         }
     },
-    "images": {},
+    "images": {
+        "f0": {
+            "link": {
+                "name": "DefaultFontImage",
+                "file": "default"
+            }
+        }
+    },
     "materials": {
         "DefaultFontMaterial": {
             "link": {
@@ -1247,7 +731,6 @@
         },
         "20": {
             "name": "White",
-            "shader": "Phong",
             "Phong": {
                 "specularColor": [
                     9.999899930335233e-7,
@@ -1256,7 +739,8 @@
                     1.0
                 ],
                 "shininess": 1
-            }
+            },
+            "pipeline": "78"
         },
         "22": {
             "name": "Pink",
@@ -1265,7 +749,7 @@
                     0.9098039269447328,
                     0.0,
                     0.5411764979362488,
-                    0.0
+                    1.0
                 ],
                 "specularColor": [
                     9.999899930335233e-7,
@@ -1327,66 +811,70 @@
                     1.0
                 ]
             }
+        },
+        "34": {
+            "link": {
+                "name": "Lambert_Body",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            }
+        },
+        "35": {
+            "link": {
+                "name": "Lambert_Button",
+                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            }
+        },
+        "66": {
+            "name": "Flat",
+            "pipeline": "72"
         }
     },
     "shaders": {
-        "1": {
+        "68": {
             "link": {
-                "name": "DistanceFieldVector Textured",
+                "name": "DistanceFieldVector",
                 "file": "default"
             }
         },
-        "2": {
-            "link": {
-                "name": "Flat",
-                "file": "default"
-            }
-        },
-        "3": {
-            "link": {
-                "name": "Flat Textured",
-                "file": "default"
-            }
-        },
-        "4": {
-            "link": {
-                "name": "MeshVisualizer",
-                "file": "default"
-            }
-        },
-        "5": {
-            "link": {
-                "name": "Phong",
-                "file": "default"
-            }
-        },
-        "6": {
-            "link": {
-                "name": "Phong Textured",
-                "file": "default"
-            }
-        },
-        "28": {
+        "70": {
             "link": {
                 "name": "Dynamic",
                 "file": "default"
             }
         },
-        "29": {
+        "71": {
             "link": {
-                "name": "Particle Textured",
+                "name": "Flat",
                 "file": "default"
             }
         },
-        "30": {
+        "74": {
+            "link": {
+                "name": "MeshVisualizer",
+                "file": "default"
+            }
+        },
+        "76": {
+            "link": {
+                "name": "Static",
+                "file": "default"
+            }
+        },
+        "77": {
+            "link": {
+                "name": "Phong",
+                "file": "default"
+            }
+        },
+        "80": {
             "link": {
                 "name": "Skinning",
                 "file": "default"
             }
         },
-        "31": {
+        "81": {
             "link": {
-                "name": "Static",
+                "name": "Particle",
                 "file": "default"
             }
         }
@@ -1397,7 +885,7 @@
             "version": [
                 0,
                 8,
-                0
+                6
             ]
         },
         "vr": {
@@ -1406,18 +894,95 @@
         },
         "scripting": {
             "sourcePaths": [
-                "/js/components/",
+                "/js/editor-components-bundle.js",
                 "js/pp",
-                "js/misc"
+                "js/pp/cauldron",
+                "js/pp/tool/cauldron",
+                "js/pp/tool/console-vr",
+                "js/pp/tool/easy-tune",
+                "js/pp/gameplay/grab_throw",
+                "js/pp/input/cauldron",
+                "js/pp/input/gamepad"
             ]
         },
-        "physx": {
-            "enable": true
+        "editor": {
+            "camera": {
+                "near": 0.009999999776482582
+            }
+        },
+        "rendering": {
+            "clearColor": [
+                0.9215686321258544,
+                0.9215686321258544,
+                0.9215686321258544,
+                1.0
+            ]
         },
         "runtime": {
-            "visualizeColliders": false
+            "xrButtonColor": "black",
+            "webxr": {
+                "requiredFeatures": {
+                    "local-floor": true
+                },
+                "optionalFeatures": {
+                    "local-floor": true
+                }
+            }
         }
     },
     "animations": {},
-    "skins": {}
+    "skins": {},
+    "files": [
+        "assets/models/quest_controllers_credits_Jezza3D.glb"
+    ],
+    "pipelines": {
+        "69": {
+            "link": {
+                "name": "DistanceFieldVector",
+                "file": "default"
+            }
+        },
+        "72": {
+            "link": {
+                "name": "Flat Opaque",
+                "file": "default"
+            }
+        },
+        "73": {
+            "link": {
+                "name": "Flat Opaque Textured",
+                "file": "default"
+            }
+        },
+        "75": {
+            "link": {
+                "name": "MeshVisualizer",
+                "file": "default"
+            }
+        },
+        "78": {
+            "link": {
+                "name": "Phong Opaque",
+                "file": "default"
+            }
+        },
+        "79": {
+            "link": {
+                "name": "Phong Opaque Textured",
+                "file": "default"
+            }
+        },
+        "82": {
+            "link": {
+                "name": "Foliage",
+                "file": "default"
+            }
+        },
+        "83": {
+            "link": {
+                "name": "Particle",
+                "file": "default"
+            }
+        }
+    }
 }
