@@ -45,7 +45,7 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
         this._myWidgetFrame.start(parentObject, additionalSetup);
 
         this._myUI.build(this._myWidgetFrame.getWidgetObject(), this._mySetup, additionalSetup);
-        this._myUI.setVisible(false);
+        this._myUI.setVisible(this._myWidgetFrame.myIsWidgetVisible);
 
         this._addListeners();
 
