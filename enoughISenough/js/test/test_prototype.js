@@ -21,23 +21,20 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getPositionLocal());
         console.warn("ROTATION");
         this.consoleWarnFixed(this.object.pp_getRotation());
-        this.consoleWarnFixed(this.object.pp_getRotationEuler());
-        this.consoleWarnFixed(this.object.pp_getRotationEulerDegrees());
-        this.consoleWarnFixed(this.object.pp_getRotationEulerRadians());
+        this.consoleWarnFixed(this.object.pp_getRotationDegrees());
+        this.consoleWarnFixed(this.object.pp_getRotationRadians());
         this.consoleWarnMatrix3Fixed(this.object.pp_getRotationMatrix());
         this.consoleWarnFixed(this.object.pp_getRotationQuat());
         console.warn("ROTATION WORLD");
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
-        this.consoleWarnFixed(this.object.pp_getRotationWorldEuler());
-        this.consoleWarnFixed(this.object.pp_getRotationWorldEulerDegrees());
-        this.consoleWarnFixed(this.object.pp_getRotationWorldEulerRadians());
+        this.consoleWarnFixed(this.object.pp_getRotationWorldDegrees());
+        this.consoleWarnFixed(this.object.pp_getRotationWorldRadians());
         this.consoleWarnMatrix3Fixed(this.object.pp_getRotationWorldMatrix());
         this.consoleWarnFixed(this.object.pp_getRotationWorldQuat());
         console.warn("ROTATION LOCAL");
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
-        this.consoleWarnFixed(this.object.pp_getRotationLocalEuler());
-        this.consoleWarnFixed(this.object.pp_getRotationLocalEulerDegrees());
-        this.consoleWarnFixed(this.object.pp_getRotationLocalEulerRadians());
+        this.consoleWarnFixed(this.object.pp_getRotationLocalDegrees());
+        this.consoleWarnFixed(this.object.pp_getRotationLocalRadians());
         this.consoleWarnMatrix3Fixed(this.object.pp_getRotationLocalMatrix());
         this.consoleWarnFixed(this.object.pp_getRotationLocalQuat());
         console.warn("SCALE");
@@ -85,7 +82,7 @@ WL.registerComponent('test-prototype', {
         console.warn(result);
     },
     consoleWarnMatrix3Fixed(vector) {
-        let result = [[], [], [], []];
+        let result = [[], [], []];
         for (let i = 0; i < vector.length; i++) {
             result[Math.floor(i / 3)].push(vector[i].toFixed(4));
         }

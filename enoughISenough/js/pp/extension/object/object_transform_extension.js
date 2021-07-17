@@ -22,17 +22,12 @@ WL.Object.prototype.pp_getPositionLocal = function (position = glMatrix.vec3.cre
 WL.Object.prototype.pp_getRotation = function (rotation) {
     return this.pp_getRotationWorld(rotation);
 };
-
-WL.Object.prototype.pp_getRotationEuler = function (rotation) {
-    return this.pp_getRotationWorldEuler(rotation);
+WL.Object.prototype.pp_getRotationDegrees = function (rotation) {
+    return this.pp_getRotationWorldDegrees(rotation);
 };
 
-WL.Object.prototype.pp_getRotationEulerDegrees = function (rotation) {
-    return this.pp_getRotationWorldEulerDegrees(rotation);
-};
-
-WL.Object.prototype.pp_getRotationEulerRadians = function (rotation) {
-    return this.pp_getRotationWorldEulerRadians(rotation);
+WL.Object.prototype.pp_getRotationRadians = function (rotation) {
+    return this.pp_getRotationWorldRadians(rotation);
 };
 
 WL.Object.prototype.pp_getRotationMatrix = function (rotation) {
@@ -46,22 +41,18 @@ WL.Object.prototype.pp_getRotationQuat = function (rotation) {
 //Rotation World
 
 WL.Object.prototype.pp_getRotationWorld = function (rotation) {
-    return this.pp_getRotationWorldEuler(rotation);
+    return this.pp_getRotationWorldDegrees(rotation);
 };
 
-WL.Object.prototype.pp_getRotationWorldEuler = function (rotation) {
-    return this.pp_getRotationWorldEulerDegrees(rotation);
-};
-
-WL.Object.prototype.pp_getRotationWorldEulerDegrees = function (rotation) {
-    rotation = this.pp_getRotationWorldEulerRadians(rotation);
+WL.Object.prototype.pp_getRotationWorldDegrees = function (rotation) {
+    rotation = this.pp_getRotationWorldRadians(rotation);
     rotation[0] = this._pp_toDegrees(rotation[0]);
     rotation[1] = this._pp_toDegrees(rotation[1]);
     rotation[2] = this._pp_toDegrees(rotation[2]);
     return rotation;
 };
 
-WL.Object.prototype.pp_getRotationWorldEulerRadians = function () {
+WL.Object.prototype.pp_getRotationWorldRadians = function () {
     let quat = glMatrix.quat.create();
     return function (rotation = glMatrix.vec3.create()) {
         this.pp_getRotationWorldQuat(quat);
@@ -87,22 +78,18 @@ WL.Object.prototype.pp_getRotationWorldQuat = function (rotation = glMatrix.quat
 //Rotation Local
 
 WL.Object.prototype.pp_getRotationLocal = function (rotation) {
-    return this.pp_getRotationLocalEuler(rotation);
+    return this.pp_getRotationLocalDegrees(rotation);
 };
 
-WL.Object.prototype.pp_getRotationLocalEuler = function (rotation) {
-    return this.pp_getRotationLocalEulerDegrees(rotation);
-};
-
-WL.Object.prototype.pp_getRotationLocalEulerDegrees = function (rotation) {
-    rotation = this.pp_getRotationLocalEulerRadians(rotation);
+WL.Object.prototype.pp_getRotationLocalDegrees = function (rotation) {
+    rotation = this.pp_getRotationLocalRadians(rotation);
     rotation.forEach(function (value, index, array) {
         array[index] = this._pp_toDegrees(value);
     }.bind(this));
     return rotation;
 };
 
-WL.Object.prototype.pp_getRotationLocalEulerRadians = function () {
+WL.Object.prototype.pp_getRotationLocalRadians = function () {
     let quat = glMatrix.quat.create();
     return function (rotation = glMatrix.vec3.create()) {
         this.pp_getRotationLocalQuat(quat);
@@ -133,11 +120,13 @@ WL.Object.prototype.pp_getScale = function (scale) {
 
 WL.Object.prototype.pp_getScaleWorld = function (scale = glMatrix.vec3.create()) {
     glMatrix.vec3.copy(scale, this.scalingWorld);
+    glMatrix.vec3.scale(scale, scale, 2);
     return scale;
 };
 
 WL.Object.prototype.pp_getScaleLocal = function (scale = glMatrix.vec3.create()) {
     glMatrix.vec3.copy(scale, this.scalingLocal);
+    glMatrix.vec3.scale(scale, scale, 2);
     return scale;
 };
 

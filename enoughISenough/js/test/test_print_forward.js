@@ -20,12 +20,12 @@ WL.registerComponent('test-print-axes', {
             this._myCounter--;
             if (this._myCounter == 0) {
                 this._myCounter = 70;
-
+                /*
                 console.log(this.object.pp_getRight()[0].toFixed(4), this.object.pp_getRight()[1].toFixed(4), this.object.pp_getRight()[2].toFixed(4));
                 console.log(this.object.pp_getUp()[0].toFixed(4), this.object.pp_getUp()[1].toFixed(4), this.object.pp_getUp()[2].toFixed(4));
                 console.log(this.object.pp_getForward()[0].toFixed(4), this.object.pp_getForward()[1].toFixed(4), this.object.pp_getForward()[2].toFixed(4));
-
-                /*
+                */
+                /* 
                 let right = [];
                 let up = [];
                 let forward = [];
