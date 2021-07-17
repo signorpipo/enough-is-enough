@@ -3,17 +3,17 @@
         "14": {
             "name": "Player",
             "transformation": [
-                1.0,
+                0.9999823,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                1.0000005,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                0.9999786,
                 0.0,
                 0.0,
                 0.0,
@@ -309,6 +309,13 @@
             "components": [
                 {
                     "type": "gamepads-manager"
+                },
+                {
+                    "type": "debug-global-data",
+                    "debug-global-data": {
+                        "_myCubeMesh": "8",
+                        "_myFlatMaterial": "66"
+                    }
                 }
             ]
         },
@@ -474,6 +481,9 @@
                         "_myCursorMaterial": "66",
                         "_myShowFingerCursor": false
                     }
+                },
+                {
+                    "type": "test-print-axes"
                 }
             ],
             "name": "Hand Right",
@@ -501,7 +511,14 @@
                 "name": "Right_Body<Right_Quest_Controller",
                 "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
             },
-            "parent": "58"
+            "parent": "58",
+            "components": [
+                null,
+                {
+                    "type": "test-print-axes",
+                    "active": false
+                }
+            ]
         },
         "60": {
             "link": {
@@ -561,12 +578,28 @@
         "84": {
             "name": "Tracked Space",
             "parent": "14",
+            "transformation": [
+                1.0000133,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0000003,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0000152,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
             "components": [
                 {
-                    "type": "player-height",
-                    "player-height": {
-                        "height": 1.6499999
-                    }
+                    "type": "pp-player-height",
+                    "active": false
                 }
             ]
         },
@@ -633,7 +666,7 @@
                 0.0,
                 -0.0,
                 2.0000004,
-                5.960464477539064e-8,
+                5.960464477539065e-8,
                 1.0
             ]
         },
@@ -659,6 +692,99 @@
                 1.0
             ],
             "deleted": true
+        },
+        "90": {
+            "name": "Test Forward",
+            "parent": "32",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "8",
+                        "material": "22"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                10.0,
+                1.0
+            ]
+        },
+        "91": {
+            "name": "Test Right",
+            "parent": "32",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "8",
+                        "material": "22"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                10.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "92": {
+            "name": "Test Up",
+            "parent": "32",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "8",
+                        "material": "22"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                10.0,
+                0.0,
+                1.0
+            ]
         }
     },
     "meshes": {
@@ -963,7 +1089,8 @@
             "version": [
                 0,
                 8,
-                6
+                7,
+                1
             ]
         },
         "vr": {
@@ -982,9 +1109,10 @@
                 "js/pp/input/cauldron",
                 "js/pp/input/gamepad",
                 "js/test",
-                "js/pp/extension/object"
+                "js/pp/extension/object",
                 "js/pp/cauldron/component",
                 "js/pp/cauldron/utils",
+                "js/debug"
             ]
         },
         "editor": {
