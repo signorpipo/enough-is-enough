@@ -3,6 +3,7 @@ WL.registerComponent('set-head-transform', {
     _myRightEye: { type: WL.Type.Object }
 }, {
     init: function () {
+        this._myRotationToFixedHeadOrientation = [0, 1, 0, 0];
     },
     start: function () {
     },
@@ -18,6 +19,7 @@ WL.registerComponent('set-head-transform', {
 
         this.object.setTranslationWorld(currentHeadPosition);
         this.object.resetRotation();
+        //this.object.rotateAxisAngleDegObject([0, 1, 0], 180);
         this.object.rotateObject(this._myLeftEye.transformWorld);
     },
 });
