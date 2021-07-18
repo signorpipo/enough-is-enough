@@ -349,7 +349,7 @@ WL.Object.prototype.pp_setRotationWorldMatrix = function () {
 WL.Object.prototype.pp_setRotationWorldQuat = function (rotation) {
     let transformWorld = this.transformWorld;
     glMatrix.quat.copy(transformWorld, rotation);
-    this.transformWorld = transformWorld;
+    this.pp_setTransformWorldQuat(transformWorld);
 };
 
 //Rotation Local
@@ -387,8 +387,7 @@ WL.Object.prototype.pp_setRotationLocalMatrix = function () {
 WL.Object.prototype.pp_setRotationLocalQuat = function (rotation) {
     let transformLocal = this.transformLocal;
     glMatrix.quat.copy(transformLocal, rotation);
-    this.transformLocal = transformLocal;
-
+    this.pp_setTransformLocalQuat(transformLocal);
 };
 
 //Scale
@@ -454,6 +453,7 @@ WL.Object.prototype.pp_setTransformWorldMatrix = function () {
 
 WL.Object.prototype.pp_setTransformWorldQuat = function (transform) {
     this.transformWorld = transform;
+    this.setDirty();
 };
 
 //Transform Local
@@ -481,6 +481,40 @@ WL.Object.prototype.pp_setTransformLocalMatrix = function () {
 
 WL.Object.prototype.pp_setTransformLocalQuat = function (transform) {
     this.transformLocal = transform;
+    this.setDirty();
+};
+
+//Transformations
+
+//Extra
+
+WL.Object.prototype.pp_setParent = function () {
+    let transform = glMatrix.quat2.create();
+    let scale = glMatrix.vec3.create();
+    return function (newParent, keepTransform = true) {
+        if (!keepTransform) {
+            this.parent = newParent;
+            this.setDirty();
+        } else {
+            this.pp_getTransformWorldQuat(transform);
+            this.pp_getScaleWorld(scale);
+            this.parent = newParent;
+            this.setDirty();
+            this.pp_setScaleWorld(scale);
+            this.pp_setTransformWorldQuat(transform);
+        }
+    };
+}();
+
+WL.Object.prototype.pp_getParent = function () {
+    return this.parent;
+};
+
+WL.Object.prototype.pp_setHierarchyActive = function (active) {
+    this.active = active;
+    for (let child of this.children) {
+        child.pp_setHierarchyActive(active);
+    }
 };
 
 //Utils
