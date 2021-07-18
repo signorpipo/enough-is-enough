@@ -1,12 +1,12 @@
 class DebugLine {
 
-    constructor() {
+    constructor(autoRefresh = true) {
         this._myLineRootObject = null;
         this._myLineObject = null;
 
-        this._myStartPosition = null;
-        this._myDirection = null;
-        this._myLength = null;
+        this._myStartPosition = [0, 0, 0];
+        this._myDirection = [0, 0, 1];
+        this._myLength = 0;
 
         this._myThickness = 0.005;
 
@@ -16,6 +16,8 @@ class DebugLine {
 
         this._myDirty = false;
 
+        this._myAutoRefresh = autoRefresh;
+
         this._buildLine();
     }
 
@@ -24,6 +26,10 @@ class DebugLine {
             this._myVisible = visible;
             PP.ObjectUtils.setHierarchyActive(this._myLineRootObject, visible);
         }
+    }
+
+    setAutoRefresh(autoRefresh) {
+        this._myAutoRefresh = autoRefresh;
     }
 
     setStartEnd(start, end) {
@@ -40,30 +46,30 @@ class DebugLine {
         this._myDirection = direction;
         this._myLength = length;
 
-        this._myDirty = true;
+        this._markDirty();
     }
 
     setColor(color) {
         this._myColor = color;
 
-        this._myDirty = true;
+        this._markDirty();
     }
 
     setThickness(thickness) {
         this._myThickness = thickness;
 
-        this._myDirty = true;
+        this._markDirty();
     }
 
     update(dt) {
         if (this._myDirty) {
-            this._refreshLine();
+            this._refreshLine(dt);
 
             this._myDirty = false;
         }
     }
 
-    _refreshLine() {
+    _refreshLine(dt) {
         this._myLineRootObject.setTranslationWorld(this._myStartPosition);
         this._myLineObject.resetTranslationRotation();
         this._myLineObject.resetScaling();
@@ -102,5 +108,13 @@ class DebugLine {
         this._myLineMesh = this._myLineObject.addComponent('mesh');
         this._myLineMesh.mesh = DebugData.myCubeMesh;
         this._myLineMesh.material = DebugData.myFlatMaterial.clone();
+    }
+
+    _markDirty() {
+        this._myDirty = true;
+
+        if (this._myAutoRefresh) {
+            this._refreshLine(0);
+        }
     }
 }

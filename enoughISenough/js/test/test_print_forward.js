@@ -12,8 +12,6 @@ WL.registerComponent('test-print-axes', {
 
         this._myDebugRight = new DebugLine();
         this._myDebugRight.setColor([1, 0, 0, 1]);
-
-        this._myDebugTest = new DebugLine();
     },
     update: function (dt) {
         if (this._myCounter >= 0) {
@@ -39,7 +37,7 @@ WL.registerComponent('test-print-axes', {
                 console.log(forward[0].toFixed(4), forward[1].toFixed(4), forward[2].toFixed(4));
                 */
 
-                console.log("   ");
+                //console.log("   ");
             }
         }
 
@@ -63,16 +61,7 @@ WL.registerComponent('test-print-axes', {
         */
 
         this._myDebugForward.setStartDirectionLength(this.object.pp_getPosition(), this.object.pp_getForward(), 0.1);
-        this._myDebugForward.update(dt);
-
         this._myDebugUp.setStartDirectionLength(this.object.pp_getPosition(), this.object.pp_getUp(), 0.1);
-        this._myDebugUp.update(dt);
-
         this._myDebugRight.setStartDirectionLength(this.object.pp_getPosition(), this.object.pp_getRight(), 0.1);
-        this._myDebugRight.update(dt);
-
-        this._myDebugTest.setStartEnd(this.object.pp_getPosition(), [0.5, 2, 0]);
-        console.log(this.object.pp_getPosition()[1]);
-        this._myDebugTest.update(dt);
     }
 });

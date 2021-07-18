@@ -109,7 +109,7 @@ PP.HandPose = class HandPose {
 
     _computeEmulatedAngularVelocity(dt) {
         if (dt > 0) {
-            glMatrix.vec3.subtract(this._myAngularVelocity, PP.MathUtils.quaternionToEuler(this._myRotation), PP.MathUtils.quaternionToEuler(this._myPrevRotation));
+            glMatrix.vec3.subtract(this._myAngularVelocity, PP.MathUtils.quaternionToRadians(this._myRotation), PP.MathUtils.quaternionToRadians(this._myPrevRotation));
             glMatrix.vec3.scale(this._myAngularVelocity, this._myAngularVelocity, 1 / dt);
         } else {
             this._myAngularVelocity[0] = 0;
