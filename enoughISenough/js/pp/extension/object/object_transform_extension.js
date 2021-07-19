@@ -435,19 +435,23 @@ WL.Object.prototype.pp_setTransformWorld = function (transform) {
 };
 
 WL.Object.prototype.pp_setTransformWorldMatrix = function () {
-    let transformQuat = glMatrix.quat2.create();
-    let transformMatrixNoScale = glMatrix.mat4.create();
+    let position = glMatrix.vec3.create();
+    let rotation = glMatrix.quat.create();
     let scale = glMatrix.vec3.create();
+    let transformMatrixNoScale = glMatrix.mat4.create();
     let inverseScale = glMatrix.vec3.create();
     let one = glMatrix.vec3.create();
     glMatrix.vec3.set(one, 1, 1, 1);
     return function (transform) {
+        glMatrix.mat4.getTranslation(position, transform);
         glMatrix.mat4.getScaling(scale, transform);
         glMatrix.vec3.divide(inverseScale, one, scale);
         glMatrix.mat4.scale(transformMatrixNoScale, transform, inverseScale);
-        glMatrix.quat2.fromMat4(transformQuat, transformMatrixNoScale);
+        glMatrix.mat4.getRotation(rotation, transformMatrixNoScale);
+        glMatrix.quat.normalize(rotation, rotation);
         this.pp_setScaleWorld(scale);
-        this.pp_setTransformWorldQuat(transformQuat);
+        this.pp_setRotationWorldQuat(rotation);
+        this.pp_setPositionWorld(position);
     };
 }();
 
@@ -463,19 +467,23 @@ WL.Object.prototype.pp_setTransformLocal = function (transform) {
 };
 
 WL.Object.prototype.pp_setTransformLocalMatrix = function () {
-    let transformQuat = glMatrix.quat2.create();
-    let transformMatrixNoScale = glMatrix.mat4.create();
+    let position = glMatrix.vec3.create();
+    let rotation = glMatrix.quat.create();
     let scale = glMatrix.vec3.create();
+    let transformMatrixNoScale = glMatrix.mat4.create();
     let inverseScale = glMatrix.vec3.create();
     let one = glMatrix.vec3.create();
     glMatrix.vec3.set(one, 1, 1, 1);
     return function (transform) {
+        glMatrix.mat4.getTranslation(position, transform);
         glMatrix.mat4.getScaling(scale, transform);
         glMatrix.vec3.divide(inverseScale, one, scale);
         glMatrix.mat4.scale(transformMatrixNoScale, transform, inverseScale);
-        glMatrix.quat2.fromMat4(transformQuat, transformMatrixNoScale);
+        glMatrix.mat4.getRotation(rotation, transformMatrixNoScale);
+        glMatrix.quat.normalize(rotation, rotation);
         this.pp_setScaleLocal(scale);
-        this.pp_setTransformLocalQuat(transformQuat);
+        this.pp_setRotationLocalQuat(rotation);
+        this.pp_setPositionLocal(position);
     };
 }();
 
@@ -484,24 +492,86 @@ WL.Object.prototype.pp_setTransformLocalQuat = function (transform) {
     this.setDirty();
 };
 
-//Transformations
+//TRANSFORMATIONS
 
-//Extra
+//Translate
+
+WL.Object.prototype.pp_translate = function (translation) {
+    this.pp_translateWorld(translation);
+};
+
+WL.Object.prototype.pp_translateWorld = function () {
+};
+
+WL.Object.prototype.pp_translateLocal = function () {
+};
+
+WL.Object.prototype.pp_translateObject = function () {
+};
+
+//Scale
+
+WL.Object.prototype.pp_scale = function (scale) {
+    this.pp_scaleObject(scale);
+};
+
+WL.Object.prototype.pp_scaleObject = function () {
+};
+
+//Look At
+WL.Object.prototype.pp_lookAt = function () {
+    let internalUp = glMatrix.vec3.create();
+    let currentPosition = glMatrix.vec3.create();
+    let targetPosition = glMatrix.vec3.create();
+    let targetToMatrix = glMatrix.mat4.create();
+    let scale = glMatrix.vec3.create();
+    return function (direction, up = this.pp_getUpWorld(internalUp)) {
+        glMatrix.vec3.copy(internalUp, up); //to avoid changing the forwarded up
+        let angle = glMatrix.vec3.angle(direction, internalUp);
+        if (angle < 0.0001 || angle > Math.PI - 0.0001) {
+            //direction and up are too similar, trying with the default up
+            this.pp_getUpWorld(internalUp);
+            angle = glMatrix.vec3.angle(direction, internalUp);
+            if (angle < 0.0001 || angle > Math.PI - 0.0001) {
+                //this means we want the forward to become up, so getting forward as the up
+                this.pp_getForwardWorld(internalUp);
+                if (angle < 0.0001) {
+                    glMatrix.vec3.negate(internalUp, internalUp);
+                }
+            }
+        }
+
+        this.pp_getPositionWorld(currentPosition);
+        glMatrix.vec3.add(targetPosition, currentPosition, direction);
+        glMatrix.mat4.targetTo(targetToMatrix, targetPosition, currentPosition, internalUp);
+        targetToMatrix[12] = currentPosition[0];
+        targetToMatrix[13] = currentPosition[1];
+        targetToMatrix[14] = currentPosition[2];
+        glMatrix.mat4.scale(targetToMatrix, targetToMatrix, this.pp_getScaleWorld(scale));
+
+        this.pp_setTransformWorldMatrix(targetToMatrix);
+    };
+}();
+
+//EXTRA
 
 WL.Object.prototype.pp_setParent = function () {
-    let transform = glMatrix.quat2.create();
+    let position = glMatrix.vec3.create();
+    let rotation = glMatrix.quat.create();
     let scale = glMatrix.vec3.create();
     return function (newParent, keepTransform = true) {
         if (!keepTransform) {
             this.parent = newParent;
             this.setDirty();
         } else {
-            this.pp_getTransformWorldQuat(transform);
+            this.pp_getPositionWorld(position);
+            this.pp_getRotationWorldQuat(rotation);
             this.pp_getScaleWorld(scale);
             this.parent = newParent;
             this.setDirty();
             this.pp_setScaleWorld(scale);
-            this.pp_setTransformWorldQuat(transform);
+            this.pp_setRotationWorldQuat(rotation);
+            this.pp_setPositionWorld(position);
         }
     };
 }();

@@ -79,7 +79,6 @@ WL.registerComponent('test-prototype', {
         console.warn("\nTRANSFORM WORLD\n");
         this.object.pp_setTransformMatrix([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
         this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorld());
-        this.consoleWarnMatrix4Fixed(this.object.pp_getTransformLocal());
         this.object.pp_setTransformWorldMatrix([-0.2458, 1.3998, 1.4071, 0.0000, 2.7900, 3.1750, -2.6712, 0.0000, -2.4621, 0.9808, -1.4058, 0.0000, 0.1834, -2.7853, -19.6426, 1.0000]);
         this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorldMatrix());
         this.object.pp_setTransformWorldMatrix([-0.1229, 0.6999, 0.7036, 0.0000, 0.5580, 0.6350, -0.5342, 0.0000, -0.8207, 0.3270, -0.4686, 0.0000, 0.1834, -2.7853, -19.6426, 1.0000]);
@@ -110,29 +109,77 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getRightWorld());
         this.consoleWarnFixed(this.object.pp_getRightLocal());
 
+        console.warn("\LOOK AT\n");
+        this.consoleWarnFixed(this.object.pp_getPosition());
+        this.object.pp_lookAt([0.7071, 0.7071, 0]);
+        this.consoleWarnFixed(this.object.pp_getForward());
+        this.object.pp_lookAt([0.4472, -0.8944, 0]);
+        this.consoleWarnFixed(this.object.pp_getForward());
+        this.object.pp_lookAt([0, 0, 1]);
+        this.consoleWarnFixed(this.object.pp_getRight());
+        this.consoleWarnFixed(this.object.pp_getUp());
+        this.consoleWarnFixed(this.object.pp_getForward());
+        this.object.pp_lookAt([0, 0, 1], [0, 1, 0]);
+        this.consoleWarnFixed(this.object.pp_getRight());
+        this.consoleWarnFixed(this.object.pp_getUp());
+        this.consoleWarnFixed(this.object.pp_getForward());
+        this.object.pp_lookAt([0, 1, 0]);
+        this.consoleWarnFixed(this.object.pp_getRight());
+        this.consoleWarnFixed(this.object.pp_getUp());
+        this.consoleWarnFixed(this.object.pp_getForward());
+        this.object.pp_lookAt([0, 0, 1], [0, 1, 0]);
+        this.object.pp_lookAt([0, -1, 0]);
+        this.consoleWarnFixed(this.object.pp_getRight());
+        this.consoleWarnFixed(this.object.pp_getUp());
+        this.consoleWarnFixed(this.object.pp_getForward());
+        this.object.pp_lookAt([0, 0, 1], [0, 0, 1]);
+        this.consoleWarnFixed(this.object.pp_getRight());
+        this.consoleWarnFixed(this.object.pp_getUp());
+        this.consoleWarnFixed(this.object.pp_getForward());
+        this.object.pp_lookAt([1, 0, 1]);
+        this.consoleWarnFixed(this.object.pp_getRight());
+        this.consoleWarnFixed(this.object.pp_getUp());
+        this.consoleWarnFixed(this.object.pp_getForward());
+        this.object.pp_lookAt([0, 0, 1], [0, 1, 0]);
+        this.object.pp_lookAt([1, -1, 1]);
+        this.consoleWarnFixed(this.object.pp_getRight());
+        this.consoleWarnFixed(this.object.pp_getUp());
+        this.consoleWarnFixed(this.object.pp_getForward());
+        this.object.pp_lookAt([0, 0, 1], [0, 1, 0]);
+        this.object.pp_lookAt([2, -1, 3], [2, 1, 4]);
+        this.consoleWarnFixed(this.object.pp_getRight());
+        this.consoleWarnFixed(this.object.pp_getUp());
+        this.consoleWarnFixed(this.object.pp_getForward());
+        this.consoleWarnFixed(this.object.pp_getPosition());
+
         console.warn("\nPARENT\n");
+        this.object.pp_setPosition([1, 2, 3]);
         let oldParent = this.object.pp_getParent();
+        let nullParent = null;
         this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorld());
-        this.object.pp_setParent(null);
+        this.object.pp_setParent(nullParent);
         this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorld());
         this.object.pp_setParent(oldParent);
         this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorld());
-        this.object.pp_setParent(null, false);
+        this.object.pp_setParent(nullParent, false);
         this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorld());
         this.object.pp_setParent(oldParent, false);
         this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorld());
-        this.object.pp_setParent(null, false);
+        this.object.pp_setParent(nullParent, false);
         this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorld());
         this.object.pp_setParent(oldParent);
         this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorld());
 
         console.warn("\nMATRIX STABILITY\n");
         this.object.pp_setTransformWorldMatrix([0.9706, 4.1994, 4.1739, 0.0000, 1.5245, 3.1750, -3.5490, 0.0000, -5.6314, 1.9616, -0.6641, 0.0000, -13.8437, -2.7853, -36.3777, 1.0000]);
-        this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorldMatrix());
-        this.object.pp_setTransformWorldMatrix(this.object.pp_getTransformWorldMatrix());
-        this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorldMatrix());
-        this.object.pp_setTransformWorldMatrix(this.object.pp_getTransformWorldMatrix());
-        this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorldMatrix());
+        let initialMatrix = this.object.pp_getTransformWorldMatrix();
+        for (let i = 0; i < 100; i++) {
+            this.object.pp_setTransformWorldMatrix(this.object.pp_getTransformWorldMatrix());
+        }
+        glMatrix.mat4.sub(initialMatrix, this.object.pp_getTransformWorldMatrix(), initialMatrix);
+        initialMatrix = initialMatrix.map(a => a < 0.00000002 ? 0 : a);
+        console.warn(initialMatrix);
+
         console.warn("\nTEST END");
 
     },
@@ -162,3 +209,11 @@ WL.registerComponent('test-prototype', {
 /*WL.Object.prototype.pp_test = function () {
     console.log("OMG IT WORKS");
 };*/
+
+/*
+let mat = [];
+this.pp_getTransformWorldMatrix(mat);
+glMatrix.mat4.sub(mat, mat, transform);
+mat = mat.map(a => a < 0.00002 ? 0 : a);
+console.warn(mat);
+*/
