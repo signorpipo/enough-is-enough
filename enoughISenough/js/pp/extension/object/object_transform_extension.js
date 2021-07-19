@@ -455,10 +455,15 @@ WL.Object.prototype.pp_setTransformWorldMatrix = function () {
     };
 }();
 
-WL.Object.prototype.pp_setTransformWorldQuat = function (transform) {
-    this.transformWorld = transform;
-    this.setDirty();
-};
+WL.Object.prototype.pp_setTransformWorldQuat = function () {
+    let position = glMatrix.vec3.create();
+    return function (transform) {
+        this.transformWorld = transform;
+        this.setDirty();
+        glMatrix.quat2.getTranslation(position, transform);
+        this.pp_setPositionWorld(position);
+    };
+}();
 
 //Transform Local
 

@@ -180,6 +180,16 @@ WL.registerComponent('test-prototype', {
         initialMatrix = initialMatrix.map(a => a < 0.00000002 ? 0 : a);
         console.warn(initialMatrix);
 
+        console.warn("\QUAT TRANSFORM POSITION STABILITY\n");
+        this.object.pp_setTransformWorldQuat([0.5354, 0.5714, 0.1685, -0.5986, 5.3222, -4.4403, 6.6770, 2.4017]);
+        let initialPos = this.object.pp_getPositionWorld();
+        for (let i = 0; i < 100; i++) {
+            this.object.pp_setTransformWorldQuat(this.object.pp_getTransformWorldQuat());
+        }
+        glMatrix.vec3.sub(initialPos, this.object.pp_getPositionWorld(), initialPos);
+        initialPos = initialPos.map(a => a < 0.00000002 ? 0 : a);
+        console.warn(initialPos);
+
         console.warn("\nTEST END");
 
     },
