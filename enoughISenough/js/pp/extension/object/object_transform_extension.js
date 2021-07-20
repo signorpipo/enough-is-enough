@@ -497,6 +497,89 @@ WL.Object.prototype.pp_setTransformLocalQuat = function (transform) {
     this.setDirty();
 };
 
+//RESET
+
+//Position
+
+WL.Object.prototype.pp_resetPosition = function () {
+    this.pp_resetPositionWorld();
+};
+
+WL.Object.prototype.pp_resetPositionWorld = function () {
+    let zero = glMatrix.vec3.create();
+    return function () {
+        this.pp_setPositionWorld(zero);
+    };
+}();
+
+WL.Object.prototype.pp_resetPositionLocal = function () {
+    let zero = glMatrix.vec3.create();
+    return function () {
+        this.pp_setPositionLocal(zero);
+    };
+}();
+
+//Rotation
+
+WL.Object.prototype.pp_resetRotation = function () {
+    this.pp_resetRotationWorld();
+};
+
+WL.Object.prototype.pp_resetRotationWorld = function () {
+    let zero = glMatrix.quat.create();
+    return function () {
+        this.pp_setRotationWorldQuat(zero);
+    };
+}();
+
+WL.Object.prototype.pp_resetRotationLocal = function () {
+    let zero = glMatrix.quat.create();
+    return function () {
+        this.pp_setRotationLocalQuat(zero);
+    };
+}();
+
+//Scale
+
+WL.Object.prototype.pp_resetScale = function () {
+    this.pp_resetScaleWorld();
+};
+
+WL.Object.prototype.pp_resetScaleWorld = function () {
+    let one = glMatrix.vec3.create();
+    glMatrix.vec3.set(one, 1, 1, 1);
+    return function () {
+        this.pp_setScaleWorld(one);
+    };
+}();
+
+WL.Object.prototype.pp_resetScaleLocal = function () {
+    let one = glMatrix.vec3.create();
+    glMatrix.vec3.set(one, 1, 1, 1);
+    return function () {
+        this.pp_setScaleLocal(one);
+    };
+}();
+
+//Transform
+
+WL.Object.prototype.pp_resetTransform = function () {
+    this.pp_resetTransformWorld();
+};
+
+WL.Object.prototype.pp_resetTransformWorld = function () {
+    this.pp_resetScaleWorld();
+    this.pp_resetRotationWorld();
+    this.pp_resetPositionWorld();
+};
+
+WL.Object.prototype.pp_resetTransformLocal = function () {
+    this.pp_resetScaleLocal();
+    this.pp_resetRotationLocal();
+    this.pp_resetPositionLocal();
+};
+
+
 //TRANSFORMATIONS
 
 //Translate
@@ -516,6 +599,7 @@ WL.Object.prototype.pp_translateObject = function () {
 
 //Scale
 
+//For now it does not really make sense in wle to scale in world space or parent space
 WL.Object.prototype.pp_scale = function (scale) {
     this.pp_scaleObject(scale);
 };

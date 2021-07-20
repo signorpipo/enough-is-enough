@@ -170,6 +170,47 @@ WL.registerComponent('test-prototype', {
         this.object.pp_setParent(oldParent);
         this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorld());
 
+        console.warn("\RESET POSITION\n");
+        this.object.pp_resetPosition();
+        this.consoleWarnFixed(this.object.pp_getPosition());
+        this.object.pp_resetPositionWorld();
+        this.consoleWarnFixed(this.object.pp_getPositionWorld());
+        this.consoleWarnFixed(this.object.pp_getPositionLocal());
+        this.object.pp_resetPositionLocal();
+        this.consoleWarnFixed(this.object.pp_getPositionWorld());
+        this.consoleWarnFixed(this.object.pp_getPositionLocal());
+
+        console.warn("\RESET ROTATION\n");
+        this.object.pp_resetRotation();
+        this.consoleWarnFixed(this.object.pp_getRotation());
+        this.object.pp_resetRotationWorld();
+        this.consoleWarnFixed(this.object.pp_getRotationWorld());
+        this.consoleWarnFixed(this.object.pp_getRotationLocal());
+        this.object.pp_resetRotationLocal();
+        this.consoleWarnFixed(this.object.pp_getRotationWorld());
+        this.consoleWarnFixed(this.object.pp_getRotationLocal());
+
+        console.warn("\RESET SCALE\n");
+        this.object.pp_resetScale();
+        this.consoleWarnFixed(this.object.pp_getScale());
+        this.object.pp_resetScaleWorld();
+        this.consoleWarnFixed(this.object.pp_getScaleWorld());
+        this.consoleWarnFixed(this.object.pp_getScaleLocal());
+        this.object.pp_resetScaleLocal();
+        this.consoleWarnFixed(this.object.pp_getScaleWorld());
+        this.consoleWarnFixed(this.object.pp_getScaleLocal());
+
+        console.warn("\RESET TRANSFORM\n");
+        this.object.pp_setTransformWorldMatrix([0.9706, 4.1994, 4.1739, 0.0000, 1.5245, 3.1750, -3.5490, 0.0000, -5.6314, 1.9616, -0.6641, 0.0000, -13.8437, -2.7853, -36.3777, 1.0000]);
+        this.object.pp_resetTransform();
+        this.consoleWarnMatrix4Fixed(this.object.pp_getTransform());
+        this.object.pp_resetTransformWorld();
+        this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorld());
+        this.consoleWarnMatrix4Fixed(this.object.pp_getTransformLocal());
+        this.object.pp_resetTransformLocal();
+        this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorld());
+        this.consoleWarnMatrix4Fixed(this.object.pp_getTransformLocal());
+
         console.warn("\nMATRIX STABILITY\n");
         this.object.pp_setTransformWorldMatrix([0.9706, 4.1994, 4.1739, 0.0000, 1.5245, 3.1750, -3.5490, 0.0000, -5.6314, 1.9616, -0.6641, 0.0000, -13.8437, -2.7853, -36.3777, 1.0000]);
         let initialMatrix = this.object.pp_getTransformWorldMatrix();
