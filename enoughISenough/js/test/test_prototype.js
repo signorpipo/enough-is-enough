@@ -211,6 +211,33 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorld());
         this.consoleWarnMatrix4Fixed(this.object.pp_getTransformLocal());
 
+
+        console.warn("\TRANSLATE\n");
+        this.object.pp_resetPositionWorld();
+        this.object.pp_translate([0, 0, 1]);
+        this.consoleWarnFixed(this.object.pp_getPosition());
+        this.object.pp_translate([0, 1, 0]);
+        this.consoleWarnFixed(this.object.pp_getPosition());
+        this.object.pp_translate([1, 0, 0]);
+        this.consoleWarnFixed(this.object.pp_getPosition());
+
+        this.object.pp_resetPositionLocal();
+        this.object.pp_translateLocal([0, 0, 1]);
+        this.consoleWarnFixed(this.object.pp_getPositionLocal());
+        this.object.pp_translateLocal([0, 1, 0]);
+        this.consoleWarnFixed(this.object.pp_getPositionLocal());
+        this.object.pp_translateLocal([1, 0, 0]);
+        this.consoleWarnFixed(this.object.pp_getPositionLocal());
+
+        this.object.pp_resetPositionLocal();
+        this.object.pp_lookAt(this.object.pp_getParent().pp_getUp());
+        this.object.pp_translateObject([0, 0, 1]);
+        this.consoleWarnFixed(this.object.pp_getPositionLocal());
+        this.object.pp_translateObject([0, 1, 0]);
+        this.consoleWarnFixed(this.object.pp_getPositionLocal());
+        this.object.pp_translateObject([1, 0, 0]);
+        this.consoleWarnFixed(this.object.pp_getPositionLocal());
+
         console.warn("\nMATRIX STABILITY\n");
         this.object.pp_setTransformWorldMatrix([0.9706, 4.1994, 4.1739, 0.0000, 1.5245, 3.1750, -3.5490, 0.0000, -5.6314, 1.9616, -0.6641, 0.0000, -13.8437, -2.7853, -36.3777, 1.0000]);
         let initialMatrix = this.object.pp_getTransformWorldMatrix();
@@ -232,6 +259,8 @@ WL.registerComponent('test-prototype', {
         console.warn(initialPos);
 
         console.warn("\nTEST END");
+
+
 
     },
     consoleWarnFixed(vector) {

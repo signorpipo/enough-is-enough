@@ -588,13 +588,16 @@ WL.Object.prototype.pp_translate = function (translation) {
     this.pp_translateWorld(translation);
 };
 
-WL.Object.prototype.pp_translateWorld = function () {
+WL.Object.prototype.pp_translateWorld = function (translation) {
+    this.translateWorld(translation);
 };
 
-WL.Object.prototype.pp_translateLocal = function () {
+WL.Object.prototype.pp_translateLocal = function (translation) {
+    this.translate(translation);
 };
 
-WL.Object.prototype.pp_translateObject = function () {
+WL.Object.prototype.pp_translateObject = function (translation) {
+    this.translateObject(translation);
 };
 
 //Scale
