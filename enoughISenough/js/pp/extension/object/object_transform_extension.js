@@ -611,7 +611,11 @@ WL.Object.prototype.pp_scaleObject = function () {
 };
 
 //Look At
-WL.Object.prototype.pp_lookAt = function () {
+WL.Object.prototype.pp_lookAt = function (direction, up) {
+    this.pp_lookAtWorld(direction, up);
+}
+
+WL.Object.prototype.pp_lookAtWorld = function () {
     let internalUp = glMatrix.vec3.create();
     let currentPosition = glMatrix.vec3.create();
     let targetPosition = glMatrix.vec3.create();
@@ -642,6 +646,40 @@ WL.Object.prototype.pp_lookAt = function () {
         glMatrix.mat4.scale(targetToMatrix, targetToMatrix, this.pp_getScaleWorld(scale));
 
         this.pp_setTransformWorldMatrix(targetToMatrix);
+    };
+}();
+
+WL.Object.prototype.pp_lookAtLocal = function () {
+    let internalUp = glMatrix.vec3.create();
+    let currentPosition = glMatrix.vec3.create();
+    let targetPosition = glMatrix.vec3.create();
+    let targetToMatrix = glMatrix.mat4.create();
+    let scale = glMatrix.vec3.create();
+    return function (direction, up = this.pp_getUpLocal(internalUp)) {
+        glMatrix.vec3.copy(internalUp, up); //to avoid changing the forwarded up
+        let angle = glMatrix.vec3.angle(direction, internalUp);
+        if (angle < 0.0001 || angle > Math.PI - 0.0001) {
+            //direction and up are too similar, trying with the default up
+            this.pp_getUpLocal(internalUp);
+            angle = glMatrix.vec3.angle(direction, internalUp);
+            if (angle < 0.0001 || angle > Math.PI - 0.0001) {
+                //this means we want the forward to become up, so getting forward as the up
+                this.pp_getForwardLocal(internalUp);
+                if (angle < 0.0001) {
+                    glMatrix.vec3.negate(internalUp, internalUp);
+                }
+            }
+        }
+
+        this.pp_getPositionLocal(currentPosition);
+        glMatrix.vec3.add(targetPosition, currentPosition, direction);
+        glMatrix.mat4.targetTo(targetToMatrix, targetPosition, currentPosition, internalUp);
+        targetToMatrix[12] = currentPosition[0];
+        targetToMatrix[13] = currentPosition[1];
+        targetToMatrix[14] = currentPosition[2];
+        glMatrix.mat4.scale(targetToMatrix, targetToMatrix, this.pp_getScaleLocal(scale));
+
+        this.pp_setTransformLocalMatrix(targetToMatrix);
     };
 }();
 
