@@ -87,7 +87,6 @@ class DebugLine {
 
             glMatrix.quat.mul(rotationQuat, rotationQuat, this._myLineObject.transformWorld);
             glMatrix.quat.normalize(rotationQuat, rotationQuat);
-            glMatrix.quat.normalize(rotationQuat, rotationQuat);
             this._myLineObject.rotateObject(rotationQuat);
         }
 
