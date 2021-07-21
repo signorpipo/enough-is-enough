@@ -115,7 +115,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getRightWorld());
         this.consoleWarnFixed(this.object.pp_getRightLocal());
 
-        console.warn("\LOOK AT\n");
+        console.warn("\nLOOK AT\n");
         this.consoleWarnFixed(this.object.pp_getPosition());
         this.object.pp_lookAt([0.7071, 0.7071, 0]);
         this.consoleWarnFixed(this.object.pp_getForward());
@@ -134,7 +134,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getUp());
         this.consoleWarnFixed(this.object.pp_getForward());
 
-        console.warn("\LOOK AT WORLD\n");
+        console.warn("\nLOOK AT WORLD\n");
         this.object.pp_lookAtWorld([0, 0, 1], [0, 1, 0]);
         this.object.pp_lookAtWorld([0, -1, 0]);
         this.consoleWarnFixed(this.object.pp_getRight());
@@ -160,7 +160,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getForward());
         this.consoleWarnFixed(this.object.pp_getPosition());
 
-        console.warn("\LOOK AT LOCAL\n");
+        console.warn("\nLOOK AT LOCAL\n");
         this.object.pp_lookAtLocal([0, 0, 1], [0, 1, 0]);
         this.object.pp_lookAtLocal([0, -1, 0]);
         this.consoleWarnFixed(this.object.pp_getRightLocal());
@@ -204,7 +204,7 @@ WL.registerComponent('test-prototype', {
         this.object.pp_setParent(oldParent);
         this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorld());
 
-        console.warn("\RESET POSITION\n");
+        console.warn("\nRESET POSITION\n");
         this.object.pp_resetPosition();
         this.consoleWarnFixed(this.object.pp_getPosition());
         this.object.pp_resetPositionWorld();
@@ -214,7 +214,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getPositionWorld());
         this.consoleWarnFixed(this.object.pp_getPositionLocal());
 
-        console.warn("\RESET ROTATION\n");
+        console.warn("\nRESET ROTATION\n");
         this.object.pp_resetRotation();
         this.consoleWarnFixed(this.object.pp_getRotation());
         this.object.pp_resetRotationWorld();
@@ -224,7 +224,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
 
-        console.warn("\RESET SCALE\n");
+        console.warn("\nRESET SCALE\n");
         this.object.pp_resetScale();
         this.consoleWarnFixed(this.object.pp_getScale());
         this.object.pp_resetScaleWorld();
@@ -234,7 +234,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getScaleWorld());
         this.consoleWarnFixed(this.object.pp_getScaleLocal());
 
-        console.warn("\RESET TRANSFORM\n");
+        console.warn("\nRESET TRANSFORM\n");
         this.object.pp_setTransformWorldMatrix([0.9706, 4.1994, 4.1739, 0.0000, 1.5245, 3.1750, -3.5490, 0.0000, -5.6314, 1.9616, -0.6641, 0.0000, -13.8437, -2.7853, -36.3777, 1.0000]);
         this.object.pp_resetTransform();
         this.consoleWarnMatrix4Fixed(this.object.pp_getTransform());
@@ -245,7 +245,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorld());
         this.consoleWarnMatrix4Fixed(this.object.pp_getTransformLocal());
 
-        console.warn("\TRANSLATE\n");
+        console.warn("\nTRANSLATE\n");
         this.object.pp_resetPositionWorld();
         this.object.pp_translate([0, 0, 1]);
         this.consoleWarnFixed(this.object.pp_getPosition());
@@ -271,7 +271,7 @@ WL.registerComponent('test-prototype', {
         this.object.pp_translateObject([1, 0, 0]);
         this.consoleWarnFixed(this.object.pp_getPositionLocal());
 
-        console.warn("\ROTATE\n");
+        console.warn("\nROTATE\n");
         this.object.pp_resetRotation();
         this.object.pp_rotate([20, 0, 0]);
         this.consoleWarnFixed(this.object.pp_getRotation());
@@ -288,7 +288,7 @@ WL.registerComponent('test-prototype', {
         this.object.pp_rotateQuat([-0.4215, -0.7461, 0.0695, 0.5108]);
         this.consoleWarnFixed(this.object.pp_getRotationQuat());
 
-        console.warn("\ROTATE WORLD\n");
+        console.warn("\nROTATE WORLD\n");
         this.object.pp_resetRotationWorld();
         this.object.pp_rotateWorld([20, 0, 0]);
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
@@ -305,7 +305,7 @@ WL.registerComponent('test-prototype', {
         this.object.pp_rotateWorldQuat([-0.4215, -0.7461, 0.0695, 0.5108]);
         this.consoleWarnFixed(this.object.pp_getRotationWorldQuat());
 
-        console.warn("\ROTATE LOCAL\n");
+        console.warn("\nROTATE LOCAL\n");
         this.object.pp_resetRotationLocal();
         this.object.pp_rotateLocal([20, 0, 0]);
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
@@ -322,7 +322,7 @@ WL.registerComponent('test-prototype', {
         this.object.pp_rotateLocalQuat([-0.4215, -0.7461, 0.0695, 0.5108]);
         this.consoleWarnFixed(this.object.pp_getRotationLocalQuat());
 
-        console.warn("\ROTATE OBJECT\n");
+        console.warn("\nROTATE OBJECT\n");
         this.object.pp_resetRotationLocal();
         this.object.pp_rotateObject([20, 0, 0]);
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
@@ -355,7 +355,61 @@ WL.registerComponent('test-prototype', {
         this.object.pp_rotateObjectQuat([-0.4215, -0.7461, 0.0695, 0.5108]);
         this.consoleWarnFixed(this.object.pp_getRotationWorldQuat());
 
-        console.warn("\SCALE OBJECT\n");
+        console.warn("\nROTATE AXIS\n");
+        this.object.pp_resetRotation();
+        this.object.pp_rotateObject([20, 0, 0]);
+        this.consoleWarnFixed(this.object.pp_getRotation());
+        this.object.pp_rotateAxis([1, 0, 0], 20);
+        this.consoleWarnFixed(this.object.pp_getRotation());
+        this.object.pp_rotateAxisDegrees([1, 0, 0], 10);
+        this.consoleWarnFixed(this.object.pp_getRotation());
+        this.object.pp_rotateAxisRadians([1, 0, 0], PP.MathUtils.toRadians(10));
+        this.consoleWarnFixed(this.object.pp_getRotation());
+
+        console.warn("\nROTATE WORLD AXIS\n");
+        this.object.pp_resetRotationWorld();
+        this.object.pp_rotateWorld([-20, 0, 0]);
+        this.consoleWarnFixed(this.object.pp_getRotationWorld());
+        this.object.pp_rotateAxisWorld([1, 0, 0], -20);
+        this.consoleWarnFixed(this.object.pp_getRotationWorld());
+        this.object.pp_rotateAxisWorldDegrees([1, 0, 0], 10);
+        this.consoleWarnFixed(this.object.pp_getRotationWorld());
+        this.object.pp_rotateAxisWorldRadians([1, 0, 0], PP.MathUtils.toRadians(10));
+        this.consoleWarnFixed(this.object.pp_getRotationWorld());
+
+        console.warn("\nROTATE LOCAL AXIS\n");
+        this.object.pp_resetRotationLocal();
+        this.object.pp_rotateLocal([-20, 0, 0]);
+        this.consoleWarnFixed(this.object.pp_getRotationLocal());
+        this.object.pp_rotateAxisLocal([1, 0, 0], -20);
+        this.consoleWarnFixed(this.object.pp_getRotationLocal());
+        this.object.pp_rotateAxisLocalDegrees([1, 0, 0], 10);
+        this.consoleWarnFixed(this.object.pp_getRotationLocal());
+        this.object.pp_rotateAxisLocalRadians([1, 0, 0], PP.MathUtils.toRadians(10));
+        this.consoleWarnFixed(this.object.pp_getRotationLocal());
+
+        console.warn("\nROTATE OBJECT AXIS\n");
+        this.object.pp_resetRotationWorld();
+        this.object.pp_rotateWorld([-20, 0, 0]);
+        this.consoleWarnFixed(this.object.pp_getRotationWorld());
+        this.object.pp_rotateAxisObject([1, 0, 0], -20);
+        this.consoleWarnFixed(this.object.pp_getRotationWorld());
+        this.object.pp_rotateAxisObjectDegrees([1, 0, 0], 10);
+        this.consoleWarnFixed(this.object.pp_getRotationWorld());
+        this.object.pp_rotateAxisObjectRadians([1, 0, 0], PP.MathUtils.toRadians(10));
+        this.consoleWarnFixed(this.object.pp_getRotationWorld());
+
+        this.object.pp_resetRotationLocal();
+        this.object.pp_rotateLocal([-20, 0, 0]);
+        this.consoleWarnFixed(this.object.pp_getRotationLocal());
+        this.object.pp_rotateAxisObject([1, 0, 0], -20);
+        this.consoleWarnFixed(this.object.pp_getRotationLocal());
+        this.object.pp_rotateAxisObjectDegrees([1, 0, 0], 10);
+        this.consoleWarnFixed(this.object.pp_getRotationLocal());
+        this.object.pp_rotateAxisObjectRadians([1, 0, 0], PP.MathUtils.toRadians(10));
+        this.consoleWarnFixed(this.object.pp_getRotationLocal());
+
+        console.warn("\nSCALE OBJECT\n");
         this.object.pp_resetScaleWorld();
         this.object.pp_scaleObject([4, 2, 3]);
         this.consoleWarnFixed(this.object.pp_getScaleWorld());
