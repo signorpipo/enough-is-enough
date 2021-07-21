@@ -120,13 +120,11 @@ WL.Object.prototype.pp_getScale = function (scale) {
 
 WL.Object.prototype.pp_getScaleWorld = function (scale = glMatrix.vec3.create()) {
     glMatrix.vec3.copy(scale, this.scalingWorld);
-    glMatrix.vec3.scale(scale, scale, 2);
     return scale;
 };
 
 WL.Object.prototype.pp_getScaleLocal = function (scale = glMatrix.vec3.create()) {
     glMatrix.vec3.copy(scale, this.scalingLocal);
-    glMatrix.vec3.scale(scale, scale, 2);
     return scale;
 };
 
@@ -320,7 +318,7 @@ WL.Object.prototype.pp_setRotationWorld = function (rotation) {
     this.pp_setRotationWorldDegrees(rotation);
 };
 
-WL.Object.prototype.pp_setRotationWorldDegrees = function (rotation) {
+WL.Object.prototype.pp_setRotationWorldDegrees = function () {
     let quat = glMatrix.quat.create();
     return function (rotation) {
         this._pp_degreesToQuaternion(rotation, quat);
@@ -346,11 +344,15 @@ WL.Object.prototype.pp_setRotationWorldMatrix = function () {
     };
 }();
 
-WL.Object.prototype.pp_setRotationWorldQuat = function (rotation) {
-    let transformWorld = this.transformWorld;
-    glMatrix.quat.copy(transformWorld, rotation);
-    this.pp_setTransformWorldQuat(transformWorld);
-};
+WL.Object.prototype.pp_setRotationWorldQuat = function () {
+    let position = glMatrix.vec3.create();
+    let transform = glMatrix.quat2.create();
+    return function (rotation) {
+        this.pp_getPositionWorld(position);
+        glMatrix.quat2.fromRotationTranslation(transform, rotation, position);
+        this.pp_setTransformWorldQuat(transform);
+    };
+}();
 
 //Rotation Local
 
@@ -384,11 +386,15 @@ WL.Object.prototype.pp_setRotationLocalMatrix = function () {
     };
 }();
 
-WL.Object.prototype.pp_setRotationLocalQuat = function (rotation) {
-    let transformLocal = this.transformLocal;
-    glMatrix.quat.copy(transformLocal, rotation);
-    this.pp_setTransformLocalQuat(transformLocal);
-};
+WL.Object.prototype.pp_setRotationLocalQuat = function () {
+    let position = glMatrix.vec3.create();
+    let transform = glMatrix.quat2.create();
+    return function (rotation) {
+        this.pp_getPositionLocal(position);
+        glMatrix.quat2.fromRotationTranslation(transform, rotation, position);
+        this.pp_setTransformLocalQuat(transform);
+    };
+}();
 
 //Scale
 
@@ -397,22 +403,17 @@ WL.Object.prototype.pp_setScale = function (scale) {
 };
 
 WL.Object.prototype.pp_setScaleWorld = function () {
-    let halfScale = glMatrix.vec3.create();
+    let inverseScale = glMatrix.vec3.create();
     return function (scale) {
-        glMatrix.vec3.scale(halfScale, scale, 0.5);
-        glMatrix.vec3.divide(halfScale, halfScale, this.scalingWorld);
-        this.scale(halfScale);
+        glMatrix.vec3.divide(inverseScale, scale, this.scalingWorld);
+        this.scale(inverseScale);
     };
 }();
 
-WL.Object.prototype.pp_setScaleLocal = function () {
-    let halfScale = glMatrix.vec3.create();
-    return function (scale) {
-        glMatrix.vec3.scale(halfScale, scale, 0.5);
-        this.resetScaling();
-        this.scale(halfScale);
-    };
-}();
+WL.Object.prototype.pp_setScaleLocal = function (scale) {
+    this.resetScaling();
+    this.scale(scale);
+};
 
 //Transform
 
@@ -660,10 +661,10 @@ WL.Object.prototype.pp_rotateWorldQuat = function () {
     let currentRotationQuat = glMatrix.quat.create();
     return function (rotation) {
         this.pp_getRotationWorldQuat(currentRotationQuat);
-        glMatrix.quat.mul(rotation, rotation, currentRotationQuat);
-        glMatrix.quat.normalize(rotation, rotation);
+        glMatrix.quat.mul(currentRotationQuat, rotation, currentRotationQuat);
+        glMatrix.quat.normalize(currentRotationQuat, currentRotationQuat);
         this.pp_getPositionWorld(position);
-        this.pp_setRotationWorldQuat(rotation);
+        this.pp_setRotationWorldQuat(currentRotationQuat);
         this.pp_setPositionWorld(position);
     };
 }();
@@ -706,10 +707,10 @@ WL.Object.prototype.pp_rotateLocalQuat = function () {
     let currentRotationQuat = glMatrix.quat.create();
     return function (rotation) {
         this.pp_getRotationLocalQuat(currentRotationQuat);
-        glMatrix.quat.mul(rotation, rotation, currentRotationQuat);
-        glMatrix.quat.normalize(rotation, rotation);
+        glMatrix.quat.mul(currentRotationQuat, rotation, currentRotationQuat);
+        glMatrix.quat.normalize(currentRotationQuat, currentRotationQuat);
         this.pp_getPositionLocal(position);
-        this.pp_setRotationLocalQuat(rotation);
+        this.pp_setRotationLocalQuat(currentRotationQuat);
         this.pp_setPositionLocal(position);
     };
 }();
@@ -867,6 +868,110 @@ WL.Object.prototype.pp_setHierarchyActive = function (active) {
     for (let child of this.children) {
         child.pp_setHierarchyActive(active);
     }
+};
+
+//Transform Vector Object World
+
+WL.Object.prototype.pp_transformPositionObjectToWorld = function () {
+    let matrix = glMatrix.mat4.create();
+    return function (position, resultPosition = glMatrix.vec3.create()) {
+        this.pp_getTransformWorldMatrix(matrix);
+        glMatrix.vec3.transformMat4(resultPosition, position, matrix);
+        return resultPosition;
+    };
+}();
+
+WL.Object.prototype.pp_transformDirectionObjectToWorld = function () {
+    let rotation = glMatrix.quat.create();
+    return function (direction, resultDirection = glMatrix.vec3.create()) {
+        this.pp_getRotationWorldQuat(rotation);
+        glMatrix.vec3.transformQuat(resultDirection, direction, rotation);
+        return resultDirection;
+    };
+}();
+
+WL.Object.prototype.pp_transformPositionWorldToObject = function () {
+    let matrix = glMatrix.mat4.create();
+    return function (position, resultPosition = glMatrix.vec3.create()) {
+        this.pp_getTransformWorldMatrix(matrix);
+        glMatrix.mat4.invert(matrix, matrix);
+        glMatrix.vec3.transformMat4(resultPosition, position, matrix);
+        return resultPosition;
+    };
+}();
+
+WL.Object.prototype.pp_transformDirectionWorldToObject = function () {
+    let rotation = glMatrix.quat.create();
+    return function (direction, resultDirection = glMatrix.vec3.create()) {
+        this.pp_getRotationWorldQuat(rotation);
+        glMatrix.quat.conjugate(rotation, rotation);
+        glMatrix.vec3.transformQuat(resultDirection, direction, rotation);
+        return resultDirection;
+    };
+}();
+
+//Transform Vector Local World
+
+WL.Object.prototype.pp_transformPositionLocalToWorld = function (position, resultPosition = glMatrix.vec3.create()) {
+    if (this.pp_getParent()) {
+        this.pp_getParent().pp_transformPositionObjectToWorld(position, resultPosition);
+    } else {
+        glMatrix.vec3.copy(resultPosition, position);
+    }
+    return resultPosition;
+};
+
+WL.Object.prototype.pp_transformDirectionLocalToWorld = function (direction, resultDirection = glMatrix.vec3.create()) {
+    if (this.pp_getParent()) {
+        this.pp_getParent().pp_transformDirectionObjectToWorld(direction, resultDirection);
+    } else {
+        glMatrix.vec3.copy(resultDirection, direction);
+    }
+    return resultDirection;
+};
+
+WL.Object.prototype.pp_transformPositionWorldToLocal = function (position, resultPosition = glMatrix.vec3.create()) {
+    if (this.pp_getParent()) {
+        this.pp_getParent().pp_transformPositionWorldToObject(position, resultPosition);
+    } else {
+        glMatrix.vec3.copy(resultPosition, position);
+    }
+    return resultPosition;
+};
+
+WL.Object.prototype.pp_transformDirectionWorldToLocal = function (direction, resultDirection = glMatrix.vec3.create()) {
+    if (this.pp_getParent()) {
+        this.pp_getParent().pp_transformDirectionWorldToObject(direction, resultDirection);
+    } else {
+        glMatrix.vec3.copy(resultDirection, direction);
+    }
+    return resultDirection;
+};
+
+//Transform Vector Local Object
+
+WL.Object.prototype.pp_transformPositionObjectToLocal = function (position, resultPosition = glMatrix.vec3.create()) {
+    this.pp_transformPositionObjectToWorld(position, resultPosition);
+    this.pp_transformPositionWorldToLocal(resultPosition, resultPosition);
+    return resultPosition;
+};
+
+WL.Object.prototype.pp_transformDirectionObjectToLocal = function (direction, resultDirection = glMatrix.vec3.create()) {
+    this.pp_transformDirectionObjectToWorld(direction, resultDirection);
+    this.pp_transformDirectionWorldToLocal(resultDirection, resultDirection);
+    return resultDirection;
+};
+
+WL.Object.prototype.pp_transformPositionLocalToObject = function (position, resultPosition = glMatrix.vec3.create()) {
+    this.pp_transformPositionLocalToWorld(position, resultPosition);
+    this.pp_transformPositionWorldToObject(resultPosition, resultPosition);
+    return resultPosition;
+};
+
+WL.Object.prototype.pp_transformDirectionLocalToObject = function (direction, resultDirection = glMatrix.vec3.create()) {
+    this.pp_transformDirectionLocalToWorld(direction, resultDirection);
+    this.pp_transformDirectionWorldToObject(resultDirection, resultDirection);
+    return resultDirection;
 };
 
 //Utils

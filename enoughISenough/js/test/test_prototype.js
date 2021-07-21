@@ -1,7 +1,7 @@
 WL.registerComponent('test-prototype', {
 }, {
     init: function () {
-        this._myCounter = 1;
+        this._myCounter = 3;
     },
     start: function () {
     },
@@ -14,6 +14,12 @@ WL.registerComponent('test-prototype', {
         }
     },
     test() {
+        let initParentTransform = [2.7510, -0.2407, -1.1722, 0.0000, 0.1662, 0.9674, 0.1914, 0.0000, 0.7252, -0.4809, 1.8008, 0.0000, 1.0000, -0.0000, -0.0000, 1.0000];
+        let initTransform = [5.5891, 0.7359, -2.0544, 0.0000, 0.3699, 1.3017, 1.4727, 0.0000, 0.6263, -1.4985, 1.1672, 0.0000, 1.3324, 1.9347, 0.3828, 1.0000];
+        this.object.pp_getParent().pp_setTransformWorldMatrix(initParentTransform);
+        this.object.pp_setTransformWorldMatrix(initTransform);
+        this.object.pp_getParent().pp_setParent(null);
+
         console.warn("TEST START\n");
 
         console.warn("\nPOSITION\n");
@@ -128,7 +134,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getUp());
         this.consoleWarnFixed(this.object.pp_getForward());
 
-        console.warn("\LOOK WORLD\n");
+        console.warn("\LOOK AT WORLD\n");
         this.object.pp_lookAtWorld([0, 0, 1], [0, 1, 0]);
         this.object.pp_lookAtWorld([0, -1, 0]);
         this.consoleWarnFixed(this.object.pp_getRight());
@@ -154,7 +160,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getForward());
         this.consoleWarnFixed(this.object.pp_getPosition());
 
-        console.warn("\LOOK LOCAL\n");
+        console.warn("\LOOK AT LOCAL\n");
         this.object.pp_lookAtLocal([0, 0, 1], [0, 1, 0]);
         this.object.pp_lookAtLocal([0, -1, 0]);
         this.consoleWarnFixed(this.object.pp_getRightLocal());
@@ -178,7 +184,6 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getRightLocal());
         this.consoleWarnFixed(this.object.pp_getUpLocal());
         this.consoleWarnFixed(this.object.pp_getForwardLocal());
-
         this.consoleWarnFixed(this.object.pp_getPosition());
 
         console.warn("\nPARENT\n");
@@ -239,7 +244,6 @@ WL.registerComponent('test-prototype', {
         this.object.pp_resetTransformLocal();
         this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorld());
         this.consoleWarnMatrix4Fixed(this.object.pp_getTransformLocal());
-
 
         console.warn("\TRANSLATE\n");
         this.object.pp_resetPositionWorld();
@@ -351,6 +355,78 @@ WL.registerComponent('test-prototype', {
         this.object.pp_rotateObjectQuat([-0.4215, -0.7461, 0.0695, 0.5108]);
         this.consoleWarnFixed(this.object.pp_getRotationWorldQuat());
 
+        //Reset Transform To Init
+        this.object.pp_getParent().pp_setTransformMatrix(initParentTransform);
+        this.object.pp_setTransformMatrix(initTransform);
+
+        console.warn("\nTRANSFORM POSITION OBJECT WORLD\n");
+        this.consoleWarnFixed(this.object.pp_getPositionWorld());
+        this.consoleWarnFixed(this.object.pp_transformPositionObjectToWorld([0, 0, 0]));
+        this.consoleWarnFixed(this.object.pp_transformPositionObjectToWorld([0, 1, 0]));
+        this.consoleWarnFixed(this.object.pp_transformPositionWorldToObject([1.7023, 3.2364, 1.8554]));
+        this.consoleWarnFixed(this.object.pp_transformPositionWorldToObject(this.object.pp_transformPositionObjectToWorld([0, 1, 0])));
+
+        console.warn("\nTRANSFORM POSITION LOCAL WORLD\n");
+        this.consoleWarnFixed(this.object.pp_getParent().pp_getPositionWorld());
+        this.consoleWarnFixed(this.object.pp_transformPositionLocalToWorld([0, 0, 0]));
+        this.consoleWarnFixed(this.object.pp_transformPositionLocalToWorld([2, 1, 0]));
+        this.consoleWarnFixed(this.object.pp_transformPositionWorldToLocal([6.6682, 0.486, -2.153]));
+        this.consoleWarnFixed(this.object.pp_transformPositionWorldToLocal(this.object.pp_transformPositionLocalToWorld([0, 1, 2])));
+
+        console.warn("\nTRANSFORM POSITION LOCAL OBJECT\n");
+        this.consoleWarnFixed(this.object.pp_getPositionLocal());
+        this.consoleWarnFixed(this.object.pp_transformPositionObjectToLocal([0, 0, 0]));
+        this.consoleWarnFixed(this.object.pp_transformPositionObjectToLocal([0, 2, 3]));
+        this.consoleWarnFixed(this.object.pp_transformPositionLocalToObject([0.0114, 1.839, 3.605]));
+        this.consoleWarnFixed(this.object.pp_transformPositionLocalToObject(this.object.pp_transformPositionObjectToLocal([1, 3, -20])));
+
+        console.warn("\nTRANSFORM POSITION CHAIN\n");
+        this.consoleWarnFixed(this.object.pp_transformPositionObjectToWorld(this.object.pp_transformPositionLocalToObject(this.object.pp_transformPositionWorldToLocal([1, 3, -20]))));
+        this.consoleWarnFixed(this.object.pp_transformPositionWorldToObject(this.object.pp_transformPositionLocalToWorld(this.object.pp_transformPositionObjectToLocal([1, 3, -20]))));
+
+        let tempDirection = [];
+        console.warn("\nTRANSFORM DIRECTION OBJECT WORLD\n");
+        glMatrix.vec3.add(tempDirection, this.object.pp_getForwardWorld(), this.object.pp_getRightWorld());
+        this.consoleWarnFixed(this.object.pp_getForwardWorld());
+        this.consoleWarnFixed(tempDirection);
+        this.consoleWarnFixed(this.object.pp_transformDirectionObjectToWorld([0, 0, 1]));
+        this.consoleWarnFixed(this.object.pp_transformDirectionObjectToWorld([0, 0, 2]));
+        this.consoleWarnFixed(this.object.pp_transformDirectionObjectToWorld([0, 0, 3]));
+        this.consoleWarnFixed(this.object.pp_transformDirectionObjectToWorld([-1, 0, 1]));
+        this.consoleWarnFixed(this.object.pp_transformDirectionWorldToObject([0.3132, -0.7492, 0.5836]));
+        this.consoleWarnFixed(this.object.pp_transformDirectionWorldToObject([0.9395, -2.2477, 1.7508]));
+        this.consoleWarnFixed(this.object.pp_transformDirectionWorldToObject(this.object.pp_getForwardWorld()));
+        this.consoleWarnFixed(this.object.pp_transformDirectionWorldToObject(this.object.pp_transformDirectionObjectToWorld([1, 2, 0])));
+
+        console.warn("\nTRANSFORM DIRECTION LOCAL WORLD\n");
+        glMatrix.vec3.add(tempDirection, this.object.pp_getParent().pp_getForwardWorld(), this.object.pp_getParent().pp_getRightWorld());
+        this.consoleWarnFixed(this.object.pp_getParent().pp_getForwardWorld());
+        this.consoleWarnFixed(tempDirection);
+        this.consoleWarnFixed(this.object.pp_transformDirectionLocalToWorld([0, 0, 1]));
+        this.consoleWarnFixed(this.object.pp_transformDirectionLocalToWorld([0, 0, 2]));
+        this.consoleWarnFixed(this.object.pp_transformDirectionLocalToWorld([0, 0, 3]));
+        this.consoleWarnFixed(this.object.pp_transformDirectionLocalToWorld([-1, 0, 1]));
+        this.consoleWarnFixed(this.object.pp_transformDirectionWorldToLocal([0.3626, -0.2404, 0.9004]));
+        this.consoleWarnFixed(this.object.pp_transformDirectionWorldToLocal([1.0878, -0.7213, 2.7012]));
+        this.consoleWarnFixed(this.object.pp_transformDirectionWorldToLocal(this.object.pp_getParent().pp_getForwardWorld()));
+        this.consoleWarnFixed(this.object.pp_transformDirectionWorldToLocal(this.object.pp_transformDirectionLocalToWorld([1, 2, 0])));
+
+        console.warn("\nTRANSFORM DIRECTION OBJECT LOCAL\n");
+        glMatrix.vec3.add(tempDirection, this.object.pp_getForwardLocal(), this.object.pp_getRightLocal());
+        this.consoleWarnFixed(this.object.pp_getForwardLocal());
+        this.consoleWarnFixed(tempDirection);
+        this.consoleWarnFixed(this.object.pp_transformDirectionObjectToLocal([0, 0, 1]));
+        this.consoleWarnFixed(this.object.pp_transformDirectionObjectToLocal([0, 0, 2]));
+        this.consoleWarnFixed(this.object.pp_transformDirectionObjectToLocal([0, 0, 3]));
+        this.consoleWarnFixed(this.object.pp_transformDirectionObjectToLocal([-1, 0, 1]));
+        this.consoleWarnFixed(this.object.pp_transformDirectionLocalToObject([0.1193, -0.5610, 0.8192]));
+        this.consoleWarnFixed(this.object.pp_transformDirectionLocalToObject([0.3578, -1.6831, 2.4575]));
+        this.consoleWarnFixed(this.object.pp_transformDirectionLocalToObject(this.object.pp_getForwardLocal()));
+        this.consoleWarnFixed(this.object.pp_transformDirectionLocalToObject(this.object.pp_transformDirectionObjectToLocal([1, 2, 0])));
+
+        console.warn("\nTRANSFORM DIRECTION CHAIN\n");
+        this.consoleWarnFixed(this.object.pp_transformDirectionObjectToWorld(this.object.pp_transformDirectionLocalToObject(this.object.pp_transformDirectionWorldToLocal([1, 3, -20]))));
+        this.consoleWarnFixed(this.object.pp_transformDirectionWorldToObject(this.object.pp_transformDirectionLocalToWorld(this.object.pp_transformDirectionObjectToLocal([1, 3, -20]))));
 
         console.warn("\nMATRIX STABILITY\n");
         this.object.pp_setTransformWorldMatrix([0.9706, 4.1994, 4.1739, 0.0000, 1.5245, 3.1750, -3.5490, 0.0000, -5.6314, 1.9616, -0.6641, 0.0000, -13.8437, -2.7853, -36.3777, 1.0000]);
@@ -373,9 +449,6 @@ WL.registerComponent('test-prototype', {
         console.warn(initialPos);
 
         console.warn("\nTEST END");
-
-
-
     },
     consoleWarnFixed(vector) {
         let result = [];
