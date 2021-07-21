@@ -355,6 +355,19 @@ WL.registerComponent('test-prototype', {
         this.object.pp_rotateObjectQuat([-0.4215, -0.7461, 0.0695, 0.5108]);
         this.consoleWarnFixed(this.object.pp_getRotationWorldQuat());
 
+        console.warn("\SCALE OBJECT\n");
+        this.object.pp_resetScaleWorld();
+        this.object.pp_scaleObject([4, 2, 3]);
+        this.consoleWarnFixed(this.object.pp_getScaleWorld());
+        this.object.pp_scaleObject(3);
+        this.consoleWarnFixed(this.object.pp_getScaleWorld());
+
+        this.object.pp_resetScaleLocal();
+        this.object.pp_scaleObject([4, 2, 3]);
+        this.consoleWarnFixed(this.object.pp_getScaleLocal());
+        this.object.pp_scaleObject(3);
+        this.consoleWarnFixed(this.object.pp_getScaleLocal());
+
         //Reset Transform To Init
         this.object.pp_getParent().pp_setTransformMatrix(initParentTransform);
         this.object.pp_setTransformMatrix(initTransform);

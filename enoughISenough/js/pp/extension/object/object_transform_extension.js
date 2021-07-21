@@ -755,13 +755,19 @@ WL.Object.prototype.pp_rotateObjectQuat = function (rotation) {
 //Scale
 
 //For now it does not really make sense in wle to scale in world space or parent space
-WL.Object.prototype.pp_scale = function (scale) {
-    this.pp_scaleObject(scale);
-};
+//so there is no pp_scale default function
 
-WL.Object.prototype.pp_scaleObject = function (scale) {
-    this.scale(scale);
-};
+WL.Object.prototype.pp_scaleObject = function () {
+    let vector = glMatrix.vec3.create();
+    return function (scale) {
+        if (isNaN(scale)) {
+            this.scale(scale);
+        } else {
+            glMatrix.vec3.set(vector, scale, scale, scale);
+            this.scale(vector);
+        }
+    };
+}();
 
 //Look At
 WL.Object.prototype.pp_lookAt = function (direction, up) {
