@@ -110,6 +110,11 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getUpWorld());
         this.consoleWarnFixed(this.object.pp_getUpLocal());
 
+        console.warn("\nLEFT\n");
+        this.consoleWarnFixed(this.object.pp_getLeft());
+        this.consoleWarnFixed(this.object.pp_getLeftWorld());
+        this.consoleWarnFixed(this.object.pp_getLeftLocal());
+
         console.warn("\nRIGHT\n");
         this.consoleWarnFixed(this.object.pp_getRight());
         this.consoleWarnFixed(this.object.pp_getRightWorld());
@@ -269,6 +274,53 @@ WL.registerComponent('test-prototype', {
         this.object.pp_translateObject([0, 1, 0]);
         this.consoleWarnFixed(this.object.pp_getPositionLocal());
         this.object.pp_translateObject([1, 0, 0]);
+        this.consoleWarnFixed(this.object.pp_getPositionLocal());
+
+        this.object.pp_getParent().pp_setTransformMatrix(initParentTransform);
+        this.object.pp_setTransformMatrix(initTransform);
+
+        console.warn("\nTRANSLATE AXIS\n");
+        let translateAxis = [23, 3, -12];
+        let normalizedTranslateAxis = [];
+        glMatrix.vec3.normalize(normalizedTranslateAxis, translateAxis);
+        let length = glMatrix.vec3.length(translateAxis);
+        this.object.pp_resetPosition();
+        this.object.pp_translate(translateAxis);
+        this.consoleWarnFixed(this.object.pp_getPosition());
+        this.object.pp_resetPosition();
+        this.object.pp_translateAxis(normalizedTranslateAxis, length);
+        this.consoleWarnFixed(this.object.pp_getPosition());
+
+        this.object.pp_resetPositionWorld();
+        this.object.pp_translateWorld(translateAxis);
+        this.consoleWarnFixed(this.object.pp_getPositionWorld());
+        this.object.pp_resetPositionWorld();
+        this.object.pp_translateAxisWorld(normalizedTranslateAxis, length);
+        this.consoleWarnFixed(this.object.pp_getPositionWorld());
+
+        this.object.pp_resetPositionLocal();
+        this.object.pp_translateLocal(translateAxis);
+        this.consoleWarnFixed(this.object.pp_getPositionLocal());
+        this.object.pp_resetPositionLocal();
+        this.object.pp_translateAxisLocal(normalizedTranslateAxis, length);
+        this.consoleWarnFixed(this.object.pp_getPositionLocal());
+
+        this.object.pp_resetPositionWorld();
+        this.object.pp_resetRotationWorld();
+        this.object.pp_translateObject(translateAxis);
+        this.consoleWarnFixed(this.object.pp_getPositionWorld());
+        this.object.pp_resetPositionWorld();
+        this.object.pp_resetRotationWorld();
+        this.object.pp_translateAxisObject(normalizedTranslateAxis, length);
+        this.consoleWarnFixed(this.object.pp_getPositionWorld());
+
+        this.object.pp_resetPositionLocal();
+        this.object.pp_resetRotationLocal();
+        this.object.pp_translateObject(translateAxis);
+        this.consoleWarnFixed(this.object.pp_getPositionLocal());
+        this.object.pp_resetPositionLocal();
+        this.object.pp_resetRotationLocal();
+        this.object.pp_translateAxisObject(normalizedTranslateAxis, length);
         this.consoleWarnFixed(this.object.pp_getPositionLocal());
 
         console.warn("\nROTATE\n");

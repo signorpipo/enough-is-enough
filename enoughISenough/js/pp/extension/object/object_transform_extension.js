@@ -205,7 +205,6 @@ WL.Object.prototype.pp_getForwardWorld = function () {
     };
 }();
 
-
 WL.Object.prototype.pp_getForwardLocal = function () {
     let rotation = glMatrix.mat3.create();
     return function (forward = glMatrix.vec3.create()) {
@@ -234,7 +233,6 @@ WL.Object.prototype.pp_getUpWorld = function () {
     };
 }();
 
-
 WL.Object.prototype.pp_getUpLocal = function () {
     let rotation = glMatrix.mat3.create();
     return function (up = glMatrix.vec3.create()) {
@@ -243,6 +241,34 @@ WL.Object.prototype.pp_getUpLocal = function () {
         up[1] = rotation[4];
         up[2] = rotation[5];
         return up;
+    };
+}();
+
+//Left
+
+WL.Object.prototype.pp_getLeft = function (left) {
+    return this.pp_getLeftWorld(left);
+};
+
+WL.Object.prototype.pp_getLeftWorld = function () {
+    let rotation = glMatrix.mat3.create();
+    return function (left = glMatrix.vec3.create()) {
+        this.pp_getRotationWorldMatrix(rotation);
+        left[0] = rotation[0];
+        left[1] = rotation[1];
+        left[2] = rotation[2];
+        return left;
+    };
+}();
+
+WL.Object.prototype.pp_getLeftLocal = function () {
+    let rotation = glMatrix.mat3.create();
+    return function (left = glMatrix.vec3.create()) {
+        this.pp_getRotationLocalMatrix(rotation);
+        left[0] = rotation[0];
+        left[1] = rotation[1];
+        left[2] = rotation[2];
+        return left;
     };
 }();
 
@@ -262,7 +288,6 @@ WL.Object.prototype.pp_getRightWorld = function () {
         return right;
     };
 }();
-
 
 WL.Object.prototype.pp_getRightLocal = function () {
     let rotation = glMatrix.mat3.create();
@@ -580,7 +605,6 @@ WL.Object.prototype.pp_resetTransformLocal = function () {
     this.pp_resetPositionLocal();
 };
 
-
 //TRANSFORMATIONS
 
 //Translate
@@ -600,6 +624,36 @@ WL.Object.prototype.pp_translateLocal = function (translation) {
 WL.Object.prototype.pp_translateObject = function (translation) {
     this.translateObject(translation);
 };
+
+//Translate Axis
+
+WL.Object.prototype.pp_translateAxis = function (direction, amount) {
+    this.pp_translateAxisWorld(direction, amount);
+};
+
+WL.Object.prototype.pp_translateAxisWorld = function () {
+    let translation = glMatrix.vec3.create();
+    return function (direction, amount) {
+        glMatrix.vec3.scale(translation, direction, amount);
+        this.pp_translateWorld(translation);
+    };
+}();
+
+WL.Object.prototype.pp_translateAxisLocal = function () {
+    let translation = glMatrix.vec3.create();
+    return function (direction, amount) {
+        glMatrix.vec3.scale(translation, direction, amount);
+        this.pp_translateLocal(translation);
+    };
+}();
+
+WL.Object.prototype.pp_translateAxisObject = function () {
+    let translation = glMatrix.vec3.create();
+    return function (direction, amount) {
+        glMatrix.vec3.scale(translation, direction, amount);
+        this.pp_translateObject(translation);
+    };
+}();
 
 //Rotate
 
