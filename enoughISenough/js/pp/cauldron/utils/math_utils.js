@@ -110,8 +110,7 @@ PP.MathUtils = {
         return rotatedVector;
     },
     mapToNewInterval(value, originIntervalLeft, originIntervalRight, newIntervalLeft, newIntervalRight) {
-        let newValue = newIntervalLeft + ((newIntervalRight - newIntervalLeft / (originIntervalRight - originIntervalLeft))) * (value - originIntervalLeft);
-
+        let newValue = newIntervalLeft + ((newIntervalRight - newIntervalLeft) / (originIntervalRight - originIntervalLeft)) * (value - originIntervalLeft);
         return newValue;
     }
 };
