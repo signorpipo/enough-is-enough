@@ -461,6 +461,60 @@ WL.registerComponent('test-prototype', {
         this.object.pp_rotateAxisObjectRadians([1, 0, 0], PP.MathUtils.toRadians(10));
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
 
+        console.warn("\nROTATE AROUND\n");
+        this.object.pp_resetRotation();
+        this.object.pp_rotateObject([20, 0, 0]);
+        this.consoleWarnFixed(this.object.pp_getRotation());
+        this.object.pp_rotateAround(this.object.pp_getPosition(), [1, 0, 0], 20);
+        this.consoleWarnFixed(this.object.pp_getRotation());
+        this.object.pp_rotateAroundDegrees(this.object.pp_getPosition(), [1, 0, 0], 10);
+        this.consoleWarnFixed(this.object.pp_getRotation());
+        this.object.pp_rotateAroundRadians(this.object.pp_getParent().pp_getPosition(), [1, 0, 0], PP.MathUtils.toRadians(10));
+        this.consoleWarnFixed(this.object.pp_getRotation());
+
+        console.warn("\nROTATE WORLD AROUND\n");
+        this.object.pp_resetRotationWorld();
+        this.object.pp_rotateWorld([-20, 0, 0]);
+        this.consoleWarnFixed(this.object.pp_getRotationWorld());
+        this.object.pp_rotateAroundWorld(this.object.pp_getParent().pp_getPosition(), [1, 0, 0], -20);
+        this.consoleWarnFixed(this.object.pp_getRotationWorld());
+        this.object.pp_rotateAroundWorldDegrees(this.object.pp_getParent().pp_getPosition(), [1, 0, 0], 10);
+        this.consoleWarnFixed(this.object.pp_getRotationWorld());
+        this.object.pp_rotateAroundWorldRadians(this.object.pp_getParent().pp_getPosition(), [1, 0, 0], PP.MathUtils.toRadians(10));
+        this.consoleWarnFixed(this.object.pp_getRotationWorld());
+
+        console.warn("\nROTATE LOCAL AROUND\n");
+        this.object.pp_resetRotationLocal();
+        this.object.pp_rotateLocal([-20, 0, 0]);
+        this.consoleWarnFixed(this.object.pp_getRotationLocal());
+        this.object.pp_rotateAroundLocal(this.object.pp_getPositionLocal(), [1, 0, 0], -20);
+        this.consoleWarnFixed(this.object.pp_getRotationLocal());
+        this.object.pp_rotateAroundLocalDegrees(this.object.pp_getPositionLocal(), [1, 0, 0], 10);
+        this.consoleWarnFixed(this.object.pp_getRotationLocal());
+        this.object.pp_rotateAroundLocalRadians([0, 0, 0], [1, 0, 0], PP.MathUtils.toRadians(10));
+        this.consoleWarnFixed(this.object.pp_getRotationLocal());
+
+        console.warn("\nROTATE OBJECT AROUND\n");
+        this.object.pp_resetRotationWorld();
+        this.object.pp_rotateWorld([-20, 0, 0]);
+        this.consoleWarnFixed(this.object.pp_getRotationWorld());
+        this.object.pp_rotateAroundObject([0, 1, 2], [1, 0, 0], -20);
+        this.consoleWarnFixed(this.object.pp_getRotationWorld());
+        this.object.pp_rotateAroundObjectDegrees([0, 1, 2], [1, 0, 0], 10);
+        this.consoleWarnFixed(this.object.pp_getRotationWorld());
+        this.object.pp_rotateAroundObjectRadians([0, 1, 2], [1, 0, 0], PP.MathUtils.toRadians(10));
+        this.consoleWarnFixed(this.object.pp_getRotationWorld());
+
+        this.object.pp_resetRotationLocal();
+        this.object.pp_rotateLocal([-20, 0, 0]);
+        this.consoleWarnFixed(this.object.pp_getRotationLocal());
+        this.object.pp_rotateAroundObject([0, 1, 2], [1, 0, 0], -20);
+        this.consoleWarnFixed(this.object.pp_getRotationLocal());
+        this.object.pp_rotateAroundObjectDegrees([0, 1, 2], [1, 0, 0], 10);
+        this.consoleWarnFixed(this.object.pp_getRotationLocal());
+        this.object.pp_rotateAroundObjectRadians([0, 1, 2], [1, 0, 0], PP.MathUtils.toRadians(10));
+        this.consoleWarnFixed(this.object.pp_getRotationLocal());
+
         console.warn("\nSCALE OBJECT\n");
         this.object.pp_resetScaleWorld();
         this.object.pp_scaleObject([4, 2, 3]);
@@ -557,15 +611,51 @@ WL.registerComponent('test-prototype', {
         initialMatrix = initialMatrix.map(a => a < 0.00000002 ? 0 : a);
         console.warn(initialMatrix);
 
+        this.object.pp_getParent().pp_setTransformMatrix(initParentTransform);
+        this.object.pp_setTransformMatrix(initTransform);
+
         console.warn("\QUAT TRANSFORM POSITION STABILITY\n");
-        this.object.pp_setTransformWorldQuat([0.5354, 0.5714, 0.1685, -0.5986, 5.3222, -4.4403, 6.6770, 2.4017]);
-        let initialPos = this.object.pp_getPositionWorld();
-        for (let i = 0; i < 100; i++) {
-            this.object.pp_setTransformWorldQuat(this.object.pp_getTransformWorldQuat());
+        {
+            let transform = [0.5354, 0.5714, 0.1685, -0.5986, 5.3222, -4.4403, 6.6770, 2.4017];
+            let transformParent = [0.1110, 0.1936, -0.0633, 0.9727, 0.4864, 0.0317, 0.0968, -0.0555];
+            glMatrix.quat2.normalize(transform, transform);
+            glMatrix.quat2.normalize(transformParent, transformParent);
+            this.object.parent.pp_setTransformWorldQuat(transformParent);
+            this.object.pp_setTransformWorldQuat(transform);
+            let initialPos = this.object.pp_getPositionWorld();
+            for (let i = 0; i < 100; i++) {
+                this.object.pp_setTransformWorldQuat(this.object.pp_getTransformWorldQuat());
+            }
+            glMatrix.vec3.sub(initialPos, this.object.pp_getPositionWorld(), initialPos);
+            initialPos = initialPos.map(a => a < 0.00000002 ? 0 : a);
+            console.warn(initialPos);
         }
-        glMatrix.vec3.sub(initialPos, this.object.pp_getPositionWorld(), initialPos);
-        initialPos = initialPos.map(a => a < 0.00000002 ? 0 : a);
-        console.warn(initialPos);
+
+        console.warn("\QUAT TRANSFORM POSITION STABILITY WLE\n");
+        {
+            this.object.scalingWorld = [5, 1, 2];
+            this.object.parent.scalingWorld = [2, 5, 3];
+            //this.object.parent.scalingWorld = [1, 1, 1];
+            let transform = [0.5354, 0.5714, 0.1685, -0.5986, 5.3222, -4.4403, 6.6770, 2.4017];
+            let transformParent = [0.1110, 0.1936, -0.0633, 0.9727, 0.4864, 0.0317, 0.0968, -0.0555];
+            glMatrix.quat2.normalize(transform, transform);
+            glMatrix.quat2.normalize(transformParent, transformParent);
+            this.object.parent.transformWorld = transformParent;
+            this.object.transformWorld = transform;
+            this.object.parent.setDirty();
+            this.object.setDirty();
+            let initialPos = [];
+            this.object.getTranslationWorld(initialPos);
+            for (let i = 0; i < 100; i++) {
+                this.object.transformWorld = this.object.transformWorld;
+                this.object.setDirty();
+            }
+            let finalPos = [];
+            this.object.getTranslationWorld(finalPos);
+            glMatrix.vec3.sub(initialPos, finalPos, initialPos);
+            initialPos = initialPos.map(a => a < 0.00000002 ? 0 : a);
+            console.warn(initialPos);
+        }
 
         console.warn("\nTEST END");
     },

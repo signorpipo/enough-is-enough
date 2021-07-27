@@ -11,15 +11,16 @@ WL.registerComponent('test-rotate-object', {
     update: function (dt) {
         let quat = this.object._pp_degreesToQuaternion([this._myX * dt, this._myY * dt, this._myZ * dt]);
         if (!this._myObjectRotate) {
-            this.object.pp_rotateWorldDegrees([this._myX * dt, this._myY * dt, this._myZ * dt]);
+            this.object.pp_rotateLocalDegrees([this._myX * dt, this._myY * dt, this._myZ * dt]);
             //this.object.pp_rotateAxisWorldDegrees(this.object.pp_getRightWorld(), -this._myX * dt);
         } else {
             let axis = [];
             glMatrix.vec3.copy(axis, [this._myX * dt, this._myY * dt, this._myZ * dt]);
             glMatrix.vec3.normalize(axis, axis);
-            this.object.pp_transformDirectionWorldToObject(axis, axis);
-            this.object.pp_rotateAxisObjectDegrees(axis, this._myX * dt);
+            //this.object.pp_transformDirectionWorldToObject(axis, axis);
+            //this.object.pp_rotateAxisObjectDegrees(axis, this._myX * dt);
             //this.object.pp_rotateObjectDegrees([this._myX * dt, this._myY * dt, this._myZ * dt]);
+            this.object.pp_rotateAroundLocalDegrees([0, 0, 0], axis, this._myX * dt);
         }
     }
 });
