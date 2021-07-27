@@ -920,8 +920,8 @@ WL.Object.prototype.pp_rotateAroundLocalRadians = function () {
     let convertedPosition = glMatrix.vec3.create();
     let convertedAxis = glMatrix.vec3.create();
     return function (position, axis, angle) {
-        this.pp_transformPositionLocalToWorld(position, convertedPosition);
-        this.pp_transformDirectionLocalToWorld(axis, convertedAxis);
+        this.pp_convertPositionLocalToWorld(position, convertedPosition);
+        this.pp_convertDirectionLocalToWorld(axis, convertedAxis);
         this.pp_rotateAroundWorldRadians(convertedPosition, convertedAxis, angle);
     };
 }();
@@ -940,8 +940,8 @@ WL.Object.prototype.pp_rotateAroundObjectRadians = function () {
     let convertedPosition = glMatrix.vec3.create();
     let convertedAxis = glMatrix.vec3.create();
     return function (position, axis, angle) {
-        this.pp_transformPositionObjectToWorld(position, convertedPosition);
-        this.pp_transformDirectionObjectToWorld(axis, convertedAxis);
+        this.pp_convertPositionObjectToWorld(position, convertedPosition);
+        this.pp_convertDirectionObjectToWorld(axis, convertedAxis);
         this.pp_rotateAroundWorldRadians(convertedPosition, convertedAxis, angle);
     };
 }();
@@ -1068,7 +1068,7 @@ WL.Object.prototype.pp_getParent = function () {
 
 //Transform Vector Object World
 
-WL.Object.prototype.pp_transformPositionObjectToWorld = function () {
+WL.Object.prototype.pp_convertPositionObjectToWorld = function () {
     let matrix = glMatrix.mat4.create();
     return function (position, resultPosition = glMatrix.vec3.create()) {
         this.pp_getTransformWorldMatrix(matrix);
@@ -1077,7 +1077,7 @@ WL.Object.prototype.pp_transformPositionObjectToWorld = function () {
     };
 }();
 
-WL.Object.prototype.pp_transformDirectionObjectToWorld = function () {
+WL.Object.prototype.pp_convertDirectionObjectToWorld = function () {
     let rotation = glMatrix.quat.create();
     return function (direction, resultDirection = glMatrix.vec3.create()) {
         this.pp_getRotationWorldQuat(rotation);
@@ -1086,7 +1086,7 @@ WL.Object.prototype.pp_transformDirectionObjectToWorld = function () {
     };
 }();
 
-WL.Object.prototype.pp_transformPositionWorldToObject = function () {
+WL.Object.prototype.pp_convertPositionWorldToObject = function () {
     let matrix = glMatrix.mat4.create();
     return function (position, resultPosition = glMatrix.vec3.create()) {
         this.pp_getTransformWorldMatrix(matrix);
@@ -1096,7 +1096,7 @@ WL.Object.prototype.pp_transformPositionWorldToObject = function () {
     };
 }();
 
-WL.Object.prototype.pp_transformDirectionWorldToObject = function () {
+WL.Object.prototype.pp_convertDirectionWorldToObject = function () {
     let rotation = glMatrix.quat.create();
     return function (direction, resultDirection = glMatrix.vec3.create()) {
         this.pp_getRotationWorldQuat(rotation);
@@ -1108,36 +1108,36 @@ WL.Object.prototype.pp_transformDirectionWorldToObject = function () {
 
 //Transform Vector Local World
 
-WL.Object.prototype.pp_transformPositionLocalToWorld = function (position, resultPosition = glMatrix.vec3.create()) {
+WL.Object.prototype.pp_convertPositionLocalToWorld = function (position, resultPosition = glMatrix.vec3.create()) {
     if (this.pp_getParent()) {
-        this.pp_getParent().pp_transformPositionObjectToWorld(position, resultPosition);
+        this.pp_getParent().pp_convertPositionObjectToWorld(position, resultPosition);
     } else {
         glMatrix.vec3.copy(resultPosition, position);
     }
     return resultPosition;
 };
 
-WL.Object.prototype.pp_transformDirectionLocalToWorld = function (direction, resultDirection = glMatrix.vec3.create()) {
+WL.Object.prototype.pp_convertDirectionLocalToWorld = function (direction, resultDirection = glMatrix.vec3.create()) {
     if (this.pp_getParent()) {
-        this.pp_getParent().pp_transformDirectionObjectToWorld(direction, resultDirection);
+        this.pp_getParent().pp_convertDirectionObjectToWorld(direction, resultDirection);
     } else {
         glMatrix.vec3.copy(resultDirection, direction);
     }
     return resultDirection;
 };
 
-WL.Object.prototype.pp_transformPositionWorldToLocal = function (position, resultPosition = glMatrix.vec3.create()) {
+WL.Object.prototype.pp_convertPositionWorldToLocal = function (position, resultPosition = glMatrix.vec3.create()) {
     if (this.pp_getParent()) {
-        this.pp_getParent().pp_transformPositionWorldToObject(position, resultPosition);
+        this.pp_getParent().pp_convertPositionWorldToObject(position, resultPosition);
     } else {
         glMatrix.vec3.copy(resultPosition, position);
     }
     return resultPosition;
 };
 
-WL.Object.prototype.pp_transformDirectionWorldToLocal = function (direction, resultDirection = glMatrix.vec3.create()) {
+WL.Object.prototype.pp_convertDirectionWorldToLocal = function (direction, resultDirection = glMatrix.vec3.create()) {
     if (this.pp_getParent()) {
-        this.pp_getParent().pp_transformDirectionWorldToObject(direction, resultDirection);
+        this.pp_getParent().pp_convertDirectionWorldToObject(direction, resultDirection);
     } else {
         glMatrix.vec3.copy(resultDirection, direction);
     }
@@ -1146,27 +1146,27 @@ WL.Object.prototype.pp_transformDirectionWorldToLocal = function (direction, res
 
 //Transform Vector Local Object
 
-WL.Object.prototype.pp_transformPositionObjectToLocal = function (position, resultPosition = glMatrix.vec3.create()) {
-    this.pp_transformPositionObjectToWorld(position, resultPosition);
-    this.pp_transformPositionWorldToLocal(resultPosition, resultPosition);
+WL.Object.prototype.pp_convertPositionObjectToLocal = function (position, resultPosition = glMatrix.vec3.create()) {
+    this.pp_convertPositionObjectToWorld(position, resultPosition);
+    this.pp_convertPositionWorldToLocal(resultPosition, resultPosition);
     return resultPosition;
 };
 
-WL.Object.prototype.pp_transformDirectionObjectToLocal = function (direction, resultDirection = glMatrix.vec3.create()) {
-    this.pp_transformDirectionObjectToWorld(direction, resultDirection);
-    this.pp_transformDirectionWorldToLocal(resultDirection, resultDirection);
+WL.Object.prototype.pp_convertDirectionObjectToLocal = function (direction, resultDirection = glMatrix.vec3.create()) {
+    this.pp_convertDirectionObjectToWorld(direction, resultDirection);
+    this.pp_convertDirectionWorldToLocal(resultDirection, resultDirection);
     return resultDirection;
 };
 
-WL.Object.prototype.pp_transformPositionLocalToObject = function (position, resultPosition = glMatrix.vec3.create()) {
-    this.pp_transformPositionLocalToWorld(position, resultPosition);
-    this.pp_transformPositionWorldToObject(resultPosition, resultPosition);
+WL.Object.prototype.pp_convertPositionLocalToObject = function (position, resultPosition = glMatrix.vec3.create()) {
+    this.pp_convertPositionLocalToWorld(position, resultPosition);
+    this.pp_convertPositionWorldToObject(resultPosition, resultPosition);
     return resultPosition;
 };
 
-WL.Object.prototype.pp_transformDirectionLocalToObject = function (direction, resultDirection = glMatrix.vec3.create()) {
-    this.pp_transformDirectionLocalToWorld(direction, resultDirection);
-    this.pp_transformDirectionWorldToObject(resultDirection, resultDirection);
+WL.Object.prototype.pp_convertDirectionLocalToObject = function (direction, resultDirection = glMatrix.vec3.create()) {
+    this.pp_convertDirectionLocalToWorld(direction, resultDirection);
+    this.pp_convertDirectionWorldToObject(resultDirection, resultDirection);
     return resultDirection;
 };
 
