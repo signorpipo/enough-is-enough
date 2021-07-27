@@ -667,6 +667,13 @@ WL.registerComponent('test-prototype', {
         this.object.pp_getChildren();
         this.object.pp_markDirty();
         this.object.pp_equals(this.object.pp_getParent());
+        this.object.pp_getComponent("ciao", 1);
+        this.object.pp_getComponentHierarchy("ciao", 1);
+        this.object.pp_getComponentChildren("ciao", 1);
+        this.object.pp_getComponents("ciao");
+        this.object.pp_getComponentsHierarchy("ciao");
+        this.object.pp_getComponentsChildren("ciao");
+        this.object.pp_addComponent("mesh");
 
         console.warn("\nTEST END");
     },

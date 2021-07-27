@@ -1172,16 +1172,72 @@ WL.Object.prototype.pp_transformDirectionLocalToObject = function (direction, re
 
 //Component
 
+WL.Object.prototype.pp_addComponent = function (type, params) {
+    this.addComponent(type, params);
+};
+
 WL.Object.prototype.pp_getComponent = function (type, index) {
     return this.getComponent(type, index);
 };
 
 WL.Object.prototype.pp_getComponents = function (type) {
-    return this.getComponent(type);
+    return this.getComponents(type);
 };
 
-WL.Object.prototype.pp_addComponent = function (type, params) {
-    this.addComponent(type, params);
+WL.Object.prototype.pp_getComponentHierarchy = function (type, index) {
+    let component = this.getComponent(type, index);
+
+    if (!component) {
+        component = this.pp_getComponentChildren(type, index);
+    }
+
+    return component;
+};
+
+WL.Object.prototype.pp_getComponentChildren = function (type, index) {
+    let component = null;
+
+    let children = this.children;
+    while (!component && children.length > 0) {
+        let child = children.shift();
+        component = child.getComponent(type, index);
+        if (!component) {
+            for (let object of child.children) {
+                children.push(object);
+            }
+        }
+    }
+
+    return component;
+};
+
+WL.Object.prototype.pp_getComponentsHierarchy = function (type) {
+    let components = this.getComponents(type);
+
+    let childrenComponents = this.pp_getComponentsChildren(type);
+    for (let component of childrenComponents) {
+        components.push(component);
+    }
+
+    return components;
+};
+
+WL.Object.prototype.pp_getComponentsChildren = function (type) {
+    let components = [];
+
+    let children = this.children;
+    while (children.length > 0) {
+        let child = children.shift();
+        let childrenComponents = child.getComponents(type);
+        for (let component of childrenComponents) {
+            components.push(component);
+        }
+        for (let object of child.children) {
+            children.push(object);
+        }
+    }
+
+    return components;
 };
 
 //Active
@@ -1196,14 +1252,17 @@ WL.Object.prototype.pp_setActive = function (active) {
 
 WL.Object.prototype.pp_setActiveHierarchy = function (active) {
     this.active = active;
-    for (let child of this.children) {
-        child.pp_setActiveHierarchy(active);
-    }
+    this.pp_setActiveChildren(active);
 };
 
 WL.Object.prototype.pp_setActiveChildren = function (active) {
-    for (let child of this.children) {
-        child.pp_setActiveHierarchy(active);
+    let children = this.children;
+    while (children.length > 0) {
+        let child = children.shift();
+        child.active = active;
+        for (let object of child.children) {
+            children.push(object);
+        }
     }
 };
 
