@@ -657,6 +657,17 @@ WL.registerComponent('test-prototype', {
             console.warn(initialPos);
         }
 
+        console.warn("\nCAULDRON\n");
+        this.object.pp_setName("ciao");
+        this.object.pp_getName();
+        this.object.pp_setActive(false);
+        this.object.pp_setActiveHierarchy(true);
+        this.object.pp_setActiveChildren(true);
+        this.object.pp_getActive();
+        this.object.pp_getChildren();
+        this.object.pp_markDirty();
+        this.object.pp_equals(this.object.pp_getParent());
+
         console.warn("\nTEST END");
     },
     consoleWarnFixed(vector) {

@@ -967,7 +967,7 @@ WL.Object.prototype.pp_scaleObject = function () {
 //Look At
 WL.Object.prototype.pp_lookAt = function (direction, up) {
     this.pp_lookAtWorld(direction, up);
-}
+};
 
 WL.Object.prototype.pp_lookAtWorld = function () {
     let internalUp = glMatrix.vec3.create();
@@ -1039,6 +1039,8 @@ WL.Object.prototype.pp_lookAtLocal = function () {
 
 //EXTRA
 
+//Parent
+
 WL.Object.prototype.pp_setParent = function () {
     let position = glMatrix.vec3.create();
     let rotation = glMatrix.quat.create();
@@ -1062,13 +1064,6 @@ WL.Object.prototype.pp_setParent = function () {
 
 WL.Object.prototype.pp_getParent = function () {
     return this.parent;
-};
-
-WL.Object.prototype.pp_setHierarchyActive = function (active) {
-    this.active = active;
-    for (let child of this.children) {
-        child.pp_setHierarchyActive(active);
-    }
 };
 
 //Transform Vector Object World
@@ -1175,7 +1170,66 @@ WL.Object.prototype.pp_transformDirectionLocalToObject = function (direction, re
     return resultDirection;
 };
 
-//Utils
+//Component
+
+WL.Object.prototype.pp_getComponent = function (type, index) {
+    return this.getComponent(type, index);
+};
+
+WL.Object.prototype.pp_getComponents = function (type) {
+    return this.getComponent(type);
+};
+
+WL.Object.prototype.pp_addComponent = function (type, params) {
+    this.addComponent(type, params);
+};
+
+//Active
+
+WL.Object.prototype.pp_getActive = function () {
+    return this.active;
+};
+
+WL.Object.prototype.pp_setActive = function (active) {
+    this.active = active;
+};
+
+WL.Object.prototype.pp_setActiveHierarchy = function (active) {
+    this.active = active;
+    for (let child of this.children) {
+        child.pp_setActiveHierarchy(active);
+    }
+};
+
+WL.Object.prototype.pp_setActiveChildren = function (active) {
+    for (let child of this.children) {
+        child.pp_setActiveHierarchy(active);
+    }
+};
+
+//Cauldron
+
+WL.Object.prototype.pp_getName = function () {
+    return this.name;
+};
+
+WL.Object.prototype.pp_setName = function (name) {
+    this.name = name;
+};
+
+WL.Object.prototype.pp_getChildren = function () {
+    return this.children;
+};
+
+WL.Object.prototype.pp_markDirty = function () {
+    return this.setDirty();
+};
+
+WL.Object.prototype.pp_equals = function (otherObject) {
+    return this.equals(otherObject);
+};
+
+//Private Utils
 
 WL.Object.prototype._pp_quaternionToRadians = function () {
     let mat3 = glMatrix.mat3.create();
