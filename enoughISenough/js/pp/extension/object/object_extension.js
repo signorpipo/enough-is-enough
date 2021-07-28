@@ -481,13 +481,10 @@ WL.Object.prototype.pp_setTransformWorldMatrix = function () {
     };
 }();
 
-WL.Object.prototype.pp_setTransformWorldQuat = function () {
-    let position = glMatrix.vec3.create();
-    return function (transform) {
-        this.transformWorld = transform;
-        this.setDirty();
-    };
-}();
+WL.Object.prototype.pp_setTransformWorldQuat = function (transform) {
+    this.transformWorld = transform;
+    this.setDirty();
+};
 
 //Transform Local
 
@@ -933,7 +930,7 @@ WL.Object.prototype.pp_rotateAroundObject = function (position, axis, angle) {
 };
 
 WL.Object.prototype.pp_rotateAroundObjectDegrees = function (position, axis, angle) {
-    this.pp_rotateAroundObjectRadians(axis, glMatrix.glMatrix.toRadian(angle));
+    this.pp_rotateAroundObjectRadians(position, axis, glMatrix.glMatrix.toRadian(angle));
 };
 
 WL.Object.prototype.pp_rotateAroundObjectRadians = function () {
@@ -1066,7 +1063,7 @@ WL.Object.prototype.pp_getParent = function () {
     return this.parent;
 };
 
-//Transform Vector Object World
+//Convert Vector Object World
 
 WL.Object.prototype.pp_convertPositionObjectToWorld = function () {
     let matrix = glMatrix.mat4.create();
@@ -1106,7 +1103,7 @@ WL.Object.prototype.pp_convertDirectionWorldToObject = function () {
     };
 }();
 
-//Transform Vector Local World
+//Convert Vector Local World
 
 WL.Object.prototype.pp_convertPositionLocalToWorld = function (position, resultPosition = glMatrix.vec3.create()) {
     if (this.pp_getParent()) {
@@ -1144,7 +1141,9 @@ WL.Object.prototype.pp_convertDirectionWorldToLocal = function (direction, resul
     return resultDirection;
 };
 
-//Transform Vector Local Object
+//Convert Vector Local Object
+
+//I need to use the converson to world and then local also use the parent scale that changes the position in local space
 
 WL.Object.prototype.pp_convertPositionObjectToLocal = function (position, resultPosition = glMatrix.vec3.create()) {
     this.pp_convertPositionObjectToWorld(position, resultPosition);
@@ -1168,6 +1167,136 @@ WL.Object.prototype.pp_convertDirectionLocalToObject = function (direction, resu
     this.pp_convertDirectionLocalToWorld(direction, resultDirection);
     this.pp_convertDirectionWorldToObject(resultDirection, resultDirection);
     return resultDirection;
+};
+
+//Convert Transform Object World
+
+WL.Object.prototype.pp_convertTransformObjectToWorld = function (transform, resultTransform) {
+    return this.pp_convertTransformObjectToWorldMatrix(transform, resultTransform);
+};
+
+WL.Object.prototype.pp_convertTransformObjectToWorldMatrix = function () {
+    let convertTransform = glMatrix.mat4.create();
+    return function (transform, resultTransform = glMatrix.mat4.create()) {
+        this.pp_getTransformWorldMatrix(convertTransform);
+        glMatrix.mat4.mul(resultTransform, convertTransform, transform);
+        return resultTransform;
+    };
+}();
+
+WL.Object.prototype.pp_convertTransformObjectToWorldQuat = function () {
+    let convertTransform = glMatrix.mat4.create();
+    return function (transform, resultTransform = glMatrix.quat2.create()) {
+        this.pp_getTransformWorldQuat(convertTransform);
+        glMatrix.quat2.mul(resultTransform, convertTransform, transform);
+        return resultTransform;
+    };
+}();
+
+WL.Object.prototype.pp_convertTransformWorldToObject = function (transform, resultTransform) {
+    return this.pp_convertTransformWorldToObjectMatrix(transform, resultTransform);
+};
+
+WL.Object.prototype.pp_convertTransformWorldToObjectMatrix = function () {
+    let convertTransform = glMatrix.mat4.create();
+    return function (transform, resultTransform = glMatrix.mat4.create()) {
+        this.pp_getTransformWorldMatrix(convertTransform);
+        glMatrix.mat4.invert(convertTransform, convertTransform);
+        glMatrix.mat4.mul(resultTransform, convertTransform, transform);
+        return resultTransform;
+    };
+}();
+
+WL.Object.prototype.pp_convertTransformWorldToObjectQuat = function () {
+    let convertTransform = glMatrix.mat4.create();
+    return function (transform, resultTransform = glMatrix.quat2.create()) {
+        this.pp_getTransformWorldQuat(convertTransform);
+        glMatrix.quat2.conjugate(convertTransform, convertTransform);
+        glMatrix.quat2.mul(resultTransform, convertTransform, transform);
+        return resultTransform;
+    };
+}();
+
+//Convert Transform Local World
+
+WL.Object.prototype.pp_convertTransformLocalToWorld = function (transform, resultTransform) {
+    return this.pp_convertTransformLocalToWorldMatrix(transform, resultTransform);
+};
+
+WL.Object.prototype.pp_convertTransformLocalToWorldMatrix = function (transform, resultTransform = glMatrix.mat4.create()) {
+    if (this.pp_getParent()) {
+        this.pp_getParent().pp_convertTransformObjectToWorldMatrix(transform, resultTransform);
+    } else {
+        glMatrix.mat4.copy(resultTransform, transform);
+    }
+    return resultTransform;
+};
+
+WL.Object.prototype.pp_convertTransformLocalToWorldQuat = function (transform, resultTransform = glMatrix.quat2.create()) {
+    if (this.pp_getParent()) {
+        this.pp_getParent().pp_convertTransformObjectToWorldQuat(transform, resultTransform);
+    } else {
+        glMatrix.quat2.copy(resultTransform, transform);
+    }
+    return resultTransform;
+};
+
+WL.Object.prototype.pp_convertTransformWorldToLocal = function (transform, resultTransform) {
+    return this.pp_convertTransformWorldToLocalMatrix(transform, resultTransform);
+};
+
+WL.Object.prototype.pp_convertTransformWorldToLocalMatrix = function (transform, resultTransform = glMatrix.mat4.create()) {
+    if (this.pp_getParent()) {
+        this.pp_getParent().pp_convertTransformWorldToObjectMatrix(transform, resultTransform);
+    } else {
+        glMatrix.mat4.copy(resultTransform, transform);
+    }
+    return resultTransform;
+};
+
+WL.Object.prototype.pp_convertTransformWorldToLocalQuat = function (transform, resultTransform = glMatrix.quat2.create()) {
+    if (this.pp_getParent()) {
+        this.pp_getParent().pp_convertTransformWorldToObjectQuat(transform, resultTransform);
+    } else {
+        glMatrix.quat2.copy(resultTransform, transform);
+    }
+    return resultTransform;
+};
+
+//Convert Transform Object Local
+
+//I need to use the converson to world and then local also use the parent scale that changes the position in local space
+
+WL.Object.prototype.pp_convertTransformObjectToLocal = function (transform, resultTransform) {
+    return this.pp_convertTransformObjectToLocalMatrix(transform, resultTransform);
+};
+
+WL.Object.prototype.pp_convertTransformObjectToLocalMatrix = function (transform, resultTransform = glMatrix.mat4.create()) {
+    this.pp_convertTransformObjectToWorldMatrix(transform, resultTransform);
+    this.pp_convertTransformWorldToLocalMatrix(resultTransform, resultTransform);
+    return resultTransform;
+};
+
+WL.Object.prototype.pp_convertTransformObjectToLocalQuat = function (transform, resultTransform = glMatrix.quat2.create()) {
+    this.pp_convertTransformObjectToWorldQuat(transform, resultTransform);
+    this.pp_convertTransformWorldToLocalQuat(resultTransform, resultTransform);
+    return resultTransform;
+};
+
+WL.Object.prototype.pp_convertTransformLocalToObject = function (transform, resultTransform) {
+    return this.pp_convertTransformLocalToObjectMatrix(transform, resultTransform);
+};
+
+WL.Object.prototype.pp_convertTransformLocalToObjectMatrix = function (transform, resultTransform = glMatrix.mat4.create()) {
+    this.pp_convertTransformLocalToWorldMatrix(transform, resultTransform);
+    this.pp_convertTransformWorldToObjectMatrix(resultTransform, resultTransform);
+    return resultTransform;
+};
+
+WL.Object.prototype.pp_convertTransformLocalToObjectQuat = function (transform, resultTransform = glMatrix.quat2.create()) {
+    this.pp_convertTransformLocalToWorldQuat(transform, resultTransform);
+    this.pp_convertTransformWorldToObjectQuat(resultTransform, resultTransform);
+    return resultTransform;
 };
 
 //Component
