@@ -627,6 +627,7 @@ WL.registerComponent('test-prototype', {
             this.object.pp_getParent().pp_setTransformMatrix(initParentTransform);
             this.object.pp_setTransformMatrix(initTransform);
             //this.object.parent.scalingWorld = [1, 1, 1];
+            //this.object.scalingWorld = [1, 1, 1];
             this.object.setDirty();
             this.object.pp_getParent().setDirty();
             let defaultMatrix = glMatrix.mat4.create();
@@ -640,10 +641,12 @@ WL.registerComponent('test-prototype', {
 
             console.warn("\nCONVERT TRANSFORM OBJECT WORLD\n");
             this.consoleWarnMatrix4Fixed(child.pp_getTransformWorldMatrix());
+            this.consoleWarnMatrix4Fixed(child.pp_getTransformWorldQuat());
             this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorldMatrix());
             this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorldQuat());
 
             this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformObjectToWorld(child.pp_getTransformLocalMatrix()));
+            this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformObjectToWorldQuat(child.pp_getTransformLocalQuat()));
             this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformObjectToWorldMatrix(defaultMatrix));
             this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformObjectToWorldQuat(defaultQuat2));
             this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformWorldToObject(this.object.pp_getTransformWorldMatrix()));

@@ -538,7 +538,6 @@ WL.Object.prototype.pp_setTransformWorldMatrix = function () {
 
 WL.Object.prototype.pp_setTransformWorldQuat = function (transform) {
     this.transformWorld = transform;
-    this.setDirty();
 };
 
 //Transform Local
@@ -570,7 +569,6 @@ WL.Object.prototype.pp_setTransformLocalMatrix = function () {
 
 WL.Object.prototype.pp_setTransformLocalQuat = function (transform) {
     this.transformLocal = transform;
-    this.setDirty();
 };
 
 //RESET
@@ -1100,13 +1098,11 @@ WL.Object.prototype.pp_setParent = function () {
     return function (newParent, keepTransform = true) {
         if (!keepTransform) {
             this.parent = newParent;
-            this.setDirty();
         } else {
             this.pp_getPositionWorld(position);
             this.pp_getRotationWorldQuat(rotation);
             this.pp_getScaleWorld(scale);
             this.parent = newParent;
-            this.setDirty();
             this.pp_setScaleWorld(scale);
             this.pp_setRotationWorldQuat(rotation);
             this.pp_setPositionWorld(position);
@@ -1240,7 +1236,7 @@ WL.Object.prototype.pp_convertTransformObjectToWorldMatrix = function () {
 }();
 
 WL.Object.prototype.pp_convertTransformObjectToWorldQuat = function () {
-    let convertTransform = glMatrix.mat4.create();
+    let convertTransform = glMatrix.quat2.create();
     return function (transform, resultTransform = glMatrix.quat2.create()) {
         this.pp_getTransformWorldQuat(convertTransform);
         glMatrix.quat2.mul(resultTransform, convertTransform, transform);
@@ -1263,7 +1259,7 @@ WL.Object.prototype.pp_convertTransformWorldToObjectMatrix = function () {
 }();
 
 WL.Object.prototype.pp_convertTransformWorldToObjectQuat = function () {
-    let convertTransform = glMatrix.mat4.create();
+    let convertTransform = glMatrix.quat2.create();
     return function (transform, resultTransform = glMatrix.quat2.create()) {
         this.pp_getTransformWorldQuat(convertTransform);
         glMatrix.quat2.conjugate(convertTransform, convertTransform);
