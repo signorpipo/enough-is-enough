@@ -111,10 +111,20 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getForwardWorld());
         this.consoleWarnFixed(this.object.pp_getForwardLocal());
 
+        console.warn("\nBACKWARD\n");
+        this.consoleWarnFixed(this.object.pp_getBackward());
+        this.consoleWarnFixed(this.object.pp_getBackwardWorld());
+        this.consoleWarnFixed(this.object.pp_getBackwardLocal());
+
         console.warn("\nUP\n");
         this.consoleWarnFixed(this.object.pp_getUp());
         this.consoleWarnFixed(this.object.pp_getUpWorld());
         this.consoleWarnFixed(this.object.pp_getUpLocal());
+
+        console.warn("\nDOWN\n");
+        this.consoleWarnFixed(this.object.pp_getDown());
+        this.consoleWarnFixed(this.object.pp_getDownWorld());
+        this.consoleWarnFixed(this.object.pp_getDownLocal());
 
         console.warn("\nLEFT\n");
         this.consoleWarnFixed(this.object.pp_getLeft());

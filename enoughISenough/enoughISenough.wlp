@@ -1061,7 +1061,16 @@
         },
         "102": {
             "name": "Test",
-            "parent": "32"
+            "parent": "32",
+            "components": [
+                {
+                    "type": "set-hierarchy-active",
+                    "active": false,
+                    "set-hierarchy-active": {
+                        "_myHierarchyActive": false
+                    }
+                }
+            ]
         },
         "103": {
             "name": "Empty.002",
@@ -1429,7 +1438,7 @@
                 0,
                 8,
                 7,
-                10
+                11
             ]
         },
         "vr": {

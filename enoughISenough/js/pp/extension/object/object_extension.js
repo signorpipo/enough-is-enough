@@ -216,6 +216,34 @@ WL.Object.prototype.pp_getForwardLocal = function () {
     };
 }();
 
+//Backward
+
+WL.Object.prototype.pp_getBackward = function (backward) {
+    return this.pp_getBackwardWorld(backward);
+};
+
+WL.Object.prototype.pp_getBackwardWorld = function () {
+    let rotation = glMatrix.mat3.create();
+    return function (backward = glMatrix.vec3.create()) {
+        this.pp_getRotationWorldMatrix(rotation);
+        backward[0] = -rotation[6];
+        backward[1] = -rotation[7];
+        backward[2] = -rotation[8];
+        return backward;
+    };
+}();
+
+WL.Object.prototype.pp_getBackwardLocal = function () {
+    let rotation = glMatrix.mat3.create();
+    return function (backward = glMatrix.vec3.create()) {
+        this.pp_getRotationLocalMatrix(rotation);
+        backward[0] = -rotation[6];
+        backward[1] = -rotation[7];
+        backward[2] = -rotation[8];
+        return backward;
+    };
+}();
+
 //Up
 
 WL.Object.prototype.pp_getUp = function (up) {
@@ -241,6 +269,34 @@ WL.Object.prototype.pp_getUpLocal = function () {
         up[1] = rotation[4];
         up[2] = rotation[5];
         return up;
+    };
+}();
+
+//Down
+
+WL.Object.prototype.pp_getDown = function (down) {
+    return this.pp_getDownWorld(down);
+};
+
+WL.Object.prototype.pp_getDownWorld = function () {
+    let rotation = glMatrix.mat3.create();
+    return function (down = glMatrix.vec3.create()) {
+        this.pp_getRotationWorldMatrix(rotation);
+        down[0] = -rotation[3];
+        down[1] = -rotation[4];
+        down[2] = -rotation[5];
+        return down;
+    };
+}();
+
+WL.Object.prototype.pp_getDownLocal = function () {
+    let rotation = glMatrix.mat3.create();
+    return function (down = glMatrix.vec3.create()) {
+        this.pp_getRotationLocalMatrix(rotation);
+        down[0] = -rotation[3];
+        down[1] = -rotation[4];
+        down[2] = -rotation[5];
+        return down;
     };
 }();
 
