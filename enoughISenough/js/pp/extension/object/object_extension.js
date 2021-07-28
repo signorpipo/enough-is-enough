@@ -416,17 +416,28 @@ WL.Object.prototype.pp_setScale = function (scale) {
 };
 
 WL.Object.prototype.pp_setScaleWorld = function () {
-    let inverseScale = glMatrix.vec3.create();
+    let vector = glMatrix.vec3.create();
     return function (scale) {
-        glMatrix.vec3.divide(inverseScale, scale, this.scalingWorld);
-        this.scale(inverseScale);
+        if (isNaN(scale)) {
+            this.scalingWorld = scale;
+        } else {
+            glMatrix.vec3.set(vector, scale, scale, scale);
+            this.scalingWorld = vector;
+        }
     };
 }();
 
-WL.Object.prototype.pp_setScaleLocal = function (scale) {
-    this.resetScaling();
-    this.scale(scale);
-};
+WL.Object.prototype.pp_setScaleLocal = function () {
+    let vector = glMatrix.vec3.create();
+    return function (scale) {
+        if (isNaN(scale)) {
+            this.scalingLocal = scale;
+        } else {
+            glMatrix.vec3.set(vector, scale, scale, scale);
+            this.scalingLocal = vector;
+        }
+    };
+}();
 
 //Transform
 

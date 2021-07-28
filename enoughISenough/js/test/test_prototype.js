@@ -69,9 +69,15 @@ WL.registerComponent('test-prototype', {
         console.warn("\nSCALE\n");
         this.object.pp_setScale([2, 5, 4]);
         this.consoleWarnFixed(this.object.pp_getScale());
+        this.object.pp_setScale(6.32);
+        this.consoleWarnFixed(this.object.pp_getScale());
         this.object.pp_setScaleWorld([3.2, 1.65, 4.4]);
         this.consoleWarnFixed(this.object.pp_getScaleWorld());
+        this.object.pp_setScaleWorld(5);
+        this.consoleWarnFixed(this.object.pp_getScaleWorld());
         this.object.pp_setScaleLocal([5.2, 3.1, 9.1]);
+        this.consoleWarnFixed(this.object.pp_getScaleLocal());
+        this.object.pp_setScaleLocal(1.3);
         this.consoleWarnFixed(this.object.pp_getScaleLocal());
 
         console.warn("\nTRANSFORM\n");
