@@ -24,13 +24,13 @@ WL.registerComponent('grabbable', {
         this.myPhysx.kinematic = true;
 
         this._myOldParent = this.object.parent;
-        PP.ObjectUtils.reparentKeepTransform(this.object, grabber);
+        this.object.pp_setParent(grabber);
 
         this.myIsGrabbed = true;
     },
     throw: function (linearVelocity, angularVelocity) {
         if (this.myIsGrabbed) {
-            PP.ObjectUtils.reparentKeepTransform(this.object, this._myOldParent);
+            this.object.pp_setParent(this._myOldParent);
             this.myIsGrabbed = false;
             this.myPhysx.kinematic = false;
 
@@ -42,6 +42,6 @@ WL.registerComponent('grabbable', {
         this._myUngrabCallbacks.forEach(function (value) { value(); });
 
         this.myIsGrabbed = false;
-        PP.ObjectUtils.reparentKeepTransform(this.object, this._myOldParent);
+        this.object.pp_setParent(this._myOldParent);
     }
 });

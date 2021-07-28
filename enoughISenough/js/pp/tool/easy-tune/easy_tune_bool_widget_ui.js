@@ -13,7 +13,7 @@ PP.EasyTuneBoolWidgetUI = class EasyTuneBoolWidgetUI {
     }
 
     setVisible(visible) {
-        PP.ObjectUtils.setHierarchyActive(this.myPivotObject, visible);
+        this.myPivotObject.pp_setActiveHierarchy(visible);
     }
 
     //Skeleton

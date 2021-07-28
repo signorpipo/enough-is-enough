@@ -24,7 +24,7 @@ class DebugLine {
     setVisible(visible) {
         if (this._myVisible != visible) {
             this._myVisible = visible;
-            PP.ObjectUtils.setHierarchyActive(this._myLineRootObject, visible);
+            this._myLineRootObject.pp_setActiveHierarchy(visible);
         }
     }
 

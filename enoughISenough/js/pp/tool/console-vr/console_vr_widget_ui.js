@@ -13,7 +13,7 @@ PP.ConsoleVRWidgetUI = class ConsoleVRWidgetUI {
     }
 
     setVisible(visible) {
-        PP.ObjectUtils.setHierarchyActive(this.myPivotObject, visible);
+        this.myPivotObject.pp_setActiveHierarchy(visible);
     }
 
     //Skeleton

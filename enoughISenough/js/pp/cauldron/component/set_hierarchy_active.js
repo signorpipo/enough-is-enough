@@ -4,7 +4,7 @@ WL.registerComponent('set-hierarchy-active', {
     init: function () {
     },
     start: function () {
-        PP.ObjectUtils.setHierarchyActive(this.object, this._myHierarchyActive);
+        this.object.pp_setActiveHierarchy(this._myHierarchyActive);
     },
     update: function (dt) {
     },

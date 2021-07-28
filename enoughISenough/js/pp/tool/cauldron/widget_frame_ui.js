@@ -20,23 +20,23 @@ PP.WidgetFrameUI = class WidgetFrameUI {
     }
 
     setWidgetVisible(visible) {
-        PP.ObjectUtils.setHierarchyActive(this.myFlagsButtonPanel, visible);
+        this.myFlagsButtonPanel.pp_setActiveHierarchy(visible);
         if (visible) {
             this._updateObjectsTransforms(true);
         }
     }
 
     setVisibilityButtonVisible(visible) {
-        PP.ObjectUtils.setHierarchyActive(this.myVisibilityButtonPanel, visible);
+        this.myVisibilityButtonPanel.pp_setActiveHierarchy(visible);
     }
 
     setPinned(pinned) {
         if (pinned != this._myIsPinned) {
             this._myIsPinned = pinned;
             if (this._myIsPinned) {
-                PP.ObjectUtils.reparentKeepTransform(this.myPivotObject, null);
+                this.myPivotObject.pp_setParent(null);
             } else {
-                PP.ObjectUtils.reparentKeepTransform(this.myPivotObject, this._myParentObject);
+                this.myPivotObject.pp_setParent(this._myParentObject);
                 this._updateObjectsTransforms(true);
             }
         }
