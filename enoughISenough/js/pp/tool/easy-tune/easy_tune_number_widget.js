@@ -199,7 +199,7 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
     }
 
     _changeStep(step) {
-        step = PP.MathUtils.roundDecimal(step, 10);
+        step = Math.pp_roundDecimal(step, 10);
         this._myVariable.myStepPerSecond = step;
         this._myUI.myStepLabelTextComponent.text = this._mySetup.myStepLabelStartString.concat(this._myVariable.myStepPerSecond);
     }

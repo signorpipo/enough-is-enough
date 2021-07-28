@@ -1457,10 +1457,10 @@
                 "js/pp/input/cauldron",
                 "js/pp/input/gamepad",
                 "js/test",
-                "js/pp/extension/object",
                 "js/pp/cauldron/component",
                 "js/pp/cauldron/utils",
-                "js/debug"
+                "js/debug",
+                "js/pp/extension"
             ]
         },
         "editor": {

@@ -437,7 +437,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getRotation());
         this.object.pp_rotateAxisDegrees([1, 0, 0], 10);
         this.consoleWarnFixed(this.object.pp_getRotation());
-        this.object.pp_rotateAxisRadians([1, 0, 0], PP.MathUtils.toRadians(10));
+        this.object.pp_rotateAxisRadians([1, 0, 0], Math.pp_toRadians(10));
         this.consoleWarnFixed(this.object.pp_getRotation());
 
         console.warn("\nROTATE WORLD AXIS\n");
@@ -448,7 +448,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
         this.object.pp_rotateAxisWorldDegrees([1, 0, 0], 10);
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
-        this.object.pp_rotateAxisWorldRadians([1, 0, 0], PP.MathUtils.toRadians(10));
+        this.object.pp_rotateAxisWorldRadians([1, 0, 0], Math.pp_toRadians(10));
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
 
         console.warn("\nROTATE LOCAL AXIS\n");
@@ -459,7 +459,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
         this.object.pp_rotateAxisLocalDegrees([1, 0, 0], 10);
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
-        this.object.pp_rotateAxisLocalRadians([1, 0, 0], PP.MathUtils.toRadians(10));
+        this.object.pp_rotateAxisLocalRadians([1, 0, 0], Math.pp_toRadians(10));
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
 
         console.warn("\nROTATE OBJECT AXIS\n");
@@ -470,7 +470,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
         this.object.pp_rotateAxisObjectDegrees([1, 0, 0], 10);
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
-        this.object.pp_rotateAxisObjectRadians([1, 0, 0], PP.MathUtils.toRadians(10));
+        this.object.pp_rotateAxisObjectRadians([1, 0, 0], Math.pp_toRadians(10));
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
 
         this.object.pp_resetRotationLocal();
@@ -480,7 +480,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
         this.object.pp_rotateAxisObjectDegrees([1, 0, 0], 10);
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
-        this.object.pp_rotateAxisObjectRadians([1, 0, 0], PP.MathUtils.toRadians(10));
+        this.object.pp_rotateAxisObjectRadians([1, 0, 0], Math.pp_toRadians(10));
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
 
         console.warn("\nROTATE AROUND\n");
@@ -491,7 +491,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getRotation());
         this.object.pp_rotateAroundDegrees(this.object.pp_getPosition(), [1, 0, 0], 10);
         this.consoleWarnFixed(this.object.pp_getRotation());
-        this.object.pp_rotateAroundRadians(this.object.pp_getParent().pp_getPosition(), [1, 0, 0], PP.MathUtils.toRadians(10));
+        this.object.pp_rotateAroundRadians(this.object.pp_getParent().pp_getPosition(), [1, 0, 0], Math.pp_toRadians(10));
         this.consoleWarnFixed(this.object.pp_getRotation());
 
         console.warn("\nROTATE WORLD AROUND\n");
@@ -502,7 +502,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
         this.object.pp_rotateAroundWorldDegrees(this.object.pp_getParent().pp_getPosition(), [1, 0, 0], 10);
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
-        this.object.pp_rotateAroundWorldRadians(this.object.pp_getParent().pp_getPosition(), [1, 0, 0], PP.MathUtils.toRadians(10));
+        this.object.pp_rotateAroundWorldRadians(this.object.pp_getParent().pp_getPosition(), [1, 0, 0], Math.pp_toRadians(10));
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
 
         console.warn("\nROTATE LOCAL AROUND\n");
@@ -513,7 +513,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
         this.object.pp_rotateAroundLocalDegrees(this.object.pp_getPositionLocal(), [1, 0, 0], 10);
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
-        this.object.pp_rotateAroundLocalRadians([0, 0, 0], [1, 0, 0], PP.MathUtils.toRadians(10));
+        this.object.pp_rotateAroundLocalRadians([0, 0, 0], [1, 0, 0], Math.pp_toRadians(10));
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
 
         console.warn("\nROTATE OBJECT AROUND\n");
@@ -524,7 +524,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
         this.object.pp_rotateAroundObjectDegrees([0, 1, 2], [1, 0, 0], 10);
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
-        this.object.pp_rotateAroundObjectRadians([0, 1, 2], [1, 0, 0], PP.MathUtils.toRadians(10));
+        this.object.pp_rotateAroundObjectRadians([0, 1, 2], [1, 0, 0], Math.pp_toRadians(10));
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
 
         this.object.pp_resetRotationLocal();
@@ -534,7 +534,7 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
         this.object.pp_rotateAroundObjectDegrees([0, 1, 2], [1, 0, 0], 10);
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
-        this.object.pp_rotateAroundObjectRadians([0, 1, 2], [1, 0, 0], PP.MathUtils.toRadians(10));
+        this.object.pp_rotateAroundObjectRadians([0, 1, 2], [1, 0, 0], Math.pp_toRadians(10));
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
 
         console.warn("\nSCALE OBJECT\n");

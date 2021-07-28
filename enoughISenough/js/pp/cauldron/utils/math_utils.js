@@ -1,22 +1,7 @@
 PP.MathUtils = {
-    clamp: function (value, min, max) {
-        return Math.min(Math.max(value, min), max);
-    },
-    toRadians: function (angle) {
-        return glMatrix.glMatrix.toRadian(angle);
-    },
-    toDegrees: function (angle) {
-        return angle * (180 / Math.PI);
-    },
-    roundDecimal(number, decimalPlaces) {
-        let factor = Math.pow(10, decimalPlaces);
-        number = Math.round(number * factor) / factor;
-
-        return number;
-    },
     radiansToQuaternion: function (radiansRotation) {
         let quat = glMatrix.quat.create();
-        glMatrix.quat.fromEuler(quat, PP.MathUtils.toDegrees(radiansRotation[0]), PP.MathUtils.toDegrees(radiansRotation[1]), PP.MathUtils.toDegrees(radiansRotation[2]));
+        glMatrix.quat.fromEuler(quat, Math.pp_toDegrees(radiansRotation[0]), Math.pp_toDegrees(radiansRotation[1]), Math.pp_toDegrees(radiansRotation[2]));
 
         return quat;
     },
@@ -27,7 +12,7 @@ PP.MathUtils = {
         glMatrix.mat3.fromQuat(mat3, quaternionRotation);
 
         //Rotation order is ZYX
-        radians[1] = Math.asin(-PP.MathUtils.clamp(mat3[2], -1, 1));
+        radians[1] = Math.asin(-Math.pp_clamp(mat3[2], -1, 1));
 
         if (Math.abs(mat3[2]) < 0.9999999) {
 
@@ -108,9 +93,5 @@ PP.MathUtils = {
         glMatrix.vec3.add(rotatedVector, rotatedVector, origin);
 
         return rotatedVector;
-    },
-    mapToNewInterval(value, originIntervalLeft, originIntervalRight, newIntervalLeft, newIntervalRight) {
-        let newValue = newIntervalLeft + ((newIntervalRight - newIntervalLeft) / (originIntervalRight - originIntervalLeft)) * (value - originIntervalLeft);
-        return newValue;
     }
 };
