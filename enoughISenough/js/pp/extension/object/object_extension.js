@@ -71,7 +71,7 @@ WL.Object.prototype.pp_getRotationWorldMatrix = function () {
 }();
 
 WL.Object.prototype.pp_getRotationWorldQuat = function (rotation = glMatrix.quat.create()) {
-    glMatrix.quat.copy(rotation, this.transformWorld);
+    glMatrix.quat.copy(rotation, this.rotationWorld);
     return rotation;
 };
 
@@ -108,7 +108,7 @@ WL.Object.prototype.pp_getRotationLocalMatrix = function () {
 }();
 
 WL.Object.prototype.pp_getRotationLocalQuat = function (rotation = glMatrix.quat.create()) {
-    glMatrix.quat.copy(rotation, this.transformLocal);
+    glMatrix.quat.copy(rotation, this.rotationLocal);
     return rotation;
 };
 
@@ -369,15 +369,9 @@ WL.Object.prototype.pp_setRotationWorldMatrix = function () {
     };
 }();
 
-WL.Object.prototype.pp_setRotationWorldQuat = function () {
-    let position = glMatrix.vec3.create();
-    let transform = glMatrix.quat2.create();
-    return function (rotation) {
-        this.pp_getPositionWorld(position);
-        glMatrix.quat2.fromRotationTranslation(transform, rotation, position);
-        this.pp_setTransformWorldQuat(transform);
-    };
-}();
+WL.Object.prototype.pp_setRotationWorldQuat = function (rotation) {
+    this.rotationWorld = rotation;
+};
 
 //Rotation Local
 
@@ -411,15 +405,9 @@ WL.Object.prototype.pp_setRotationLocalMatrix = function () {
     };
 }();
 
-WL.Object.prototype.pp_setRotationLocalQuat = function () {
-    let position = glMatrix.vec3.create();
-    let transform = glMatrix.quat2.create();
-    return function (rotation) {
-        this.pp_getPositionLocal(position);
-        glMatrix.quat2.fromRotationTranslation(transform, rotation, position);
-        this.pp_setTransformLocalQuat(transform);
-    };
-}();
+WL.Object.prototype.pp_setRotationLocalQuat = function (rotation) {
+    this.rotationLocal = rotation;
+};
 
 //Scale
 
