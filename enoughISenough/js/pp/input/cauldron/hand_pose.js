@@ -1,13 +1,12 @@
 PP.HandPose = class HandPose {
 
     constructor(handedness, forceEmulatedVelocities) {
-        this._mySession = null;
         this._myInputSource = null;
 
         this._myHandedness = handedness;
         this._myForceEmulatedVelocities = forceEmulatedVelocities;
 
-        this._myReferenceSpace = [0, 0, 0];
+        this._myReferenceSpace = null;
 
         this._myPosition = [0, 0, 0];
         this._myRotation = [0, 0, 0, 0];
@@ -33,20 +32,18 @@ PP.HandPose = class HandPose {
 
     getLinearVelocity() {
         return this._myLinearVelocity;
-
     }
 
     getAngularVelocity() {
         return this._myAngularVelocity;
-
     }
 
     start() {
         if (WL.xrSession) {
-            this._setupVREvents(WL.xrSession);
-        } else {
-            WL.onXRSessionStart.push(this._setupVREvents.bind(this));
+            this._onXRSessionStart(WL.xrSession);
         }
+        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
+        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
     }
 
     update(dt) {
@@ -118,17 +115,10 @@ PP.HandPose = class HandPose {
         }
     }
 
-    _setupVREvents(session) {
-        this._mySession = session;
-
+    _onXRSessionStart(session) {
         session.requestReferenceSpace('local').then(function (referenceSpace) { this._myReferenceSpace = referenceSpace; }.bind(this));
 
-        this._mySession.addEventListener('end', function (event) {
-            this._mySession = null;
-            this._myInputSource = null;
-        }.bind(this));
-
-        this._mySession.addEventListener('inputsourceschange', function (event) {
+        session.addEventListener('inputsourceschange', function (event) {
             if (event.removed) {
                 for (let item of event.removed) {
                     if (item == this._myInputSource) {
@@ -145,5 +135,10 @@ PP.HandPose = class HandPose {
                 }
             }
         }.bind(this));
+    }
+
+    _onXRSessionEnd(session) {
+        this._myReferenceSpace = null;
+        this._myInputSource = null;
     }
 };

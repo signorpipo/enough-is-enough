@@ -5,18 +5,17 @@ WL.registerComponent("pp-player-height", {
         this.object.setTranslationLocal([0, this._myEyesHeight, 0]);
 
         if (WL.xrSession) {
-            this.onXRSessionStart(WL.xrSession);
+            this._onXRSessionStart(WL.xrSession);
         }
-
-        WL.onXRSessionStart.push(this.onXRSessionStart.bind(this));
-        WL.onXRSessionEnd.push(this.onXRSessionEnd.bind(this));
+        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
+        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
     },
-    onXRSessionStart: function () {
+    _onXRSessionStart: function () {
         if (!["local", "viewer"].includes(WebXR.refSpace)) {
             this.object.resetTranslation();
         }
     },
-    onXRSessionEnd: function () {
+    _onXRSessionEnd: function () {
         if (!["local", "viewer"].includes(WebXR.refSpace)) {
             this.object.setTranslationLocal([0, this._myEyesHeight, 0]);
         }

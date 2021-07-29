@@ -130,7 +130,6 @@ PP.Gamepad = class Gamepad {
         this._mySqueezeStart = false;
         this._mySqueezeEnd = false;
 
-        this.mySession = null;
         this.myInputSource = null;
         this.myGamepad = null;
 
@@ -226,10 +225,10 @@ PP.Gamepad = class Gamepad {
 
     start() {
         if (WL.xrSession) {
-            this._setupVREvents(WL.xrSession);
-        } else {
-            WL.onXRSessionStart.push(this._setupVREvents.bind(this));
+            this._onXRSessionStart(WL.xrSession);
         }
+        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
+        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
     }
 
     update(dt) {
@@ -473,16 +472,8 @@ PP.Gamepad = class Gamepad {
         return hapticActuator;
     }
 
-    _setupVREvents(s) {
-        this.mySession = s;
-
-        this.mySession.addEventListener('end', function (event) {
-            this.mySession = null;
-            this.myInputSource = null;
-            this.myGamepad = null;
-        }.bind(this));
-
-        this.mySession.addEventListener('inputsourceschange', function (event) {
+    _onXRSessionStart(session) {
+        session.addEventListener('inputsourceschange', function (event) {
             if (event.removed) {
                 for (let item of event.removed) {
                     if (item.gamepad == this.myGamepad) {
@@ -502,11 +493,16 @@ PP.Gamepad = class Gamepad {
             }
         }.bind(this));
 
-        this.mySession.addEventListener('selectstart', this._selectStart.bind(this));
-        this.mySession.addEventListener('selectend', this._selectEnd.bind(this));
+        session.addEventListener('selectstart', this._selectStart.bind(this));
+        session.addEventListener('selectend', this._selectEnd.bind(this));
 
-        this.mySession.addEventListener('squeezestart', this._squeezeStart.bind(this));
-        this.mySession.addEventListener('squeezeend', this._squeezeEnd.bind(this));
+        session.addEventListener('squeezestart', this._squeezeStart.bind(this));
+        session.addEventListener('squeezeend', this._squeezeEnd.bind(this));
+    }
+
+    _onXRSessionEnd(session) {
+        this.myInputSource = null;
+        this.myGamepad = null;
     }
 
     //Select and Squeeze are managed this way to be more compatible

@@ -7,7 +7,7 @@ WL.registerComponent('finger-cursor', {
 }, {
     init: function () {
         this._myLastTarget = null;
-        this._myRefSpace = null;
+        this._myReferenceSpace = null;
         this._myHandInputSource = null;
         this._myHandednessString = ['left', 'right'][this._myHandedness];
     },
@@ -27,10 +27,10 @@ WL.registerComponent('finger-cursor', {
         this._myCollisionComponent.extents = [this._myCursorSize, this._myCursorSize, this._myCursorSize];
 
         if (WL.xrSession) {
-            this._setupVREvents(WL.xrSession);
-        } else {
-            WL.onXRSessionStart.push(this._setupVREvents.bind(this));
+            this._onXRSessionStart(WL.xrSession);
         }
+        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
+        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
     },
     update: function (dt) {
         this._updateHand();
@@ -83,7 +83,7 @@ WL.registerComponent('finger-cursor', {
         this._myHandInputSource = PP.InputUtils.getInputSource(this._myHandednessString, PP.InputSourceType.HAND);
 
         if (this._myHandInputSource) {
-            let tip = Module['webxr_frame'].getJointPose(this._myHandInputSource.hand.get("index-finger-tip"), this._myRefSpace);
+            let tip = Module['webxr_frame'].getJointPose(this._myHandInputSource.hand.get("index-finger-tip"), this._myReferenceSpace);
 
             if (tip) {
                 this._myCursorObject.resetTransform();
@@ -100,7 +100,10 @@ WL.registerComponent('finger-cursor', {
             }
         }
     },
-    _setupVREvents: function (s) {
-        s.requestReferenceSpace('local').then(function (refSpace) { this._myRefSpace = refSpace; }.bind(this));
+    _onXRSessionStart: function (session) {
+        session.requestReferenceSpace('local-floor').then(function (referenceSpace) { this._myReferenceSpace = referenceSpace; }.bind(this));
     },
+    _onXRSessionEnd: function (session) {
+        this._myReferenceSpace = null;
+    }
 });
