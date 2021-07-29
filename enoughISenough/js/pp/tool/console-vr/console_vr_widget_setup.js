@@ -178,6 +178,7 @@ PP.ConsoleVRWidgetSetup = class ConsoleVRWidgetSetup {
         this.myButtonDisabledTextColor = this.myBackgroundColor;
         this.myButtonDisabledBackgroundColor = [110 / 255, 110 / 255, 110 / 255, 1];
 
+        this.myFilterDoubleClickDelay = 0.3;
         this.myFilterButtonDisabledTextColor = this.myButtonDisabledTextColor;
         this.myFilterButtonDisabledBackgroundColor = this.myButtonDisabledBackgroundColor;
 

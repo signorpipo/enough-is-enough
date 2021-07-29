@@ -25,6 +25,11 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
             this._myTypeFilters[PP.ConsoleVRWidget.MessageType[key]] = false;
         }
 
+        this._myTypeFiltersDoubleClickTimers = [];
+        for (let key in PP.ConsoleVRWidget.MessageType) {
+            this._myTypeFiltersDoubleClickTimers[PP.ConsoleVRWidget.MessageType[key]] = 0;
+        }
+
         this._myNotifyIconActive = false;
 
         this._myScrollUp = false;
@@ -99,6 +104,11 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
         if (this._myWidgetFrame.myIsWidgetVisible) {
             this._myPreventScrollClick = false; //used to avoid finger cursor to always trigger instant scroll up/down when hovering scroll buttons
             this._updateScroll(dt);
+
+            for (let key in PP.ConsoleVRWidget.MessageType) {
+                let value = this._myTypeFiltersDoubleClickTimers[PP.ConsoleVRWidget.MessageType[key]];
+                this._myTypeFiltersDoubleClickTimers[PP.ConsoleVRWidget.MessageType[key]] = Math.max(value - dt, 0);
+            }
         }
 
         this._updateGamepadsExtraActions(dt);
@@ -484,11 +494,31 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
 
     _toggleFilter(messageType, textMaterial) {
         if (this._myWidgetFrame.myIsWidgetVisible) {
-            this._myTypeFilters[messageType] = !this._myTypeFilters[messageType];
-            if (this._myTypeFilters[messageType]) {
-                textMaterial.color = this._mySetup.myFilterButtonDisabledTextColor;
+            if (this._myTypeFiltersDoubleClickTimers[messageType] > 0) {
+
+                for (let key in PP.ConsoleVRWidget.MessageType) {
+                    let backgroundMaterial = this._myUI.myFilterButtonsBackgroundComponents[PP.ConsoleVRWidget.MessageType[key]].material;
+                    let filterTextMaterial = this._myUI.myFilterButtonsTextComponents[PP.ConsoleVRWidget.MessageType[key]].material;
+                    if (PP.ConsoleVRWidget.MessageType[key] != messageType) {
+                        this._myTypeFilters[PP.ConsoleVRWidget.MessageType[key]] = true;
+                        backgroundMaterial.color = this._mySetup.myFilterButtonDisabledBackgroundColor;
+                        filterTextMaterial.color = this._mySetup.myFilterButtonDisabledTextColor;
+                    } else {
+                        this._myTypeFilters[PP.ConsoleVRWidget.MessageType[key]] = false;
+                        filterTextMaterial.color = this._mySetup.myMessageTypeColors[messageType];
+                    }
+                }
+
+                this._myTypeFilters[messageType] = false;
             } else {
-                textMaterial.color = this._mySetup.myMessageTypeColors[messageType];
+                this._myTypeFiltersDoubleClickTimers[messageType] = this._mySetup.myFilterDoubleClickDelay;
+
+                this._myTypeFilters[messageType] = !this._myTypeFilters[messageType];
+                if (this._myTypeFilters[messageType]) {
+                    textMaterial.color = this._mySetup.myFilterButtonDisabledTextColor;
+                } else {
+                    textMaterial.color = this._mySetup.myMessageTypeColors[messageType];
+                }
             }
 
             this._clampScrollOffset();
