@@ -1,3 +1,60 @@
+/*
+    How to use
+
+    By default methods work on World space and the transform is a matrix (and not a quat2)
+
+    You can usually append at the end of a method a keyword like World/Local(sometimes Object) to specify the space, examples:
+        - pp_getPositionLocal() to get the position in local space (parent space)
+        - pp_translateObject() to translate in object space
+
+    For rotations u can append Degrees/Radians/Quat/Matrix to use a specific version, examples
+        - pp_getRotationDegrees
+        - pp_setRotationLocalMatrix
+        - pp_rotateWorldQuat
+        
+    For transform u can append Quat/Matrix to use a specific version, examples
+        - pp_getTransformQuat
+        - pp_setTransformWorldMatrix
+
+    Methods leave u the choice of forwarding an out paramter or just get the return value, example:
+        - let position = this.object.pp_getPosition()
+        - this.object.pp_getPosition(position)
+        - the out parameter is always the last
+
+    List of methods (without extra "append" labels):
+        - pp_getPosition    / pp_setPosition    / pp_resetPosition
+        - pp_getRotation    / pp_setRotation    / pp_resetRotation
+        - pp_getScale       / pp_setScale (u can specify a single number instead of a vector to uniform scale easily)   / pp_resetScale 
+        - pp_getTransform   / pp_setTransform   / pp_resetTransform
+
+        - pp_getLeft        / pp_getRight
+        - pp_getUp          / pp_getDown
+        - pp_getForward     / pp_getBackward
+
+        - pp_translate      / pp_translateAxis
+        - pp_rotate         / pp_rotateAxis     / pp_rotateAround
+        - pp_scaleObject (for now scale only have this variant) (u can specify a single number instead of a vector to uniform scale easily)
+
+        - pp_lookAt (u can avoid to specify up and the method will pickup the object up by default)
+
+        - pp_getParent      / pp_setParent (let u specify if u want to keep the transform or not)
+
+        - pp_convertPositionObjectToWorld (you can use all the combinations between Object/Local/World)
+        - pp_convertDirectionObjectToWorld (you can use all the combinations between Object/Local/World)
+        - pp_convertTransformObjectToWorld (you can use all the combinations between Object/Local/World) (u also have Quat and Matrix version)
+
+        - pp_addComponent  / pp_getComponent  / pp_getComponentHierarchy / pp_getComponentChildren
+        - pp_getComponents  / pp_getComponentsHierarchy / pp_getComponentsChildren
+
+        - pp_getActive  / pp_setActive  / pp_setActiveHierarchy     / pp_setActiveChildren
+
+        - pp_getName    / pp_setName
+        - pp_getChildren
+        - pp_markDirty
+        - pp_equals
+        - pp_destroy  
+*/
+
 
 //GETTER
 
@@ -1466,6 +1523,10 @@ WL.Object.prototype.pp_markDirty = function () {
 
 WL.Object.prototype.pp_equals = function (otherObject) {
     return this.equals(otherObject);
+};
+
+WL.Object.prototype.pp_destroy = function () {
+    return this.destroy();
 };
 
 //Private Utils
