@@ -116,7 +116,7 @@ PP.HandPose = class HandPose {
     }
 
     _onXRSessionStart(session) {
-        session.requestReferenceSpace('local').then(function (referenceSpace) { this._myReferenceSpace = referenceSpace; }.bind(this));
+        session.requestReferenceSpace(WebXR.refSpace).then(function (referenceSpace) { this._myReferenceSpace = referenceSpace; }.bind(this));
 
         session.addEventListener('inputsourceschange', function (event) {
             if (event.removed) {

@@ -599,7 +599,7 @@
             "components": [
                 {
                     "type": "pp-player-height",
-                    "active": false
+                    "active": true
                 }
             ]
         },

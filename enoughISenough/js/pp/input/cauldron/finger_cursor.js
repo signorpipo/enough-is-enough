@@ -101,7 +101,7 @@ WL.registerComponent('finger-cursor', {
         }
     },
     _onXRSessionStart: function (session) {
-        session.requestReferenceSpace('local-floor').then(function (referenceSpace) { this._myReferenceSpace = referenceSpace; }.bind(this));
+        session.requestReferenceSpace(WebXR.refSpace).then(function (referenceSpace) { this._myReferenceSpace = referenceSpace; }.bind(this));
     },
     _onXRSessionEnd: function (session) {
         this._myReferenceSpace = null;
