@@ -21,13 +21,12 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
         this._myOldConsoleVR = [];
 
         this._myTypeFilters = [];
+        this._myTypeFiltersDoubleClickTimers = [];
+        this._myTypeFiltersTripleClickTimers = [];
         for (let key in PP.ConsoleVRWidget.MessageType) {
             this._myTypeFilters[PP.ConsoleVRWidget.MessageType[key]] = false;
-        }
-
-        this._myTypeFiltersDoubleClickTimers = [];
-        for (let key in PP.ConsoleVRWidget.MessageType) {
             this._myTypeFiltersDoubleClickTimers[PP.ConsoleVRWidget.MessageType[key]] = 0;
+            this._myTypeFiltersTripleClickTimers[PP.ConsoleVRWidget.MessageType[key]] = 0;
         }
 
         this._myNotifyIconActive = false;
@@ -108,6 +107,9 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
             for (let key in PP.ConsoleVRWidget.MessageType) {
                 let value = this._myTypeFiltersDoubleClickTimers[PP.ConsoleVRWidget.MessageType[key]];
                 this._myTypeFiltersDoubleClickTimers[PP.ConsoleVRWidget.MessageType[key]] = Math.max(value - dt, 0);
+
+                value = this._myTypeFiltersTripleClickTimers[PP.ConsoleVRWidget.MessageType[key]];
+                this._myTypeFiltersTripleClickTimers[PP.ConsoleVRWidget.MessageType[key]] = Math.max(value - dt, 0);
             }
         }
 
@@ -494,7 +496,22 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
 
     _toggleFilter(messageType, textMaterial) {
         if (this._myWidgetFrame.myIsWidgetVisible) {
-            if (this._myTypeFiltersDoubleClickTimers[messageType] > 0) {
+            if (this._myTypeFiltersTripleClickTimers[messageType] > 0) {
+                this._myTypeFiltersTripleClickTimers[messageType] = 0;
+
+                for (let key in PP.ConsoleVRWidget.MessageType) {
+                    let backgroundMaterial = this._myUI.myFilterButtonsBackgroundComponents[PP.ConsoleVRWidget.MessageType[key]].material;
+                    let filterTextMaterial = this._myUI.myFilterButtonsTextComponents[PP.ConsoleVRWidget.MessageType[key]].material;
+
+                    this._myTypeFilters[PP.ConsoleVRWidget.MessageType[key]] = false;
+                    filterTextMaterial.color = this._mySetup.myMessageTypeColors[PP.ConsoleVRWidget.MessageType[key]];
+                    if (PP.ConsoleVRWidget.MessageType[key] != messageType) {
+                        backgroundMaterial.color = this._mySetup.myBackgroundColor;
+                    }
+                }
+            } else if (this._myTypeFiltersDoubleClickTimers[messageType] > 0) {
+                this._myTypeFiltersDoubleClickTimers[messageType] = 0;
+                this._myTypeFiltersTripleClickTimers[messageType] = this._mySetup.myFilterDoubleClickDelay;
 
                 for (let key in PP.ConsoleVRWidget.MessageType) {
                     let backgroundMaterial = this._myUI.myFilterButtonsBackgroundComponents[PP.ConsoleVRWidget.MessageType[key]].material;
