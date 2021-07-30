@@ -2,11 +2,6 @@
 
 //glMatrix Bridge
 
-Array.prototype.vec3_add = function (vector, out = glMatrix.vec3.create()) {
-    glMatrix.vec3.add(out, this, vector);
-    return out;
-};
-
 Array.prototype.vec3_normalize = function () {
     glMatrix.vec3.normalize(this, this);
     return this;
@@ -27,19 +22,25 @@ Array.prototype.vec3_zero = function () {
     return this;
 };
 
+Array.prototype.vec3_add = function (vector, out = glMatrix.vec3.create()) {
+    glMatrix.vec3.add(out, this, vector);
+    return out;
+};
+
+Array.prototype.vec3_mul = function (vector, out = glMatrix.vec3.create()) {
+    glMatrix.vec3.mul(out, this, vector);
+    return out;
+};
+
+Array.prototype.vec3_scale = function (value, out = glMatrix.vec3.create()) {
+    glMatrix.vec3.scale(out, this, value);
+    return out;
+};
+
 //New Methods
 
 Array.prototype.vec3_getNormalized = function (out = glMatrix.vec3.create()) {
     glMatrix.vec3.normalize(out, this);
-    return out;
-};
-
-Array.prototype.vec3_getComponentAlongAxis = function (axis, out = glMatrix.vec3.create()) {
-    let angle = glMatrix.vec3.angle(this, axis);
-    let length = Math.cos(angle) * glMatrix.vec3.length(this);
-
-    glMatrix.vec3.copy(out, axis);
-    glMatrix.vec3.scale(out, out, length);
     return out;
 };
 
@@ -53,11 +54,33 @@ Array.prototype.vec3_toDegrees = function (out = glMatrix.vec3.create()) {
     return out;
 };
 
-Array.prototype.vec3_removeComponentAlongAxis = function (axis, out = glMatrix.vec3.create()) {
-    let componentAlong = this.vec3_getComponentAlongVector(axis);
-    glMatrix.vec3.sub(out, this, componentAlong);
+Array.prototype.vec3_radiansToQuat = function (out = glMatrix.quat.create()) {
+    out.quat_fromRadians(this);
     return out;
 };
+
+Array.prototype.vec3_degreesToQuat = function (out = glMatrix.quat.create()) {
+    out.quat_fromDegrees(this);
+    return out;
+};
+
+Array.prototype.vec3_getComponentAlongAxis = function (axis, out = glMatrix.vec3.create()) {
+    let angle = glMatrix.vec3.angle(this, axis);
+    let length = Math.cos(angle) * glMatrix.vec3.length(this);
+
+    glMatrix.vec3.copy(out, axis);
+    glMatrix.vec3.scale(out, out, length);
+    return out;
+};
+
+Array.prototype.vec3_removeComponentAlongAxis = function () {
+    let componentAlong = glMatrix.vec3.create();
+    return function (axis, out = glMatrix.vec3.create()) {
+        this.vec3_getComponentAlongAxis(axis, componentAlong);
+        glMatrix.vec3.sub(out, this, componentAlong);
+        return out;
+    };
+}();
 
 Array.prototype.vec3_isConcordant = function (vector) {
     return glMatrix.vec3.angle(this, vector) <= Math.PI / 2;
@@ -109,15 +132,15 @@ Array.prototype.quat_getNormalized = function (out = glMatrix.quat.create()) {
 
 Array.prototype.quat_fromRadians = function () {
     let vector = glMatrix.vec3.create();
-    return function (radiansRotation, out) {
+    return function (radiansRotation) {
         radiansRotation.vec3_toDegrees(vector);
-        return this.quat_fromDegrees(vector, out);
+        return this.quat_fromDegrees(vector);
     };
 }();
 
-Array.prototype.quat_fromDegrees = function (degreesRotation, out = glMatrix.quat.create()) {
-    glMatrix.quat.fromEuler(out, degreesRotation[0], degreesRotation[1], degreesRotation[2]);
-    return out;
+Array.prototype.quat_fromDegrees = function (degreesRotation) {
+    glMatrix.quat.fromEuler(this, degreesRotation[0], degreesRotation[1], degreesRotation[2]);
+    return this;
 };
 
 //QUAT 2
@@ -163,19 +186,17 @@ Array.prototype.quat2_getAxes = function () {
     };
 }();
 
-Array.prototype.quat2_toLocal = function (parentTransform, out = glMatrix.quat2.create()) {
-    glMatrix.quat2.conjugate(out, parentTransform);
-    glMatrix.quat2.mul(out, out, this);
-    return out;
-};
+Array.prototype.quat2_toLocal = function () {
+    let invertQuat = glMatrix.quat2.create();
+    return function (parentTransform, out = glMatrix.quat2.create()) {
+        glMatrix.quat2.conjugate(invertQuat, parentTransform);
+        glMatrix.quat2.mul(out, invertQuat, this);
+        return out;
+    };
+}();
 
 Array.prototype.quat2_toWorld = function (parentTransform, out = glMatrix.quat2.create()) {
     glMatrix.quat2.mul(out, parentTransform, this);
-    return out;
-};
-
-Array.prototype.quat2_fromDegrees = function (degreesRotation, out = glMatrix.quat2.create()) {
-    glMatrix.quat2.fromEuler(out, degreesRotation[0], degreesRotation[1], degreesRotation[2]);
     return out;
 };
 
@@ -193,6 +214,11 @@ Array.prototype.mat4_identity = function () {
     return this;
 };
 
+Array.prototype.mat4_fromRotationTranslationScale = function (rotation, translation, scale) {
+    glMatrix.mat4.fromRotationTranslationScale(this, rotation, translation, scale);
+    return this;
+};
+
 //New Methods
 
 Array.prototype.mat4_getAxes = function (out = [glMatrix.vec3.create(), glMatrix.vec3.create(), glMatrix.vec3.create()]) {
@@ -207,11 +233,14 @@ Array.prototype.mat4_getAxes = function (out = [glMatrix.vec3.create(), glMatrix
     return out;
 };
 
-Array.prototype.mat4_toLocal = function (parentTransform, out = glMatrix.mat4.create()) {
-    glMatrix.mat4.invert(out, parentTransform);
-    glMatrix.mat4.mul(out, out, this);
-    return out;
-};
+Array.prototype.mat4_toLocal = function () {
+    let invertMatrix = glMatrix.mat4.create();
+    return function (parentTransform, out = glMatrix.mat4.create()) {
+        glMatrix.mat4.invert(invertMatrix, parentTransform);
+        glMatrix.mat4.mul(out, invertMatrix, this);
+        return out;
+    };
+}();
 
 Array.prototype.mat4_toWorld = function (parentTransform, out = glMatrix.mat4.create()) {
     glMatrix.mat4.mul(out, parentTransform, this);
