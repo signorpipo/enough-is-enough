@@ -694,6 +694,20 @@ WL.registerComponent('test-prototype', {
             this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformWorldToObjectQuat(this.object.pp_convertTransformLocalToWorldQuat(this.object.pp_convertTransformObjectToLocalQuat(defaultQuat2))));
         }
 
+        console.warn("\nUNIFORM SCALE\n");
+        this.object.pp_setScale([2, 2, 2]);
+        console.warn(this.object.pp_hasUniformScale());
+        this.object.pp_setScale([2, 2, 1]);
+        console.warn(this.object.pp_hasUniformScale());
+        this.object.pp_setScaleWorld([3, 2, 2]);
+        console.warn(this.object.pp_hasUniformScaleWorld());
+        this.object.pp_setScaleWorld([3, 2, 1]);
+        console.warn(this.object.pp_hasUniformScaleWorld());
+        this.object.pp_setScaleLocal([3, 2, 1]);
+        console.warn(this.object.pp_hasUniformScaleLocal());
+        this.object.pp_setScaleLocal([3, 3, 3]);
+        console.warn(this.object.pp_hasUniformScaleLocal());
+
         console.warn("\nCAULDRON\n");
         this.object.pp_setName("ciao");
         this.object.pp_getName();

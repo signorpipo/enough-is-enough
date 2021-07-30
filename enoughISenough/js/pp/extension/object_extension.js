@@ -1503,6 +1503,28 @@ WL.Object.prototype.pp_setActiveChildren = function (active) {
     }
 };
 
+//Uniform Scale
+
+WL.Object.prototype.pp_hasUniformScale = function () {
+    return this.pp_hasUniformScaleWorld();
+};
+
+WL.Object.prototype.pp_hasUniformScaleWorld = function () {
+    let scale = glMatrix.vec3.create();
+    return function () {
+        this.pp_getScaleWorld(scale);
+        return scale[0] == scale[1] && scale[1] == scale[2];
+    };
+}();
+
+WL.Object.prototype.pp_hasUniformScaleLocal = function () {
+    let scale = glMatrix.vec3.create();
+    return function () {
+        this.pp_getScaleLocal(scale);
+        return scale[0] == scale[1] && scale[1] == scale[2];
+    };
+}();
+
 //Cauldron
 
 WL.Object.prototype.pp_getName = function () {
