@@ -102,6 +102,20 @@ Array.prototype.vec3_rotateAroundAxis = function () {
     };
 }();
 
+Array.prototype.vec3_convertPositionToWorldMatrix = function (parentTransform, out = glMatrix.vec3.create()) {
+    glMatrix.vec3.transformMat4(out, this, parentTransform);
+    return out;
+};
+
+Array.prototype.vec3_convertPositionToLocalMatrix = function () {
+    let inverse = glMatrix.mat4.create();
+    return function (parentTransform, out = glMatrix.vec3.create()) {
+        glMatrix.mat4.invert(inverse, parentTransform);
+        glMatrix.vec3.transformMat4(out, this, inverse);
+        return out;
+    };
+}();
+
 //QUAT
 
 //glMatrix Bridge
@@ -251,6 +265,11 @@ Array.prototype.mat4_getScale = function (out = glMatrix.vec3.create()) {
     return out;
 };
 
+Array.prototype.mat4_clone = function (out = glMatrix.mat4.create()) {
+    glMatrix.mat4.copy(out, this);
+    return out;
+};
+
 //New Methods
 
 Array.prototype.mat4_getAxes = function (out = [glMatrix.vec3.create(), glMatrix.vec3.create(), glMatrix.vec3.create()]) {
@@ -274,10 +293,67 @@ Array.prototype.mat4_toLocal = function () {
     };
 }();
 
-Array.prototype.mat4_toWorld = function (parentTransform, out = glMatrix.mat4.create()) {
-    glMatrix.mat4.mul(out, parentTransform, this);
-    return out;
-};
+Array.prototype.mat4_toWorld = function () {
+    let convertTransform = glMatrix.mat4.create();
+    let position = glMatrix.vec3.create();
+    let scale = glMatrix.vec3.create();
+    let inverseScale = glMatrix.vec3.create();
+    let one = glMatrix.vec3.create();
+    glMatrix.vec3.set(one, 1, 1, 1);
+    return function (parentTransform, out = glMatrix.mat4.create()) {
+        if (parentTransform.mat4_hasUniformScale()) {
+            glMatrix.mat4.mul(out, parentTransform, this);
+        } else {
+            glMatrix.vec3.set(position, this[12], this[13], this[14]);
+            position.vec3_convertPositionToWorldMatrix(parentTransform, position);
+
+            glMatrix.mat4.getScaling(scale, parentTransform);
+            glMatrix.vec3.divide(inverseScale, one, scale);
+            glMatrix.mat4.scale(convertTransform, parentTransform, inverseScale);
+
+            glMatrix.mat4.mul(out, convertTransform, this);
+            glMatrix.mat4.scale(out, out, scale);
+
+            out[12] = position[0];
+            out[13] = position[1];
+            out[14] = position[2];
+            out[15] = 1;
+        }
+        return out;
+    };
+}();
+
+Array.prototype.mat4_toLocal = function () {
+    let convertTransform = glMatrix.mat4.create();
+    let position = glMatrix.vec3.create();
+    let scale = glMatrix.vec3.create();
+    let inverseScale = glMatrix.vec3.create();
+    let one = glMatrix.vec3.create();
+    glMatrix.vec3.set(one, 1, 1, 1);
+    return function (parentTransform, out = glMatrix.mat4.create()) {
+        if (parentTransform.mat4_hasUniformScale()) {
+            glMatrix.mat4.invert(convertTransform, parentTransform);
+            glMatrix.mat4.mul(out, convertTransform, this);
+        } else {
+            glMatrix.vec3.set(position, this[12], this[13], this[14]);
+            position.vec3_convertPositionToLocalMatrix(parentTransform, position);
+
+            glMatrix.mat4.getScaling(scale, parentTransform);
+            glMatrix.vec3.divide(inverseScale, one, scale);
+            glMatrix.mat4.scale(convertTransform, parentTransform, inverseScale);
+
+            glMatrix.mat4.invert(convertTransform, convertTransform);
+            glMatrix.mat4.mul(out, convertTransform, this);
+            glMatrix.mat4.scale(out, out, inverseScale);
+
+            out[12] = position[0];
+            out[13] = position[1];
+            out[14] = position[2];
+            out[15] = 1;
+        }
+        return out;
+    };
+}();
 
 Array.prototype.mat4_setScale = function () {
     let tempScale = glMatrix.vec3.create();
@@ -289,7 +365,10 @@ Array.prototype.mat4_setScale = function () {
     };
 }();
 
-Array.prototype.mat4_clone = function (out = glMatrix.mat4.create()) {
-    glMatrix.mat4.copy(out, this);
-    return out;
-};
+Array.prototype.mat4_hasUniformScale = function () {
+    let scale = glMatrix.vec3.create();
+    return function () {
+        glMatrix.mat4.getScaling(scale, this);
+        return Math.abs(scale[0] - scale[1]) < 0.000001 && Math.abs(scale[1] - scale[2]) < 0.000001 && Math.abs(scale[0] - scale[2]) < 0.000001;
+    };
+}();

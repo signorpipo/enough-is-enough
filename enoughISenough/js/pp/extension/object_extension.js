@@ -43,6 +43,8 @@
         - pp_convertDirectionObjectToWorld (you can use all the combinations between Object/Local/World)
         - pp_convertTransformObjectToWorld (you can use all the combinations between Object/Local/World) (u also have Quat and Matrix version)
 
+        - pp_hasUniformScale
+
         - pp_addComponent  / pp_getComponent  / pp_getComponentHierarchy / pp_getComponentChildren
         - pp_getComponents  / pp_getComponentsHierarchy / pp_getComponentsChildren
 
@@ -1576,7 +1578,7 @@ WL.Object.prototype.pp_hasUniformScaleWorld = function () {
     let scale = glMatrix.vec3.create();
     return function () {
         this.pp_getScaleWorld(scale);
-        return scale[0] == scale[1] && scale[1] == scale[2];
+        return Math.abs(scale[0] - scale[1]) < 0.000001 && Math.abs(scale[1] - scale[2]) < 0.000001 && Math.abs(scale[0] - scale[2]) < 0.000001;
     };
 }();
 
@@ -1584,7 +1586,7 @@ WL.Object.prototype.pp_hasUniformScaleLocal = function () {
     let scale = glMatrix.vec3.create();
     return function () {
         this.pp_getScaleLocal(scale);
-        return scale[0] == scale[1] && scale[1] == scale[2];
+        return Math.abs(scale[0] - scale[1]) < 0.000001 && Math.abs(scale[1] - scale[2]) < 0.000001 && Math.abs(scale[0] - scale[2]) < 0.000001;
     };
 }();
 

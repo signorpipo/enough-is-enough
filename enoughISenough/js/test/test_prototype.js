@@ -705,7 +705,7 @@ WL.registerComponent('test-prototype', {
         console.warn(this.object.pp_hasUniformScaleWorld());
         this.object.pp_setScaleWorld([3, 2, 1]);
         console.warn(this.object.pp_hasUniformScaleWorld());
-        this.object.pp_setScaleLocal([3, 2, 1]);
+        this.object.pp_setScaleLocal([1, 2, 3]);
         console.warn(this.object.pp_hasUniformScaleLocal());
         this.object.pp_setScaleLocal([3, 3, 3]);
         console.warn(this.object.pp_hasUniformScaleLocal());
