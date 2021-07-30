@@ -2,9 +2,9 @@
 
 //glMatrix Bridge
 
-Array.prototype.vec3_normalize = function () {
-    glMatrix.vec3.normalize(this, this);
-    return this;
+Array.prototype.vec3_normalize = function (out = glMatrix.vec3.create()) {
+    glMatrix.vec3.normalize(out, this);
+    return out;
 };
 
 Array.prototype.vec3_copy = function (vector) {
@@ -20,6 +20,14 @@ Array.prototype.vec3_set = function (x, y, z) {
 Array.prototype.vec3_zero = function () {
     glMatrix.vec3.zero(this);
     return this;
+};
+
+Array.prototype.vec3_angle = function (vector) {
+    return glMatrix.vec3.angle(this, vector);
+};
+
+Array.prototype.vec3_length = function () {
+    return glMatrix.vec3.length(this);
 };
 
 Array.prototype.vec3_add = function (vector, out = glMatrix.vec3.create()) {
@@ -38,11 +46,6 @@ Array.prototype.vec3_scale = function (value, out = glMatrix.vec3.create()) {
 };
 
 //New Methods
-
-Array.prototype.vec3_getNormalized = function (out = glMatrix.vec3.create()) {
-    glMatrix.vec3.normalize(out, this);
-    return out;
-};
 
 Array.prototype.vec3_toRadians = function (out = glMatrix.vec3.create()) {
     glMatrix.vec3.set(out, glMatrix.glMatrix.toRadian(this[0]), glMatrix.glMatrix.toRadian(this[1]), glMatrix.glMatrix.toRadian(this[2]));
@@ -103,9 +106,9 @@ Array.prototype.vec3_rotateAroundAxis = function () {
 
 //glMatrix Bridge
 
-Array.prototype.quat_normalize = function () {
-    glMatrix.quat.normalize(this, this);
-    return this;
+Array.prototype.quat_normalize = function (out = glMatrix.quat.create()) {
+    glMatrix.quat.normalize(out, this);
+    return out;
 };
 
 Array.prototype.quat_copy = function (quat) {
@@ -124,11 +127,6 @@ Array.prototype.quat_identity = function () {
 };
 
 //New Methods
-
-Array.prototype.quat_getNormalized = function (out = glMatrix.quat.create()) {
-    glMatrix.quat.normalize(out, this);
-    return out;
-};
 
 Array.prototype.quat_fromRadians = function () {
     let vector = glMatrix.vec3.create();
@@ -176,9 +174,9 @@ Array.prototype.quat_toDegrees = function (out = glMatrix.vec3.create()) {
 
 //glMatrix Bridge
 
-Array.prototype.quat2_normalize = function () {
-    glMatrix.quat2.normalize(this, this);
-    return this;
+Array.prototype.quat2_normalize = function (out = glMatrix.quat2.create()) {
+    glMatrix.quat2.normalize(out, this);
+    return out;
 };
 
 Array.prototype.quat2_copy = function (quat2) {
@@ -192,11 +190,6 @@ Array.prototype.quat2_identity = function () {
 };
 
 //New Methods
-
-Array.prototype.quat2_getNormalized = function (out = glMatrix.quat2.create()) {
-    glMatrix.quat2.normalize(out, this);
-    return out;
-};
 
 Array.prototype.quat2_getAxes = function () {
     let rotationMatrix = glMatrix.mat3.create();
@@ -243,9 +236,19 @@ Array.prototype.mat4_identity = function () {
     return this;
 };
 
-Array.prototype.mat4_fromRotationTranslationScale = function (rotation, translation, scale) {
+Array.prototype.mat4_fromTranslationRotationScale = function (translation, rotation, scale) {
     glMatrix.mat4.fromRotationTranslationScale(this, rotation, translation, scale);
     return this;
+};
+
+Array.prototype.mat4_invert = function (out = glMatrix.mat4.create()) {
+    glMatrix.mat4.invert(out, this);
+    return out;
+};
+
+Array.prototype.mat4_getScale = function (out = glMatrix.vec3.create()) {
+    glMatrix.mat4.getScaling(out, this);
+    return out;
 };
 
 //New Methods
@@ -273,5 +276,20 @@ Array.prototype.mat4_toLocal = function () {
 
 Array.prototype.mat4_toWorld = function (parentTransform, out = glMatrix.mat4.create()) {
     glMatrix.mat4.mul(out, parentTransform, this);
+    return out;
+};
+
+Array.prototype.mat4_setScale = function () {
+    let tempScale = glMatrix.vec3.create();
+    return function (scale) {
+        glMatrix.mat4.getScaling(tempScale, this);
+        glMatrix.vec3.divide(tempScale, scale, tempScale);
+        glMatrix.mat4.scale(this, this, tempScale);
+        return this;
+    };
+}();
+
+Array.prototype.mat4_clone = function (out = glMatrix.mat4.create()) {
+    glMatrix.mat4.copy(out, this);
     return out;
 };
