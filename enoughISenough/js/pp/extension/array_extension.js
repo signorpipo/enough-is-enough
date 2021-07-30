@@ -143,6 +143,35 @@ Array.prototype.quat_fromDegrees = function (degreesRotation) {
     return this;
 };
 
+Array.prototype.quat_toRadians = function () {
+    let mat3 = glMatrix.mat3.create();
+    return function (out = glMatrix.vec3.create()) {
+        glMatrix.mat3.fromQuat(mat3, this);
+
+        //Rotation order is ZYX 
+        out[1] = Math.asin(-Math.pp_clamp(mat3[2], -1, 1));
+
+        if (Math.abs(mat3[2]) < 0.9999999) {
+
+            out[0] = Math.atan2(mat3[5], mat3[8]);
+            out[2] = Math.atan2(mat3[1], mat3[0]);
+
+        } else {
+
+            out[0] = 0;
+            out[2] = Math.atan2(-mat3[3], mat3[4]);
+        }
+
+        return out;
+    };
+}();
+
+Array.prototype.quat_toDegrees = function (out = glMatrix.vec3.create()) {
+    this.quat_toRadians(out);
+    out.vec3_toDegrees(out);
+    return out;
+};
+
 //QUAT 2
 
 //glMatrix Bridge
