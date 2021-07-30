@@ -1285,18 +1285,44 @@ WL.Object.prototype.pp_convertTransformObjectToWorld = function (transform, resu
 
 WL.Object.prototype.pp_convertTransformObjectToWorldMatrix = function () {
     let convertTransform = glMatrix.mat4.create();
+    let position = glMatrix.vec3.create();
+    let scale = glMatrix.vec3.create();
+    let inverseScale = glMatrix.vec3.create();
+    let one = glMatrix.vec3.create();
+    glMatrix.vec3.set(one, 1, 1, 1);
     return function (transform, resultTransform = glMatrix.mat4.create()) {
         this.pp_getTransformWorldMatrix(convertTransform);
-        glMatrix.mat4.mul(resultTransform, convertTransform, transform);
+        if (this.pp_hasUniformScaleWorld()) {
+            glMatrix.mat4.mul(resultTransform, convertTransform, transform);
+        } else {
+            glMatrix.vec3.set(position, transform[12], transform[13], transform[14]);
+            this.pp_convertPositionObjectToWorld(position, position);
+
+            glMatrix.mat4.getScaling(scale, convertTransform);
+            glMatrix.vec3.divide(inverseScale, one, scale);
+            glMatrix.mat4.scale(convertTransform, convertTransform, inverseScale);
+
+            glMatrix.mat4.mul(resultTransform, convertTransform, transform);
+            glMatrix.mat4.scale(resultTransform, resultTransform, scale);
+
+            resultTransform[12] = position[0];
+            resultTransform[13] = position[1];
+            resultTransform[14] = position[2];
+            resultTransform[15] = 1;
+        }
         return resultTransform;
     };
 }();
 
 WL.Object.prototype.pp_convertTransformObjectToWorldQuat = function () {
-    let convertTransform = glMatrix.quat2.create();
+    let position = glMatrix.vec3.create();
+    let rotation = glMatrix.quat.create();
     return function (transform, resultTransform = glMatrix.quat2.create()) {
-        this.pp_getTransformWorldQuat(convertTransform);
-        glMatrix.quat2.mul(resultTransform, convertTransform, transform);
+        this.pp_getRotationWorldQuat(rotation);
+        glMatrix.quat.mul(rotation, rotation, transform);
+        glMatrix.quat2.getTranslation(position, transform);
+        this.pp_convertPositionObjectToWorld(position, position);
+        glMatrix.quat2.fromRotationTranslation(resultTransform, rotation, position);
         return resultTransform;
     };
 }();
@@ -1307,10 +1333,33 @@ WL.Object.prototype.pp_convertTransformWorldToObject = function (transform, resu
 
 WL.Object.prototype.pp_convertTransformWorldToObjectMatrix = function () {
     let convertTransform = glMatrix.mat4.create();
+    let position = glMatrix.vec3.create();
+    let scale = glMatrix.vec3.create();
+    let inverseScale = glMatrix.vec3.create();
+    let one = glMatrix.vec3.create();
+    glMatrix.vec3.set(one, 1, 1, 1);
     return function (transform, resultTransform = glMatrix.mat4.create()) {
         this.pp_getTransformWorldMatrix(convertTransform);
-        glMatrix.mat4.invert(convertTransform, convertTransform);
-        glMatrix.mat4.mul(resultTransform, convertTransform, transform);
+        if (this.pp_hasUniformScaleWorld()) {
+            glMatrix.mat4.invert(convertTransform, convertTransform);
+            glMatrix.mat4.mul(resultTransform, convertTransform, transform);
+        } else {
+            glMatrix.vec3.set(position, transform[12], transform[13], transform[14]);
+            this.pp_convertPositionWorldToObject(position, position);
+
+            glMatrix.mat4.getScaling(scale, convertTransform);
+            glMatrix.vec3.divide(inverseScale, one, scale);
+            glMatrix.mat4.scale(convertTransform, convertTransform, inverseScale);
+
+            glMatrix.mat4.invert(convertTransform, convertTransform);
+            glMatrix.mat4.mul(resultTransform, convertTransform, transform);
+            glMatrix.mat4.scale(resultTransform, resultTransform, inverseScale);
+
+            resultTransform[12] = position[0];
+            resultTransform[13] = position[1];
+            resultTransform[14] = position[2];
+            resultTransform[15] = 1;
+        }
         return resultTransform;
     };
 }();
@@ -1321,6 +1370,20 @@ WL.Object.prototype.pp_convertTransformWorldToObjectQuat = function () {
         this.pp_getTransformWorldQuat(convertTransform);
         glMatrix.quat2.conjugate(convertTransform, convertTransform);
         glMatrix.quat2.mul(resultTransform, convertTransform, transform);
+        return resultTransform;
+    };
+}();
+
+WL.Object.prototype.pp_convertTransformWorldToObjectQuat = function () {
+    let position = glMatrix.vec3.create();
+    let rotation = glMatrix.quat.create();
+    return function (transform, resultTransform = glMatrix.quat2.create()) {
+        this.pp_getRotationWorldQuat(rotation);
+        glMatrix.quat.conjugate(rotation, rotation);
+        glMatrix.quat.mul(rotation, rotation, transform);
+        glMatrix.quat2.getTranslation(position, transform);
+        this.pp_convertPositionWorldToObject(position, position);
+        glMatrix.quat2.fromRotationTranslation(resultTransform, rotation, position);
         return resultTransform;
     };
 }();

@@ -688,10 +688,12 @@ WL.registerComponent('test-prototype', {
             console.warn("\nCONVERT TRANSFORM CHAIN\n");
             this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformObjectToWorld(this.object.pp_convertTransformLocalToObject(this.object.pp_convertTransformWorldToLocal(defaultMatrix))));
             this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformWorldToObject(this.object.pp_convertTransformLocalToWorld(this.object.pp_convertTransformObjectToLocal(defaultMatrix))));
-            this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformObjectToWorldMatrix(this.object.pp_convertTransformLocalToObjectMatrix(this.object.pp_convertTransformWorldToLocalMatrix(defaultMatrix))));
-            this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformWorldToObjectMatrix(this.object.pp_convertTransformLocalToWorldMatrix(this.object.pp_convertTransformObjectToLocalMatrix(defaultMatrix))));
+            this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformObjectToWorldMatrix(this.object.pp_convertTransformLocalToObjectMatrix(this.object.pp_convertTransformWorldToLocalMatrix(this.object.pp_getTransformWorldMatrix()))));
+            this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformWorldToObjectMatrix(this.object.pp_convertTransformLocalToWorldMatrix(this.object.pp_convertTransformObjectToLocalMatrix(this.object.pp_getTransformWorldMatrix()))));
             this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformObjectToWorldQuat(this.object.pp_convertTransformLocalToObjectQuat(this.object.pp_convertTransformWorldToLocalQuat(defaultQuat2))));
             this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformWorldToObjectQuat(this.object.pp_convertTransformLocalToWorldQuat(this.object.pp_convertTransformObjectToLocalQuat(defaultQuat2))));
+            this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformObjectToWorldQuat(this.object.pp_convertTransformLocalToObjectQuat(this.object.pp_convertTransformWorldToLocalQuat(this.object.pp_getTransformWorldQuat()))));
+            this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformWorldToObjectQuat(this.object.pp_convertTransformLocalToWorldQuat(this.object.pp_convertTransformObjectToLocalQuat(this.object.pp_getTransformWorldQuat()))));
         }
 
         console.warn("\nUNIFORM SCALE\n");

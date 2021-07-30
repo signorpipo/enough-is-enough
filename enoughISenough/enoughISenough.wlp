@@ -513,11 +513,7 @@
             },
             "parent": "58",
             "components": [
-                null,
-                {
-                    "type": "test-print-axes",
-                    "active": false
-                }
+                null
             ]
         },
         "60": {
@@ -656,7 +652,8 @@
             "parent": "87",
             "components": [
                 {
-                    "type": "test-prototype"
+                    "type": "test-prototype",
+                    "active": false
                 }
             ],
             "transformation": [
