@@ -1,4 +1,4 @@
-class DebugLine {
+PP.DebugLine = class DebugLine {
 
     constructor(autoRefresh = true) {
         this._myLineRootObject = null;
@@ -100,13 +100,13 @@ class DebugLine {
     }
 
     _buildLine() {
-        this._myLineRootObject = WL.scene.addObject(DebugData.myRootObject);
+        this._myLineRootObject = WL.scene.addObject(PP.DebugData.myRootObject);
         this._myLineObject = WL.scene.addObject(this._myLineRootObject);
         this._myLineObject.scale([0.01, 0.01, 0.01]);
 
         this._myLineMesh = this._myLineObject.addComponent('mesh');
-        this._myLineMesh.mesh = DebugData.myCubeMesh;
-        this._myLineMesh.material = DebugData.myFlatMaterial.clone();
+        this._myLineMesh.mesh = PP.DebugData.myCubeMesh;
+        this._myLineMesh.material = PP.DebugData.myFlatMaterial.clone();
     }
 
     _markDirty() {

@@ -141,14 +141,7 @@ WL.registerComponent('test-print-axes', {
         console.warn(result);
     },
     start: function () {
-        this._myDebugForward = new DebugLine();
-        this._myDebugForward.setColor([0, 0, 1, 1]);
-
-        this._myDebugUp = new DebugLine();
-        this._myDebugUp.setColor([0, 1, 0, 1]);
-
-        this._myDebugRight = new DebugLine();
-        this._myDebugRight.setColor([1, 0, 0, 1]);
+        this._myDebugAxes = new PP.DebugAxes();
     },
     update: function (dt) {
         if (this._myCounter >= 0) {
@@ -197,8 +190,6 @@ WL.registerComponent('test-print-axes', {
         this._myDebugRight.update(dt);
         */
 
-        this._myDebugForward.setStartDirectionLength(this.object.pp_getPosition(), this.object.pp_getForward(), 0.1);
-        this._myDebugUp.setStartDirectionLength(this.object.pp_getPosition(), this.object.pp_getUp(), 0.1);
-        this._myDebugRight.setStartDirectionLength(this.object.pp_getPosition(), this.object.pp_getRight(), 0.1);
+        this._myDebugAxes.setTransform(this.object.transformWorld);
     }
 });

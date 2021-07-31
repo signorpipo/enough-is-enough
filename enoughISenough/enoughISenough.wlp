@@ -359,7 +359,8 @@
                         "_myHandedness": "left",
                         "_myPlaneMaterial": "66",
                         "_myTextMaterial": "DefaultFontMaterial"
-                    }
+                    },
+                    "active": true
                 }
             ],
             "name": "Hand Left",
@@ -481,9 +482,6 @@
                         "_myCursorMaterial": "66",
                         "_myShowFingerCursor": true
                     }
-                },
-                {
-                    "type": "test-print-axes"
                 }
             ],
             "name": "Hand Right",
@@ -653,7 +651,7 @@
             "components": [
                 {
                     "type": "test-prototype",
-                    "active": true
+                    "active": false
                 }
             ],
             "transformation": [
@@ -1456,8 +1454,8 @@
                 "js/test",
                 "js/pp/cauldron/component",
                 "js/pp/cauldron/utils",
-                "js/debug",
-                "js/pp/extension"
+                "js/pp/extension",
+                "js/pp/debug"
             ]
         },
         "editor": {

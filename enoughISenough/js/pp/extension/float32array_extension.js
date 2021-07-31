@@ -50,6 +50,11 @@ Float32Array.prototype.vec3_scale = function (value, out = glMatrix.vec3.create(
     return out;
 };
 
+Float32Array.prototype.vec3_negate = function (out = glMatrix.vec3.create()) {
+    glMatrix.vec3.negate(out, this);
+    return out;
+};
+
 //New Methods
 
 Float32Array.prototype.vec3_toRadians = function (out = glMatrix.vec3.create()) {
