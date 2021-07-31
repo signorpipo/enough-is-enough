@@ -10,6 +10,7 @@ PP.DebugAxes = class DebugAxes {
 
         this._myTransform = glMatrix.mat4.create();
         this._myAxesLength = 0.1;
+        this._myPositionOffset = [0, 0, 0];
 
         this._myVisible = true;
         this._myDirty = false;
@@ -54,6 +55,12 @@ PP.DebugAxes = class DebugAxes {
         this._markDirty();
     }
 
+    setPositionOffset(offset) {
+        this._myPositionOffset.vec3_copy(offset);
+
+        this._markDirty();
+    }
+
     update(dt) {
         if (this._myDirty) {
             this._refreshAxes(dt);
@@ -69,6 +76,7 @@ PP.DebugAxes = class DebugAxes {
     _refreshAxes(dt) {
         let axes = this._myTransform.mat4_getAxes();
         let position = this._myTransform.mat4_getPosition();
+        position.vec3_add(this._myPositionOffset, position);
         this._myDebugRight.setStartDirectionLength(position, axes[0], this._myAxesLength);
         this._myDebugUp.setStartDirectionLength(position, axes[1], this._myAxesLength);
         this._myDebugForward.setStartDirectionLength(position, axes[2], this._myAxesLength);

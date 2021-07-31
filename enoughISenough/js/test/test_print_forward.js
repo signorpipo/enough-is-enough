@@ -142,6 +142,7 @@ WL.registerComponent('test-print-axes', {
     },
     start: function () {
         this._myDebugAxes = new PP.DebugAxes();
+        this._myDebugAxes.setPositionOffset([0, 0, 0]);
     },
     update: function (dt) {
         if (this._myCounter >= 0) {

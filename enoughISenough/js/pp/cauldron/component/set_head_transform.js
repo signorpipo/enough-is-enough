@@ -18,8 +18,7 @@ WL.registerComponent('set-head-transform', {
         glMatrix.vec3.scale(this._myCurrentHeadPosition, this._myCurrentHeadPosition, 0.5);
 
         this.object.setTranslationWorld(this._myCurrentHeadPosition);
-        this.object.resetRotation();
-        this.object.rotateAxisAngleDegObject([0, 1, 0], 180);
-        this.object.rotateObject(this._myLeftEye.transformWorld);
+        this.object.rotationWorld = this._myLeftEye.rotationWorld;
+        this.object.pp_rotateAxisObject([0, 1, 0], 180);
     },
 });

@@ -42,15 +42,15 @@ PP.DebugLine = class DebugLine {
     }
 
     setStartDirectionLength(start, direction, length) {
-        this._myStartPosition = start;
-        this._myDirection = direction;
+        this._myStartPosition.vec3_copy(start);
+        this._myDirection.vec3_copy(direction);
         this._myLength = length;
 
         this._markDirty();
     }
 
     setColor(color) {
-        this._myColor = color;
+        glMatrix.vec4.copy(this._myColor, color);
 
         this._markDirty();
     }
