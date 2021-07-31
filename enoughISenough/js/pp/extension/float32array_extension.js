@@ -35,6 +35,11 @@ Float32Array.prototype.vec3_add = function (vector, out = glMatrix.vec3.create()
     return out;
 };
 
+Float32Array.prototype.vec3_sub = function (vector, out = glMatrix.vec3.create()) {
+    glMatrix.vec3.sub(out, this, vector);
+    return out;
+};
+
 Float32Array.prototype.vec3_mul = function (vector, out = glMatrix.vec3.create()) {
     glMatrix.vec3.mul(out, this, vector);
     return out;
@@ -98,6 +103,99 @@ Float32Array.prototype.vec3_rotateAroundAxis = function () {
         glMatrix.vec3.transformQuat(out, out, quat);
 
         glMatrix.vec3.add(out, out, origin);
+        return out;
+    };
+}();
+
+Float32Array.prototype.vec3_convertPositionToWorld = function (parentTransform, out) {
+    return this.vec3_convertPositionToWorldMatrix(parentTransform, out);
+};
+
+Float32Array.prototype.vec3_convertPositionToLocal = function (parentTransform, out) {
+    return this.vec3_convertPositionToLocalMatrix(parentTransform, out);
+};
+
+Float32Array.prototype.vec3_convertPositionToWorldMatrix = function (parentTransform, out = glMatrix.vec3.create()) {
+    glMatrix.vec3.transformMat4(out, this, parentTransform);
+    return out;
+};
+
+Float32Array.prototype.vec3_convertPositionToLocalMatrix = function () {
+    let inverse = glMatrix.mat4.create();
+    return function (parentTransform, out = glMatrix.vec3.create()) {
+        glMatrix.mat4.invert(inverse, parentTransform);
+        glMatrix.vec3.transformMat4(out, this, inverse);
+        return out;
+    };
+}();
+
+Float32Array.prototype.vec3_convertPositionToWorldQuat = function () {
+    let parentTransformMatrix = glMatrix.mat4.create();
+    let position = glMatrix.vec3.create();
+    let rotation = glMatrix.quat.create();
+    return function (parentTransform, out = glMatrix.vec3.create()) {
+        parentTransform.quat2_getPosition(position);
+        parentTransform.quat2_getRotationQuat(rotation);
+        parentTransformMatrix.mat4_fromPositionRotation(position, rotation);
+        return this.vec3_convertPositionToWorldMatrix(parentTransformMatrix, out);
+    };
+}();
+
+Float32Array.prototype.vec3_convertPositionToLocalQuat = function () {
+    let parentTransformMatrix = glMatrix.mat4.create();
+    let position = glMatrix.vec3.create();
+    let rotation = glMatrix.quat.create();
+    return function (parentTransform, out = glMatrix.vec3.create()) {
+        parentTransform.quat2_getPosition(position);
+        parentTransform.quat2_getRotationQuat(rotation);
+        parentTransformMatrix.mat4_fromPositionRotation(position, rotation);
+        return this.vec3_convertPositionToLocalMatrix(parentTransformMatrix, out);
+    };
+}();
+
+Float32Array.prototype.vec3_convertDirectionToWorld = function (parentTransform, out) {
+    return this.vec3_convertDirectionToWorldMatrix(parentTransform, out);
+};
+
+Float32Array.prototype.vec3_convertDirectionToLocal = function (parentTransform, out) {
+    return this.vec3_convertDirectionToLocalMatrix(parentTransform, out);
+};
+
+Float32Array.prototype.vec3_convertDirectionToWorldMatrix = function () {
+    let rotation = glMatrix.quat.create();
+    return function (parentTransform, out = glMatrix.vec3.create()) {
+        parentTransform.mat4_getRotationQuat(rotation);
+        glMatrix.vec3.transformQuat(out, this, rotation);
+        return out;
+    };
+}();
+
+Float32Array.prototype.vec3_convertDirectionToLocalMatrix = function () {
+    let rotation = glMatrix.quat.create();
+    return function (parentTransform, out = glMatrix.vec3.create()) {
+        parentTransform.mat4_getRotationQuat(rotation);
+        glMatrix.quat.conjugate(rotation, rotation);
+        glMatrix.vec3.transformQuat(out, this, rotation);
+        return out;
+    };
+}();
+
+
+Float32Array.prototype.vec3_convertDirectionToWorldQuat = function () {
+    let rotation = glMatrix.quat.create();
+    return function (parentTransform, out = glMatrix.vec3.create()) {
+        parentTransform.quat2_getRotationQuat(rotation);
+        glMatrix.vec3.transformQuat(out, this, rotation);
+        return out;
+    };
+}();
+
+Float32Array.prototype.vec3_convertDirectionToLocalQuat = function () {
+    let rotation = glMatrix.quat.create();
+    return function (parentTransform, out = glMatrix.vec3.create()) {
+        parentTransform.quat2_getRotationQuat(rotation);
+        glMatrix.quat.conjugate(rotation, rotation);
+        glMatrix.vec3.transformQuat(out, this, rotation);
         return out;
     };
 }();
@@ -189,6 +287,16 @@ Float32Array.prototype.quat2_identity = function () {
     return this;
 };
 
+Float32Array.prototype.quat2_getPosition = function (out = glMatrix.vec3.create()) {
+    glMatrix.quat2.getTranslation(out, this);
+    return this;
+};
+
+Float32Array.prototype.quat2_getRotationQuat = function (out = glMatrix.quat.create()) {
+    glMatrix.quat.copy(out, this);
+    return this;
+};
+
 //New Methods
 
 Float32Array.prototype.quat2_getAxes = function () {
@@ -236,8 +344,13 @@ Float32Array.prototype.mat4_identity = function () {
     return this;
 };
 
-Float32Array.prototype.mat4_fromTranslationRotationScale = function (translation, rotation, scale) {
-    glMatrix.mat4.fromRotationTranslationScale(this, rotation, translation, scale);
+Float32Array.prototype.mat4_fromPositionRotationScale = function (position, rotation, scale) {
+    glMatrix.mat4.fromRotationTranslationScale(this, rotation, position, scale);
+    return this;
+};
+
+Float32Array.prototype.mat4_fromPositionRotation = function (position, rotation) {
+    glMatrix.mat4.fromRotationTranslation(this, rotation, position);
     return this;
 };
 
@@ -250,6 +363,27 @@ Float32Array.prototype.mat4_getScale = function (out = glMatrix.vec3.create()) {
     glMatrix.mat4.getScaling(out, this);
     return out;
 };
+
+Float32Array.prototype.mat4_clone = function (out = glMatrix.mat4.create()) {
+    glMatrix.mat4.copy(out, this);
+    return out;
+};
+
+Float32Array.prototype.mat4_getRotationQuat = function () {
+    let scale = glMatrix.vec3.create();
+    let transformMatrixNoScale = glMatrix.mat4.create();
+    let inverseScale = glMatrix.vec3.create();
+    let one = glMatrix.vec3.create();
+    glMatrix.vec3.set(one, 1, 1, 1);
+    return function (out = glMatrix.quat.create()) {
+        glMatrix.mat4.getScaling(scale, this);
+        glMatrix.vec3.divide(inverseScale, one, scale);
+        glMatrix.mat4.scale(transformMatrixNoScale, this, inverseScale);
+        glMatrix.mat4.getRotation(out, transformMatrixNoScale);
+        glMatrix.quat.normalize(out, out);
+        return out;
+    };
+}();
 
 //New Methods
 
@@ -274,10 +408,67 @@ Float32Array.prototype.mat4_toLocal = function () {
     };
 }();
 
-Float32Array.prototype.mat4_toWorld = function (parentTransform, out = glMatrix.mat4.create()) {
-    glMatrix.mat4.mul(out, parentTransform, this);
-    return out;
-};
+Float32Array.prototype.mat4_toWorld = function () {
+    let convertTransform = glMatrix.mat4.create();
+    let position = glMatrix.vec3.create();
+    let scale = glMatrix.vec3.create();
+    let inverseScale = glMatrix.vec3.create();
+    let one = glMatrix.vec3.create();
+    glMatrix.vec3.set(one, 1, 1, 1);
+    return function (parentTransform, out = glMatrix.mat4.create()) {
+        if (parentTransform.mat4_hasUniformScale()) {
+            glMatrix.mat4.mul(out, parentTransform, this);
+        } else {
+            glMatrix.vec3.set(position, this[12], this[13], this[14]);
+            position.vec3_convertPositionToWorldMatrix(parentTransform, position);
+
+            glMatrix.mat4.getScaling(scale, parentTransform);
+            glMatrix.vec3.divide(inverseScale, one, scale);
+            glMatrix.mat4.scale(convertTransform, parentTransform, inverseScale);
+
+            glMatrix.mat4.mul(out, convertTransform, this);
+            glMatrix.mat4.scale(out, out, scale);
+
+            out[12] = position[0];
+            out[13] = position[1];
+            out[14] = position[2];
+            out[15] = 1;
+        }
+        return out;
+    };
+}();
+
+Float32Array.prototype.mat4_toLocal = function () {
+    let convertTransform = glMatrix.mat4.create();
+    let position = glMatrix.vec3.create();
+    let scale = glMatrix.vec3.create();
+    let inverseScale = glMatrix.vec3.create();
+    let one = glMatrix.vec3.create();
+    glMatrix.vec3.set(one, 1, 1, 1);
+    return function (parentTransform, out = glMatrix.mat4.create()) {
+        if (parentTransform.mat4_hasUniformScale()) {
+            glMatrix.mat4.invert(convertTransform, parentTransform);
+            glMatrix.mat4.mul(out, convertTransform, this);
+        } else {
+            glMatrix.vec3.set(position, this[12], this[13], this[14]);
+            position.vec3_convertPositionToLocalMatrix(parentTransform, position);
+
+            glMatrix.mat4.getScaling(scale, parentTransform);
+            glMatrix.vec3.divide(inverseScale, one, scale);
+            glMatrix.mat4.scale(convertTransform, parentTransform, inverseScale);
+
+            glMatrix.mat4.invert(convertTransform, convertTransform);
+            glMatrix.mat4.mul(out, convertTransform, this);
+            glMatrix.mat4.scale(out, out, inverseScale);
+
+            out[12] = position[0];
+            out[13] = position[1];
+            out[14] = position[2];
+            out[15] = 1;
+        }
+        return out;
+    };
+}();
 
 Float32Array.prototype.mat4_setScale = function () {
     let tempScale = glMatrix.vec3.create();
@@ -289,7 +480,10 @@ Float32Array.prototype.mat4_setScale = function () {
     };
 }();
 
-Float32Array.prototype.mat4_clone = function (out = glMatrix.mat4.create()) {
-    glMatrix.mat4.copy(out, this);
-    return out;
-};
+Float32Array.prototype.mat4_hasUniformScale = function () {
+    let scale = glMatrix.vec3.create();
+    return function () {
+        glMatrix.mat4.getScaling(scale, this);
+        return Math.abs(scale[0] - scale[1]) < 0.000001 && Math.abs(scale[1] - scale[2]) < 0.000001 && Math.abs(scale[0] - scale[2]) < 0.000001;
+    };
+}();

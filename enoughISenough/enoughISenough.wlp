@@ -653,7 +653,7 @@
             "components": [
                 {
                     "type": "test-prototype",
-                    "active": false
+                    "active": true
                 }
             ],
             "transformation": [
