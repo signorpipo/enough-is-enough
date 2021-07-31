@@ -297,6 +297,11 @@ Float32Array.prototype.quat2_getRotationQuat = function (out = glMatrix.quat.cre
     return this;
 };
 
+Float32Array.prototype.quat2_fromPositionRotation = function (position, rotation) {
+    glMatrix.quat2.fromRotationTranslation(this, rotation, position);
+    return this;
+};
+
 //New Methods
 
 Float32Array.prototype.quat2_getAxes = function () {
@@ -328,6 +333,16 @@ Float32Array.prototype.quat2_toLocal = function () {
 Float32Array.prototype.quat2_toWorld = function (parentTransform, out = glMatrix.quat2.create()) {
     glMatrix.quat2.mul(out, parentTransform, this);
     return out;
+};
+
+Float32Array.prototype.quat2_toTransformMatrix = function (out = glMatrix.mat4.create()) {
+    glMatrix.mat4.fromQuat2(out, this);
+    return out;
+};
+
+Float32Array.prototype.quat2_fromTransformMatrix = function (transformMatrix) {
+    transformMatrix.mat4_toTransformQuat(this);
+    return this;
 };
 
 //MATRIX 4
@@ -366,6 +381,11 @@ Float32Array.prototype.mat4_getScale = function (out = glMatrix.vec3.create()) {
 
 Float32Array.prototype.mat4_clone = function (out = glMatrix.mat4.create()) {
     glMatrix.mat4.copy(out, this);
+    return out;
+};
+
+Float32Array.prototype.mat4_getPosition = function (out = glMatrix.vec3.create()) {
+    glMatrix.mat4.getTranslation(out, this);
     return out;
 };
 
@@ -487,3 +507,19 @@ Float32Array.prototype.mat4_hasUniformScale = function () {
         return Math.abs(scale[0] - scale[1]) < 0.000001 && Math.abs(scale[1] - scale[2]) < 0.000001 && Math.abs(scale[0] - scale[2]) < 0.000001;
     };
 }();
+
+Float32Array.prototype.mat4_toTransformQuat = function () {
+    let position = glMatrix.vec3.create();
+    let rotation = glMatrix.quat.create();
+    return function (out = glMatrix.quat2.create()) {
+        glMatrix.mat4.getTranslation(position, this);
+        this.mat4_getRotationQuat(rotation, this);
+        glMatrix.quat2.fromRotationTranslation(out, rotation, position);
+        return out;
+    };
+}();
+
+Float32Array.prototype.mat4_fromTransformQuat = function (transformQuat) {
+    transformQuat.quat2_toTransformMatrix(this);
+    return this;
+};
