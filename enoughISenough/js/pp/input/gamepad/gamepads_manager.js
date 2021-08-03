@@ -3,7 +3,7 @@
  * Add this manager to an object that will never available destroyed (like the Player object)
  * otherwise the gamepads will not be updated anymore
  */
-WL.registerComponent('gamepads-manager', {
+WL.registerComponent('pp-gamepads-manager', {
 }, {
     init: function () {
     },

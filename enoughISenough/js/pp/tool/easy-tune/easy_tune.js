@@ -1,4 +1,4 @@
-WL.registerComponent('easy-tune', {
+WL.registerComponent('pp-easy-tune', {
     _myHandedness: { type: WL.Type.Enum, values: ['none', 'left', 'right'], default: 'none' },
     _myShowOnStart: { type: WL.Type.Bool, default: false },
     _myShowVisibilityButton: { type: WL.Type.Bool, default: true },

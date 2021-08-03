@@ -1,4 +1,4 @@
-WL.registerComponent('grab', {
+WL.registerComponent('pp-grab', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
     _mySnapOnPivot: { type: WL.Type.Bool, default: false }
 }, {

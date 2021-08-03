@@ -1,7 +1,7 @@
 /**
  * Animate the buttons of a gamepad, like pressing, thumbstick tilting and so on
  */
-WL.registerComponent('gamepad-animator', {
+WL.registerComponent('pp-gamepad-animator', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
     _mySelect: { type: WL.Type.Object, default: null },
     _mySqueeze: { type: WL.Type.Object, default: null },

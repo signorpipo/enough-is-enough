@@ -1,4 +1,4 @@
-WL.registerComponent('finger-cursor', {
+WL.registerComponent('pp-finger-cursor', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
     _myCollisionGroup: { type: WL.Type.Int, default: 1 },
     _myCursorMesh: { type: WL.Type.Mesh, default: null },

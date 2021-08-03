@@ -1,4 +1,4 @@
-WL.registerComponent('grabbable', {
+WL.registerComponent('pp-grabbable', {
 }, {
     init: function () {
         this.myIsGrabbed = false;

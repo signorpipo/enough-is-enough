@@ -1,4 +1,4 @@
-WL.registerComponent('console-vr', {
+WL.registerComponent('pp-console-vr', {
     _myHandedness: { type: WL.Type.Enum, values: ['none', 'left', 'right'], default: 'none' },
     _myOverrideBrowserConsole: { type: WL.Type.Bool, default: true },
     _myShowOnStart: { type: WL.Type.Bool, default: false },

@@ -308,11 +308,11 @@
             "parent": null,
             "components": [
                 {
-                    "type": "gamepads-manager"
+                    "type": "pp-gamepads-manager"
                 },
                 {
-                    "type": "debug-global-data",
-                    "debug-global-data": {
+                    "type": "pp-debug-global-data",
+                    "pp-debug-global-data": {
                         "_myCubeMesh": "8",
                         "_myFlatMaterial": "66"
                     }
@@ -333,8 +333,8 @@
                     }
                 },
                 {
-                    "type": "gamepad-animator",
-                    "gamepad-animator": {
+                    "type": "pp-gamepad-animator",
+                    "pp-gamepad-animator": {
                         "_mySelect": "54",
                         "_mySqueeze": "55",
                         "_myThumbstick": "56",
@@ -343,8 +343,8 @@
                     }
                 },
                 {
-                    "type": "console-vr",
-                    "console-vr": {
+                    "type": "pp-console-vr",
+                    "pp-console-vr": {
                         "_myPlaneMaterial": "66",
                         "_myTextMaterial": "DefaultFontMaterial",
                         "_myHandedness": "left",
@@ -353,8 +353,8 @@
                     "active": true
                 },
                 {
-                    "type": "easy-tune",
-                    "easy-tune": {
+                    "type": "pp-easy-tune",
+                    "pp-easy-tune": {
                         "_myShowVisibilityButton": true,
                         "_myHandedness": "left",
                         "_myPlaneMaterial": "66",
@@ -464,8 +464,8 @@
                     }
                 },
                 {
-                    "type": "gamepad-animator",
-                    "gamepad-animator": {
+                    "type": "pp-gamepad-animator",
+                    "pp-gamepad-animator": {
                         "_myHandedness": "right",
                         "_mySelect": "62",
                         "_mySqueeze": "63",
@@ -475,8 +475,8 @@
                     }
                 },
                 {
-                    "type": "tool-cursor",
-                    "tool-cursor": {
+                    "type": "pp-tool-cursor",
+                    "pp-tool-cursor": {
                         "_myHandedness": "right",
                         "_myCursorMesh": "9",
                         "_myCursorMaterial": "66",
@@ -602,8 +602,8 @@
             "parent": "84",
             "components": [
                 {
-                    "type": "set-head-transform",
-                    "set-head-transform": {
+                    "type": "pp-set-head-transform",
+                    "pp-set-head-transform": {
                         "_myLeftEye": "18",
                         "_myRightEye": "19"
                     }
@@ -1059,9 +1059,9 @@
             "parent": "32",
             "components": [
                 {
-                    "type": "set-hierarchy-active",
+                    "type": "pp-set-hierarchy-active",
                     "active": false,
-                    "set-hierarchy-active": {
+                    "pp-set-hierarchy-active": {
                         "_myHierarchyActive": false
                     }
                 }

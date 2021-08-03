@@ -1,4 +1,4 @@
-WL.registerComponent('set-head-transform', {
+WL.registerComponent('pp-set-head-transform', {
     _myLeftEye: { type: WL.Type.Object },
     _myRightEye: { type: WL.Type.Object }
 }, {

@@ -1,4 +1,4 @@
-WL.registerComponent('set-hierarchy-active', {
+WL.registerComponent('pp-set-hierarchy-active', {
     _myHierarchyActive: { type: WL.Type.Bool, default: true },
 }, {
     init: function () {

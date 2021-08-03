@@ -1,4 +1,4 @@
-WL.registerComponent('mute-all', {
+WL.registerComponent('pp-mute-all', {
 }, {
     init: function () {
     },
