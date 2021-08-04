@@ -21,7 +21,7 @@ PP.FSM = class FSM {
 
     addTransition(fromStateID, toStateID, transitionID, transitionFunction = null) {
         if (this.hasState(fromStateID) && this.hasState(toStateID)) {
-            let fromMap = this.getTransitionMapFromState(fromStateID);
+            let fromMap = this._getTransitionMapFromState(fromStateID);
 
             let transitionData = new TransitionData(transitionID, fromStateID, toStateID, transitionFunction);
             fromMap.set(transitionID, transitionData);
@@ -97,34 +97,26 @@ PP.FSM = class FSM {
         return this.getTransitionsFromStateToState(this._myCurrentStateID, stateID);
     }
 
-    getCurrentTransitionMap() {
-        return this.getTransitionMapFromState(this._myCurrentStateID);
-    }
-
     getState(stateID) {
         return this._myStateMap.get(stateID);
     }
 
     getTransitionsFromState(fromStateID) {
-        let transitionMap = this.getTransitionMapFromState(fromStateID);
-        return Array.from(transitionMap.keys());
+        let transitionMap = this._getTransitionMapFromState(fromStateID);
+        return Array.from(transitionMap.values());
     }
 
     getTransitionsFromStateToState(fromStateID, toStateID) {
-        let transitionMap = this.getTransitionMapFromState(fromStateID);
+        let transitionMap = this._getTransitionMapFromState(fromStateID);
 
         let transitionsToState = [];
-        for (let [transitionID, transitionData] of transitionMap.entries()) {
+        for (let transitionData of transitionMap.values()) {
             if (transitionData.myToStateID == toStateID) {
-                transitionsToState.push(transitionID);
+                transitionsToState.push(transitionData);
             }
         }
 
         return transitionsToState;
-    }
-
-    getTransitionMapFromState(fromStateID) {
-        return this._myTransitionMap.get(fromStateID);
     }
 
     removeState(stateID) {
@@ -151,7 +143,7 @@ PP.FSM = class FSM {
     }
 
     removeTransitionFromState(fromStateID, transitionID) {
-        let fromTransitions = this.getTransitionMapFromState(fromStateID);
+        let fromTransitions = this._getTransitionMapFromState(fromStateID);
         if (fromTransitions) {
             return fromTransitions.delete(transitionID);
         }
@@ -165,7 +157,12 @@ PP.FSM = class FSM {
 
     hasTransitionFromState(fromStateID, transitionID) {
         let transitions = this.getTransitionsFromState(fromStateID);
-        return transitions.includes(transitionID);
+
+        let transitionIndex = transitions.findIndex(function (transition) {
+            return transition.myTransitionID == transitionID;
+        });
+
+        return transitionIndex >= 0;
     }
 
     hasTransitionFromStateToState(fromStateID, toStateID, transitionID = null) {
@@ -173,12 +170,20 @@ PP.FSM = class FSM {
 
         let hasTransition = false;
         if (transitionID) {
-            hasTransition = transitions.includes(transitionID);
+            let transitionIndex = transitions.findIndex(function (transition) {
+                return transition.myTransitionID == transitionID;
+            });
+
+            hasTransition = transitionIndex >= 0;
         } else {
             hasTransition = transitions.length > 0;
         }
 
         return hasTransition;
+    }
+
+    _getTransitionMapFromState(fromStateID) {
+        return this._myTransitionMap.get(fromStateID);
     }
 };
 
