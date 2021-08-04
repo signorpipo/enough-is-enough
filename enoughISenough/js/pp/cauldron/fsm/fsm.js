@@ -1,7 +1,7 @@
 /*
     Signatures:
-        initFunction(fsm, initStateObject, initStateID)
-        transitionFunction(fsm, fromStateObject, toStateObject, fromStateID, toStateID)
+        initFunction(fsm, initStateData)
+        transitionFunction(fsm, fromStateData, toStateData)
 */
 
 PP.FSM = class FSM {
@@ -14,7 +14,8 @@ PP.FSM = class FSM {
     }
 
     addState(stateID, stateObject = null) {
-        this._myStateMap.set(stateID, stateObject);
+        let stateData = new StateData(stateID, stateObject);
+        this._myStateMap.set(stateID, stateData);
         this._myTransitionMap.set(fromStateID, new Map());
     }
 
@@ -22,7 +23,7 @@ PP.FSM = class FSM {
         if (this.hasState(fromStateID) && this.hasState(toStateID)) {
             let fromMap = this.getTransitionMapFromState(fromStateID);
 
-            let transitionData = new TransitionData(fromStateID, toStateID, transitionFunction);
+            let transitionData = new TransitionData(transitionID, fromStateID, toStateID, transitionFunction);
             fromMap.set(transitionID, transitionData);
         } else {
             console.error("can't add the transition, states not found inside the fsm");
@@ -32,19 +33,19 @@ PP.FSM = class FSM {
     start(initStateID, initFunction = null) {
         if (this.hasState(initStateID)) {
             this._myCurrentStateID = initStateID;
-            let stateObject = this._myStateMap.get(initStateID);
+            let stateData = this._myStateMap.get(initStateID);
             if (initFunction) {
-                initFunction(this, stateObject, initStateID);
-            } else if (stateObject && stateObject.init) {
-                stateObject.init(this);
+                initFunction(this, stateData);
+            } else if (stateData.myStateObject && stateData.myStateObject.init) {
+                stateData.myStateObject.init(this);
             }
         }
     }
 
     update(dt) {
-        let currentState = this._myStateMap.get(this.getCurrentState());
-        if (currentState && currentState.update) {
-            currentState.update(dt, this);
+        let currentState = this._myStateMap.get(this._myCurrentStateID);
+        if (currentState.myStateObject && currentState.myStateObject.update) {
+            currentState.myStateObject.update(dt, this);
         }
     }
 
@@ -53,18 +54,18 @@ PP.FSM = class FSM {
             let transitions = this.getCurrentTransitions();
             let transitionToPerform = transitions.get(transitionID);
 
-            let fromState = this._myStateMap.get(this.getCurrentState());
+            let fromState = this._myStateMap.get(this._myCurrentStateID);
             let toState = this._myStateMap.get(transitionToPerform.myToStateID);
 
             if (transitionToPerform.myTransitionFunction) {
-                transitionToPerform.myTransitionFunction(this, fromState, toState, this.getCurrentState(), transitionToPerform.myToStateID);
+                transitionToPerform.myTransitionFunction(this, fromState, toState);
             } else {
-                if (fromState && fromState.end) {
-                    fromState.end(this, transitionID);
+                if (fromState.myStateObject && fromState.myStateObject.end) {
+                    fromState.myStateObject.end(this, transitionID);
                 }
 
-                if (toState && toState.end) {
-                    toState.start(this, transitionID);
+                if (toState.myStateObject && toState.myStateObject.end) {
+                    toState.myStateObject.start(this, transitionID);
                 }
             }
 
@@ -77,34 +78,30 @@ PP.FSM = class FSM {
     }
 
     canPerform(transitionID) {
-        return this.hasTransitionFromState(this.getCurrentState(), transitionID);
+        return this.hasTransitionFromState(this._myCurrentStateID, transitionID);
     }
 
     isInState(stateID) {
-        return this.getCurrentState() == stateID;
+        return this._myCurrentStateID == stateID;
     }
 
     getCurrentState() {
-        return this._myCurrentStateID;
-    }
-
-    getCurrentStateObject() {
-        return this.getStateObject(this.getCurrentState());
+        return this._myStateMap.get(this._myCurrentStateID);
     }
 
     getCurrentTransitions() {
-        return this.getTransitionsFromState(this.getCurrentState());
+        return this.getTransitionsFromState(this._myCurrentStateID);
     }
 
     getCurrentTransitionsToState(stateID) {
-        return this.getTransitionsFromStateToState(this.getCurrentState(), stateID);
+        return this.getTransitionsFromStateToState(this._myCurrentStateID, stateID);
     }
 
     getCurrentTransitionMap() {
-        return this.getTransitionMapFromState(this.getCurrentState());
+        return this.getTransitionMapFromState(this._myCurrentStateID);
     }
 
-    getStateObject(stateID) {
+    getState(stateID) {
         return this._myStateMap.get(stateID);
     }
 
@@ -185,8 +182,16 @@ PP.FSM = class FSM {
     }
 };
 
+PP.StateData = class StateData {
+    constructor(stateID, stateObject) {
+        this.myStateID = stateID;
+        this.myStateObject = stateObject;
+    }
+};
+
 PP.TransitionData = class TransitionData {
-    constructor(fromStateID, toStateID, transitionFunction) {
+    constructor(transitionID, fromStateID, toStateID, transitionFunction) {
+        this.myTransitionID = transitionID;
         this.myFromStateID = fromStateID;
         this.myToStateID = toStateID;
         this.myTransitionFunction = transitionFunction;
