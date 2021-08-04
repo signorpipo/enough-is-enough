@@ -81,6 +81,10 @@ PP.FSM = class FSM {
         return this.hasTransitionFromState(this._myCurrentStateID, transitionID);
     }
 
+    canGoTo(stateID, transitionID = null) {
+        return this.hasTransitionFromStateToState(this._myCurrentStateID, stateID, transitionID);
+    }
+
     isInState(stateID) {
         return this._myCurrentStateID == stateID;
     }
