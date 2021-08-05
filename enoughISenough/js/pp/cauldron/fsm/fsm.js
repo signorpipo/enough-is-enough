@@ -11,6 +11,8 @@ PP.FSM = class FSM {
 
         this._myStateMap = new Map();
         this._myTransitionMap = new Map();
+
+        this._myDebugLogActive = false;
     }
 
     addState(stateID, stateObject = null) {
@@ -39,6 +41,10 @@ PP.FSM = class FSM {
             } else if (stateData.myStateObject && stateData.myStateObject.init) {
                 stateData.myStateObject.init(this);
             }
+
+            if (this._myDebugLogActive) {
+                console.log("FSM - Init:", initStateID);
+            }
         }
     }
 
@@ -51,7 +57,7 @@ PP.FSM = class FSM {
 
     perform(transitionID) {
         if (this.canPerform(transitionID)) {
-            let transitions = this.getCurrentTransitions();
+            let transitions = this._myTransitionMap.get(this._myCurrentStateID);
             let transitionToPerform = transitions.get(transitionID);
 
             let fromState = this._myStateMap.get(this._myCurrentStateID);
@@ -71,7 +77,13 @@ PP.FSM = class FSM {
 
             this._myCurrentStateID = transitionToPerform.myToStateID;
 
+            if (this._myDebugLogActive) {
+                console.log("FSM - From:", fromState.myStateID, "- To:", toState.myStateID, "- With:", transitionID);
+            }
+
             return true;
+        } else if (this._myDebugLogActive) {
+            console.log("FSM - No Transition:", transitionID, "- From:", this._myCurrentStateID);
         }
 
         return false;
@@ -184,6 +196,10 @@ PP.FSM = class FSM {
         }
 
         return hasTransition;
+    }
+
+    setDebugLogActive(active) {
+        this._myDebugLogActive = active;
     }
 
     _getTransitionMapFromState(fromStateID) {
