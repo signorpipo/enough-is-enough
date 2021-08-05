@@ -1,4 +1,4 @@
-class MenuState extends PP.State {
+class PrepareGameState extends PP.State {
     update(dt, fsm) {
         this._myFSM = new PP.FSM();
     }

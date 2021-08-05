@@ -207,7 +207,7 @@
                 1.0,
                 1.0
             ],
-            "parent": "32"
+            "parent": "105"
         },
         "23": {
             "name": "Light 2",
@@ -237,7 +237,7 @@
                 -1.0,
                 1.0
             ],
-            "parent": "32"
+            "parent": "105"
         },
         "24": {
             "name": "Cone",
@@ -1059,7 +1059,7 @@
         },
         "102": {
             "name": "Test",
-            "parent": "32",
+            "parent": null,
             "components": [
                 {
                     "type": "pp-set-hierarchy-active",
@@ -1068,6 +1068,24 @@
                         "_myHierarchyActive": false
                     }
                 }
+            ],
+            "transformation": [
+                0.001,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.001,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.001,
+                0.0,
+                0.0,
+                1000.0,
+                0.0,
+                1.0
             ]
         },
         "103": {
@@ -1131,6 +1149,10 @@
                     }
                 }
             ]
+        },
+        "105": {
+            "name": "Lights",
+            "parent": "32"
         }
     },
     "meshes": {
@@ -1471,14 +1493,14 @@
         },
         "rendering": {
             "clearColor": [
-                0.9215686,
-                0.9215686,
-                0.9215686,
+                9.999999974752428e-7,
+                9.999899930335233e-7,
+                9.999899930335233e-7,
                 1.0
             ]
         },
         "runtime": {
-            "xrButtonColor": "black",
+            "xrButtonColor": "white",
             "webxr": {
                 "requiredFeatures": {
                     "local-floor": true
