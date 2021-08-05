@@ -1456,6 +1456,7 @@
                 "js/pp/cauldron/utils",
                 "js/pp/extension",
                 "js/pp/debug"
+                "js/pp/cauldron/fsm",
             ]
         },
         "editor": {

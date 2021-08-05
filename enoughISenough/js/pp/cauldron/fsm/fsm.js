@@ -14,16 +14,16 @@ PP.FSM = class FSM {
     }
 
     addState(stateID, stateObject = null) {
-        let stateData = new StateData(stateID, stateObject);
+        let stateData = new PP.StateData(stateID, stateObject);
         this._myStateMap.set(stateID, stateData);
-        this._myTransitionMap.set(fromStateID, new Map());
+        this._myTransitionMap.set(stateID, new Map());
     }
 
     addTransition(fromStateID, toStateID, transitionID, transitionFunction = null) {
         if (this.hasState(fromStateID) && this.hasState(toStateID)) {
             let fromMap = this._getTransitionMapFromState(fromStateID);
 
-            let transitionData = new TransitionData(transitionID, fromStateID, toStateID, transitionFunction);
+            let transitionData = new PP.TransitionData(transitionID, fromStateID, toStateID, transitionFunction);
             fromMap.set(transitionID, transitionData);
         } else {
             console.error("can't add the transition, states not found inside the fsm");
@@ -44,7 +44,7 @@ PP.FSM = class FSM {
 
     update(dt) {
         let currentState = this._myStateMap.get(this._myCurrentStateID);
-        if (currentState.myStateObject && currentState.myStateObject.update) {
+        if (currentState && currentState.myStateObject && currentState.myStateObject.update) {
             currentState.myStateObject.update(dt, this);
         }
     }
