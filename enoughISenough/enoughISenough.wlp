@@ -316,6 +316,9 @@
                         "_myCubeMesh": "8",
                         "_myFlatMaterial": "66"
                     }
+                },
+                {
+                    "type": "enough-IS-enough-gateway"
                 }
             ]
         },
@@ -1455,8 +1458,10 @@
                 "js/pp/cauldron/component",
                 "js/pp/cauldron/utils",
                 "js/pp/extension",
-                "js/pp/debug"
+                "js/pp/debug",
                 "js/pp/cauldron/fsm",
+                "js/enoughISenough",
+                "js/enoughISenough/main"
             ]
         },
         "editor": {
