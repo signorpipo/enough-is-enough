@@ -1225,6 +1225,32 @@
                 0.0,
                 1.0
             ]
+        },
+        "113": {
+            "name": "Text",
+            "components": [
+                {
+                    "type": "text"
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.8074123,
+                0.0,
+                1.0
+            ]
         }
     },
     "meshes": {
@@ -1383,6 +1409,18 @@
             "link": {
                 "name": "DefaultFontMaterial",
                 "file": "default"
+            },
+            "DistanceFieldVector": {
+                "outlineRange": [
+                    0.5,
+                    0.5
+                ],
+                "outlineColor": [
+                    1.0,
+                    0.9999899,
+                    0.9999899,
+                    1.0
+                ]
             }
         },
         "20": {
@@ -1633,7 +1671,8 @@
                 9.999899930335233e-7,
                 9.999899930335233e-7,
                 1.0
-            ]
+            ],
+            "font": "assets/fonts/Tourney-Black.ttf"
         },
         "runtime": {
             "xrButtonColor": "white",
