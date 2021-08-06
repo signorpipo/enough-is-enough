@@ -1153,6 +1153,78 @@
         "105": {
             "name": "Lights",
             "parent": "32"
+        },
+        "110": {
+            "link": {
+                "name": "Ring",
+                "file": "assets\\models\\ring.glb"
+            },
+            "parent": "112",
+            "transformation": [
+                1.2999999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.8,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.2999999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "111": {
+            "link": {
+                "name": "Smaller Ring",
+                "file": "assets\\models\\ring.glb"
+            },
+            "parent": "112",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "112": {
+            "name": "Test Ring",
+            "parent": "32",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                1.0
+            ]
         }
     },
     "meshes": {
@@ -1274,6 +1346,18 @@
             "link": {
                 "name": "Mesh.008",
                 "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
+            }
+        },
+        "108": {
+            "link": {
+                "name": "Ring",
+                "file": "assets\\models\\ring.glb"
+            }
+        },
+        "109": {
+            "link": {
+                "name": "Smaller Ring",
+                "file": "assets\\models\\ring.glb"
             }
         }
     },
@@ -1399,6 +1483,58 @@
         "66": {
             "name": "Flat",
             "pipeline": "72"
+        },
+        "106": {
+            "link": {
+                "name": "Dark Red",
+                "file": "assets\\models\\ring.glb"
+            },
+            "Phong": {
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    0.5
+                ],
+                "diffuseColor": [
+                    0.4941176,
+                    0.145098,
+                    0.3254902,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.1764705,
+                    0.017993,
+                    0.0999027,
+                    1.0
+                ]
+            }
+        },
+        "107": {
+            "link": {
+                "name": "Light Blue",
+                "file": "assets\\models\\ring.glb"
+            },
+            "Phong": {
+                "diffuseColor": [
+                    0.1607843,
+                    0.6784313,
+                    1.0,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.0186851,
+                    0.1160419,
+                    0.1764705,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999899930335233e-7,
+                    9.999961321227602e-7,
+                    9.999999974752428e-7,
+                    1.0
+                ]
+            }
         }
     },
     "shaders": {
@@ -1514,7 +1650,8 @@
     "animations": {},
     "skins": {},
     "files": [
-        "assets/models/quest_controllers_credits_Jezza3D.glb"
+        "assets/models/quest_controllers_credits_Jezza3D.glb",
+        "assets/models/ring.glb"
     ],
     "pipelines": {
         "69": {
