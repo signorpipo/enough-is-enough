@@ -1,15 +1,39 @@
 //Variable Map
-PP.EasyTuneVariableMap = class EasyTuneVariableMap extends Map {
+PP.EasyTuneVariableMap = class EasyTuneVariableMap {
     constructor() {
-        super();
+        this._myMap = new Map();
     }
 
-    addVariable(variable) {
-        super.set(variable.myName, variable);
+    add(variable) {
+        this._myMap.set(variable.myName, variable);
     }
 
-    set() {
-        console.error("Use addVariable instead of set");
+    remove(variableName) {
+        this._myMap.delete(variableName);
+    }
+
+    get(variableName) {
+        let variable = this._myMap.get(variableName);
+        if (variable) {
+            return variable.getValue();
+        }
+
+        return null;
+    }
+
+    set(variableName, value) {
+        let variable = this._myMap.get(variableName);
+        if (variable) {
+            variable.setValue(value);
+        }
+    }
+
+    getEasyTuneVariable(variableName) {
+        return this._myMap.get(variableName);
+    }
+
+    _getInternalMap() {
+        return this._myMap;
     }
 };
 
@@ -31,6 +55,14 @@ PP.EasyTuneVariable = class EasyTuneVariable {
 
         this.myInitialValue = this.myValue;
     }
+
+    getValue() {
+        return this.myValue;
+    }
+
+    setValue(value) {
+        this.myValue = value;
+    }
 };
 
 PP.EasyTuneNumber = class EasyTuneNumber extends PP.EasyTuneVariable {
@@ -42,6 +74,11 @@ PP.EasyTuneNumber = class EasyTuneNumber extends PP.EasyTuneVariable {
 
         this.myRealValue = value;
         this.myInitialStepPerSecond = this.myStepPerSecond;
+    }
+
+    setValue(value) {
+        this.myValue = value;
+        this.myRealValue = value;
     }
 };
 

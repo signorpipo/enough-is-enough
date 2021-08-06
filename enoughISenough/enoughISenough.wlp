@@ -1230,7 +1230,13 @@
             "name": "Text",
             "components": [
                 {
-                    "type": "text"
+                    "type": "text",
+                    "text": {
+                        "text": "Mr NOT"
+                    }
+                },
+                {
+                    "type": "pp-easy-transform"
                 }
             ],
             "transformation": [
@@ -1657,7 +1663,9 @@
                 "js/pp/debug",
                 "js/pp/cauldron/fsm",
                 "js/enoughISenough",
-                "js/enoughISenough/main"
+                "js/enoughISenough/main",
+                "js/pp/tool/cauldron/component",
+                "js/pp/tool/widget-frame"
             ]
         },
         "editor": {

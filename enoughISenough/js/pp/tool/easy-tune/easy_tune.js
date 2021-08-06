@@ -7,9 +7,9 @@ WL.registerComponent('pp-easy-tune', {
 }, {
     init: function () {
         //Examples
-        //Number: PP.EasyTuneVariables.addVariable(new PP.EasyTuneNumber("Speed", 10.32, 0.01, 3));
-        //Integer: PP.EasyTuneVariables.addVariable(new PP.EasyTuneInteger("Lives", 3, 1));
-        //Bool: PP.EasyTuneVariables.addVariable(new PP.EasyTuneBool("Run", false));
+        //Number: PP.EasyTuneVariables.add(new PP.EasyTuneNumber("Speed", 10.32, 0.01, 3));
+        //Integer: PP.EasyTuneVariables.add(new PP.EasyTuneInteger("Lives", 3, 1));
+        //Bool: PP.EasyTuneVariables.add(new PP.EasyTuneBool("Run", false));
 
         this._myWidget = new PP.EasyTuneWidget();
         PP.SetEasyTuneWidgetActiveVariable = function (variableName) {
@@ -25,7 +25,7 @@ WL.registerComponent('pp-easy-tune', {
         additionalSetup.myPlaneMaterial = this._myPlaneMaterial;
         additionalSetup.myTextMaterial = this._myTextMaterial;
 
-        this._myWidget.start(this.object, additionalSetup, PP.EasyTuneVariables);
+        this._myWidget.start(this.object, additionalSetup, PP.EasyTuneVariables._getInternalMap());
     },
     update: function (dt) {
         this._myWidget.update(dt);
