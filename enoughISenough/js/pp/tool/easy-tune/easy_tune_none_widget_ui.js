@@ -20,19 +20,22 @@ PP.EasyTuneNoneWidgetUI = class EasyTuneNoneWidgetUI {
     _createSkeleton() {
         this.myPivotObject = WL.scene.addObject(this._myParentObject);
 
+        this.myBackPanel = WL.scene.addObject(this.myPivotObject);
+        this.myBackBackground = WL.scene.addObject(this.myBackPanel);
+
         this._createDisplaySkeleton();
         this._createPointerSkeleton();
     }
 
     _createDisplaySkeleton() {
         this.myDisplayPanel = WL.scene.addObject(this.myPivotObject);
-        this.myDisplayBackground = WL.scene.addObject(this.myDisplayPanel);
 
         this.myVariableLabelPanel = WL.scene.addObject(this.myDisplayPanel);
         this.myVariableLabelText = WL.scene.addObject(this.myVariableLabelPanel);
 
         this.myTypeNotSupportedPanel = WL.scene.addObject(this.myDisplayPanel);
         this.myTypeNotSupportedText = WL.scene.addObject(this.myTypeNotSupportedPanel);
+        this.myTypeNotSupportedCursorTarget = WL.scene.addObject(this.myTypeNotSupportedPanel);
 
         //Next/Previous
         this.myNextButtonPanel = WL.scene.addObject(this.myVariableLabelPanel);
@@ -54,13 +57,15 @@ PP.EasyTuneNoneWidgetUI = class EasyTuneNoneWidgetUI {
     _setTransforms() {
         this.myPivotObject.setTranslationLocal(this._mySetup.myPivotObjectPositions[this._myAdditionalSetup.myHandednessIndex]);
 
+        this.myBackPanel.setTranslationLocal(this._mySetup.myBackPanelPosition);
+        this.myBackBackground.scale(this._mySetup.myBackBackgroundScale);
+
         this._setDisplayTransforms();
         this._setPointerTransform();
     }
 
     _setDisplayTransforms() {
         this.myDisplayPanel.setTranslationLocal(this._mySetup.myDisplayPanelPosition);
-        this.myDisplayBackground.scale(this._mySetup.myDisplayBackgroundScale);
 
         this.myVariableLabelPanel.setTranslationLocal(this._mySetup.myVariableLabelPanelPosition);
         this.myVariableLabelText.scale(this._mySetup.myVariableLabelTextScale);
@@ -69,17 +74,17 @@ PP.EasyTuneNoneWidgetUI = class EasyTuneNoneWidgetUI {
         this.myTypeNotSupportedText.scale(this._mySetup.myTypeNotSupportedTextScale);
 
         //Next/Previous
-        this.myNextButtonPanel.setTranslationLocal(this._mySetup.myNextButtonPosition);
-        this.myNextButtonBackground.scale(this._mySetup.myDisplayButtonBackgroundScale);
-        this.myNextButtonText.setTranslationLocal(this._mySetup.myDisplayButtonTextPosition);
-        this.myNextButtonText.scale(this._mySetup.myDisplayButtonTextScale);
-        this.myNextButtonCursorTarget.setTranslationLocal(this._mySetup.myDisplayButtonCursorTargetPosition);
+        this.myNextButtonPanel.setTranslationLocal(this._mySetup.myRightSideButtonPosition);
+        this.myNextButtonBackground.scale(this._mySetup.mySideButtonBackgroundScale);
+        this.myNextButtonText.setTranslationLocal(this._mySetup.mySideButtonTextPosition);
+        this.myNextButtonText.scale(this._mySetup.mySideButtonTextScale);
+        this.myNextButtonCursorTarget.setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
 
-        this.myPreviousButtonPanel.setTranslationLocal(this._mySetup.myPreviousButtonPosition);
-        this.myPreviousButtonBackground.scale(this._mySetup.myDisplayButtonBackgroundScale);
-        this.myPreviousButtonText.setTranslationLocal(this._mySetup.myDisplayButtonTextPosition);
-        this.myPreviousButtonText.scale(this._mySetup.myDisplayButtonTextScale);
-        this.myPreviousButtonCursorTarget.setTranslationLocal(this._mySetup.myDisplayButtonCursorTargetPosition);
+        this.myPreviousButtonPanel.setTranslationLocal(this._mySetup.myLeftSideButtonPosition);
+        this.myPreviousButtonBackground.scale(this._mySetup.mySideButtonBackgroundScale);
+        this.myPreviousButtonText.setTranslationLocal(this._mySetup.mySideButtonTextPosition);
+        this.myPreviousButtonText.scale(this._mySetup.mySideButtonTextScale);
+        this.myPreviousButtonCursorTarget.setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
     }
 
     _setPointerTransform() {
@@ -88,18 +93,19 @@ PP.EasyTuneNoneWidgetUI = class EasyTuneNoneWidgetUI {
 
     //Components
     _addComponents() {
+        this.myBackBackgroundComponent = this.myBackBackground.addComponent('mesh');
+        this.myBackBackgroundComponent.mesh = this._myPlaneMesh;
+        this.myBackBackgroundComponent.material = this._myAdditionalSetup.myPlaneMaterial.clone();
+        this.myBackBackgroundComponent.material.color = this._mySetup.myBackBackgroundColor;
+
         this._addDisplayComponents();
         this._addPointerComponents();
     }
 
     _addDisplayComponents() {
-        this.myDisplayBackgroundComponent = this.myDisplayBackground.addComponent('mesh');
-        this.myDisplayBackgroundComponent.mesh = this._myPlaneMesh;
-        this.myDisplayBackgroundComponent.material = this._myAdditionalSetup.myPlaneMaterial.clone();
-        this.myDisplayBackgroundComponent.material.color = this._mySetup.myDisplayBackgroundColor;
-
         this.myVariableLabelTextComponent = this.myVariableLabelText.addComponent('text');
         this._setupTextComponent(this.myVariableLabelTextComponent);
+        this.myVariableLabelTextComponent.text = " ";
 
         this.myTypeNotSupportedTextComponent = this.myTypeNotSupportedText.addComponent('text');
         this._setupTextComponent(this.myTypeNotSupportedTextComponent);
@@ -119,7 +125,7 @@ PP.EasyTuneNoneWidgetUI = class EasyTuneNoneWidgetUI {
         this.myNextButtonCollisionComponent = this.myNextButtonCursorTarget.addComponent('collision');
         this.myNextButtonCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
         this.myNextButtonCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
-        this.myNextButtonCollisionComponent.extents = this._mySetup.myDisplayButtonCollisionExtents;
+        this.myNextButtonCollisionComponent.extents = this._mySetup.mySideButtonCollisionExtents;
 
         this.myPreviousButtonBackgroundComponent = this.myPreviousButtonBackground.addComponent('mesh');
         this.myPreviousButtonBackgroundComponent.mesh = this._myPlaneMesh;
@@ -134,7 +140,7 @@ PP.EasyTuneNoneWidgetUI = class EasyTuneNoneWidgetUI {
         this.myPreviousButtonCollisionComponent = this.myPreviousButtonCursorTarget.addComponent('collision');
         this.myPreviousButtonCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
         this.myPreviousButtonCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
-        this.myPreviousButtonCollisionComponent.extents = this._mySetup.myDisplayButtonCollisionExtents;
+        this.myPreviousButtonCollisionComponent.extents = this._mySetup.mySideButtonCollisionExtents;
     }
 
     _addPointerComponents() {

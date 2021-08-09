@@ -29,52 +29,61 @@ PP.EasyTuneNoneWidgetSetup = class EasyTuneNoneWidgetSetup {
         this.myPivotObjectPositions[PP.HandednessIndex.LEFT] = [-0.04, 0, 0.00004213]; //little "random" z offset to avoid glitching with other widgets
         this.myPivotObjectPositions[PP.HandednessIndex.RIGHT] = [-0.08, 0, 0.00004213];
 
+        let panelZ = 0.01;
+        let distanceFromBorder = 0.0125;
+        let colliderZPosition = 0.017;
+        let backgroundHalfWidth = 0.2;
+
+        this.mySideButtonBackgroundScale = [0.015, 0.015, 1];
+        this.mySideButtonTextScale = [0.18, 0.18, 0.18];
+        this.mySideButtonTextPosition = [0, 0, 0.007];
+
+        this.mySideButtonCursorTargetPosition = [0, 0, 0];
+        this.mySideButtonCursorTargetPosition[2] = colliderZPosition - panelZ;
+        this.mySideButtonCollisionExtents = this.mySideButtonBackgroundScale.slice(0);
+        this.mySideButtonCollisionExtents[2] = this.myCursorTargetCollisionThickness;
+
+        this.myLeftSideButtonPosition = [0, 0, 0];
+        this.myLeftSideButtonPosition[0] = -backgroundHalfWidth + this.mySideButtonBackgroundScale[0] + distanceFromBorder;
+
+        this.myRightSideButtonPosition = [0, 0, 0];
+        this.myRightSideButtonPosition[0] = backgroundHalfWidth - this.mySideButtonBackgroundScale[0] - distanceFromBorder;
+
         //Display
+        this.myDisplayPanelPosition = [0, 0.1, 0];
+
+        this.myVariableLabelPanelPosition = [0, 0.025, panelZ];
+        this.myVariableLabelTextScale = [0.19, 0.19, 0.19];
+
+        this.myTypeNotSupportedPanelPosition = [0, -0.03, panelZ];
+        this.myTypeNotSupportedTextScale = [0.275, 0.275, 0.275];
+        this.myTypeNotSupportedText = "Type Not Supported";
+
+        this.myValueCursorTargetPosition = [0, 0, 0];
+        this.myValueCursorTargetPosition[2] = colliderZPosition - panelZ;
+        this.myValueCollisionExtents = [0.065, 0.02, 1];
+        this.myValueCollisionExtents[2] = this.myCursorTargetCollisionThickness;
+
+        this.myNextButtonText = ">";
+        this.myPreviousButtonText = "<";
+
+        //Background
         {
-            this.myDisplayPanelPosition = [0, 0.1025, 0];
-            this.myDisplayBackgroundScale = [0.200, 0.0575, 1];
-            this.myDisplayBackgroundColor = [70 / 255, 70 / 255, 70 / 255, 1];
-
-            let panelZ = 0.01;
-
-            this.myVariableLabelPanelPosition = [0, 0.025, panelZ];
-            this.myVariableLabelTextScale = [0.19, 0.19, 0.19];
-
-            this.myTypeNotSupportedPanelPosition = [0, -0.025, panelZ];
-            this.myTypeNotSupportedTextScale = [0.25, 0.25, 0.25];
-            this.myTypeNotSupportedText = "Type Not Supported";
-
-            this.myDisplayButtonBackgroundScale = [0.015, 0.015, 1];
-            this.myDisplayButtonTextScale = [0.18, 0.18, 0.18];
-            this.myDisplayButtonTextPosition = [0, 0, 0.007];
-
-            let distanceFromBorder = 0.01;
-
-            this.myNextButtonPosition = [0, 0, 0];
-            this.myNextButtonPosition[0] = this.myDisplayBackgroundScale[0] - this.myDisplayButtonBackgroundScale[0] - distanceFromBorder;
-            this.myNextButtonText = ">";
-
-            this.myPreviousButtonPosition = [0, 0, 0];
-            this.myPreviousButtonPosition[0] = -this.myDisplayBackgroundScale[0] + this.myDisplayButtonBackgroundScale[0] + distanceFromBorder;
-            this.myPreviousButtonText = "<";
-
-            this.myDisplayButtonCursorTargetPosition = [0, 0, 0];
-            this.myDisplayButtonCursorTargetPosition[2] = this.myColliderZPosition - panelZ;
-            this.myDisplayButtonCollisionExtents = this.myDisplayButtonBackgroundScale.slice(0);
-            this.myDisplayButtonCollisionExtents[2] = this.myCursorTargetCollisionThickness;
+            let maxY = this.myDisplayPanelPosition[1] + this.myVariableLabelPanelPosition[1] + this.mySideButtonBackgroundScale[1] + distanceFromBorder * 1.25;
+            let minY = this.myDisplayPanelPosition[1] + this.myTypeNotSupportedPanelPosition[1] - distanceFromBorder * 1.25 - this.mySideButtonBackgroundScale[1];
+            this.myBackPanelPosition = [0, (maxY + minY) / 2, 0];
+            this.myBackBackgroundScale = [backgroundHalfWidth, (maxY - minY) / 2, 1];
+            this.myBackBackgroundColor = [70 / 255, 70 / 255, 70 / 255, 1];
         }
 
         //Pointer
-        this.myPointerCollisionExtents = this.myDisplayBackgroundScale.slice(0);
+        this.myPointerCollisionExtents = this.myBackBackgroundScale.slice(0);
         this.myPointerCollisionExtents[2] = this.myCursorTargetCollisionThickness;
-
-        this.myPointerCursorTargetPosition = this.myDisplayPanelPosition.slice(0);
-        this.myPointerCursorTargetPosition[2] = this.myColliderZPosition - 0.0001; // a little behind the button target to avoid hiding it
+        this.myPointerCursorTargetPosition = this.myBackPanelPosition.slice(0);
+        this.myPointerCursorTargetPosition[2] = colliderZPosition - 0.0001; // a little behind the button target to avoid hiding it
     }
 
     _initializeRuntimeSetup() {
         this.myButtonHoverColor = [150 / 255, 150 / 255, 150 / 255, 1];
-
-        this.myScrollVariableDelay = 0.75;
     }
 };

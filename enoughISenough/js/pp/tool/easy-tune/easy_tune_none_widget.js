@@ -12,9 +12,6 @@ PP.EasyTuneNoneWidget = class EasyTuneNoneWidget {
         this._myScrollVariableRequestCallbacks = new Map();
 
         this._myAppendToVariableName = "";
-
-        this._myScrollVariableAmount = 0;
-        this._myScrollVariableTimer = 0;
     }
 
     setEasyTuneVariable(variable, appendToVariableName) {
@@ -63,20 +60,6 @@ PP.EasyTuneNoneWidget = class EasyTuneNoneWidget {
     }
 
     update(dt) {
-        if (this._isActive()) {
-            this._updateScrollVariable(dt);
-        }
-    }
-
-    _updateScrollVariable(dt) {
-        this._myScrollVariableTimer = Math.min(this._myScrollVariableTimer + dt, this._mySetup.myScrollVariableDelay);
-
-        if (this._myScrollVariableAmount != 0) {
-            if (this._myScrollVariableTimer >= this._mySetup.myScrollVariableDelay) {
-                this._myScrollVariableTimer = 0;
-                this._scrollVariableRequest(this._myScrollVariableAmount);
-            }
-        }
     }
 
     _isActive() {
@@ -86,23 +69,13 @@ PP.EasyTuneNoneWidget = class EasyTuneNoneWidget {
     _addListeners() {
         let ui = this._myUI;
 
-        ui.myNextButtonCursorTargetComponent.addHoverFunction(this._setScrollVariableAmount.bind(this, ui.myNextButtonBackgroundComponent.material, 1));
-        ui.myNextButtonCursorTargetComponent.addUnHoverFunction(this._setScrollVariableAmount.bind(this, ui.myNextButtonBackgroundComponent.material, 0));
-        ui.myPreviousButtonCursorTargetComponent.addHoverFunction(this._setScrollVariableAmount.bind(this, ui.myPreviousButtonBackgroundComponent.material, -1));
-        ui.myPreviousButtonCursorTargetComponent.addUnHoverFunction(this._setScrollVariableAmount.bind(this, ui.myPreviousButtonBackgroundComponent.material, 0));
-    }
+        ui.myNextButtonCursorTargetComponent.addClickFunction(this._scrollVariableRequest.bind(this, 1));
+        ui.myNextButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myNextButtonBackgroundComponent.material));
+        ui.myNextButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myNextButtonBackgroundComponent.material));
 
-    _setScrollVariableAmount(material, value) {
-        if (this._isActive() || value == 0) {
-            if (value != 0) {
-                this._genericHover(material);
-            } else {
-                this._myScrollVariableTimer = this._mySetup.myScrollVariableDelay;
-                this._genericUnHover(material);
-            }
-
-            this._myScrollVariableAmount = value;
-        }
+        ui.myPreviousButtonCursorTargetComponent.addClickFunction(this._scrollVariableRequest.bind(this, -1));
+        ui.myPreviousButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
+        ui.myPreviousButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
     }
 
     _scrollVariableRequest(amount) {
