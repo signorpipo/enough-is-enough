@@ -1,5 +1,5 @@
 
-PP.EasyTuneVecNumberWidgetUI = class EasyTuneVecNumberWidgetUI {
+PP.EasyTuneNumberArrayWidgetUI = class EasyTuneNumberArrayWidgetUI {
 
     build(parentObject, setup, additionalSetup) {
         this._myParentObject = parentObject;
@@ -25,7 +25,7 @@ PP.EasyTuneVecNumberWidgetUI = class EasyTuneVecNumberWidgetUI {
     setAdditionalButtonsActive(active) {
         this._myAdditionalButtonsActive = active;
 
-        for (let i = 0; i < this._mySetup.myVectorSize; i++) {
+        for (let i = 0; i < this._mySetup.myArraySize; i++) {
             this.myValueIncreaseButtonPanels[i].pp_setActiveHierarchy(this._myAdditionalButtonsActive);
             this.myValueDecreaseButtonPanels[i].pp_setActiveHierarchy(this._myAdditionalButtonsActive);
         }
@@ -79,7 +79,7 @@ PP.EasyTuneVecNumberWidgetUI = class EasyTuneVecNumberWidgetUI {
         this.myValueDecreaseButtonTexts = [];
         this.myValueDecreaseButtonCursorTargets = [];
 
-        for (let i = 0; i < this._mySetup.myVectorSize; i++) {
+        for (let i = 0; i < this._mySetup.myArraySize; i++) {
             this.myValuePanels[i] = WL.scene.addObject(this.myValuesPanel);
             this.myValueTexts[i] = WL.scene.addObject(this.myValuePanels[i]);
             this.myValueCursorTargets[i] = WL.scene.addObject(this.myValuePanels[i]);
@@ -152,7 +152,7 @@ PP.EasyTuneVecNumberWidgetUI = class EasyTuneVecNumberWidgetUI {
 
         this.myValuesPanel.setTranslationLocal(this._mySetup.myValuesPanelPosition);
 
-        for (let i = 0; i < this._mySetup.myVectorSize; i++) {
+        for (let i = 0; i < this._mySetup.myArraySize; i++) {
             this.myValuePanels[i].setTranslationLocal(this._mySetup.myValuePanelsPositions[i]);
             this.myValueTexts[i].scale(this._mySetup.myValueTextScale);
             this.myValueCursorTargets[i].setTranslationLocal(this._mySetup.myValueCursorTargetPosition);
@@ -264,7 +264,7 @@ PP.EasyTuneVecNumberWidgetUI = class EasyTuneVecNumberWidgetUI {
         this.myValueDecreaseButtonCollisionComponents = [];
 
 
-        for (let i = 0; i < this._mySetup.myVectorSize; i++) {
+        for (let i = 0; i < this._mySetup.myArraySize; i++) {
             this.myValueTextComponents[i] = this.myValueTexts[i].addComponent('text');
             this._setupTextComponent(this.myValueTextComponents[i]);
             this.myValueTextComponents[i].text = " ";

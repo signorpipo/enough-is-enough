@@ -69,10 +69,10 @@ PP.EasyTuneVariable = class EasyTuneVariable {
 
 //NUMBER
 
-PP.EasyTuneVecNumber = class EasyTuneVecNumber extends PP.EasyTuneVariable {
-    constructor(name, size, value, stepPerSecond, decimalPlaces) {
+PP.EasyTuneNumberArray = class EasyTuneNumberArray extends PP.EasyTuneVariable {
+    constructor(name, value, stepPerSecond, decimalPlaces) {
         let type = null;
-        switch (size) {
+        switch (value.length) {
             case 1:
                 type = PP.EasyTuneVariableType.VEC1_NUMBER;
                 break;
@@ -85,7 +85,9 @@ PP.EasyTuneVecNumber = class EasyTuneVecNumber extends PP.EasyTuneVariable {
 
         super(name, type, null);
 
-        PP.EasyTuneVecNumber.prototype.setValue.call(this, value);
+        this.mySize = value.length;
+
+        PP.EasyTuneNumberArray.prototype.setValue.call(this, value);
 
         this.myDecimalPlaces = decimalPlaces;
         this.myStepPerSecond = stepPerSecond;
@@ -99,9 +101,9 @@ PP.EasyTuneVecNumber = class EasyTuneVecNumber extends PP.EasyTuneVariable {
     }
 };
 
-PP.EasyTuneNumber = class EasyTuneNumber extends PP.EasyTuneVecNumber {
+PP.EasyTuneNumber = class EasyTuneNumber extends PP.EasyTuneNumberArray {
     constructor(name, value, stepPerSecond, decimalPlaces) {
-        super(name, 1, [value], stepPerSecond, decimalPlaces);
+        super(name, [value], stepPerSecond, decimalPlaces);
     }
 
     getValue() {
@@ -119,21 +121,15 @@ PP.EasyTuneInt = class EasyTuneInt extends PP.EasyTuneNumber {
     }
 };
 
-PP.EasyTuneVec3Number = class EasyTuneVec3Number extends PP.EasyTuneVecNumber {
-    constructor(name, value, stepPerSecond, decimalPlaces) {
-        super(name, 3, value, stepPerSecond, decimalPlaces);
-    }
-};
-
-PP.EasyTuneVec3Int = class EasyTuneVec3Int extends PP.EasyTuneVec3Number {
+PP.EasyTuneIntArray = class EasyTuneIntArray extends PP.EasyTuneNumberArray {
     constructor(name, value, stepPerSecond) {
-        super(name, 3, value, stepPerSecond, 0);
+        super(name, value, stepPerSecond, 0);
     }
 };
 
 //BOOL
 
-PP.EasyTuneVecBool = class EasyTuneVecBool extends PP.EasyTuneVariable {
+PP.EasyTuneBoolArray = class EasyTuneBoolArray extends PP.EasyTuneVariable {
     constructor(name, value) {
         let type = null;
         switch (value.length) {
@@ -151,7 +147,7 @@ PP.EasyTuneVecBool = class EasyTuneVecBool extends PP.EasyTuneVariable {
 
         this.mySize = value.length;
 
-        PP.EasyTuneVecBool.prototype.setValue.call(this, value);
+        PP.EasyTuneBoolArray.prototype.setValue.call(this, value);
     }
 
     setValue(value) {
@@ -160,7 +156,7 @@ PP.EasyTuneVecBool = class EasyTuneVecBool extends PP.EasyTuneVariable {
     }
 };
 
-PP.EasyTuneBool = class EasyTuneBool extends PP.EasyTuneVecBool {
+PP.EasyTuneBool = class EasyTuneBool extends PP.EasyTuneBoolArray {
     constructor(name, value) {
         super(name, [value]);
     }

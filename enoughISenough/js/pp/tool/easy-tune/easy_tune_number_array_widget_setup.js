@@ -1,7 +1,7 @@
-PP.EasyTuneVecBoolWidgetSetup = class EasyTuneVecBoolWidgetSetup {
+PP.EasyTuneNumberArrayWidgetSetup = class EasyTuneNumberArrayWidgetSetup {
 
-    constructor(vectorSize) {
-        this.myVectorSize = vectorSize;
+    constructor(arraySize) {
+        this.myArraySize = arraySize;
         this._initializeBuildSetup();
         this._initializeRuntimeSetup();
     }
@@ -79,15 +79,25 @@ PP.EasyTuneVecBoolWidgetSetup = class EasyTuneVecBoolWidgetSetup {
 
         this.myValuePanelsPositions = [];
         this.myValuePanelsPositions[0] = [0, 0, 0];
-        for (let i = 1; i < this.myVectorSize; i++) {
+        for (let i = 1; i < this.myArraySize; i++) {
             this.myValuePanelsPositions[i] = this.myValuePanelsPositions[i - 1].slice(0);
             this.myValuePanelsPositions[i][1] -= this.myDistanceBetweenValues;
         }
 
+        //Step
+        this.myStepPanelPosition = [0, this.myDisplayPanelPosition[1] + this.myValuesPanelPosition[1] + this.myValuePanelsPositions[this.myArraySize - 1][1] - distanceFromValue, panelZ];
+        this.myStepTextScale = [0.19, 0.19, 0.19];
+        this.myStepStartString = "Step: ";
+
+        this.myStepCursorTargetPosition = [0, 0, 0];
+        this.myStepCursorTargetPosition[2] = colliderZPosition - this.myStepPanelPosition[2];
+        this.myStepCollisionExtents = [0.065, 0.0175, 1];
+        this.myStepCollisionExtents[2] = this.myCursorTargetCollisionThickness;
+
         //Background
         {
             let maxY = this.myDisplayPanelPosition[1] + this.myVariableLabelPanelPosition[1] + this.mySideButtonBackgroundScale[1] + distanceFromBorder * 1.25;
-            let minY = this.myDisplayPanelPosition[1] + this.myValuesPanelPosition[1] + this.myValuePanelsPositions[this.myVectorSize - 1][1] - distanceFromBorder * 1.25 - this.mySideButtonBackgroundScale[1];
+            let minY = this.myStepPanelPosition[1] - distanceFromBorder * 1.25 - this.mySideButtonBackgroundScale[1];
             this.myBackPanelPosition = [0, (maxY + minY) / 2, 0];
             this.myBackBackgroundScale = [backgroundHalfWidth, (maxY - minY) / 2, 1];
             this.myBackBackgroundColor = [70 / 255, 70 / 255, 70 / 255, 1];
@@ -104,7 +114,8 @@ PP.EasyTuneVecBoolWidgetSetup = class EasyTuneVecBoolWidgetSetup {
         this.myButtonHoverColor = [150 / 255, 150 / 255, 150 / 255, 1];
         this.myTextHoverScaleMultiplier = [1.25, 1.25, 1.25];
 
-        this.myThumbstickToggleThreshold = 0.6;
+        this.myEditThumbstickMinThreshold = 0.2;
+        this.myStepMultiplierStepPerSecond = 2.25;
         this.myButtonEditDelay = 0.25;
     }
 };

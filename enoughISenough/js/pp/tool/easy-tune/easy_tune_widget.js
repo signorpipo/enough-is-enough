@@ -88,10 +88,10 @@ PP.EasyTuneWidget = class EasyTuneWidget {
 
     _initializeWidgets() {
         this._myWidgets[PP.EasyTuneVariableType.NONE] = new PP.EasyTuneNoneWidget();
-        this._myWidgets[PP.EasyTuneVariableType.VEC1_NUMBER] = new PP.EasyTuneVecNumberWidget(1, this._myGamepad, this._mySetup.myScrollVariableButtonType);
-        this._myWidgets[PP.EasyTuneVariableType.VEC3_NUMBER] = new PP.EasyTuneVecNumberWidget(3, this._myGamepad, this._mySetup.myScrollVariableButtonType);
-        this._myWidgets[PP.EasyTuneVariableType.VEC1_BOOL] = new PP.EasyTuneVecBoolWidget(1, this._myGamepad, this._mySetup.myScrollVariableButtonType);
-        this._myWidgets[PP.EasyTuneVariableType.VEC3_BOOL] = new PP.EasyTuneVecBoolWidget(3, this._myGamepad, this._mySetup.myScrollVariableButtonType);
+        this._myWidgets[PP.EasyTuneVariableType.VEC1_NUMBER] = new PP.EasyTuneNumberArrayWidget(1, this._myGamepad, this._mySetup.myScrollVariableButtonType);
+        this._myWidgets[PP.EasyTuneVariableType.VEC3_NUMBER] = new PP.EasyTuneNumberArrayWidget(3, this._myGamepad, this._mySetup.myScrollVariableButtonType);
+        this._myWidgets[PP.EasyTuneVariableType.VEC1_BOOL] = new PP.EasyTuneBoolArrayWidget(1, this._myGamepad, this._mySetup.myScrollVariableButtonType);
+        this._myWidgets[PP.EasyTuneVariableType.VEC3_BOOL] = new PP.EasyTuneBoolArrayWidget(3, this._myGamepad, this._mySetup.myScrollVariableButtonType);
 
         for (let item of this._myWidgets) {
             item.start(this._myWidgetFrame.getWidgetObject(), this._myAdditionalSetup);
