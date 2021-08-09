@@ -28,6 +28,7 @@ PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget {
 
         this._myValueRealValue = null;
         this._myStepMultiplierValue = null;
+        this._myStepFastEdit = false;
     }
 
     setEasyTuneVariable(variable, appendToVariableName) {
@@ -131,7 +132,13 @@ PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget {
         }
 
         if (stepIntensity != 0) {
-            let amountToAdd = stepIntensity * this._mySetup.myStepMultiplierStepPerSecond * dt;
+            let amountToAdd = 0;
+            if (this._myStepFastEdit) {
+                amountToAdd = Math.sign(stepIntensity) * 1;
+                this._myStepFastEdit = false;
+            } else {
+                amountToAdd = stepIntensity * this._mySetup.myStepMultiplierStepPerSecond * dt;
+            }
 
             this._myStepMultiplierValue += amountToAdd;
             if (Math.abs(this._myStepMultiplierValue) >= 1) {
@@ -145,6 +152,7 @@ PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget {
             }
         } else {
             this._myStepMultiplierValue = 0;
+            this._myStepFastEdit = true;
         }
     }
 
@@ -204,7 +212,7 @@ PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget {
     _setStepEditIntensity(material, value) {
         if (this._isActive() || value == 0) {
             if (value != 0) {
-                this._myStepButtonEditIntensityTimer = 0;
+                this._myStepButtonEditIntensityTimer = this._mySetup.myButtonEditDelay;
                 this._genericHover(material);
             } else {
                 this._genericUnHover(material);
