@@ -1,12 +1,12 @@
 
-PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
+PP.EasyTuneVecNumberWidget = class EasyTuneVecNumberWidget {
 
-    constructor(gamepad, blockEditButtonType) {
+    constructor(vectorSize, gamepad, blockEditButtonType) {
         this._myGamepad = gamepad;
         this._myBlockEditButtonType = blockEditButtonType;
 
-        this._mySetup = new PP.EasyTuneNumberWidgetSetup();
-        this._myUI = new PP.EasyTuneNumberWidgetUI();
+        this._mySetup = new PP.EasyTuneVecNumberWidgetSetup(vectorSize);
+        this._myUI = new PP.EasyTuneVecNumberWidgetUI();
 
         this._myVariable = null;
 
@@ -15,6 +15,8 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
         this._myScrollVariableRequestCallbacks = new Map();
 
         this._myAppendToVariableName = "";
+
+        this._myValueEditIndex = 0;
 
         this._myValueButtonEditIntensity = 0;
         this._myValueButtonEditIntensityTimer = 0;
@@ -43,7 +45,11 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
     _refreshUI() {
         if (this._myVariable) {
             this._myUI.myVariableLabelTextComponent.text = this._myVariable.myName.concat(this._myAppendToVariableName);
-            this._myUI.myValueTextComponent.text = this._myVariable.myValue.toFixed(this._myVariable.myDecimalPlaces);
+
+            for (let i = 0; i < this._mySetup.myVectorSize; i++) {
+                this._myUI.myValueTextComponents[i].text = this._myVariable.myValue[i].toFixed(this._myVariable.myDecimalPlaces);
+            }
+
             this._myUI.myStepTextComponent.text = this._mySetup.myStepStartString.concat(this._myVariable.myStepPerSecond);
         }
     }
@@ -107,10 +113,10 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
             this._myValueRealValue += amountToAdd;
 
             let decimalPlacesMultiplier = Math.pow(10, this._myVariable.myDecimalPlaces);
-            this._myVariable.myValue = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
-            this._myUI.myValueTextComponent.text = this._myVariable.myValue.toFixed(this._myVariable.myDecimalPlaces);
+            this._myVariable.myValue[this._myValueEditIndex] = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
+            this._myUI.myValueTextComponents[this._myValueEditIndex].text = this._myVariable.myValue[this._myValueEditIndex].toFixed(this._myVariable.myDecimalPlaces);
         } else {
-            this._myValueRealValue = this._myVariable.myValue;
+            this._myValueRealValue = this._myVariable.myValue[this._myValueEditIndex];
         }
 
         let stepIntensity = 0;
@@ -157,14 +163,16 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
         ui.myPreviousButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
         ui.myPreviousButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
 
-        ui.myValueIncreaseButtonCursorTargetComponent.addHoverFunction(this._setValueEditIntensity.bind(this, ui.myValueIncreaseButtonBackgroundComponent.material, 1));
-        ui.myValueIncreaseButtonCursorTargetComponent.addUnHoverFunction(this._setValueEditIntensity.bind(this, ui.myValueIncreaseButtonBackgroundComponent.material, 0));
-        ui.myValueDecreaseButtonCursorTargetComponent.addHoverFunction(this._setValueEditIntensity.bind(this, ui.myValueDecreaseButtonBackgroundComponent.material, -1));
-        ui.myValueDecreaseButtonCursorTargetComponent.addUnHoverFunction(this._setValueEditIntensity.bind(this, ui.myValueDecreaseButtonBackgroundComponent.material, 0));
+        for (let i = 0; i < this._mySetup.myVectorSize; i++) {
+            ui.myValueIncreaseButtonCursorTargetComponents[i].addHoverFunction(this._setValueEditIntensity.bind(this, i, ui.myValueIncreaseButtonBackgroundComponents[i].material, 1));
+            ui.myValueIncreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._setValueEditIntensity.bind(this, i, ui.myValueIncreaseButtonBackgroundComponents[i].material, 0));
+            ui.myValueDecreaseButtonCursorTargetComponents[i].addHoverFunction(this._setValueEditIntensity.bind(this, i, ui.myValueDecreaseButtonBackgroundComponents[i].material, -1));
+            ui.myValueDecreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._setValueEditIntensity.bind(this, i, ui.myValueDecreaseButtonBackgroundComponents[i].material, 0));
 
-        ui.myValueCursorTargetComponent.addClickFunction(this._resetValue.bind(this));
-        ui.myValueCursorTargetComponent.addHoverFunction(this._setValueEditActive.bind(this, ui.myValueText, true));
-        ui.myValueCursorTargetComponent.addUnHoverFunction(this._setValueEditActive.bind(this, ui.myValueText, false));
+            ui.myValueCursorTargetComponents[i].addClickFunction(this._resetValue.bind(this, i));
+            ui.myValueCursorTargetComponents[i].addHoverFunction(this._setValueEditActive.bind(this, i, ui.myValueTexts[i], true));
+            ui.myValueCursorTargetComponents[i].addUnHoverFunction(this._setValueEditActive.bind(this, i, ui.myValueTexts[i], false));
+        }
 
         ui.myStepCursorTargetComponent.addClickFunction(this._resetStep.bind(this));
         ui.myStepCursorTargetComponent.addHoverFunction(this._setStepEditActive.bind(this, ui.myStepText, true));
@@ -176,10 +184,12 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
         ui.myStepDecreaseButtonCursorTargetComponent.addUnHoverFunction(this._setStepEditIntensity.bind(this, ui.myStepDecreaseButtonBackgroundComponent.material, 0));
     }
 
-    _setValueEditIntensity(material, value) {
+    _setValueEditIntensity(index, material, value) {
         if (this._isActive() || value == 0) {
             if (value != 0) {
                 this._myValueButtonEditIntensityTimer = this._mySetup.myButtonEditDelay;
+                this._myValueRealValue = this._myVariable.myValue[index];
+                this._myValueEditIndex = index;
                 this._genericHover(material);
             } else {
                 this._genericUnHover(material);
@@ -202,9 +212,11 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
         }
     }
 
-    _setValueEditActive(text, active) {
+    _setValueEditActive(index, text, active) {
         if (this._isActive() || !active) {
             if (active) {
+                this._myValueRealValue = this._myVariable.myValue[index];
+                this._myValueEditIndex = index;
                 text.scale(this._mySetup.myTextHoverScaleMultiplier);
             } else {
                 text.scalingWorld = this._mySetup.myValueTextScale;
@@ -234,10 +246,10 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
         }
     }
 
-    _resetValue() {
+    _resetValue(index) {
         if (this._isActive()) {
-            this._myVariable.myValue = this._myVariable.myInitialValue;
-            this._myUI.myValueTextComponent.text = this._myVariable.myValue.toFixed(this._myVariable.myDecimalPlaces);
+            this._myVariable.myValue[index] = this._myVariable.myInitialValue[index];
+            this._myUI.myValueTextComponents[index].text = this._myVariable.myValue[index].toFixed(this._myVariable.myDecimalPlaces);
         }
     }
 

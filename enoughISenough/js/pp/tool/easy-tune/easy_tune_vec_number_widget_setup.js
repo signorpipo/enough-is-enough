@@ -1,6 +1,7 @@
-PP.EasyTuneNumberWidgetSetup = class EasyTuneNumberWidgetSetup {
+PP.EasyTuneVecNumberWidgetSetup = class EasyTuneVecNumberWidgetSetup {
 
-    constructor() {
+    constructor(vectorSize) {
+        this.myVectorSize = vectorSize;
         this._initializeBuildSetup();
         this._initializeRuntimeSetup();
     }
@@ -29,6 +30,7 @@ PP.EasyTuneNumberWidgetSetup = class EasyTuneNumberWidgetSetup {
 
         let panelZ = 0.01;
         let distanceFromBorder = 0.0125;
+        let distanceFromValue = 0.055;
         let colliderZPosition = 0.017;
         let backgroundHalfWidth = 0.2;
 
@@ -56,7 +58,11 @@ PP.EasyTuneNumberWidgetSetup = class EasyTuneNumberWidgetSetup {
         this.myVariableLabelPanelPosition = [0, 0.025, panelZ];
         this.myVariableLabelTextScale = [0.19, 0.19, 0.19];
 
-        this.myValuePanelPosition = [0, -0.03, panelZ];
+        this.myNextButtonText = ">";
+        this.myPreviousButtonText = "<";
+
+        this.myValuesPanelPosition = [0, this.myVariableLabelPanelPosition[1] - distanceFromValue, panelZ];
+
         this.myValueTextScale = [0.4, 0.4, 0.4];
 
         this.myValueCursorTargetPosition = [0, 0, 0];
@@ -64,11 +70,18 @@ PP.EasyTuneNumberWidgetSetup = class EasyTuneNumberWidgetSetup {
         this.myValueCollisionExtents = [0.065, 0.02, 1];
         this.myValueCollisionExtents[2] = this.myCursorTargetCollisionThickness;
 
-        this.myNextButtonText = ">";
-        this.myPreviousButtonText = "<";
+        this.myDistanceBetweenValues = this.mySideButtonBackgroundScale[1] * 2 + 0.015;
+
+        this.myValuePanelsPositions = [];
+        this.myValuePanelsPositions[0] = [0, 0, 0];
+        for (let i = 1; i < this.myVectorSize; i++) {
+            this.myValuePanelsPositions[i] = this.myValuePanelsPositions[i - 1].slice(0);
+            this.myValuePanelsPositions[i][1] -= this.myDistanceBetweenValues;
+        }
 
         //Step
-        this.myStepPanelPosition = [0, 0.015, panelZ];
+        console.log("AAAAA", this.myValuePanelsPositions[this.myVectorSize - 1][1]);
+        this.myStepPanelPosition = [0, this.myDisplayPanelPosition[1] + this.myValuesPanelPosition[1] + this.myValuePanelsPositions[this.myVectorSize - 1][1] - distanceFromValue, panelZ];
         this.myStepTextScale = [0.19, 0.19, 0.19];
         this.myStepStartString = "Step: ";
 
