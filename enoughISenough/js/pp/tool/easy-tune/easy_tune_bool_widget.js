@@ -1,7 +1,7 @@
 
 PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
 
-    constructor(gamepad, blockModifyButtonType) {
+    constructor(gamepad, blockModifyButtonType, enableAdditionalVariable) {
         this._myGamepad = gamepad;
         this._myBlockModifyButtonType = blockModifyButtonType;
 
@@ -64,6 +64,7 @@ PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
 
     start(parentObject, additionalSetup) {
         this._myUI.build(parentObject, this._mySetup, additionalSetup);
+        this._myUI.setAdditionalButtonsActive(additionalSetup.myEnableAdditionalButtons);
 
         this._addListeners();
     }

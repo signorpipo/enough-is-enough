@@ -5,6 +5,9 @@ PP.EasyTuneBoolWidgetUI = class EasyTuneBoolWidgetUI {
         this._myParentObject = parentObject;
         this._mySetup = setup;
         this._myAdditionalSetup = additionalSetup;
+
+        this._myAdditionalButtonsActive = true;
+
         this._myPlaneMesh = PP.MeshUtils.createPlaneMesh();
 
         this._createSkeleton();
@@ -14,6 +17,15 @@ PP.EasyTuneBoolWidgetUI = class EasyTuneBoolWidgetUI {
 
     setVisible(visible) {
         this.myPivotObject.pp_setActiveHierarchy(visible);
+        if (visible) {
+            this.setAdditionalButtonsActive(this._myAdditionalButtonsActive);
+        }
+    }
+
+    setAdditionalButtonsActive(active) {
+        this._myAdditionalButtonsActive = active;
+        this.myIncreaseButtonPanel.pp_setActiveHierarchy(this._myAdditionalButtonsActive);
+        this.myDecreaseButtonPanel.pp_setActiveHierarchy(this._myAdditionalButtonsActive);
     }
 
     //Skeleton

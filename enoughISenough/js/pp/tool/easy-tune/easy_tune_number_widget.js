@@ -65,6 +65,7 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
 
     start(parentObject, additionalSetup) {
         this._myUI.build(parentObject, this._mySetup, additionalSetup);
+        this._myUI.setAdditionalButtonsActive(additionalSetup.myEnableAdditionalButtons);
 
         this._addListeners();
     }
