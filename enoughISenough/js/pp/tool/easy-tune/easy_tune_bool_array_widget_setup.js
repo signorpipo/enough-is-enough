@@ -25,8 +25,8 @@ PP.EasyTuneBoolArrayWidgetSetup = class EasyTuneBoolArrayWidgetSetup {
         //Pivot
         this.myPivotObjectPositions = [];
         this.myPivotObjectPositions[PP.HandednessIndex.NONE] = [0, 0, 0];
-        this.myPivotObjectPositions[PP.HandednessIndex.LEFT] = [-0.04, 0, 0.00003713]; //little "random" z offset to avoid glitching with other widgets
-        this.myPivotObjectPositions[PP.HandednessIndex.RIGHT] = [-0.08, 0, 0.00003713];
+        this.myPivotObjectPositions[PP.HandednessIndex.LEFT] = [-0.04, 0.02, 0.00003013]; //little "random" z offset to avoid glitching with other widgets
+        this.myPivotObjectPositions[PP.HandednessIndex.RIGHT] = [-0.08, 0.02, 0.00003013];
 
         let panelZ = 0.01;
         let distanceFromBorder = 0.0125;
@@ -86,8 +86,9 @@ PP.EasyTuneBoolArrayWidgetSetup = class EasyTuneBoolArrayWidgetSetup {
 
         //Background
         {
+            let valuePanelLastPosition = (this.myValuePanelsPositions[this.myArraySize - 1]) ? this.myValuePanelsPositions[this.myArraySize - 1][1] : 0;
             let maxY = this.myDisplayPanelPosition[1] + this.myVariableLabelPanelPosition[1] + this.mySideButtonBackgroundScale[1] + distanceFromBorder * 1.25;
-            let minY = this.myDisplayPanelPosition[1] + this.myValuesPanelPosition[1] + this.myValuePanelsPositions[this.myArraySize - 1][1] - distanceFromBorder * 1.25 - this.mySideButtonBackgroundScale[1];
+            let minY = this.myDisplayPanelPosition[1] + this.myValuesPanelPosition[1] + valuePanelLastPosition - distanceFromBorder * 1.25 - this.mySideButtonBackgroundScale[1];
             this.myBackPanelPosition = [0, (maxY + minY) / 2, 0];
             this.myBackBackgroundScale = [backgroundHalfWidth, (maxY - minY) / 2, 1];
             this.myBackBackgroundColor = [70 / 255, 70 / 255, 70 / 255, 1];

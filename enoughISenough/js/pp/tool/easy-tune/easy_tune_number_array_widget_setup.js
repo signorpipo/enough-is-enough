@@ -25,8 +25,8 @@ PP.EasyTuneNumberArrayWidgetSetup = class EasyTuneNumberArrayWidgetSetup {
         //Pivot
         this.myPivotObjectPositions = [];
         this.myPivotObjectPositions[PP.HandednessIndex.NONE] = [0, 0, 0];
-        this.myPivotObjectPositions[PP.HandednessIndex.LEFT] = [-0.04, 0, 0.00003713]; //little "random" z offset to avoid glitching with other widgets
-        this.myPivotObjectPositions[PP.HandednessIndex.RIGHT] = [-0.08, 0, 0.00003713];
+        this.myPivotObjectPositions[PP.HandednessIndex.LEFT] = [-0.04, 0.02, 0.00003713]; //little "random" z offset to avoid glitching with other widgets
+        this.myPivotObjectPositions[PP.HandednessIndex.RIGHT] = [-0.08, 0.02, 0.00003713];
 
         let panelZ = 0.01;
         let distanceFromBorder = 0.0125;
@@ -85,7 +85,8 @@ PP.EasyTuneNumberArrayWidgetSetup = class EasyTuneNumberArrayWidgetSetup {
         }
 
         //Step
-        this.myStepPanelPosition = [0, this.myDisplayPanelPosition[1] + this.myValuesPanelPosition[1] + this.myValuePanelsPositions[this.myArraySize - 1][1] - distanceFromValue, panelZ];
+        let valuePanelLastPosition = (this.myValuePanelsPositions[this.myArraySize - 1]) ? this.myValuePanelsPositions[this.myArraySize - 1][1] : 0;
+        this.myStepPanelPosition = [0, this.myDisplayPanelPosition[1] + this.myValuesPanelPosition[1] + valuePanelLastPosition - distanceFromValue, panelZ];
         this.myStepTextScale = [0.19, 0.19, 0.19];
         this.myStepStartString = "Step: ";
 

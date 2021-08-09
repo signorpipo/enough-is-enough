@@ -24,8 +24,8 @@ PP.EasyTuneNoneWidgetSetup = class EasyTuneNoneWidgetSetup {
         //Pivot
         this.myPivotObjectPositions = [];
         this.myPivotObjectPositions[PP.HandednessIndex.NONE] = [0, 0, 0];
-        this.myPivotObjectPositions[PP.HandednessIndex.LEFT] = [-0.04, 0, 0.00004213]; //little "random" z offset to avoid glitching with other widgets
-        this.myPivotObjectPositions[PP.HandednessIndex.RIGHT] = [-0.08, 0, 0.00004213];
+        this.myPivotObjectPositions[PP.HandednessIndex.LEFT] = [-0.04, 0.02, 0.00004213]; //little "random" z offset to avoid glitching with other widgets
+        this.myPivotObjectPositions[PP.HandednessIndex.RIGHT] = [-0.08, 0.02, 0.00004213];
 
         let panelZ = 0.01;
         let distanceFromBorder = 0.0125;
