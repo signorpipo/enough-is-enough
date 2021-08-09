@@ -1,6 +1,7 @@
-PP.EasyTuneBoolWidgetSetup = class EasyTuneBoolWidgetSetup {
+PP.EasyTuneVecBoolWidgetSetup = class EasyTuneVecBoolWidgetSetup {
 
-    constructor() {
+    constructor(vectorSize) {
+        this.myVectorSize = vectorSize;
         this._initializeBuildSetup();
         this._initializeRuntimeSetup();
     }
@@ -29,6 +30,7 @@ PP.EasyTuneBoolWidgetSetup = class EasyTuneBoolWidgetSetup {
 
         let panelZ = 0.01;
         let distanceFromBorder = 0.0125;
+        let distanceFromValue = 0.055;
         let colliderZPosition = 0.017;
         let backgroundHalfWidth = 0.2;
 
@@ -47,8 +49,8 @@ PP.EasyTuneBoolWidgetSetup = class EasyTuneBoolWidgetSetup {
         this.myRightSideButtonPosition = [0, 0, 0];
         this.myRightSideButtonPosition[0] = backgroundHalfWidth - this.mySideButtonBackgroundScale[0] - distanceFromBorder;
 
-        this.myIncreaseButtonText = "T";
-        this.myDecreaseButtonText = "F";
+        this.myIncreaseButtonText = "+";
+        this.myDecreaseButtonText = "-";
 
         //Display
         this.myDisplayPanelPosition = [0, 0.1, 0];
@@ -56,21 +58,36 @@ PP.EasyTuneBoolWidgetSetup = class EasyTuneBoolWidgetSetup {
         this.myVariableLabelPanelPosition = [0, 0.025, panelZ];
         this.myVariableLabelTextScale = [0.19, 0.19, 0.19];
 
-        this.myValuePanelPosition = [0, -0.03, panelZ];
-        this.myValueTextScale = [0.35, 0.35, 0.35];
+        this.myVariableLabelCursorTargetPosition = [0, 0, 0];
+        this.myVariableLabelCursorTargetPosition[2] = colliderZPosition - panelZ;
+        this.myVariableLabelCollisionExtents = [0.065, 0.0175, 1];
+        this.myVariableLabelCollisionExtents[2] = this.myCursorTargetCollisionThickness;
+
+        this.myNextButtonText = ">";
+        this.myPreviousButtonText = "<";
+
+        this.myValuesPanelPosition = [0, this.myVariableLabelPanelPosition[1] - distanceFromValue, panelZ];
+
+        this.myValueTextScale = [0.4, 0.4, 0.4];
 
         this.myValueCursorTargetPosition = [0, 0, 0];
         this.myValueCursorTargetPosition[2] = colliderZPosition - panelZ;
         this.myValueCollisionExtents = [0.065, 0.02, 1];
         this.myValueCollisionExtents[2] = this.myCursorTargetCollisionThickness;
 
-        this.myNextButtonText = ">";
-        this.myPreviousButtonText = "<";
+        this.myDistanceBetweenValues = this.mySideButtonBackgroundScale[1] * 2 + 0.015;
+
+        this.myValuePanelsPositions = [];
+        this.myValuePanelsPositions[0] = [0, 0, 0];
+        for (let i = 1; i < this.myVectorSize; i++) {
+            this.myValuePanelsPositions[i] = this.myValuePanelsPositions[i - 1].slice(0);
+            this.myValuePanelsPositions[i][1] -= this.myDistanceBetweenValues;
+        }
 
         //Background
         {
             let maxY = this.myDisplayPanelPosition[1] + this.myVariableLabelPanelPosition[1] + this.mySideButtonBackgroundScale[1] + distanceFromBorder * 1.25;
-            let minY = this.myDisplayPanelPosition[1] + this.myValuePanelPosition[1] - distanceFromBorder * 1.25 - this.mySideButtonBackgroundScale[1];
+            let minY = this.myDisplayPanelPosition[1] + this.myValuesPanelPosition[1] + this.myValuePanelsPositions[this.myVectorSize - 1][1] - distanceFromBorder * 1.25 - this.mySideButtonBackgroundScale[1];
             this.myBackPanelPosition = [0, (maxY + minY) / 2, 0];
             this.myBackBackgroundScale = [backgroundHalfWidth, (maxY - minY) / 2, 1];
             this.myBackBackgroundColor = [70 / 255, 70 / 255, 70 / 255, 1];
@@ -88,7 +105,6 @@ PP.EasyTuneBoolWidgetSetup = class EasyTuneBoolWidgetSetup {
         this.myTextHoverScaleMultiplier = [1.25, 1.25, 1.25];
 
         this.myThumbstickToggleThreshold = 0.6;
-
         this.myButtonEditDelay = 0.25;
     }
 };

@@ -1,12 +1,12 @@
 
-PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
+PP.EasyTuneVecBoolWidget = class EasyTuneVecBoolWidget {
 
-    constructor(gamepad, blockEditButtonType) {
+    constructor(vectorSize, gamepad, blockEditButtonType) {
         this._myGamepad = gamepad;
         this._myBlockEditButtonType = blockEditButtonType;
 
-        this._mySetup = new PP.EasyTuneBoolWidgetSetup();
-        this._myUI = new PP.EasyTuneBoolWidgetUI();
+        this._mySetup = new PP.EasyTuneVecBoolWidgetSetup(vectorSize);
+        this._myUI = new PP.EasyTuneVecBoolWidgetUI();
 
         this._myVariable = null;
 
@@ -16,12 +16,10 @@ PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
 
         this._myAppendToVariableName = "";
 
+        this._myValueEditIndex = 0;
         this._myValueButtonEditIntensity = 0;
         this._myValueButtonEditIntensityTimer = 0;
-
         this._myValueEditActive = false;
-
-        this._myValueRealValue = null;
     }
 
     setEasyTuneVariable(variable, appendToVariableName) {
@@ -39,7 +37,10 @@ PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
     _refreshUI() {
         if (this._myVariable) {
             this._myUI.myVariableLabelTextComponent.text = this._myVariable.myName.concat(this._myAppendToVariableName);
-            this._myUI.myValueTextComponent.text = (this._myVariable.myValue) ? "true" : "false";
+
+            for (let i = 0; i < this._mySetup.myVectorSize; i++) {
+                this._myUI.myValueTextComponents[i].text = (this._myVariable.myValue[i]) ? "true" : "false";
+            }
         }
     }
 
@@ -92,7 +93,7 @@ PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
         }
 
         if (Math.abs(valueIntensity) > this._mySetup.myThumbstickToggleThreshold) {
-            this._myVariable.myValue = valueIntensity > 0;
+            this._myVariable.myValue[this._myValueEditIndex] = valueIntensity > 0;
             this._refreshUI();
         }
     }
@@ -104,6 +105,8 @@ PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
     _addListeners() {
         let ui = this._myUI;
 
+        ui.myVariableLabelCursorTargetComponent.addClickFunction(this._resetAllValues.bind(this));
+
         ui.myNextButtonCursorTargetComponent.addClickFunction(this._scrollVariableRequest.bind(this, 1));
         ui.myNextButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myNextButtonBackgroundComponent.material));
         ui.myNextButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myNextButtonBackgroundComponent.material));
@@ -112,20 +115,23 @@ PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
         ui.myPreviousButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
         ui.myPreviousButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
 
-        ui.myValueIncreaseButtonCursorTargetComponent.addHoverFunction(this._setValueEditIntensity.bind(this, ui.myValueIncreaseButtonBackgroundComponent.material, 1));
-        ui.myValueIncreaseButtonCursorTargetComponent.addUnHoverFunction(this._setValueEditIntensity.bind(this, ui.myValueIncreaseButtonBackgroundComponent.material, 0));
-        ui.myValueDecreaseButtonCursorTargetComponent.addHoverFunction(this._setValueEditIntensity.bind(this, ui.myValueDecreaseButtonBackgroundComponent.material, -1));
-        ui.myValueDecreaseButtonCursorTargetComponent.addUnHoverFunction(this._setValueEditIntensity.bind(this, ui.myValueDecreaseButtonBackgroundComponent.material, 0));
+        for (let i = 0; i < this._mySetup.myVectorSize; i++) {
+            ui.myValueIncreaseButtonCursorTargetComponents[i].addHoverFunction(this._setValueEditIntensity.bind(this, i, ui.myValueIncreaseButtonBackgroundComponents[i].material, 1));
+            ui.myValueIncreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._setValueEditIntensity.bind(this, i, ui.myValueIncreaseButtonBackgroundComponents[i].material, 0));
+            ui.myValueDecreaseButtonCursorTargetComponents[i].addHoverFunction(this._setValueEditIntensity.bind(this, i, ui.myValueDecreaseButtonBackgroundComponents[i].material, -1));
+            ui.myValueDecreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._setValueEditIntensity.bind(this, i, ui.myValueDecreaseButtonBackgroundComponents[i].material, 0));
 
-        ui.myValueCursorTargetComponent.addClickFunction(this._resetValue.bind(this));
-        ui.myValueCursorTargetComponent.addHoverFunction(this._setValueEditActive.bind(this, ui.myValueText, true));
-        ui.myValueCursorTargetComponent.addUnHoverFunction(this._setValueEditActive.bind(this, ui.myValueText, false));
+            ui.myValueCursorTargetComponents[i].addClickFunction(this._resetValue.bind(this, i));
+            ui.myValueCursorTargetComponents[i].addHoverFunction(this._setValueEditActive.bind(this, i, ui.myValueTexts[i], true));
+            ui.myValueCursorTargetComponents[i].addUnHoverFunction(this._setValueEditActive.bind(this, i, ui.myValueTexts[i], false));
+        }
     }
 
-    _setValueEditIntensity(material, value) {
+    _setValueEditIntensity(index, material, value) {
         if (this._isActive() || value == 0) {
             if (value != 0) {
                 this._myValueButtonEditIntensityTimer = this._mySetup.myButtonEditDelay;
+                this._myValueEditIndex = index;
                 this._genericHover(material);
             } else {
                 this._genericUnHover(material);
@@ -135,9 +141,10 @@ PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
         }
     }
 
-    _setValueEditActive(text, active) {
+    _setValueEditActive(index, text, active) {
         if (this._isActive() || !active) {
             if (active) {
+                this._myValueEditIndex = index;
                 text.scale(this._mySetup.myTextHoverScaleMultiplier);
             } else {
                 text.scalingWorld = this._mySetup.myValueTextScale;
@@ -155,10 +162,16 @@ PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
         }
     }
 
-    _resetValue() {
+    _resetValue(index) {
         if (this._isActive()) {
-            this._myVariable.myValue = this._myVariable.myInitialValue;
-            this._myUI.myValueTextComponent.text = this._myVariable.myValue.toFixed(this._myVariable.myDecimalPlaces);
+            this._myVariable.myValue[index] = this._myVariable.myInitialValue[index];
+            this._myUI.myValueTextComponents[index].text = (this._myVariable.myValue[index]) ? "true" : "false";
+        }
+    }
+
+    _resetAllValues() {
+        for (let i = 0; i < this._mySetup.myVectorSize; i++) {
+            this._resetValue(i);
         }
     }
 

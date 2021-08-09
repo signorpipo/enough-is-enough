@@ -43,8 +43,9 @@ PP.EasyTuneVariables = new PP.EasyTuneVariableMap();
 PP.EasyTuneVariableType = {
     NONE: 0,
     VEC1_NUMBER: 1,
-    BOOL: 2,
-    VEC3_NUMBER: 3
+    VEC3_NUMBER: 2,
+    VEC1_BOOL: 3,
+    VEC3_BOOL: 4
 };
 
 PP.EasyTuneVariable = class EasyTuneVariable {
@@ -66,11 +67,7 @@ PP.EasyTuneVariable = class EasyTuneVariable {
     }
 };
 
-PP.EasyTuneBool = class EasyTuneBool extends PP.EasyTuneVariable {
-    constructor(name, value) {
-        super(name, PP.EasyTuneVariableType.BOOL, value);
-    }
-};
+//NUMBER
 
 PP.EasyTuneVecNumber = class EasyTuneVecNumber extends PP.EasyTuneVariable {
     constructor(name, size, value, stepPerSecond, decimalPlaces) {
@@ -131,5 +128,48 @@ PP.EasyTuneVec3Number = class EasyTuneVec3Number extends PP.EasyTuneVecNumber {
 PP.EasyTuneVec3Int = class EasyTuneVec3Int extends PP.EasyTuneVec3Number {
     constructor(name, value, stepPerSecond) {
         super(name, 3, value, stepPerSecond, 0);
+    }
+};
+
+//BOOL
+
+PP.EasyTuneVecBool = class EasyTuneVecBool extends PP.EasyTuneVariable {
+    constructor(name, value) {
+        let type = null;
+        switch (value.length) {
+            case 1:
+                type = PP.EasyTuneVariableType.VEC1_BOOL;
+                break;
+            case 3:
+                type = PP.EasyTuneVariableType.VEC3_BOOL;
+                break;
+            default:
+                type = PP.EasyTuneVariableType.NONE;
+        }
+
+        super(name, type, null);
+
+        this.mySize = value.length;
+
+        PP.EasyTuneVecBool.prototype.setValue.call(this, value);
+    }
+
+    setValue(value) {
+        this.myValue = value.slice(0);
+        this.myInitialValue = this.myValue.slice(0);
+    }
+};
+
+PP.EasyTuneBool = class EasyTuneBool extends PP.EasyTuneVecBool {
+    constructor(name, value) {
+        super(name, [value]);
+    }
+
+    getValue() {
+        return this.myValue[0];
+    }
+
+    setValue(value) {
+        super.setValue([value]);
     }
 };

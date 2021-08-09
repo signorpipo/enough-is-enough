@@ -60,7 +60,7 @@ PP.EasyTuneVecNumberWidgetSetup = class EasyTuneVecNumberWidgetSetup {
 
         this.myVariableLabelCursorTargetPosition = [0, 0, 0];
         this.myVariableLabelCursorTargetPosition[2] = colliderZPosition - panelZ;
-        this.myVariableLabelCollisionExtents = [0.045, 0.0175, 1];
+        this.myVariableLabelCollisionExtents = [0.065, 0.0175, 1];
         this.myVariableLabelCollisionExtents[2] = this.myCursorTargetCollisionThickness;
 
         this.myNextButtonText = ">";
@@ -85,14 +85,13 @@ PP.EasyTuneVecNumberWidgetSetup = class EasyTuneVecNumberWidgetSetup {
         }
 
         //Step
-        console.log("AAAAA", this.myValuePanelsPositions[this.myVectorSize - 1][1]);
         this.myStepPanelPosition = [0, this.myDisplayPanelPosition[1] + this.myValuesPanelPosition[1] + this.myValuePanelsPositions[this.myVectorSize - 1][1] - distanceFromValue, panelZ];
         this.myStepTextScale = [0.19, 0.19, 0.19];
         this.myStepStartString = "Step: ";
 
         this.myStepCursorTargetPosition = [0, 0, 0];
         this.myStepCursorTargetPosition[2] = colliderZPosition - this.myStepPanelPosition[2];
-        this.myStepCollisionExtents = [0.045, 0.0175, 1];
+        this.myStepCollisionExtents = [0.065, 0.0175, 1];
         this.myStepCollisionExtents[2] = this.myCursorTargetCollisionThickness;
 
         //Background
