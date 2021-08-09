@@ -48,12 +48,11 @@ PP.EasyTuneVariableType = {
 
 PP.EasyTuneVariable = class EasyTuneVariable {
     constructor(name, type, value) {
-        this.myName = name;
+        this.myName = name.slice(0);
         this.myType = type;
 
         this.myValue = value;
-
-        this.myInitialValue = this.myValue;
+        this.myInitialValue = value;
     }
 
     getValue() {
@@ -62,6 +61,7 @@ PP.EasyTuneVariable = class EasyTuneVariable {
 
     setValue(value) {
         this.myValue = value;
+        this.myInitialValue = this.myValue;
     }
 };
 
