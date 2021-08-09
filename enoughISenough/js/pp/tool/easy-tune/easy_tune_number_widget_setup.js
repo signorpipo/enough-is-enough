@@ -15,7 +15,6 @@ PP.EasyTuneNumberWidgetSetup = class EasyTuneNumberWidgetSetup {
 
         this.myDefaultTextColor = [255 / 255, 255 / 255, 255 / 255, 1];
 
-        this.myColliderZPosition = 0.027;
 
         this.myTextAlignment = 2; // center
         this.myTextJustification = 2; // middle
@@ -29,121 +28,78 @@ PP.EasyTuneNumberWidgetSetup = class EasyTuneNumberWidgetSetup {
         this.myPivotObjectPositions[PP.HandednessIndex.LEFT] = [-0.04, 0, 0.00003713]; //little "random" z offset to avoid glitching with other widgets
         this.myPivotObjectPositions[PP.HandednessIndex.RIGHT] = [-0.08, 0, 0.00003713];
 
+        let panelZ = 0.01;
+        let distanceFromBorder = 0.0125;
+        let colliderZPosition = 0.017;
+        let backgroundHalfWidth = 0.2;
+
+        this.mySideButtonBackgroundScale = [0.015, 0.015, 1];
+        this.mySideButtonTextScale = [0.18, 0.18, 0.18];
+        this.mySideButtonTextPosition = [0, 0, 0.007];
+
+        this.mySideButtonCursorTargetPosition = [0, 0, 0];
+        this.mySideButtonCursorTargetPosition[2] = colliderZPosition - panelZ;
+        this.mySideButtonCollisionExtents = this.mySideButtonBackgroundScale.slice(0);
+        this.mySideButtonCollisionExtents[2] = this.myCursorTargetCollisionThickness;
+
+        this.myLeftSideButtonPosition = [0, 0, 0];
+        this.myLeftSideButtonPosition[0] = -backgroundHalfWidth + this.mySideButtonBackgroundScale[0] + distanceFromBorder;
+
+        this.myRightSideButtonPosition = [0, 0, 0];
+        this.myRightSideButtonPosition[0] = backgroundHalfWidth - this.mySideButtonBackgroundScale[0] - distanceFromBorder;
+
+        this.myIncreaseButtonText = "+";
+        this.myDecreaseButtonText = "-";
+
         //Display
-        {
-            this.myDisplayPanelPosition = [0, 0.1025, 0];
-            this.myDisplayBackgroundScale = [0.200, 0.0575, 1];
-            this.myDisplayBackgroundColor = [70 / 255, 70 / 255, 70 / 255, 1];
+        this.myDisplayPanelPosition = [0, 0.1, 0];
 
-            let panelZ = 0.01;
+        this.myVariableLabelPanelPosition = [0, 0.025, panelZ];
+        this.myVariableLabelTextScale = [0.19, 0.19, 0.19];
 
-            this.myVariableLabelPanelPosition = [0, 0.025, panelZ];
-            this.myVariableLabelTextScale = [0.19, 0.19, 0.19];
+        this.myValuePanelPosition = [0, -0.03, panelZ];
+        this.myValueTextScale = [0.4, 0.4, 0.4];
 
-            this.myValuePanelPosition = [0, -0.025, panelZ];
-            this.myValueTextScale = [0.4, 0.4, 0.4];
+        this.myValueCursorTargetPosition = [0, 0, 0];
+        this.myValueCursorTargetPosition[2] = colliderZPosition - panelZ;
+        this.myValueCollisionExtents = [0.065, 0.02, 1];
+        this.myValueCollisionExtents[2] = this.myCursorTargetCollisionThickness;
 
-            this.myResetValueCursorTargetPosition = [0, 0, 0];
-            this.myResetValueCursorTargetPosition[2] = this.myColliderZPosition - panelZ;
-            this.myResetValueCollisionExtents = [0.065, 0.015, 1];
-            this.myResetValueCollisionExtents[2] = this.myCursorTargetCollisionThickness;
-
-            this.myDisplayButtonBackgroundScale = [0.015, 0.015, 1];
-            this.myDisplayButtonTextScale = [0.18, 0.18, 0.18];
-            this.myDisplayButtonTextPosition = [0, 0, 0.007];
-
-            let distanceFromBorder = 0.01;
-
-            this.myNextButtonPosition = [0, 0, 0];
-            this.myNextButtonPosition[0] = this.myDisplayBackgroundScale[0] - this.myDisplayButtonBackgroundScale[0] - distanceFromBorder;
-            this.myNextButtonText = ">";
-
-            this.myPreviousButtonPosition = [0, 0, 0];
-            this.myPreviousButtonPosition[0] = -this.myDisplayBackgroundScale[0] + this.myDisplayButtonBackgroundScale[0] + distanceFromBorder;
-            this.myPreviousButtonText = "<";
-
-            this.myIncreaseButtonPosition = [0, 0, 0];
-            this.myIncreaseButtonPosition[0] = this.myDisplayBackgroundScale[0] - this.myDisplayButtonBackgroundScale[0] - distanceFromBorder;
-            this.myIncreaseButtonText = "+";
-
-            this.myDecreaseButtonPosition = [0, 0, 0];
-            this.myDecreaseButtonPosition[0] = -this.myDisplayBackgroundScale[0] + this.myDisplayButtonBackgroundScale[0] + distanceFromBorder;
-            this.myDecreaseButtonText = "-";
-
-            this.myDisplayButtonCursorTargetPosition = [0, 0, 0];
-            this.myDisplayButtonCursorTargetPosition[2] = this.myColliderZPosition - panelZ;
-            this.myDisplayButtonCollisionExtents = this.myDisplayButtonBackgroundScale.slice(0);
-            this.myDisplayButtonCollisionExtents[2] = this.myCursorTargetCollisionThickness;
-        }
+        this.myNextButtonText = ">";
+        this.myPreviousButtonText = "<";
 
         //Step
-        this.myStepPanelPosition = [0, -0.035, 0.01];
+        this.myStepPanelPosition = [0, 0.015, panelZ];
+        this.myStepTextScale = [0.19, 0.19, 0.19];
+        this.myStepStartString = "Step: ";
 
-        this.myStepBackgroundScale = [0.19, 0.065, 1];
-        this.myStepBackgroundColor = [70 / 255, 70 / 255, 70 / 255, 1];
+        this.myStepCursorTargetPosition = [0, 0, 0];
+        this.myStepCursorTargetPosition[2] = colliderZPosition - this.myStepPanelPosition[2];
+        this.myStepCollisionExtents = [0.045, 0.0175, 1];
+        this.myStepCollisionExtents[2] = this.myCursorTargetCollisionThickness;
 
-        this.myStepLabelPanelPosition = [0, 0.036, 0.01];
-        this.myStepLabelTextScale = [0.19, 0.19, 0.19];
-        this.myStepLabelStartString = "Step: ";
-
-        this.myResetStepCursorTargetPosition = [0, 0, 0];
-        this.myResetStepCursorTargetPosition[2] = this.myColliderZPosition - this.myStepLabelPanelPosition[2] - this.myStepPanelPosition[2];
-        this.myResetStepCollisionExtents = [0.04, 0.015, 1];
-        this.myResetStepCollisionExtents[2] = this.myCursorTargetCollisionThickness;
-
-        this.myStepButtonsPanelPosition = [0, -0.025, 0.01];
-
-        this.myStepButtonBackgroundScale = [0.04, 0.02, 1];
-
-        this.myStepButtonStartString = "x";
-
-        this.myStepButtonTextScale = [0.18, 0.18, 0.18];
-        this.myStepButtonTextPosition = [0, 0, 0.007];
-
-        this.myStepButtonCursorTargetPosition = [0, 0, 0];
-        this.myStepButtonCursorTargetPosition[2] = this.myColliderZPosition - this.myStepPanelPosition[2] - this.myStepButtonsPanelPosition[2];
-        this.myStepButtonCollisionExtents = this.myStepButtonBackgroundScale.slice(0);
-        this.myStepButtonCollisionExtents[2] = this.myCursorTargetCollisionThickness;
-
-        this.myStepButtonsSetupList = [];
+        //Background
         {
-            let numberOfButtons = 4;
-            let buttonsHorizontalSpace = this.myStepBackgroundScale[0] * 2;
-            //3 at start, 2 between buttons, 3 at end
-            let numberOfSpacesBetweenButtons = 3 + 6 + 3;
-
-            let spaceWidth = Math.max((buttonsHorizontalSpace - numberOfButtons * this.myStepButtonBackgroundScale[0] * 2) / numberOfSpacesBetweenButtons, 0);
-            let halfButtonWidth = this.myStepButtonBackgroundScale[0];
-            let currentPosition = - buttonsHorizontalSpace / 2 + spaceWidth * 3 + halfButtonWidth;
-
-            for (let i = 0; i < numberOfButtons; ++i) {
-                this.myStepButtonsSetupList[i] = {};
-                this.myStepButtonsSetupList[i].myPosition = [currentPosition, 0, 0];
-                currentPosition += halfButtonWidth + spaceWidth * 2 + halfButtonWidth;
-            }
-
-            this.myStepButtonsSetupList[0].myStepMultiplier = 0.01;
-            this.myStepButtonsSetupList[1].myStepMultiplier = 0.1;
-            this.myStepButtonsSetupList[2].myStepMultiplier = 10;
-            this.myStepButtonsSetupList[3].myStepMultiplier = 100;
+            let maxY = this.myDisplayPanelPosition[1] + this.myVariableLabelPanelPosition[1] + this.mySideButtonBackgroundScale[1] + distanceFromBorder * 1.5;
+            let minY = this.myStepPanelPosition[1] - distanceFromBorder * 2;
+            this.myBackPanelPosition = [0, (maxY + minY) / 2, 0];
+            this.myBackBackgroundScale = [backgroundHalfWidth, (maxY - minY) / 2, 1];
+            this.myBackBackgroundColor = [70 / 255, 70 / 255, 70 / 255, 1];
         }
 
         //Pointer
-        {
-            let spaceBetweenPanels = Math.abs((this.myDisplayPanelPosition[1] - this.myDisplayBackgroundScale[1]) - (this.myStepPanelPosition[1] + this.myStepBackgroundScale[1]));
-            let pointerCollisionHalfHeight = this.myDisplayBackgroundScale[1] + this.myStepBackgroundScale[1] + spaceBetweenPanels / 2;
-            this.myPointerCollisionExtents = [this.myDisplayBackgroundScale[0], pointerCollisionHalfHeight, this.myCursorTargetCollisionThickness];
-        }
-
-        this.myPointerCursorTargetPosition = [0, 0, 0];
-        this.myPointerCursorTargetPosition[1] = (this.myDisplayPanelPosition[1] + this.myDisplayBackgroundScale[1]) - this.myPointerCollisionExtents[1];
-        this.myPointerCursorTargetPosition[2] = this.myColliderZPosition - 0.0001; // a little behind the button target to avoid hiding it
+        this.myPointerCollisionExtents = this.myBackBackgroundScale.slice(0);
+        this.myPointerCollisionExtents[2] = this.myCursorTargetCollisionThickness;
+        this.myPointerCursorTargetPosition = this.myBackPanelPosition.slice(0);
+        this.myPointerCursorTargetPosition[2] = colliderZPosition - 0.0001; // a little behind the button target to avoid hiding it
     }
 
     _initializeRuntimeSetup() {
         this.myButtonHoverColor = [150 / 255, 150 / 255, 150 / 255, 1];
+        this.myTextHoverScaleMultiplier = [1.25, 1.25, 1.25];
 
-        this.myModifyThumbstickMinThreshold = 0.2;
+        this.myEditThumbstickMinThreshold = 0.2;
+        this.myStepMultiplierStepPerSecond = 2.5;
 
         this.myScrollVariableDelay = 0.75;
     }

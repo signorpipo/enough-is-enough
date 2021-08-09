@@ -72,13 +72,7 @@ PP.EasyTuneNumber = class EasyTuneNumber extends PP.EasyTuneVariable {
         this.myDecimalPlaces = decimalPlaces;
         this.myStepPerSecond = stepPerSecond;
 
-        this.myRealValue = value;
         this.myInitialStepPerSecond = this.myStepPerSecond;
-    }
-
-    setValue(value) {
-        this.myValue = value;
-        this.myRealValue = value;
     }
 };
 

@@ -1,9 +1,9 @@
 
 PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
 
-    constructor(gamepad, blockModifyButtonType) {
+    constructor(gamepad, blockEditButtonType) {
         this._myGamepad = gamepad;
-        this._myBlockModifyButtonType = blockModifyButtonType;
+        this._myBlockEditButtonType = blockEditButtonType;
 
         this._mySetup = new PP.EasyTuneNumberWidgetSetup();
         this._myUI = new PP.EasyTuneNumberWidgetUI();
@@ -19,7 +19,11 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
         this._myScrollVariableAmount = 0;
         this._myScrollVariableTimer = 0;
 
-        this._myModifyVariableButtonIntensity = 0;
+        this._myValueEditIntensity = 0;
+        this._myStepEditIntensity = 0;
+
+        this._myValueRealValue = null;
+        this._myStepMultiplierValue = null;
     }
 
     setEasyTuneVariable(variable, appendToVariableName) {
@@ -38,7 +42,7 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
         if (this._myVariable) {
             this._myUI.myVariableLabelTextComponent.text = this._myVariable.myName.concat(this._myAppendToVariableName);
             this._myUI.myValueTextComponent.text = this._myVariable.myValue.toFixed(this._myVariable.myDecimalPlaces);
-            this._myUI.myStepLabelTextComponent.text = this._mySetup.myStepLabelStartString.concat(this._myVariable.myStepPerSecond);
+            this._myUI.myStepTextComponent.text = this._mySetup.myStepStartString.concat(this._myVariable.myStepPerSecond);
         }
     }
 
@@ -80,27 +84,56 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
     _updateValue(dt) {
         let stickVariableIntensity = 0;
 
-        if (this._myGamepad && !this._myGamepad.getButtonInfo(this._myBlockModifyButtonType).myIsPressed) {
+        if (this._myGamepad && !this._myGamepad.getButtonInfo(this._myBlockEditButtonType).myIsPressed) {
             let y = this._myGamepad.getAxesInfo().myAxes[1];
 
-            if (Math.abs(y) > this._mySetup.myModifyThumbstickMinThreshold) {
-                let normalizedModifyAmount = (Math.abs(y) - this._mySetup.myModifyThumbstickMinThreshold) / (1 - this._mySetup.myModifyThumbstickMinThreshold);
-                stickVariableIntensity = Math.sign(y) * normalizedModifyAmount;
+            if (Math.abs(y) > this._mySetup.myEditThumbstickMinThreshold) {
+                let normalizedEditAmount = (Math.abs(y) - this._mySetup.myEditThumbstickMinThreshold) / (1 - this._mySetup.myEditThumbstickMinThreshold);
+                stickVariableIntensity = Math.sign(y) * normalizedEditAmount;
             }
         }
 
-        let intensity = this._myModifyVariableButtonIntensity + stickVariableIntensity;
+        let valueIntensity = 0;
+        if (this._myValueEditActive) {
+            valueIntensity = stickVariableIntensity;
+        } else {
+            valueIntensity = this._myValueEditIntensity;
+        }
 
-        if (intensity != 0) {
-            let amountToAdd = intensity * this._myVariable.myStepPerSecond * dt;
+        if (valueIntensity != 0) {
+            let amountToAdd = valueIntensity * this._myVariable.myStepPerSecond * dt;
 
-            this._myVariable.myRealValue += amountToAdd;
+            this._myValueRealValue += amountToAdd;
 
             let decimalPlacesMultiplier = Math.pow(10, this._myVariable.myDecimalPlaces);
-            this._myVariable.myValue = Math.round(this._myVariable.myRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
+            this._myVariable.myValue = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
             this._myUI.myValueTextComponent.text = this._myVariable.myValue.toFixed(this._myVariable.myDecimalPlaces);
         } else {
-            this._myVariable.myRealValue = this._myVariable.myValue;
+            this._myValueRealValue = this._myVariable.myValue;
+        }
+
+        let stepIntensity = 0;
+        if (this._myStepEditActive) {
+            stepIntensity = stickVariableIntensity;
+        } else {
+            stepIntensity = this._myStepEditIntensity;
+        }
+
+        if (stepIntensity != 0) {
+            let amountToAdd = stepIntensity * this._mySetup.myStepMultiplierStepPerSecond * dt;
+
+            this._myStepMultiplierValue += amountToAdd;
+            if (Math.abs(this._myStepMultiplierValue) >= 1) {
+                if (Math.sign(this._myStepMultiplierValue) > 0) {
+                    this._myStepMultiplierValue -= 1;
+                    this._changeStep(this._myVariable.myStepPerSecond * 10);
+                } else {
+                    this._myStepMultiplierValue += 1;
+                    this._changeStep(this._myVariable.myStepPerSecond * 0.1);
+                }
+            }
+        } else {
+            this._myStepMultiplierValue = 0;
         }
     }
 
@@ -121,30 +154,29 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
 
     _addListeners() {
         let ui = this._myUI;
-        let setup = this._mySetup;
 
         ui.myNextButtonCursorTargetComponent.addHoverFunction(this._setScrollVariableAmount.bind(this, ui.myNextButtonBackgroundComponent.material, 1));
         ui.myNextButtonCursorTargetComponent.addUnHoverFunction(this._setScrollVariableAmount.bind(this, ui.myNextButtonBackgroundComponent.material, 0));
         ui.myPreviousButtonCursorTargetComponent.addHoverFunction(this._setScrollVariableAmount.bind(this, ui.myPreviousButtonBackgroundComponent.material, -1));
         ui.myPreviousButtonCursorTargetComponent.addUnHoverFunction(this._setScrollVariableAmount.bind(this, ui.myPreviousButtonBackgroundComponent.material, 0));
 
-        ui.myIncreaseButtonCursorTargetComponent.addHoverFunction(this._setModifyVariableButtonIntensity.bind(this, ui.myIncreaseButtonBackgroundComponent.material, 1));
-        ui.myIncreaseButtonCursorTargetComponent.addUnHoverFunction(this._setModifyVariableButtonIntensity.bind(this, ui.myIncreaseButtonBackgroundComponent.material, 0));
-        ui.myDecreaseButtonCursorTargetComponent.addHoverFunction(this._setModifyVariableButtonIntensity.bind(this, ui.myDecreaseButtonBackgroundComponent.material, -1));
-        ui.myDecreaseButtonCursorTargetComponent.addUnHoverFunction(this._setModifyVariableButtonIntensity.bind(this, ui.myDecreaseButtonBackgroundComponent.material, 0));
+        ui.myValueIncreaseButtonCursorTargetComponent.addHoverFunction(this._setValueEditIntensity.bind(this, ui.myValueIncreaseButtonBackgroundComponent.material, 1));
+        ui.myValueIncreaseButtonCursorTargetComponent.addUnHoverFunction(this._setValueEditIntensity.bind(this, ui.myValueIncreaseButtonBackgroundComponent.material, 0));
+        ui.myValueDecreaseButtonCursorTargetComponent.addHoverFunction(this._setValueEditIntensity.bind(this, ui.myValueDecreaseButtonBackgroundComponent.material, -1));
+        ui.myValueDecreaseButtonCursorTargetComponent.addUnHoverFunction(this._setValueEditIntensity.bind(this, ui.myValueDecreaseButtonBackgroundComponent.material, 0));
 
-        ui.myResetValueCursorTargetComponent.addClickFunction(this._resetValue.bind(this));
+        ui.myValueCursorTargetComponent.addClickFunction(this._resetValue.bind(this));
+        ui.myValueCursorTargetComponent.addHoverFunction(this._setValueEditActive.bind(this, ui.myValueText, true));
+        ui.myValueCursorTargetComponent.addUnHoverFunction(this._setValueEditActive.bind(this, ui.myValueText, false));
 
-        ui.myResetStepCursorTargetComponent.addClickFunction(this._resetStep.bind(this));
+        ui.myStepCursorTargetComponent.addClickFunction(this._resetStep.bind(this));
+        ui.myStepCursorTargetComponent.addHoverFunction(this._setStepEditActive.bind(this, ui.myStepText, true));
+        ui.myStepCursorTargetComponent.addUnHoverFunction(this._setStepEditActive.bind(this, ui.myStepText, false));
 
-        for (let i = 0; i < ui.myStepButtonsComponents.length; ++i) {
-            let cursorTarget = ui.myStepButtonsComponents[i].myCursorTarget;
-            let backgroundMaterial = ui.myStepButtonsComponents[i].myBackground.material;
-
-            cursorTarget.addClickFunction(this._multiplyStep.bind(this, setup.myStepButtonsSetupList[i].myStepMultiplier));
-            cursorTarget.addHoverFunction(this._genericHover.bind(this, backgroundMaterial));
-            cursorTarget.addUnHoverFunction(this._genericUnHover.bind(this, backgroundMaterial));
-        }
+        ui.myStepIncreaseButtonCursorTargetComponent.addHoverFunction(this._setStepEditIntensity.bind(this, ui.myStepIncreaseButtonBackgroundComponent.material, 1));
+        ui.myStepIncreaseButtonCursorTargetComponent.addUnHoverFunction(this._setStepEditIntensity.bind(this, ui.myStepIncreaseButtonBackgroundComponent.material, 0));
+        ui.myStepDecreaseButtonCursorTargetComponent.addHoverFunction(this._setStepEditIntensity.bind(this, ui.myStepDecreaseButtonBackgroundComponent.material, -1));
+        ui.myStepDecreaseButtonCursorTargetComponent.addUnHoverFunction(this._setStepEditIntensity.bind(this, ui.myStepDecreaseButtonBackgroundComponent.material, 0));
     }
 
     _setScrollVariableAmount(material, value) {
@@ -160,7 +192,7 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
         }
     }
 
-    _setModifyVariableButtonIntensity(material, value) {
+    _setValueEditIntensity(material, value) {
         if (this._isActive() || value == 0) {
             if (value != 0) {
                 this._genericHover(material);
@@ -168,7 +200,43 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
                 this._genericUnHover(material);
             }
 
-            this._myModifyVariableButtonIntensity = value;
+            this._myValueEditIntensity = value;
+        }
+    }
+
+    _setStepEditIntensity(material, value) {
+        if (this._isActive() || value == 0) {
+            if (value != 0) {
+                this._genericHover(material);
+            } else {
+                this._genericUnHover(material);
+            }
+
+            this._myStepEditIntensity = value;
+        }
+    }
+
+    _setValueEditActive(text, active) {
+        if (this._isActive() || value == 0) {
+            if (active) {
+                text.scale(this._mySetup.myTextHoverScaleMultiplier);
+            } else {
+                text.scalingWorld = this._mySetup.myValueTextScale;
+            }
+
+            this._myValueEditActive = active;
+        }
+    }
+
+    _setStepEditActive(text, active) {
+        if (this._isActive() || value == 0) {
+            if (active) {
+                text.scale(this._mySetup.myTextHoverScaleMultiplier);
+            } else {
+                text.scalingWorld = this._mySetup.myStepTextScale;
+            }
+
+            this._myStepEditActive = active;
         }
     }
 
@@ -193,16 +261,10 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
         }
     }
 
-    _multiplyStep(stepMultiplier) {
-        if (this._isActive()) {
-            this._changeStep(this._myVariable.myStepPerSecond * stepMultiplier);
-        }
-    }
-
     _changeStep(step) {
         step = Math.pp_roundDecimal(step, 10);
         this._myVariable.myStepPerSecond = step;
-        this._myUI.myStepLabelTextComponent.text = this._mySetup.myStepLabelStartString.concat(this._myVariable.myStepPerSecond);
+        this._myUI.myStepTextComponent.text = this._mySetup.myStepStartString.concat(this._myVariable.myStepPerSecond);
     }
 
     _genericHover(material) {
