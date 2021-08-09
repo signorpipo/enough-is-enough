@@ -38,10 +38,6 @@ PP.EasyTuneNoneWidget = class EasyTuneNoneWidget {
         }
         this._myUI.setVisible(visible);
 
-        if (!this._myIsVisible && visible) {
-            this._myScrollVariableTimer = 0;
-        }
-
         this._myIsVisible = visible;
     }
 

@@ -54,10 +54,6 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
         }
         this._myUI.setVisible(visible);
 
-        if (!this._myIsVisible && visible) {
-            this._myScrollVariableTimer = 0;
-        }
-
         this._myIsVisible = visible;
     }
 
@@ -207,7 +203,7 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
     }
 
     _setValueEditActive(text, active) {
-        if (this._isActive() || value == 0) {
+        if (this._isActive() || !active) {
             if (active) {
                 text.scale(this._mySetup.myTextHoverScaleMultiplier);
             } else {
@@ -219,7 +215,7 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
     }
 
     _setStepEditActive(text, active) {
-        if (this._isActive() || value == 0) {
+        if (this._isActive() || !active) {
             if (active) {
                 text.scale(this._mySetup.myTextHoverScaleMultiplier);
             } else {

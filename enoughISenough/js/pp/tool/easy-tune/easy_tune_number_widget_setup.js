@@ -15,7 +15,6 @@ PP.EasyTuneNumberWidgetSetup = class EasyTuneNumberWidgetSetup {
 
         this.myDefaultTextColor = [255 / 255, 255 / 255, 255 / 255, 1];
 
-
         this.myTextAlignment = 2; // center
         this.myTextJustification = 2; // middle
         this.myTextOutlineRange = [0.45, 0.45];

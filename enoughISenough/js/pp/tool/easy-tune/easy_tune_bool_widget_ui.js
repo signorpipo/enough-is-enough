@@ -24,13 +24,16 @@ PP.EasyTuneBoolWidgetUI = class EasyTuneBoolWidgetUI {
 
     setAdditionalButtonsActive(active) {
         this._myAdditionalButtonsActive = active;
-        this.myIncreaseButtonPanel.pp_setActiveHierarchy(this._myAdditionalButtonsActive);
-        this.myDecreaseButtonPanel.pp_setActiveHierarchy(this._myAdditionalButtonsActive);
+        this.myValueIncreaseButtonPanel.pp_setActiveHierarchy(this._myAdditionalButtonsActive);
+        this.myValueDecreaseButtonPanel.pp_setActiveHierarchy(this._myAdditionalButtonsActive);
     }
 
     //Skeleton
     _createSkeleton() {
         this.myPivotObject = WL.scene.addObject(this._myParentObject);
+
+        this.myBackPanel = WL.scene.addObject(this.myPivotObject);
+        this.myBackBackground = WL.scene.addObject(this.myBackPanel);
 
         this._createDisplaySkeleton();
         this._createPointerSkeleton();
@@ -38,14 +41,13 @@ PP.EasyTuneBoolWidgetUI = class EasyTuneBoolWidgetUI {
 
     _createDisplaySkeleton() {
         this.myDisplayPanel = WL.scene.addObject(this.myPivotObject);
-        this.myDisplayBackground = WL.scene.addObject(this.myDisplayPanel);
 
         this.myVariableLabelPanel = WL.scene.addObject(this.myDisplayPanel);
         this.myVariableLabelText = WL.scene.addObject(this.myVariableLabelPanel);
 
         this.myValuePanel = WL.scene.addObject(this.myDisplayPanel);
         this.myValueText = WL.scene.addObject(this.myValuePanel);
-        this.myResetValueCursorTarget = WL.scene.addObject(this.myValuePanel);
+        this.myValueCursorTarget = WL.scene.addObject(this.myValuePanel);
 
         //Next/Previous
         this.myNextButtonPanel = WL.scene.addObject(this.myVariableLabelPanel);
@@ -59,15 +61,15 @@ PP.EasyTuneBoolWidgetUI = class EasyTuneBoolWidgetUI {
         this.myPreviousButtonCursorTarget = WL.scene.addObject(this.myPreviousButtonPanel);
 
         //Increase/Decrease
-        this.myIncreaseButtonPanel = WL.scene.addObject(this.myValuePanel);
-        this.myIncreaseButtonBackground = WL.scene.addObject(this.myIncreaseButtonPanel);
-        this.myIncreaseButtonText = WL.scene.addObject(this.myIncreaseButtonPanel);
-        this.myIncreaseButtonCursorTarget = WL.scene.addObject(this.myIncreaseButtonPanel);
+        this.myValueIncreaseButtonPanel = WL.scene.addObject(this.myValuePanel);
+        this.myValueIncreaseButtonBackground = WL.scene.addObject(this.myValueIncreaseButtonPanel);
+        this.myValueIncreaseButtonText = WL.scene.addObject(this.myValueIncreaseButtonPanel);
+        this.myValueIncreaseButtonCursorTarget = WL.scene.addObject(this.myValueIncreaseButtonPanel);
 
-        this.myDecreaseButtonPanel = WL.scene.addObject(this.myValuePanel);
-        this.myDecreaseButtonBackground = WL.scene.addObject(this.myDecreaseButtonPanel);
-        this.myDecreaseButtonText = WL.scene.addObject(this.myDecreaseButtonPanel);
-        this.myDecreaseButtonCursorTarget = WL.scene.addObject(this.myDecreaseButtonPanel);
+        this.myValueDecreaseButtonPanel = WL.scene.addObject(this.myValuePanel);
+        this.myValueDecreaseButtonBackground = WL.scene.addObject(this.myValueDecreaseButtonPanel);
+        this.myValueDecreaseButtonText = WL.scene.addObject(this.myValueDecreaseButtonPanel);
+        this.myValueDecreaseButtonCursorTarget = WL.scene.addObject(this.myValueDecreaseButtonPanel);
     }
 
     _createPointerSkeleton() {
@@ -78,46 +80,48 @@ PP.EasyTuneBoolWidgetUI = class EasyTuneBoolWidgetUI {
     _setTransforms() {
         this.myPivotObject.setTranslationLocal(this._mySetup.myPivotObjectPositions[this._myAdditionalSetup.myHandednessIndex]);
 
+        this.myBackPanel.setTranslationLocal(this._mySetup.myBackPanelPosition);
+        this.myBackBackground.scale(this._mySetup.myBackBackgroundScale);
+
         this._setDisplayTransforms();
         this._setPointerTransform();
     }
 
     _setDisplayTransforms() {
         this.myDisplayPanel.setTranslationLocal(this._mySetup.myDisplayPanelPosition);
-        this.myDisplayBackground.scale(this._mySetup.myDisplayBackgroundScale);
 
         this.myVariableLabelPanel.setTranslationLocal(this._mySetup.myVariableLabelPanelPosition);
         this.myVariableLabelText.scale(this._mySetup.myVariableLabelTextScale);
 
         this.myValuePanel.setTranslationLocal(this._mySetup.myValuePanelPosition);
         this.myValueText.scale(this._mySetup.myValueTextScale);
-        this.myResetValueCursorTarget.setTranslationLocal(this._mySetup.myResetValueCursorTargetPosition);
+        this.myValueCursorTarget.setTranslationLocal(this._mySetup.myValueCursorTargetPosition);
 
         //Next/Previous
-        this.myNextButtonPanel.setTranslationLocal(this._mySetup.myNextButtonPosition);
-        this.myNextButtonBackground.scale(this._mySetup.myDisplayButtonBackgroundScale);
-        this.myNextButtonText.setTranslationLocal(this._mySetup.myDisplayButtonTextPosition);
-        this.myNextButtonText.scale(this._mySetup.myDisplayButtonTextScale);
-        this.myNextButtonCursorTarget.setTranslationLocal(this._mySetup.myDisplayButtonCursorTargetPosition);
+        this.myNextButtonPanel.setTranslationLocal(this._mySetup.myRightSideButtonPosition);
+        this.myNextButtonBackground.scale(this._mySetup.mySideButtonBackgroundScale);
+        this.myNextButtonText.setTranslationLocal(this._mySetup.mySideButtonTextPosition);
+        this.myNextButtonText.scale(this._mySetup.mySideButtonTextScale);
+        this.myNextButtonCursorTarget.setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
 
-        this.myPreviousButtonPanel.setTranslationLocal(this._mySetup.myPreviousButtonPosition);
-        this.myPreviousButtonBackground.scale(this._mySetup.myDisplayButtonBackgroundScale);
-        this.myPreviousButtonText.setTranslationLocal(this._mySetup.myDisplayButtonTextPosition);
-        this.myPreviousButtonText.scale(this._mySetup.myDisplayButtonTextScale);
-        this.myPreviousButtonCursorTarget.setTranslationLocal(this._mySetup.myDisplayButtonCursorTargetPosition);
+        this.myPreviousButtonPanel.setTranslationLocal(this._mySetup.myLeftSideButtonPosition);
+        this.myPreviousButtonBackground.scale(this._mySetup.mySideButtonBackgroundScale);
+        this.myPreviousButtonText.setTranslationLocal(this._mySetup.mySideButtonTextPosition);
+        this.myPreviousButtonText.scale(this._mySetup.mySideButtonTextScale);
+        this.myPreviousButtonCursorTarget.setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
 
         //Increase/Decrease
-        this.myIncreaseButtonPanel.setTranslationLocal(this._mySetup.myIncreaseButtonPosition);
-        this.myIncreaseButtonBackground.scale(this._mySetup.myDisplayButtonBackgroundScale);
-        this.myIncreaseButtonText.setTranslationLocal(this._mySetup.myDisplayButtonTextPosition);
-        this.myIncreaseButtonText.scale(this._mySetup.myDisplayButtonTextScale);
-        this.myIncreaseButtonCursorTarget.setTranslationLocal(this._mySetup.myDisplayButtonCursorTargetPosition);
+        this.myValueIncreaseButtonPanel.setTranslationLocal(this._mySetup.myRightSideButtonPosition);
+        this.myValueIncreaseButtonBackground.scale(this._mySetup.mySideButtonBackgroundScale);
+        this.myValueIncreaseButtonText.setTranslationLocal(this._mySetup.mySideButtonTextPosition);
+        this.myValueIncreaseButtonText.scale(this._mySetup.mySideButtonTextScale);
+        this.myValueIncreaseButtonCursorTarget.setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
 
-        this.myDecreaseButtonPanel.setTranslationLocal(this._mySetup.myDecreaseButtonPosition);
-        this.myDecreaseButtonBackground.scale(this._mySetup.myDisplayButtonBackgroundScale);
-        this.myDecreaseButtonText.setTranslationLocal(this._mySetup.myDisplayButtonTextPosition);
-        this.myDecreaseButtonText.scale(this._mySetup.myDisplayButtonTextScale);
-        this.myDecreaseButtonCursorTarget.setTranslationLocal(this._mySetup.myDisplayButtonCursorTargetPosition);
+        this.myValueDecreaseButtonPanel.setTranslationLocal(this._mySetup.myLeftSideButtonPosition);
+        this.myValueDecreaseButtonBackground.scale(this._mySetup.mySideButtonBackgroundScale);
+        this.myValueDecreaseButtonText.setTranslationLocal(this._mySetup.mySideButtonTextPosition);
+        this.myValueDecreaseButtonText.scale(this._mySetup.mySideButtonTextScale);
+        this.myValueDecreaseButtonCursorTarget.setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
     }
 
     _setPointerTransform() {
@@ -126,16 +130,16 @@ PP.EasyTuneBoolWidgetUI = class EasyTuneBoolWidgetUI {
 
     //Components
     _addComponents() {
+        this.myBackBackgroundComponent = this.myBackBackground.addComponent('mesh');
+        this.myBackBackgroundComponent.mesh = this._myPlaneMesh;
+        this.myBackBackgroundComponent.material = this._myAdditionalSetup.myPlaneMaterial.clone();
+        this.myBackBackgroundComponent.material.color = this._mySetup.myBackBackgroundColor;
+
         this._addDisplayComponents();
         this._addPointerComponents();
     }
 
     _addDisplayComponents() {
-        this.myDisplayBackgroundComponent = this.myDisplayBackground.addComponent('mesh');
-        this.myDisplayBackgroundComponent.mesh = this._myPlaneMesh;
-        this.myDisplayBackgroundComponent.material = this._myAdditionalSetup.myPlaneMaterial.clone();
-        this.myDisplayBackgroundComponent.material.color = this._mySetup.myDisplayBackgroundColor;
-
         this.myVariableLabelTextComponent = this.myVariableLabelText.addComponent('text');
         this._setupTextComponent(this.myVariableLabelTextComponent);
         this.myVariableLabelTextComponent.text = " ";
@@ -144,11 +148,11 @@ PP.EasyTuneBoolWidgetUI = class EasyTuneBoolWidgetUI {
         this._setupTextComponent(this.myValueTextComponent);
         this.myValueTextComponent.text = " ";
 
-        this.myResetValueCursorTargetComponent = this.myResetValueCursorTarget.addComponent('cursor-target');
-        this.myResetValueCollisionComponent = this.myResetValueCursorTarget.addComponent('collision');
-        this.myResetValueCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
-        this.myResetValueCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
-        this.myResetValueCollisionComponent.extents = this._mySetup.myResetValueCollisionExtents;
+        this.myValueCursorTargetComponent = this.myValueCursorTarget.addComponent('cursor-target');
+        this.myValueCollisionComponent = this.myValueCursorTarget.addComponent('collision');
+        this.myValueCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
+        this.myValueCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
+        this.myValueCollisionComponent.extents = this._mySetup.myValueCollisionExtents;
 
         //Next/Previous
         this.myNextButtonBackgroundComponent = this.myNextButtonBackground.addComponent('mesh');
@@ -164,7 +168,7 @@ PP.EasyTuneBoolWidgetUI = class EasyTuneBoolWidgetUI {
         this.myNextButtonCollisionComponent = this.myNextButtonCursorTarget.addComponent('collision');
         this.myNextButtonCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
         this.myNextButtonCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
-        this.myNextButtonCollisionComponent.extents = this._mySetup.myDisplayButtonCollisionExtents;
+        this.myNextButtonCollisionComponent.extents = this._mySetup.mySideButtonCollisionExtents;
 
         this.myPreviousButtonBackgroundComponent = this.myPreviousButtonBackground.addComponent('mesh');
         this.myPreviousButtonBackgroundComponent.mesh = this._myPlaneMesh;
@@ -179,38 +183,38 @@ PP.EasyTuneBoolWidgetUI = class EasyTuneBoolWidgetUI {
         this.myPreviousButtonCollisionComponent = this.myPreviousButtonCursorTarget.addComponent('collision');
         this.myPreviousButtonCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
         this.myPreviousButtonCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
-        this.myPreviousButtonCollisionComponent.extents = this._mySetup.myDisplayButtonCollisionExtents;
+        this.myPreviousButtonCollisionComponent.extents = this._mySetup.mySideButtonCollisionExtents;
 
         //Increase/Decrease
-        this.myIncreaseButtonBackgroundComponent = this.myIncreaseButtonBackground.addComponent('mesh');
-        this.myIncreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
-        this.myIncreaseButtonBackgroundComponent.material = this._myAdditionalSetup.myPlaneMaterial.clone();
-        this.myIncreaseButtonBackgroundComponent.material.color = this._mySetup.myBackgroundColor;
+        this.myValueIncreaseButtonBackgroundComponent = this.myValueIncreaseButtonBackground.addComponent('mesh');
+        this.myValueIncreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
+        this.myValueIncreaseButtonBackgroundComponent.material = this._myAdditionalSetup.myPlaneMaterial.clone();
+        this.myValueIncreaseButtonBackgroundComponent.material.color = this._mySetup.myBackgroundColor;
 
-        this.myIncreaseButtonTextComponent = this.myIncreaseButtonText.addComponent('text');
-        this._setupTextComponent(this.myIncreaseButtonTextComponent);
-        this.myIncreaseButtonTextComponent.text = this._mySetup.myIncreaseButtonText;
+        this.myValueIncreaseButtonTextComponent = this.myValueIncreaseButtonText.addComponent('text');
+        this._setupTextComponent(this.myValueIncreaseButtonTextComponent);
+        this.myValueIncreaseButtonTextComponent.text = this._mySetup.myIncreaseButtonText;
 
-        this.myIncreaseButtonCursorTargetComponent = this.myIncreaseButtonCursorTarget.addComponent('cursor-target');
-        this.myIncreaseButtonCollisionComponent = this.myIncreaseButtonCursorTarget.addComponent('collision');
-        this.myIncreaseButtonCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
-        this.myIncreaseButtonCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
-        this.myIncreaseButtonCollisionComponent.extents = this._mySetup.myDisplayButtonCollisionExtents;
+        this.myValueIncreaseButtonCursorTargetComponent = this.myValueIncreaseButtonCursorTarget.addComponent('cursor-target');
+        this.myValueIncreaseButtonCollisionComponent = this.myValueIncreaseButtonCursorTarget.addComponent('collision');
+        this.myValueIncreaseButtonCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
+        this.myValueIncreaseButtonCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
+        this.myValueIncreaseButtonCollisionComponent.extents = this._mySetup.mySideButtonCollisionExtents;
 
-        this.myDecreaseButtonBackgroundComponent = this.myDecreaseButtonBackground.addComponent('mesh');
-        this.myDecreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
-        this.myDecreaseButtonBackgroundComponent.material = this._myAdditionalSetup.myPlaneMaterial.clone();
-        this.myDecreaseButtonBackgroundComponent.material.color = this._mySetup.myBackgroundColor;
+        this.myValueDecreaseButtonBackgroundComponent = this.myValueDecreaseButtonBackground.addComponent('mesh');
+        this.myValueDecreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
+        this.myValueDecreaseButtonBackgroundComponent.material = this._myAdditionalSetup.myPlaneMaterial.clone();
+        this.myValueDecreaseButtonBackgroundComponent.material.color = this._mySetup.myBackgroundColor;
 
-        this.myDecreaseButtonTextComponent = this.myDecreaseButtonText.addComponent('text');
-        this._setupTextComponent(this.myDecreaseButtonTextComponent);
-        this.myDecreaseButtonTextComponent.text = this._mySetup.myDecreaseButtonText;
+        this.myValueDecreaseButtonTextComponent = this.myValueDecreaseButtonText.addComponent('text');
+        this._setupTextComponent(this.myValueDecreaseButtonTextComponent);
+        this.myValueDecreaseButtonTextComponent.text = this._mySetup.myDecreaseButtonText;
 
-        this.myDecreaseButtonCursorTargetComponent = this.myDecreaseButtonCursorTarget.addComponent('cursor-target');
-        this.myDecreaseButtonCollisionComponent = this.myDecreaseButtonCursorTarget.addComponent('collision');
-        this.myDecreaseButtonCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
-        this.myDecreaseButtonCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
-        this.myDecreaseButtonCollisionComponent.extents = this._mySetup.myDisplayButtonCollisionExtents;
+        this.myValueDecreaseButtonCursorTargetComponent = this.myValueDecreaseButtonCursorTarget.addComponent('cursor-target');
+        this.myValueDecreaseButtonCollisionComponent = this.myValueDecreaseButtonCursorTarget.addComponent('collision');
+        this.myValueDecreaseButtonCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
+        this.myValueDecreaseButtonCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
+        this.myValueDecreaseButtonCollisionComponent.extents = this._mySetup.mySideButtonCollisionExtents;
     }
 
     _addPointerComponents() {

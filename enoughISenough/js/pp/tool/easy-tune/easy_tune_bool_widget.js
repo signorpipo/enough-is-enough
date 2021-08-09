@@ -1,9 +1,9 @@
 
 PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
 
-    constructor(gamepad, blockModifyButtonType, enableAdditionalVariable) {
+    constructor(gamepad, blockEditButtonType) {
         this._myGamepad = gamepad;
-        this._myBlockModifyButtonType = blockModifyButtonType;
+        this._myBlockEditButtonType = blockEditButtonType;
 
         this._mySetup = new PP.EasyTuneBoolWidgetSetup();
         this._myUI = new PP.EasyTuneBoolWidgetUI();
@@ -16,10 +16,12 @@ PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
 
         this._myAppendToVariableName = "";
 
-        this._myScrollVariableAmount = 0;
-        this._myScrollVariableTimer = 0;
+        this._myValueButtonEditIntensity = 0;
+        this._myValueButtonEditIntensityTimer = 0;
 
-        this._myModifyVariableButtonIntensity = 0;
+        this._myValueEditActive = false;
+
+        this._myValueRealValue = null;
     }
 
     setEasyTuneVariable(variable, appendToVariableName) {
@@ -47,10 +49,6 @@ PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
         }
         this._myUI.setVisible(visible);
 
-        if (!this._myIsVisible && visible) {
-            this._myScrollVariableTimer = 0;
-        }
-
         this._myIsVisible = visible;
     }
 
@@ -72,29 +70,30 @@ PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
     update(dt) {
         if (this._isActive()) {
             this._updateValue(dt);
-            this._updateScrollVariable(dt);
         }
     }
 
     _updateValue(dt) {
-        if (this._myGamepad && !this._myGamepad.getButtonInfo(this._myBlockModifyButtonType).myIsPressed) {
-            let y = this._myGamepad.getAxesInfo().myAxes[1];
+        let stickVariableIntensity = 0;
 
-            if (Math.abs(y) > this._mySetup.myThumbstickToggleThreshold) {
-                this._myVariable.myValue = y > 0;
-                this._refreshUI();
+        if (this._myGamepad && !this._myGamepad.getButtonInfo(this._myBlockEditButtonType).myIsPressed) {
+            stickVariableIntensity = this._myGamepad.getAxesInfo().myAxes[1];
+        }
+
+        let valueIntensity = 0;
+        if (this._myValueEditActive) {
+            valueIntensity = stickVariableIntensity;
+        } else if (this._myValueButtonEditIntensity != 0) {
+            if (this._myValueButtonEditIntensityTimer <= 0) {
+                valueIntensity = this._myValueButtonEditIntensity;
+            } else {
+                this._myValueButtonEditIntensityTimer -= dt;
             }
         }
-    }
 
-    _updateScrollVariable(dt) {
-        this._myScrollVariableTimer = Math.min(this._myScrollVariableTimer + dt, this._mySetup.myScrollVariableDelay);
-
-        if (this._myScrollVariableAmount != 0) {
-            if (this._myScrollVariableTimer >= this._mySetup.myScrollVariableDelay) {
-                this._myScrollVariableTimer = 0;
-                this._scrollVariableRequest(this._myScrollVariableAmount);
-            }
+        if (Math.abs(valueIntensity) > this._mySetup.myThumbstickToggleThreshold) {
+            this._myVariable.myValue = valueIntensity > 0;
+            this._refreshUI();
         }
     }
 
@@ -105,42 +104,46 @@ PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
     _addListeners() {
         let ui = this._myUI;
 
-        ui.myNextButtonCursorTargetComponent.addHoverFunction(this._setScrollVariableAmount.bind(this, ui.myNextButtonBackgroundComponent.material, 1));
-        ui.myNextButtonCursorTargetComponent.addUnHoverFunction(this._setScrollVariableAmount.bind(this, ui.myNextButtonBackgroundComponent.material, 0));
-        ui.myPreviousButtonCursorTargetComponent.addHoverFunction(this._setScrollVariableAmount.bind(this, ui.myPreviousButtonBackgroundComponent.material, -1));
-        ui.myPreviousButtonCursorTargetComponent.addUnHoverFunction(this._setScrollVariableAmount.bind(this, ui.myPreviousButtonBackgroundComponent.material, 0));
+        ui.myNextButtonCursorTargetComponent.addClickFunction(this._scrollVariableRequest.bind(this, 1));
+        ui.myNextButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myNextButtonBackgroundComponent.material));
+        ui.myNextButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myNextButtonBackgroundComponent.material));
 
-        ui.myIncreaseButtonCursorTargetComponent.addHoverFunction(this._setModifyVariableButtonIntensity.bind(this, ui.myIncreaseButtonBackgroundComponent.material, 1));
-        ui.myIncreaseButtonCursorTargetComponent.addUnHoverFunction(this._setModifyVariableButtonIntensity.bind(this, ui.myIncreaseButtonBackgroundComponent.material, 0));
-        ui.myDecreaseButtonCursorTargetComponent.addHoverFunction(this._setModifyVariableButtonIntensity.bind(this, ui.myDecreaseButtonBackgroundComponent.material, -1));
-        ui.myDecreaseButtonCursorTargetComponent.addUnHoverFunction(this._setModifyVariableButtonIntensity.bind(this, ui.myDecreaseButtonBackgroundComponent.material, 0));
+        ui.myPreviousButtonCursorTargetComponent.addClickFunction(this._scrollVariableRequest.bind(this, -1));
+        ui.myPreviousButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
+        ui.myPreviousButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
 
-        ui.myResetValueCursorTargetComponent.addClickFunction(this._resetValue.bind(this));
+        ui.myValueIncreaseButtonCursorTargetComponent.addHoverFunction(this._setValueEditIntensity.bind(this, ui.myValueIncreaseButtonBackgroundComponent.material, 1));
+        ui.myValueIncreaseButtonCursorTargetComponent.addUnHoverFunction(this._setValueEditIntensity.bind(this, ui.myValueIncreaseButtonBackgroundComponent.material, 0));
+        ui.myValueDecreaseButtonCursorTargetComponent.addHoverFunction(this._setValueEditIntensity.bind(this, ui.myValueDecreaseButtonBackgroundComponent.material, -1));
+        ui.myValueDecreaseButtonCursorTargetComponent.addUnHoverFunction(this._setValueEditIntensity.bind(this, ui.myValueDecreaseButtonBackgroundComponent.material, 0));
+
+        ui.myValueCursorTargetComponent.addClickFunction(this._resetValue.bind(this));
+        ui.myValueCursorTargetComponent.addHoverFunction(this._setValueEditActive.bind(this, ui.myValueText, true));
+        ui.myValueCursorTargetComponent.addUnHoverFunction(this._setValueEditActive.bind(this, ui.myValueText, false));
     }
 
-    _setScrollVariableAmount(material, value) {
+    _setValueEditIntensity(material, value) {
         if (this._isActive() || value == 0) {
             if (value != 0) {
+                this._myValueButtonEditIntensityTimer = this._mySetup.myButtonEditDelay;
                 this._genericHover(material);
             } else {
-                this._myScrollVariableTimer = this._mySetup.myScrollVariableDelay;
                 this._genericUnHover(material);
             }
 
-            this._myScrollVariableAmount = value;
+            this._myValueButtonEditIntensity = value;
         }
     }
 
-    _setModifyVariableButtonIntensity(material, value) {
-        if (this._isActive() || value == 0) {
-            if (value != 0) {
-                this._myVariable.myValue = value > 0;
-                this._refreshUI();
-
-                this._genericHover(material);
+    _setValueEditActive(text, active) {
+        if (this._isActive() || !active) {
+            if (active) {
+                text.scale(this._mySetup.myTextHoverScaleMultiplier);
             } else {
-                this._genericUnHover(material);
+                text.scalingWorld = this._mySetup.myValueTextScale;
             }
+
+            this._myValueEditActive = active;
         }
     }
 
@@ -155,7 +158,7 @@ PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
     _resetValue() {
         if (this._isActive()) {
             this._myVariable.myValue = this._myVariable.myInitialValue;
-            this._refreshUI();
+            this._myUI.myValueTextComponent.text = this._myVariable.myValue.toFixed(this._myVariable.myDecimalPlaces);
         }
     }
 
