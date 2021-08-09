@@ -82,7 +82,7 @@ PP.EasyTuneNumber = class EasyTuneNumber extends PP.EasyTuneVariable {
     }
 };
 
-PP.EasyTuneInteger = class EasyTuneInteger extends PP.EasyTuneNumber {
+PP.EasyTuneInt = class EasyTuneInt extends PP.EasyTuneNumber {
     constructor(name, value, stepPerSecond) {
         super(name, value, stepPerSecond, 0);
     }
