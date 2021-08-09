@@ -16,9 +16,6 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
 
         this._myAppendToVariableName = "";
 
-        this._myScrollVariableAmount = 0;
-        this._myScrollVariableTimer = 0;
-
         this._myValueEditIntensity = 0;
         this._myStepEditIntensity = 0;
 
@@ -77,7 +74,6 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
     update(dt) {
         if (this._isActive()) {
             this._updateValue(dt);
-            this._updateScrollVariable(dt);
         }
     }
 
@@ -137,17 +133,6 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
         }
     }
 
-    _updateScrollVariable(dt) {
-        this._myScrollVariableTimer = Math.min(this._myScrollVariableTimer + dt, this._mySetup.myScrollVariableDelay);
-
-        if (this._myScrollVariableAmount != 0) {
-            if (this._myScrollVariableTimer >= this._mySetup.myScrollVariableDelay) {
-                this._myScrollVariableTimer = 0;
-                this._scrollVariableRequest(this._myScrollVariableAmount);
-            }
-        }
-    }
-
     _isActive() {
         return this._myIsVisible && this._myVariable;
     }
@@ -155,10 +140,13 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
     _addListeners() {
         let ui = this._myUI;
 
-        ui.myNextButtonCursorTargetComponent.addHoverFunction(this._setScrollVariableAmount.bind(this, ui.myNextButtonBackgroundComponent.material, 1));
-        ui.myNextButtonCursorTargetComponent.addUnHoverFunction(this._setScrollVariableAmount.bind(this, ui.myNextButtonBackgroundComponent.material, 0));
-        ui.myPreviousButtonCursorTargetComponent.addHoverFunction(this._setScrollVariableAmount.bind(this, ui.myPreviousButtonBackgroundComponent.material, -1));
-        ui.myPreviousButtonCursorTargetComponent.addUnHoverFunction(this._setScrollVariableAmount.bind(this, ui.myPreviousButtonBackgroundComponent.material, 0));
+        ui.myNextButtonCursorTargetComponent.addClickFunction(this._scrollVariableRequest.bind(this, 1));
+        ui.myNextButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myNextButtonBackgroundComponent.material));
+        ui.myNextButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myNextButtonBackgroundComponent.material));
+
+        ui.myPreviousButtonCursorTargetComponent.addClickFunction(this._scrollVariableRequest.bind(this, -1));
+        ui.myPreviousButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
+        ui.myPreviousButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
 
         ui.myValueIncreaseButtonCursorTargetComponent.addHoverFunction(this._setValueEditIntensity.bind(this, ui.myValueIncreaseButtonBackgroundComponent.material, 1));
         ui.myValueIncreaseButtonCursorTargetComponent.addUnHoverFunction(this._setValueEditIntensity.bind(this, ui.myValueIncreaseButtonBackgroundComponent.material, 0));
@@ -177,19 +165,6 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
         ui.myStepIncreaseButtonCursorTargetComponent.addUnHoverFunction(this._setStepEditIntensity.bind(this, ui.myStepIncreaseButtonBackgroundComponent.material, 0));
         ui.myStepDecreaseButtonCursorTargetComponent.addHoverFunction(this._setStepEditIntensity.bind(this, ui.myStepDecreaseButtonBackgroundComponent.material, -1));
         ui.myStepDecreaseButtonCursorTargetComponent.addUnHoverFunction(this._setStepEditIntensity.bind(this, ui.myStepDecreaseButtonBackgroundComponent.material, 0));
-    }
-
-    _setScrollVariableAmount(material, value) {
-        if (this._isActive() || value == 0) {
-            if (value != 0) {
-                this._genericHover(material);
-            } else {
-                this._myScrollVariableTimer = this._mySetup.myScrollVariableDelay;
-                this._genericUnHover(material);
-            }
-
-            this._myScrollVariableAmount = value;
-        }
     }
 
     _setValueEditIntensity(material, value) {

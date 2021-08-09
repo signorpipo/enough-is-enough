@@ -80,8 +80,8 @@ PP.EasyTuneNumberWidgetSetup = class EasyTuneNumberWidgetSetup {
 
         //Background
         {
-            let maxY = this.myDisplayPanelPosition[1] + this.myVariableLabelPanelPosition[1] + this.mySideButtonBackgroundScale[1] + distanceFromBorder * 1.5;
-            let minY = this.myStepPanelPosition[1] - distanceFromBorder * 2;
+            let maxY = this.myDisplayPanelPosition[1] + this.myVariableLabelPanelPosition[1] + this.mySideButtonBackgroundScale[1] + distanceFromBorder * 1.25;
+            let minY = this.myStepPanelPosition[1] - distanceFromBorder * 1.25 - this.mySideButtonBackgroundScale[1];
             this.myBackPanelPosition = [0, (maxY + minY) / 2, 0];
             this.myBackBackgroundScale = [backgroundHalfWidth, (maxY - minY) / 2, 1];
             this.myBackBackgroundColor = [70 / 255, 70 / 255, 70 / 255, 1];
