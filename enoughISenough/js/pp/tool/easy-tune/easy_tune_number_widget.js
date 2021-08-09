@@ -16,8 +16,13 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
 
         this._myAppendToVariableName = "";
 
-        this._myValueEditIntensity = 0;
-        this._myStepEditIntensity = 0;
+        this._myValueButtonEditIntensity = 0;
+        this._myValueButtonEditIntensityTimer = 0;
+        this._myStepButtonEditIntensity = 0;
+        this._myStepButtonEditIntensityTimer = 0;
+
+        this._myValueEditActive = false;
+        this._myStepEditActive = false;
 
         this._myValueRealValue = null;
         this._myStepMultiplierValue = null;
@@ -92,8 +97,12 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
         let valueIntensity = 0;
         if (this._myValueEditActive) {
             valueIntensity = stickVariableIntensity;
-        } else {
-            valueIntensity = this._myValueEditIntensity;
+        } else if (this._myValueButtonEditIntensity != 0) {
+            if (this._myValueButtonEditIntensityTimer <= 0) {
+                valueIntensity = this._myValueButtonEditIntensity;
+            } else {
+                this._myValueButtonEditIntensityTimer -= dt;
+            }
         }
 
         if (valueIntensity != 0) {
@@ -111,8 +120,12 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
         let stepIntensity = 0;
         if (this._myStepEditActive) {
             stepIntensity = stickVariableIntensity;
-        } else {
-            stepIntensity = this._myStepEditIntensity;
+        } else if (this._myStepButtonEditIntensity != 0) {
+            if (this._myStepButtonEditIntensityTimer <= 0) {
+                stepIntensity = this._myStepButtonEditIntensity;
+            } else {
+                this._myStepButtonEditIntensityTimer -= dt;
+            }
         }
 
         if (stepIntensity != 0) {
@@ -170,24 +183,26 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
     _setValueEditIntensity(material, value) {
         if (this._isActive() || value == 0) {
             if (value != 0) {
+                this._myValueButtonEditIntensityTimer = this._mySetup.myButtonEditDelay;
                 this._genericHover(material);
             } else {
                 this._genericUnHover(material);
             }
 
-            this._myValueEditIntensity = value;
+            this._myValueButtonEditIntensity = value;
         }
     }
 
     _setStepEditIntensity(material, value) {
         if (this._isActive() || value == 0) {
             if (value != 0) {
+                this._myStepButtonEditIntensityTimer = 0;
                 this._genericHover(material);
             } else {
                 this._genericUnHover(material);
             }
 
-            this._myStepEditIntensity = value;
+            this._myStepButtonEditIntensity = value;
         }
     }
 
