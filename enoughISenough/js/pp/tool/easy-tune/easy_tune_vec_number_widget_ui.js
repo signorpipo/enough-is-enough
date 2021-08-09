@@ -50,6 +50,7 @@ PP.EasyTuneVecNumberWidgetUI = class EasyTuneVecNumberWidgetUI {
 
         this.myVariableLabelPanel = WL.scene.addObject(this.myDisplayPanel);
         this.myVariableLabelText = WL.scene.addObject(this.myVariableLabelPanel);
+        this.myVariableLabelCursorTarget = WL.scene.addObject(this.myVariableLabelPanel);
 
         //Next/Previous
         this.myNextButtonPanel = WL.scene.addObject(this.myVariableLabelPanel);
@@ -134,6 +135,7 @@ PP.EasyTuneVecNumberWidgetUI = class EasyTuneVecNumberWidgetUI {
 
         this.myVariableLabelPanel.setTranslationLocal(this._mySetup.myVariableLabelPanelPosition);
         this.myVariableLabelText.scale(this._mySetup.myVariableLabelTextScale);
+        this.myVariableLabelCursorTarget.setTranslationLocal(this._mySetup.myVariableLabelCursorTargetPosition);
 
         //Next/Previous
         this.myNextButtonPanel.setTranslationLocal(this._mySetup.myRightSideButtonPosition);
@@ -209,6 +211,12 @@ PP.EasyTuneVecNumberWidgetUI = class EasyTuneVecNumberWidgetUI {
         this.myVariableLabelTextComponent = this.myVariableLabelText.addComponent('text');
         this._setupTextComponent(this.myVariableLabelTextComponent);
         this.myVariableLabelTextComponent.text = " ";
+
+        this.myVariableLabelCursorTargetComponent = this.myVariableLabelCursorTarget.addComponent('cursor-target');
+        this.myVariableLabelCollisionComponent = this.myVariableLabelCursorTarget.addComponent('collision');
+        this.myVariableLabelCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
+        this.myVariableLabelCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
+        this.myVariableLabelCollisionComponent.extents = this._mySetup.myVariableLabelCollisionExtents;
 
         //Next/Previous
         this.myNextButtonBackgroundComponent = this.myNextButtonBackground.addComponent('mesh');

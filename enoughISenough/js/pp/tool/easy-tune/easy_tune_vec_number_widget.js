@@ -155,6 +155,8 @@ PP.EasyTuneVecNumberWidget = class EasyTuneVecNumberWidget {
     _addListeners() {
         let ui = this._myUI;
 
+        ui.myVariableLabelCursorTargetComponent.addClickFunction(this._resetAllValues.bind(this));
+
         ui.myNextButtonCursorTargetComponent.addClickFunction(this._scrollVariableRequest.bind(this, 1));
         ui.myNextButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myNextButtonBackgroundComponent.material));
         ui.myNextButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myNextButtonBackgroundComponent.material));
@@ -250,6 +252,12 @@ PP.EasyTuneVecNumberWidget = class EasyTuneVecNumberWidget {
         if (this._isActive()) {
             this._myVariable.myValue[index] = this._myVariable.myInitialValue[index];
             this._myUI.myValueTextComponents[index].text = this._myVariable.myValue[index].toFixed(this._myVariable.myDecimalPlaces);
+        }
+    }
+
+    _resetAllValues() {
+        for (let i = 0; i < this._mySetup.myVectorSize; i++) {
+            this._resetValue(i);
         }
     }
 

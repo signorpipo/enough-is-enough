@@ -58,6 +58,11 @@ PP.EasyTuneVecNumberWidgetSetup = class EasyTuneVecNumberWidgetSetup {
         this.myVariableLabelPanelPosition = [0, 0.025, panelZ];
         this.myVariableLabelTextScale = [0.19, 0.19, 0.19];
 
+        this.myVariableLabelCursorTargetPosition = [0, 0, 0];
+        this.myVariableLabelCursorTargetPosition[2] = colliderZPosition - panelZ;
+        this.myVariableLabelCollisionExtents = [0.045, 0.0175, 1];
+        this.myVariableLabelCollisionExtents[2] = this.myCursorTargetCollisionThickness;
+
         this.myNextButtonText = ">";
         this.myPreviousButtonText = "<";
 
