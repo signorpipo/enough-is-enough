@@ -43,8 +43,9 @@ WL.registerComponent('pp-tool-cursor', {
         }
 
         this._myFingerCursorComponent = this.object.addComponent("pp-finger-cursor", {
-            "_myCollisionGroup": this._myCursorTargetCollisionGroup,
             "_myHandedness": this._myHandedness,
+            "_myEnableMultipleClicks": true,
+            "_myCollisionGroup": this._myCursorTargetCollisionGroup,
             "_myCursorMesh": (this._myShowFingerCursor ? this._myCursorMesh : null),
             "_myCursorMaterial": this._myCursorMeshComponent.material
         });
