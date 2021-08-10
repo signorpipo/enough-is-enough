@@ -45,6 +45,11 @@ Float32Array.prototype.vec3_mul = function (vector, out = glMatrix.vec3.create()
     return out;
 };
 
+Float32Array.prototype.vec3_div = function (vector, out = glMatrix.vec3.create()) {
+    glMatrix.vec3.div(out, this, vector);
+    return out;
+};
+
 Float32Array.prototype.vec3_scale = function (value, out = glMatrix.vec3.create()) {
     glMatrix.vec3.scale(out, this, value);
     return out;
@@ -75,6 +80,10 @@ Float32Array.prototype.vec3_radiansToQuat = function (out = glMatrix.quat.create
 Float32Array.prototype.vec3_degreesToQuat = function (out = glMatrix.quat.create()) {
     out.quat_fromDegrees(this);
     return out;
+};
+
+Float32Array.prototype.vec3_isNormalized = function () {
+    return Math.abs(glMatrix.vec3.length(this) - 1) < 0.000001;
 };
 
 Float32Array.prototype.vec3_getComponentAlongAxis = function (axis, out = glMatrix.vec3.create()) {
@@ -271,6 +280,10 @@ Float32Array.prototype.quat_toDegrees = function (out = glMatrix.vec3.create()) 
     this.quat_toRadians(out);
     out.vec3_toDegrees(out);
     return out;
+};
+
+Float32Array.prototype.quat_isNormalized = function () {
+    return Math.abs(glMatrix.quat.length(this) - 1) < 0.000001;
 };
 
 //QUAT 2
