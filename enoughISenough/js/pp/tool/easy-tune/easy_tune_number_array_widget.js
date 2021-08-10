@@ -177,10 +177,15 @@ PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget {
         ui.myPreviousButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
 
         for (let i = 0; i < this._mySetup.myArraySize; i++) {
-            ui.myValueIncreaseButtonCursorTargetComponents[i].addHoverFunction(this._setValueEditIntensity.bind(this, i, ui.myValueIncreaseButtonBackgroundComponents[i].material, 1));
-            ui.myValueIncreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._setValueEditIntensity.bind(this, i, ui.myValueIncreaseButtonBackgroundComponents[i].material, 0));
-            ui.myValueDecreaseButtonCursorTargetComponents[i].addHoverFunction(this._setValueEditIntensity.bind(this, i, ui.myValueDecreaseButtonBackgroundComponents[i].material, -1));
-            ui.myValueDecreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._setValueEditIntensity.bind(this, i, ui.myValueDecreaseButtonBackgroundComponents[i].material, 0));
+            ui.myValueIncreaseButtonCursorTargetComponents[i].addDownFunction(this._setValueEditIntensity.bind(this, i, 1));
+            ui.myValueIncreaseButtonCursorTargetComponents[i].addUpFunction(this._setValueEditIntensity.bind(this, i, 0));
+            ui.myValueDecreaseButtonCursorTargetComponents[i].addDownFunction(this._setValueEditIntensity.bind(this, i, -1));
+            ui.myValueDecreaseButtonCursorTargetComponents[i].addUpFunction(this._setValueEditIntensity.bind(this, i, 0));
+
+            ui.myValueIncreaseButtonCursorTargetComponents[i].addHoverFunction(this._genericHover.bind(this, ui.myValueIncreaseButtonBackgroundComponents[i].material));
+            ui.myValueIncreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._genericUnHover.bind(this, ui.myValueIncreaseButtonBackgroundComponents[i].material));
+            ui.myValueDecreaseButtonCursorTargetComponents[i].addHoverFunction(this._genericHover.bind(this, ui.myValueDecreaseButtonBackgroundComponents[i].material));
+            ui.myValueDecreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._genericUnHover.bind(this, ui.myValueDecreaseButtonBackgroundComponents[i].material));
 
             ui.myValueCursorTargetComponents[i].addClickFunction(this._resetValue.bind(this, i));
             ui.myValueCursorTargetComponents[i].addHoverFunction(this._setValueEditActive.bind(this, i, ui.myValueTexts[i], true));
@@ -191,34 +196,33 @@ PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget {
         ui.myStepCursorTargetComponent.addHoverFunction(this._setStepEditActive.bind(this, ui.myStepText, true));
         ui.myStepCursorTargetComponent.addUnHoverFunction(this._setStepEditActive.bind(this, ui.myStepText, false));
 
-        ui.myStepIncreaseButtonCursorTargetComponent.addHoverFunction(this._setStepEditIntensity.bind(this, ui.myStepIncreaseButtonBackgroundComponent.material, 1));
-        ui.myStepIncreaseButtonCursorTargetComponent.addUnHoverFunction(this._setStepEditIntensity.bind(this, ui.myStepIncreaseButtonBackgroundComponent.material, 0));
-        ui.myStepDecreaseButtonCursorTargetComponent.addHoverFunction(this._setStepEditIntensity.bind(this, ui.myStepDecreaseButtonBackgroundComponent.material, -1));
-        ui.myStepDecreaseButtonCursorTargetComponent.addUnHoverFunction(this._setStepEditIntensity.bind(this, ui.myStepDecreaseButtonBackgroundComponent.material, 0));
+        ui.myStepIncreaseButtonCursorTargetComponent.addDownFunction(this._setStepEditIntensity.bind(this, 1));
+        ui.myStepIncreaseButtonCursorTargetComponent.addUpFunction(this._setStepEditIntensity.bind(this, 0));
+        ui.myStepDecreaseButtonCursorTargetComponent.addDownFunction(this._setStepEditIntensity.bind(this, -1));
+        ui.myStepDecreaseButtonCursorTargetComponent.addUpFunction(this._setStepEditIntensity.bind(this, 0));
+
+        ui.myStepIncreaseButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myStepIncreaseButtonBackgroundComponent.material));
+        ui.myStepIncreaseButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myStepIncreaseButtonBackgroundComponent.material));
+        ui.myStepDecreaseButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myStepDecreaseButtonBackgroundComponent.material));
+        ui.myStepDecreaseButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myStepDecreaseButtonBackgroundComponent.material));
     }
 
-    _setValueEditIntensity(index, material, value) {
+    _setValueEditIntensity(index, value) {
         if (this._isActive() || value == 0) {
             if (value != 0) {
                 this._myValueButtonEditIntensityTimer = this._mySetup.myButtonEditDelay;
                 this._myValueRealValue = this._myVariable.myValue[index];
                 this._myValueEditIndex = index;
-                this._genericHover(material);
-            } else {
-                this._genericUnHover(material);
             }
 
             this._myValueButtonEditIntensity = value;
         }
     }
 
-    _setStepEditIntensity(material, value) {
+    _setStepEditIntensity(value) {
         if (this._isActive() || value == 0) {
             if (value != 0) {
                 this._myStepButtonEditIntensityTimer = this._mySetup.myButtonEditDelay;
-                this._genericHover(material);
-            } else {
-                this._genericUnHover(material);
             }
 
             this._myStepButtonEditIntensity = value;

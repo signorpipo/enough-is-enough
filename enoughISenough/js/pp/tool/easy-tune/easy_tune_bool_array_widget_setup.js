@@ -106,6 +106,6 @@ PP.EasyTuneBoolArrayWidgetSetup = class EasyTuneBoolArrayWidgetSetup {
         this.myTextHoverScaleMultiplier = [1.25, 1.25, 1.25];
 
         this.myThumbstickToggleThreshold = 0.6;
-        this.myButtonEditDelay = 0.25;
+        this.myButtonEditDelay = 0;
     }
 };

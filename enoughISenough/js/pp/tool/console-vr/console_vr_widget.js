@@ -470,18 +470,22 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
             let cursorTarget = ui.myUpButtonCursorTargetComponent;
             let backgroundMaterial = ui.myUpButtonBackgroundComponent.material;
 
-            cursorTarget.addClickFunction(this._instantScrollUp.bind(this));
-            cursorTarget.addHoverFunction(this._setScrollUp.bind(this, backgroundMaterial, true));
-            cursorTarget.addUnHoverFunction(this._setScrollUp.bind(this, backgroundMaterial, false));
+            cursorTarget.addDoubleClickFunction(this._instantScrollUp.bind(this, true));
+            cursorTarget.addDownFunction(this._setScrollUp.bind(this, true));
+            cursorTarget.addUpFunction(this._setScrollUp.bind(this, false));
+            cursorTarget.addHoverFunction(this._genericHover.bind(this, backgroundMaterial));
+            cursorTarget.addUnHoverFunction(this._genericUnHover.bind(this, backgroundMaterial));
         }
 
         {
             let cursorTarget = ui.myDownButtonCursorTargetComponent;
             let backgroundMaterial = ui.myDownButtonBackgroundComponent.material;
 
-            cursorTarget.addClickFunction(this._instantScrollDown.bind(this, true));
-            cursorTarget.addHoverFunction(this._setScrollDown.bind(this, backgroundMaterial, true));
-            cursorTarget.addUnHoverFunction(this._setScrollDown.bind(this, backgroundMaterial, false));
+            cursorTarget.addDoubleClickFunction(this._instantScrollDown.bind(this, true));
+            cursorTarget.addDownFunction(this._setScrollDown.bind(this, true));
+            cursorTarget.addUpFunction(this._setScrollDown.bind(this, false));
+            cursorTarget.addHoverFunction(this._genericHover.bind(this, backgroundMaterial));
+            cursorTarget.addUnHoverFunction(this._genericUnHover.bind(this, backgroundMaterial));
         }
 
         {
@@ -555,28 +559,22 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
         }
     }
 
-    _setScrollUp(material, value) {
+    _setScrollUp(value) {
         if (this._myWidgetFrame.myIsWidgetVisible || !value) {
             if (value) {
                 this._myPreventScrollClick = true;
                 this._myScrollTimer = 0;
-                this._genericHover(material);
-            } else {
-                this._genericUnHover(material);
             }
 
             this._myScrollUp = value;
         }
     }
 
-    _setScrollDown(material, value) {
+    _setScrollDown(value) {
         if (this._myWidgetFrame.myIsWidgetVisible || !value) {
             if (value) {
                 this._myPreventScrollClick = true;
                 this._myScrollTimer = 0;
-                this._genericHover(material);
-            } else {
-                this._genericUnHover(material);
             }
 
             this._myScrollDown = value;

@@ -117,6 +117,6 @@ PP.EasyTuneNumberArrayWidgetSetup = class EasyTuneNumberArrayWidgetSetup {
 
         this.myEditThumbstickMinThreshold = 0.35;
         this.myStepMultiplierStepPerSecond = 2.25;
-        this.myButtonEditDelay = 0.25;
+        this.myButtonEditDelay = 0;
     }
 };

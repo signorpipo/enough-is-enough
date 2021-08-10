@@ -49,20 +49,26 @@ WL.registerComponent('pp-finger-cursor', {
 
             if (!overlapObject) {
                 if (this._myLastTarget) {
+                    this._myLastTarget.onClick(this._myLastTarget.object, this);
+                    this._myLastTarget.onUp(this._myLastTarget.object, this);
                     this._myLastTarget.onUnhover(this._myLastTarget.object, this);
                     this._myLastTarget = null;
                 }
             } else if (!overlapObject.equals(this._myLastTarget)) {
                 if (this._myLastTarget) {
+                    this._myLastTarget.onClick(this._myLastTarget.object, this);
+                    this._myLastTarget.onUp(this._myLastTarget.object, this);
                     this._myLastTarget.onUnhover(this._myLastTarget.object, this);
                 }
 
                 this._myLastTarget = overlapObject;
 
                 overlapObject.onHover(this._myLastTarget.object, this);
-                overlapObject.onClick(this._myLastTarget.object, this);
+                overlapObject.onDown(this._myLastTarget.object, this);
             }
         } else if (this._myLastTarget) {
+            this._myLastTarget.onClick(this._myLastTarget.object, this);
+            this._myLastTarget.onUp(this._myLastTarget.object, this);
             this._myLastTarget.onUnhover(this._myLastTarget.object, this);
             this._myLastTarget = null;
         }
