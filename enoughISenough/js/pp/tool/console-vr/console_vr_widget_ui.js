@@ -90,6 +90,9 @@ PP.ConsoleVRWidgetUI = class ConsoleVRWidgetUI {
 
         this.myMessagesTextsPanel.setTranslationLocal(this._mySetup.myMessagesTextsPanelPosition);
         this.myMessagesTextsPanel.scale(this._mySetup.myMessagesTextsPanelScale);
+        for (let key in PP.ConsoleVRWidget.MessageType) {
+            this.myMessagesTexts[PP.ConsoleVRWidget.MessageType[key]].setTranslationLocal(this._mySetup.myMessagesTextPositions[PP.ConsoleVRWidget.MessageType[key]]);
+        }
 
         this.myNotifyIconPanel.setTranslationLocal(this._mySetup.myNotifyIconPanelPositions[this._myAdditionalSetup.myHandednessIndex]);
         this.myNotifyIconBackground.scale(this._mySetup.myNotifyIconBackgroundScale);

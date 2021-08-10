@@ -46,6 +46,12 @@ PP.ConsoleVRWidgetSetup = class ConsoleVRWidgetSetup {
         this.myMessagesTextJustification = 3; // top
         this.myMessagesTextOutlineRange = [0.45, 0.45];
 
+        this.myMessagesTextPositions = [];
+        this.myMessagesTextPositions[PP.ConsoleVRWidget.MessageType.LOG] = [0, 0, 0.00001];
+        this.myMessagesTextPositions[PP.ConsoleVRWidget.MessageType.ERROR] = [0, 0, 0];
+        this.myMessagesTextPositions[PP.ConsoleVRWidget.MessageType.WARN] = [0, 0, 0];
+        this.myMessagesTextPositions[PP.ConsoleVRWidget.MessageType.INFO] = [0, 0, 0];
+
         this.myMessagesTextColors = [];
         this.myMessagesTextColors[PP.ConsoleVRWidget.MessageType.LOG] = this.myMessageTypeColors[PP.ConsoleVRWidget.MessageType.LOG];
         this.myMessagesTextColors[PP.ConsoleVRWidget.MessageType.ERROR] = this.myMessageTypeColors[PP.ConsoleVRWidget.MessageType.ERROR];
