@@ -42,10 +42,8 @@ PP.EasyTuneVariables = new PP.EasyTuneVariableMap();
 //Variable Types
 PP.EasyTuneVariableType = {
     NONE: 0,
-    VEC1_NUMBER: 1,
-    VEC3_NUMBER: 2,
-    VEC1_BOOL: 3,
-    VEC3_BOOL: 4
+    NUMBER: 1,
+    BOOL: 2
 };
 
 PP.EasyTuneVariable = class EasyTuneVariable {
@@ -67,37 +65,29 @@ PP.EasyTuneVariable = class EasyTuneVariable {
     }
 };
 
-//NUMBER
-
-PP.EasyTuneNumberArray = class EasyTuneNumberArray extends PP.EasyTuneVariable {
-    constructor(name, value, stepPerSecond, decimalPlaces) {
-        let type = null;
-        switch (value.length) {
-            case 1:
-                type = PP.EasyTuneVariableType.VEC1_NUMBER;
-                break;
-            case 3:
-                type = PP.EasyTuneVariableType.VEC3_NUMBER;
-                break;
-            default:
-                type = PP.EasyTuneVariableType.NONE;
-        }
-
+PP.EasyTuneVariableArray = class EasyTuneVariableArray extends PP.EasyTuneVariable {
+    constructor(name, type, value) {
         super(name, type, null);
 
-        this.mySize = value.length;
-
-        PP.EasyTuneNumberArray.prototype.setValue.call(this, value);
-
-        this.myDecimalPlaces = decimalPlaces;
-        this.myStepPerSecond = stepPerSecond;
-
-        this.myInitialStepPerSecond = this.myStepPerSecond;
+        PP.EasyTuneVariableArray.prototype.setValue.call(this, value);
     }
 
     setValue(value) {
         this.myValue = value.slice(0);
         this.myInitialValue = this.myValue.slice(0);
+    }
+};
+
+//NUMBER
+
+PP.EasyTuneNumberArray = class EasyTuneNumberArray extends PP.EasyTuneVariableArray {
+    constructor(name, value, stepPerSecond, decimalPlaces) {
+        super(name, PP.EasyTuneVariableType.NUMBER, value);
+
+        this.myDecimalPlaces = decimalPlaces;
+        this.myStepPerSecond = stepPerSecond;
+
+        this.myInitialStepPerSecond = this.myStepPerSecond;
     }
 };
 
@@ -129,30 +119,9 @@ PP.EasyTuneIntArray = class EasyTuneIntArray extends PP.EasyTuneNumberArray {
 
 //BOOL
 
-PP.EasyTuneBoolArray = class EasyTuneBoolArray extends PP.EasyTuneVariable {
+PP.EasyTuneBoolArray = class EasyTuneBoolArray extends PP.EasyTuneVariableArray {
     constructor(name, value) {
-        let type = null;
-        switch (value.length) {
-            case 1:
-                type = PP.EasyTuneVariableType.VEC1_BOOL;
-                break;
-            case 3:
-                type = PP.EasyTuneVariableType.VEC3_BOOL;
-                break;
-            default:
-                type = PP.EasyTuneVariableType.NONE;
-        }
-
-        super(name, type, null);
-
-        this.mySize = value.length;
-
-        PP.EasyTuneBoolArray.prototype.setValue.call(this, value);
-    }
-
-    setValue(value) {
-        this.myValue = value.slice(0);
-        this.myInitialValue = this.myValue.slice(0);
+        super(name, PP.EasyTuneVariableType.BOOL, value);
     }
 };
 
