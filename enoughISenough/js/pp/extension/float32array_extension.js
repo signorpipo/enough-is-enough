@@ -83,7 +83,7 @@ Float32Array.prototype.vec3_degreesToQuat = function (out = glMatrix.quat.create
 };
 
 Float32Array.prototype.vec3_isNormalized = function () {
-    return Math.abs(glMatrix.vec3.length(this) - 1) < 0.000001;
+    return Math.abs(glMatrix.vec3.length(this) - 1) < this._pp_epsilon;
 };
 
 Float32Array.prototype.vec3_getComponentAlongAxis = function (axis, out = glMatrix.vec3.create()) {
@@ -261,13 +261,10 @@ Float32Array.prototype.quat_toRadians = function () {
         //Rotation order is ZYX 
         out[1] = Math.asin(-Math.pp_clamp(mat3[2], -1, 1));
 
-        if (Math.abs(mat3[2]) < 0.9999999) {
-
+        if (Math.abs(mat3[2]) < (1 - this._pp_epsilon)) {
             out[0] = Math.atan2(mat3[5], mat3[8]);
             out[2] = Math.atan2(mat3[1], mat3[0]);
-
         } else {
-
             out[0] = 0;
             out[2] = Math.atan2(-mat3[3], mat3[4]);
         }
@@ -283,7 +280,7 @@ Float32Array.prototype.quat_toDegrees = function (out = glMatrix.vec3.create()) 
 };
 
 Float32Array.prototype.quat_isNormalized = function () {
-    return Math.abs(glMatrix.quat.length(this) - 1) < 0.000001;
+    return Math.abs(glMatrix.quat.length(this) - 1) < this._pp_epsilon;
 };
 
 //QUAT 2
@@ -522,7 +519,7 @@ Float32Array.prototype.mat4_hasUniformScale = function () {
     let scale = glMatrix.vec3.create();
     return function () {
         glMatrix.mat4.getScaling(scale, this);
-        return Math.abs(scale[0] - scale[1]) < 0.000001 && Math.abs(scale[1] - scale[2]) < 0.000001 && Math.abs(scale[0] - scale[2]) < 0.000001;
+        return Math.abs(scale[0] - scale[1]) < this._pp_epsilon && Math.abs(scale[1] - scale[2]) < this._pp_epsilon && Math.abs(scale[0] - scale[2]) < this._pp_epsilon;
     };
 }();
 
@@ -541,3 +538,7 @@ Float32Array.prototype.mat4_fromTransformQuat = function (transformQuat) {
     transformQuat.quat2_toTransformMatrix(this);
     return this;
 };
+
+//UTILS
+
+Float32Array.prototype._pp_epsilon = 0.000001;

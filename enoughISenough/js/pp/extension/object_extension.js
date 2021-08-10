@@ -1087,14 +1087,14 @@ WL.Object.prototype.pp_lookAtWorld = function () {
     return function (direction, up = this.pp_getUpWorld(internalUp)) {
         glMatrix.vec3.copy(internalUp, up); //to avoid changing the forwarded up
         let angle = glMatrix.vec3.angle(direction, internalUp);
-        if (angle < 0.0001 || angle > Math.PI - 0.0001) {
+        if (angle < this._pp_epsilon || angle > Math.PI - this._pp_epsilon) {
             //direction and up are too similar, trying with the default up
             this.pp_getUpWorld(internalUp);
             angle = glMatrix.vec3.angle(direction, internalUp);
-            if (angle < 0.0001 || angle > Math.PI - 0.0001) {
+            if (angle < this._pp_epsilon || angle > Math.PI - this._pp_epsilon) {
                 //this means we want the forward to become up, so getting forward as the up
                 this.pp_getForwardWorld(internalUp);
-                if (angle < 0.0001) {
+                if (angle < this._pp_epsilon) {
                     glMatrix.vec3.negate(internalUp, internalUp);
                 }
             }
@@ -1121,14 +1121,14 @@ WL.Object.prototype.pp_lookAtLocal = function () {
     return function (direction, up = this.pp_getUpLocal(internalUp)) {
         glMatrix.vec3.copy(internalUp, up); //to avoid changing the forwarded up
         let angle = glMatrix.vec3.angle(direction, internalUp);
-        if (angle < 0.0001 || angle > Math.PI - 0.0001) {
+        if (angle < this._pp_epsilon || angle > Math.PI - this._pp_epsilon) {
             //direction and up are too similar, trying with the default up
             this.pp_getUpLocal(internalUp);
             angle = glMatrix.vec3.angle(direction, internalUp);
-            if (angle < 0.0001 || angle > Math.PI - 0.0001) {
+            if (angle < this._pp_epsilon || angle > Math.PI - this._pp_epsilon) {
                 //this means we want the forward to become up, so getting forward as the up
                 this.pp_getForwardLocal(internalUp);
-                if (angle < 0.0001) {
+                if (angle < this._pp_epsilon) {
                     glMatrix.vec3.negate(internalUp, internalUp);
                 }
             }
@@ -1578,7 +1578,7 @@ WL.Object.prototype.pp_hasUniformScaleWorld = function () {
     let scale = glMatrix.vec3.create();
     return function () {
         this.pp_getScaleWorld(scale);
-        return Math.abs(scale[0] - scale[1]) < 0.000001 && Math.abs(scale[1] - scale[2]) < 0.000001 && Math.abs(scale[0] - scale[2]) < 0.000001;
+        return Math.abs(scale[0] - scale[1]) < this._pp_epsilon && Math.abs(scale[1] - scale[2]) < this._pp_epsilon && Math.abs(scale[0] - scale[2]) < this._pp_epsilon;
     };
 }();
 
@@ -1586,7 +1586,7 @@ WL.Object.prototype.pp_hasUniformScaleLocal = function () {
     let scale = glMatrix.vec3.create();
     return function () {
         this.pp_getScaleLocal(scale);
-        return Math.abs(scale[0] - scale[1]) < 0.000001 && Math.abs(scale[1] - scale[2]) < 0.000001 && Math.abs(scale[0] - scale[2]) < 0.000001;
+        return Math.abs(scale[0] - scale[1]) < this._pp_epsilon && Math.abs(scale[1] - scale[2]) < this._pp_epsilon && Math.abs(scale[0] - scale[2]) < this._pp_epsilon;
     };
 }();
 
@@ -1617,6 +1617,8 @@ WL.Object.prototype.pp_destroy = function () {
 };
 
 //Private Utils
+
+WL.Object.prototype._pp_epsilon = 0.000001;
 
 WL.Object.prototype._pp_quaternionToRadians = function () {
     let mat3 = glMatrix.mat3.create();
