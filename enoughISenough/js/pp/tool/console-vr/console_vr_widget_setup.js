@@ -133,16 +133,13 @@ PP.ConsoleVRWidgetSetup = class ConsoleVRWidgetSetup {
 
         this.myNotifyIconPanelPositions = [];
         this.myNotifyIconPanelPositions[PP.HandednessIndex.NONE] = [0, 0, 0];
-        this.myNotifyIconPanelPositions[PP.HandednessIndex.NONE][0] = this.myMessagesBackgroundScale[0] - this.myNotifyIconBackgroundScale[0] - 0.01;
+        this.myNotifyIconPanelPositions[PP.HandednessIndex.NONE][0] = -this.myMessagesBackgroundScale[0] + this.myNotifyIconBackgroundScale[0] + 0.01;
         this.myNotifyIconPanelPositions[PP.HandednessIndex.NONE][1] = -this.myMessagesBackgroundScale[1] + this.myNotifyIconBackgroundScale[1] + 0.01;
         this.myNotifyIconPanelPositions[PP.HandednessIndex.NONE][2] = this.myMessagesTextsPanelPosition[2] - 0.00001; //prevent glitches with text
 
         this.myNotifyIconPanelPositions[PP.HandednessIndex.LEFT] = this.myNotifyIconPanelPositions[PP.HandednessIndex.NONE];
 
-        this.myNotifyIconPanelPositions[PP.HandednessIndex.RIGHT] = [0, 0, 0];
-        this.myNotifyIconPanelPositions[PP.HandednessIndex.RIGHT][0] = -this.myMessagesBackgroundScale[0] + this.myNotifyIconBackgroundScale[0] + 0.01;
-        this.myNotifyIconPanelPositions[PP.HandednessIndex.RIGHT][1] = -this.myMessagesBackgroundScale[1] + this.myNotifyIconBackgroundScale[1] + 0.01;
-        this.myNotifyIconPanelPositions[PP.HandednessIndex.RIGHT][2] = this.myMessagesTextsPanelPosition[2] - 0.00001; //prevent glitches with text
+        this.myNotifyIconPanelPositions[PP.HandednessIndex.RIGHT] = this.myNotifyIconPanelPositions[PP.HandednessIndex.NONE];
 
         this.myNotifyIconCursorTargetPosition = [0, 0, 0];
         this.myNotifyIconCursorTargetPosition[2] = this.myButtonsPanelPosition[2] + this.myButtonTextPosition[2] - this.myMessagesTextsPanelPosition[2]; // a little behind the button target to avoid hiding it
@@ -150,8 +147,7 @@ PP.ConsoleVRWidgetSetup = class ConsoleVRWidgetSetup {
         this.myNotifyIconCollisionExtents = this.myNotifyIconBackgroundScale.slice(0);
         this.myNotifyIconCollisionExtents[2] = this.myCursorTargetCollisionThickness;
 
-        this.myNotifyIconNothingColor = [70 / 255, 70 / 255, 70 / 255, 1];
-        this.myNotifyIconNewMessageColor = [210 / 255, 210 / 255, 210 / 255, 1];
+        this.myNotifyIconColor = [210 / 255, 210 / 255, 210 / 255, 1];
 
         //Pointer
         this.myPointerCollisionCollider = this.myCursorTargetCollisionCollider;
@@ -184,7 +180,6 @@ PP.ConsoleVRWidgetSetup = class ConsoleVRWidgetSetup {
         this.myButtonDisabledTextColor = this.myBackgroundColor;
         this.myButtonDisabledBackgroundColor = [110 / 255, 110 / 255, 110 / 255, 1];
 
-        this.myFilterDoubleClickDelay = 0.3;
         this.myFilterButtonDisabledTextColor = this.myButtonDisabledTextColor;
         this.myFilterButtonDisabledBackgroundColor = this.myButtonDisabledBackgroundColor;
 

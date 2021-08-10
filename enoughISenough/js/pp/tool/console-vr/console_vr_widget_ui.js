@@ -186,7 +186,7 @@ PP.ConsoleVRWidgetUI = class ConsoleVRWidgetUI {
         this.myNotifyIconBackgroundComponent = this.myNotifyIconBackground.addComponent('mesh');
         this.myNotifyIconBackgroundComponent.mesh = this._myPlaneMesh;
         this.myNotifyIconBackgroundComponent.material = this._myAdditionalSetup.myPlaneMaterial.clone();
-        this.myNotifyIconBackgroundComponent.material.color = this._mySetup.myNotifyIconNothingColor;
+        this.myNotifyIconBackgroundComponent.material.color = this._mySetup.myNotifyIconColor;
 
         this.myNotifyIconCursorTargetComponent = this.myNotifyIconCursorTarget.addComponent('cursor-target');
 

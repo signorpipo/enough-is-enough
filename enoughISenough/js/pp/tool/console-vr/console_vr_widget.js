@@ -21,12 +21,8 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
         this._myOldConsoleVR = [];
 
         this._myTypeFilters = [];
-        this._myTypeFiltersDoubleClickTimers = [];
-        this._myTypeFiltersTripleClickTimers = [];
         for (let key in PP.ConsoleVRWidget.MessageType) {
             this._myTypeFilters[PP.ConsoleVRWidget.MessageType[key]] = false;
-            this._myTypeFiltersDoubleClickTimers[PP.ConsoleVRWidget.MessageType[key]] = 0;
-            this._myTypeFiltersTripleClickTimers[PP.ConsoleVRWidget.MessageType[key]] = 0;
         }
 
         this._myNotifyIconActive = false;
@@ -50,6 +46,7 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
 
         this._myUI.build(this._myWidgetFrame.getWidgetObject(), this._mySetup, additionalSetup);
         this._myUI.setVisible(this._myWidgetFrame.myIsWidgetVisible);
+        this._setNotifyIconActive(false);
 
         this._addListeners();
 
@@ -103,14 +100,6 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
         if (this._myWidgetFrame.myIsWidgetVisible) {
             this._myPreventScrollClick = false; //used to avoid finger cursor to always trigger instant scroll up/down when hovering scroll buttons
             this._updateScroll(dt);
-
-            for (let key in PP.ConsoleVRWidget.MessageType) {
-                let value = this._myTypeFiltersDoubleClickTimers[PP.ConsoleVRWidget.MessageType[key]];
-                this._myTypeFiltersDoubleClickTimers[PP.ConsoleVRWidget.MessageType[key]] = Math.max(value - dt, 0);
-
-                value = this._myTypeFiltersTripleClickTimers[PP.ConsoleVRWidget.MessageType[key]];
-                this._myTypeFiltersTripleClickTimers[PP.ConsoleVRWidget.MessageType[key]] = Math.max(value - dt, 0);
-            }
         }
 
         this._updateGamepadsExtraActions(dt);
@@ -390,7 +379,7 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
 
     _updateNotifyIcon(message) {
         if (!(this._myTypeFilters[message.myType]) && this._myScrollOffset > 0) {
-            this._setNotifyIconActive(true, true);
+            this._setNotifyIconActive(true);
         }
     }
 
@@ -416,7 +405,7 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
         }
 
         if (this._myScrollOffset == 0) {
-            this._setNotifyIconActive(false, true);
+            this._setNotifyIconActive(false);
         }
     }
 
@@ -452,6 +441,8 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
             let backgroundMaterial = ui.myFilterButtonsBackgroundComponents[PP.ConsoleVRWidget.MessageType[key]].material;
             let textMaterial = ui.myFilterButtonsTextComponents[PP.ConsoleVRWidget.MessageType[key]].material;
 
+            cursorTarget.addTripleClickFunction(this._resetFilters.bind(this, PP.ConsoleVRWidget.MessageType[key]));
+            cursorTarget.addDoubleClickFunction(this._filterAllButOne.bind(this, PP.ConsoleVRWidget.MessageType[key], textMaterial));
             cursorTarget.addClickFunction(this._toggleFilter.bind(this, PP.ConsoleVRWidget.MessageType[key], textMaterial));
             cursorTarget.addHoverFunction(this._filterHover.bind(this, PP.ConsoleVRWidget.MessageType[key], backgroundMaterial));
             cursorTarget.addUnHoverFunction(this._filterUnHover.bind(this, PP.ConsoleVRWidget.MessageType[key], backgroundMaterial));
@@ -481,7 +472,7 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
             let cursorTarget = ui.myDownButtonCursorTargetComponent;
             let backgroundMaterial = ui.myDownButtonBackgroundComponent.material;
 
-            cursorTarget.addDoubleClickFunction(this._instantScrollDown.bind(this, true));
+            cursorTarget.addDoubleClickFunction(this._instantScrollDown.bind(this));
             cursorTarget.addDownFunction(this._setScrollDown.bind(this, true));
             cursorTarget.addUpFunction(this._setScrollDown.bind(this, false));
             cursorTarget.addHoverFunction(this._genericHover.bind(this, backgroundMaterial));
@@ -492,54 +483,58 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
             let cursorTarget = ui.myNotifyIconCursorTargetComponent;
             let backgroundMaterial = ui.myNotifyIconBackgroundComponent.material;
 
-            cursorTarget.addClickFunction(this._instantScrollDown.bind(this, false));
+            cursorTarget.addClickFunction(this._instantScrollDown.bind(this));
             cursorTarget.addHoverFunction(this._genericHover.bind(this, backgroundMaterial));
-            cursorTarget.addUnHoverFunction(this._setNotifyIconMaterial.bind(this));
+            cursorTarget.addUnHoverFunction(this._notifyIconUnHover.bind(this));
+        }
+    }
+
+    _resetFilters(messageType) {
+        if (this._myWidgetFrame.myIsWidgetVisible) {
+            for (let key in PP.ConsoleVRWidget.MessageType) {
+                let backgroundMaterial = this._myUI.myFilterButtonsBackgroundComponents[PP.ConsoleVRWidget.MessageType[key]].material;
+                let filterTextMaterial = this._myUI.myFilterButtonsTextComponents[PP.ConsoleVRWidget.MessageType[key]].material;
+
+                this._myTypeFilters[PP.ConsoleVRWidget.MessageType[key]] = false;
+                filterTextMaterial.color = this._mySetup.myMessageTypeColors[PP.ConsoleVRWidget.MessageType[key]];
+                if (PP.ConsoleVRWidget.MessageType[key] != messageType) {
+                    backgroundMaterial.color = this._mySetup.myBackgroundColor;
+                }
+            }
+
+            this._clampScrollOffset();
+            this._updateAllTexts();
+        }
+    }
+
+    _filterAllButOne(messageType) {
+        if (this._myWidgetFrame.myIsWidgetVisible) {
+            for (let key in PP.ConsoleVRWidget.MessageType) {
+                let backgroundMaterial = this._myUI.myFilterButtonsBackgroundComponents[PP.ConsoleVRWidget.MessageType[key]].material;
+                let filterTextMaterial = this._myUI.myFilterButtonsTextComponents[PP.ConsoleVRWidget.MessageType[key]].material;
+                if (PP.ConsoleVRWidget.MessageType[key] != messageType) {
+                    this._myTypeFilters[PP.ConsoleVRWidget.MessageType[key]] = true;
+                    backgroundMaterial.color = this._mySetup.myFilterButtonDisabledBackgroundColor;
+                    filterTextMaterial.color = this._mySetup.myFilterButtonDisabledTextColor;
+                } else {
+                    this._myTypeFilters[PP.ConsoleVRWidget.MessageType[key]] = false;
+                    filterTextMaterial.color = this._mySetup.myMessageTypeColors[messageType];
+                }
+            }
+
+            this._clampScrollOffset();
+            this._updateAllTexts();
         }
     }
 
     _toggleFilter(messageType, textMaterial) {
         if (this._myWidgetFrame.myIsWidgetVisible) {
-            if (this._myTypeFiltersTripleClickTimers[messageType] > 0) {
-                this._myTypeFiltersTripleClickTimers[messageType] = 0;
 
-                for (let key in PP.ConsoleVRWidget.MessageType) {
-                    let backgroundMaterial = this._myUI.myFilterButtonsBackgroundComponents[PP.ConsoleVRWidget.MessageType[key]].material;
-                    let filterTextMaterial = this._myUI.myFilterButtonsTextComponents[PP.ConsoleVRWidget.MessageType[key]].material;
-
-                    this._myTypeFilters[PP.ConsoleVRWidget.MessageType[key]] = false;
-                    filterTextMaterial.color = this._mySetup.myMessageTypeColors[PP.ConsoleVRWidget.MessageType[key]];
-                    if (PP.ConsoleVRWidget.MessageType[key] != messageType) {
-                        backgroundMaterial.color = this._mySetup.myBackgroundColor;
-                    }
-                }
-            } else if (this._myTypeFiltersDoubleClickTimers[messageType] > 0) {
-                this._myTypeFiltersDoubleClickTimers[messageType] = 0;
-                this._myTypeFiltersTripleClickTimers[messageType] = this._mySetup.myFilterDoubleClickDelay;
-
-                for (let key in PP.ConsoleVRWidget.MessageType) {
-                    let backgroundMaterial = this._myUI.myFilterButtonsBackgroundComponents[PP.ConsoleVRWidget.MessageType[key]].material;
-                    let filterTextMaterial = this._myUI.myFilterButtonsTextComponents[PP.ConsoleVRWidget.MessageType[key]].material;
-                    if (PP.ConsoleVRWidget.MessageType[key] != messageType) {
-                        this._myTypeFilters[PP.ConsoleVRWidget.MessageType[key]] = true;
-                        backgroundMaterial.color = this._mySetup.myFilterButtonDisabledBackgroundColor;
-                        filterTextMaterial.color = this._mySetup.myFilterButtonDisabledTextColor;
-                    } else {
-                        this._myTypeFilters[PP.ConsoleVRWidget.MessageType[key]] = false;
-                        filterTextMaterial.color = this._mySetup.myMessageTypeColors[messageType];
-                    }
-                }
-
-                this._myTypeFilters[messageType] = false;
+            this._myTypeFilters[messageType] = !this._myTypeFilters[messageType];
+            if (this._myTypeFilters[messageType]) {
+                textMaterial.color = this._mySetup.myFilterButtonDisabledTextColor;
             } else {
-                this._myTypeFiltersDoubleClickTimers[messageType] = this._mySetup.myFilterDoubleClickDelay;
-
-                this._myTypeFilters[messageType] = !this._myTypeFilters[messageType];
-                if (this._myTypeFilters[messageType]) {
-                    textMaterial.color = this._mySetup.myFilterButtonDisabledTextColor;
-                } else {
-                    textMaterial.color = this._mySetup.myMessageTypeColors[messageType];
-                }
+                textMaterial.color = this._mySetup.myMessageTypeColors[messageType];
             }
 
             this._clampScrollOffset();
@@ -588,30 +583,21 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
         }
     }
 
-    _instantScrollDown(updateNotifyIconMaterial) {
+    _instantScrollDown() {
         if (this._myWidgetFrame.myIsWidgetVisible && !this._myPreventScrollClick) {
             this._myScrollOffset = 0;
-            this._setNotifyIconActive(false, updateNotifyIconMaterial);
+            this._setNotifyIconActive(false);
             this._updateAllTexts();
         }
     }
 
-    _setNotifyIconActive(active, updateNotifyIconMaterial) {
-        if (this._myNotifyIconActive != active) {
-            this._myNotifyIconActive = active;
-            if (updateNotifyIconMaterial) {
-                this._setNotifyIconMaterial();
-            }
-        }
+    _setNotifyIconActive(active) {
+        this._myUI.myNotifyIconPanel.pp_setActiveHierarchy(active);
     }
 
-    _setNotifyIconMaterial() {
+    _notifyIconUnHover() {
         let material = this._myUI.myNotifyIconBackgroundComponent.material;
-        if (this._myNotifyIconActive) {
-            material.color = this._mySetup.myNotifyIconNewMessageColor;
-        } else {
-            material.color = this._mySetup.myNotifyIconNothingColor;
-        }
+        material.color = this._mySetup.myNotifyIconColor;
     }
 
     _filterHover(messageType, material) {
