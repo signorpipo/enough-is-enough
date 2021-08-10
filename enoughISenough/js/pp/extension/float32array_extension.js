@@ -259,7 +259,7 @@ Float32Array.prototype.quat_toRadians = function () {
         glMatrix.mat3.fromQuat(mat3, this);
 
         //Rotation order is ZYX 
-        out[1] = Math.asin(-Math.pp_clamp(mat3[2], -1, 1));
+        out[1] = Math.asin(-this._pp_clamp(mat3[2], -1, 1));
 
         if (Math.abs(mat3[2]) < (1 - this._pp_epsilon)) {
             out[0] = Math.atan2(mat3[5], mat3[8]);
@@ -542,3 +542,7 @@ Float32Array.prototype.mat4_fromTransformQuat = function (transformQuat) {
 //UTILS
 
 Float32Array.prototype._pp_epsilon = 0.000001;
+
+Float32Array.prototype._pp_clamp = function (value, min, max) {
+    return Math.min(Math.max(value, min), max);
+};
