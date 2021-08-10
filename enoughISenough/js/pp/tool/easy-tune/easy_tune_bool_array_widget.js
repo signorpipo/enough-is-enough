@@ -1,9 +1,8 @@
 
 PP.EasyTuneBoolArrayWidget = class EasyTuneBoolArrayWidget {
 
-    constructor(arraySize, gamepad, blockEditButtonType) {
+    constructor(arraySize, gamepad) {
         this._myGamepad = gamepad;
-        this._myBlockEditButtonType = blockEditButtonType;
 
         this._mySetup = new PP.EasyTuneBoolArrayWidgetSetup(arraySize);
         this._myUI = new PP.EasyTuneBoolArrayWidgetUI();
@@ -77,7 +76,7 @@ PP.EasyTuneBoolArrayWidget = class EasyTuneBoolArrayWidget {
     _updateValue(dt) {
         let stickVariableIntensity = 0;
 
-        if (this._myGamepad && !this._myGamepad.getButtonInfo(this._myBlockEditButtonType).myIsPressed) {
+        if (this._myGamepad) {
             stickVariableIntensity = this._myGamepad.getAxesInfo().myAxes[1];
         }
 

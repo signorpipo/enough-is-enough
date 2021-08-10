@@ -80,7 +80,10 @@ PP.EasyTuneWidget = class EasyTuneWidget {
             if (this._myCurrentWidget) {
                 this._myCurrentWidget.update(dt);
             }
-            this._updateGamepadScrollVariable(dt);
+
+            if (this._myAdditionalSetup.myEnableChangeVariableShortcut) {
+                this._updateGamepadScrollVariable(dt);
+            }
         }
 
         this._updateGamepadWidgetVisibility();
@@ -88,8 +91,8 @@ PP.EasyTuneWidget = class EasyTuneWidget {
 
     _initializeWidgets() {
         this._myWidgets[PP.EasyTuneVariableType.NONE] = new PP.EasyTuneNoneWidget();
-        this._myWidgets[PP.EasyTuneVariableType.NUMBER] = new PP.EasyTuneNumberWidget(this._myGamepad, this._mySetup.myScrollVariableButtonType);
-        this._myWidgets[PP.EasyTuneVariableType.BOOL] = new PP.EasyTuneBoolWidget(this._myGamepad, this._mySetup.myScrollVariableButtonType);
+        this._myWidgets[PP.EasyTuneVariableType.NUMBER] = new PP.EasyTuneNumberWidget(this._myGamepad);
+        this._myWidgets[PP.EasyTuneVariableType.BOOL] = new PP.EasyTuneBoolWidget(this._myGamepad);
 
         for (let item of this._myWidgets) {
             item.start(this._myWidgetFrame.getWidgetObject(), this._myAdditionalSetup);
@@ -169,9 +172,10 @@ PP.EasyTuneWidget = class EasyTuneWidget {
     }
 
     _updateGamepadScrollVariable(dt) {
-        if (this._myGamepad && this._myGamepad.getButtonInfo(this._mySetup.myScrollVariableButtonType).myIsPressed) {
+        if (this._myGamepad && (!this._mySetup.myScrollVariableButtonType || this._myGamepad.getButtonInfo(this._mySetup.myScrollVariableButtonType).myIsPressed)) {
             let x = this._myGamepad.getAxesInfo().myAxes[0];
-            if (Math.abs(x) > this._mySetup.myScrollVariableMinThreshold) {
+            let y = this._myGamepad.getAxesInfo().myAxes[1];
+            if (Math.abs(x) > this._mySetup.myScrollVariableMinXThreshold && Math.abs(y) < this._mySetup.myScrollVariableMaxYThreshold) {
                 this._myScrollVariableTimer += dt;
                 while (this._myScrollVariableTimer > this._mySetup.myScrollVariableDelay) {
                     this._myScrollVariableTimer -= this._mySetup.myScrollVariableDelay;

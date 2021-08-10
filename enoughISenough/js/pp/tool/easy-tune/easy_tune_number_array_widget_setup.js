@@ -115,7 +115,7 @@ PP.EasyTuneNumberArrayWidgetSetup = class EasyTuneNumberArrayWidgetSetup {
         this.myButtonHoverColor = [150 / 255, 150 / 255, 150 / 255, 1];
         this.myTextHoverScaleMultiplier = [1.25, 1.25, 1.25];
 
-        this.myEditThumbstickMinThreshold = 0.2;
+        this.myEditThumbstickMinThreshold = 0.35;
         this.myStepMultiplierStepPerSecond = 2.25;
         this.myButtonEditDelay = 0.25;
     }

@@ -1,9 +1,8 @@
 
 PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget {
 
-    constructor(arraySize, gamepad, blockEditButtonType) {
+    constructor(arraySize, gamepad) {
         this._myGamepad = gamepad;
-        this._myBlockEditButtonType = blockEditButtonType;
 
         this._mySetup = new PP.EasyTuneNumberArrayWidgetSetup(arraySize);
         this._myUI = new PP.EasyTuneNumberArrayWidgetUI();
@@ -16,7 +15,7 @@ PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget {
 
         this._myAppendToVariableName = "";
 
-        this._myValueEditIndex = 0;
+        this._myValueEditIndex = -1;
 
         this._myValueButtonEditIntensity = 0;
         this._myValueButtonEditIntensityTimer = 0;
@@ -38,6 +37,10 @@ PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget {
             this._myAppendToVariableName = appendToVariableName;
         } else {
             this._myAppendToVariableName = "";
+        }
+
+        if (this._myValueEditIndex >= 0) {
+            this._myValueRealValue = this._myVariable.myValue[this._myValueEditIndex];
         }
 
         this._refreshUI();
@@ -88,7 +91,7 @@ PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget {
     _updateValue(dt) {
         let stickVariableIntensity = 0;
 
-        if (this._myGamepad && !this._myGamepad.getButtonInfo(this._myBlockEditButtonType).myIsPressed) {
+        if (this._myGamepad) {
             let y = this._myGamepad.getAxesInfo().myAxes[1];
 
             if (Math.abs(y) > this._mySetup.myEditThumbstickMinThreshold) {

@@ -3,6 +3,7 @@ WL.registerComponent('pp-easy-tune', {
     _myShowOnStart: { type: WL.Type.Bool, default: false },
     _myShowVisibilityButton: { type: WL.Type.Bool, default: true },
     _myEnableAdditionalButtons: { type: WL.Type.Bool, default: false },
+    _myEnableChangeVariableShortcut: { type: WL.Type.Bool, default: true },
     _myPlaneMaterial: { type: WL.Type.Material, default: null },
     _myTextMaterial: { type: WL.Type.Material, default: null }
 }, {
@@ -24,6 +25,7 @@ WL.registerComponent('pp-easy-tune', {
         additionalSetup.myShowOnStart = this._myShowOnStart;
         additionalSetup.myShowVisibilityButton = this._myShowVisibilityButton;
         additionalSetup.myEnableAdditionalButtons = this._myEnableAdditionalButtons;
+        additionalSetup.myEnableChangeVariableShortcut = this._myEnableChangeVariableShortcut;
         additionalSetup.myPlaneMaterial = this._myPlaneMaterial;
         additionalSetup.myTextMaterial = this._myTextMaterial;
 
