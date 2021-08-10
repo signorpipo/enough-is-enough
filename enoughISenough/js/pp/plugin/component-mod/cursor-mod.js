@@ -5,14 +5,18 @@ _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.init = function (
     this.maxDistance = 100;
 
     this.doubleClickTimer = 0;
-    this.doubleClickObject = null;
-
-    this.doubleClickDelay = 0.3;
+    this.tripleClickTimer = 0;
+    this.multipleClickObject = null;
+    this.multipleClickDelay = 0.3;
 };
 
 _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.update = function (dt) {
     if (this.doubleClickTimer > 0) {
         this.doubleClickTimer -= dt;
+    }
+
+    if (this.tripleClickTimer > 0) {
+        this.tripleClickTimer -= dt;
     }
 
     this.doUpdate(false);
@@ -64,15 +68,24 @@ _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.hoverBehaviour = 
 
         /* Click */
         if (doClick) {
-            if (this.doubleClickTimer > 0 && this.doubleClickObject && this.doubleClickObject.equals(this.hoveringObject)) {
+            if (this.tripleClickTimer > 0 && this.multipleClickObject && this.multipleClickObject.equals(this.hoveringObject)) {
+                if (cursorTarget) cursorTarget.onTripleClick(this.hoveringObject, this);
+                this.globalTarget.onTripleClick(this.hoveringObject, this);
+
+                this.tripleClickTimer = 0;
+            } else if (this.doubleClickTimer > 0 && this.multipleClickObject && this.multipleClickObject.equals(this.hoveringObject)) {
                 if (cursorTarget) cursorTarget.onDoubleClick(this.hoveringObject, this);
                 this.globalTarget.onDoubleClick(this.hoveringObject, this);
+
+                this.tripleClickTimer = this.multipleClickDelay;
+                this.doubleClickTimer = 0;
             } else {
                 if (cursorTarget) cursorTarget.onClick(this.hoveringObject, this);
                 this.globalTarget.onClick(this.hoveringObject, this);
 
-                this.doubleClickTimer = this.doubleClickDelay;
-                this.doubleClickObject = this.hoveringObject;
+                this.tripleClickTimer = 0;
+                this.doubleClickTimer = this.multipleClickDelay;
+                this.multipleClickObject = this.hoveringObject;
             }
         }
 
