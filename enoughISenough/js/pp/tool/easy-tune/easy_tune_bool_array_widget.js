@@ -105,6 +105,8 @@ PP.EasyTuneBoolArrayWidget = class EasyTuneBoolArrayWidget {
         let ui = this._myUI;
 
         ui.myVariableLabelCursorTargetComponent.addClickFunction(this._resetAllValues.bind(this));
+        ui.myVariableLabelCursorTargetComponent.addHoverFunction(this._genericTextHover.bind(this, ui.myVariableLabelText));
+        ui.myVariableLabelCursorTargetComponent.addUnHoverFunction(this._genericTextUnHover.bind(this, ui.myVariableLabelText, this._mySetup.myVariableLabelTextScale));
 
         ui.myNextButtonCursorTargetComponent.addClickFunction(this._scrollVariableRequest.bind(this, 1));
         ui.myNextButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myNextButtonBackgroundComponent.material));
@@ -184,5 +186,13 @@ PP.EasyTuneBoolArrayWidget = class EasyTuneBoolArrayWidget {
 
     _genericUnHover(material) {
         material.color = this._mySetup.myBackgroundColor;
+    }
+
+    _genericTextHover(text) {
+        text.scale(this._mySetup.myTextHoverScaleMultiplier);
+    }
+
+    _genericTextUnHover(text, originalScale) {
+        text.scalingWorld = originalScale;
     }
 };
