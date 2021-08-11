@@ -501,14 +501,14 @@ Float32Array.prototype.mat4_setScale = function () {
 }();
 
 Float32Array.prototype.mat4_setPositionRotationScale = function (position, rotation, scale) {
-    this.mat4_setPositionRotationDegreesScale(this, position, rotation, scale);
+    this.mat4_setPositionRotationDegreesScale(position, rotation, scale);
     return this;
 };
 
 Float32Array.prototype.mat4_setPositionRotationDegreesScale = function () {
     let quat = glMatrix.quat.create();
     return function (position, rotation, scale) {
-        this.mat4_setPositionRotationQuatScale(this, position, rotation.vec3_degreesToQuat(quat), scale);
+        this.mat4_setPositionRotationQuatScale(position, rotation.vec3_degreesToQuat(quat), scale);
         return this;
     };
 }();
@@ -516,7 +516,7 @@ Float32Array.prototype.mat4_setPositionRotationDegreesScale = function () {
 Float32Array.prototype.mat4_setPositionRotationRadiansScale = function () {
     let vector = glMatrix.vec3.create();
     return function (position, rotation, scale) {
-        this.mat4_setPositionRotationDegreesScale(this, position, rotation.vec3_toRadians(vector), scale);
+        this.mat4_setPositionRotationDegreesScale(position, rotation.vec3_toRadians(vector), scale);
         return this;
     };
 }();

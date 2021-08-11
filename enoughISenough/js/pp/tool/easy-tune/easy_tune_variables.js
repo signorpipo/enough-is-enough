@@ -43,16 +43,17 @@ PP.EasyTuneVariables = new PP.EasyTuneVariableMap();
 PP.EasyTuneVariableType = {
     NONE: 0,
     NUMBER: 1,
-    BOOL: 2
+    BOOL: 2,
+    EASY_TRANSFORM: 3
 };
 
 PP.EasyTuneVariable = class EasyTuneVariable {
-    constructor(name, type, value) {
+    constructor(name, type) {
         this.myName = name.slice(0);
         this.myType = type;
 
-        this.myValue = value;
-        this.myInitialValue = value;
+        this.myValue = null;
+        this.myInitialValue = null;
     }
 
     getValue() {
@@ -67,7 +68,7 @@ PP.EasyTuneVariable = class EasyTuneVariable {
 
 PP.EasyTuneVariableArray = class EasyTuneVariableArray extends PP.EasyTuneVariable {
     constructor(name, type, value) {
-        super(name, type, null);
+        super(name, type);
 
         PP.EasyTuneVariableArray.prototype.setValue.call(this, value);
     }
@@ -136,5 +137,64 @@ PP.EasyTuneBool = class EasyTuneBool extends PP.EasyTuneBoolArray {
 
     setValue(value) {
         super.setValue([value]);
+    }
+};
+
+PP.EasyTuneBool = class EasyTuneBool extends PP.EasyTuneBoolArray {
+    constructor(name, value) {
+        super(name, [value]);
+    }
+
+    getValue() {
+        return this.myValue[0];
+    }
+
+    setValue(value) {
+        super.setValue([value]);
+    }
+};
+
+//EASY TUNE EASY TRANSFORM
+
+PP.EasyTuneEasyTransform = class EasyTuneEasyTransform extends PP.EasyTuneVariable {
+    constructor(name, value, scaleAsOne = true, positionStepPerSecond = 0.5, rotationStepPerSecond = 20, scaleStepPerSecond = 0.5) {
+        super(name, PP.EasyTuneVariableType.EASY_TRANSFORM);
+
+        this.myPosition = value.mat4_getPosition();
+        this.myRotation = value.mat4_getRotationDegrees();
+        this.myScale = value.mat4_getScale();
+
+        this.myScaleAsOne = scaleAsOne;
+
+        this.myPositionStepPerSecond = positionStepPerSecond;
+        this.myRotationStepPerSecond = rotationStepPerSecond;
+        this.myScaleStepPerSecond = scaleStepPerSecond;
+
+        this.myInitialPosition = this.myPosition.vec3_clone();
+        this.myInitialRotation = this.myRotation.vec3_clone();
+        this.myInitialScale = this.myScale.vec3_clone();
+
+        this.myInitialPositionStepPerSecond = this.myPositionStepPerSecond;
+        this.myInitialRotationStepPerSecond = this.myRotationStepPerSecond;
+        this.myInitialScaleStepPerSecond = this.myScaleStepPerSecond;
+
+        this.myDecimalPlaces = 3;
+
+        this.myTransform = mat4_create();
+    }
+
+    getValue() {
+        this.myTransform.mat4_setPositionRotationDegreesScale(this.myPosition, this.myRotation, this.myScale);
+        return this.myTransform;
+    }
+
+    setValue(value) {
+        this.myPosition = value.mat4_getPosition();
+        this.myRotation = value.mat4_getRotationDegrees();
+        this.myScale = value.mat4_getScale();
+
+        this.myInitialPosition = this.myPosition.vec3_clone();
+        this.myInitialRotation = this.myRotation.vec3_clone();
+        this.myInitialScale = this.myScale.vec3_clone();
     }
 };
