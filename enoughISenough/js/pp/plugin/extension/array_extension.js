@@ -12,6 +12,11 @@ Array.prototype.vec3_copy = function (vector) {
     return this;
 };
 
+Array.prototype.vec3_clone = function (out = glMatrix.vec3.create()) {
+    glMatrix.vec3.copy(out, this);
+    return out;
+};
+
 Array.prototype.vec3_set = function (x, y = null, z = null) {
     if (y == null) {
         glMatrix.vec3.set(this, x, x, x);
@@ -391,11 +396,6 @@ Array.prototype.mat4_invert = function (out = glMatrix.mat4.create()) {
     return out;
 };
 
-Array.prototype.mat4_getScale = function (out = glMatrix.vec3.create()) {
-    glMatrix.mat4.getScaling(out, this);
-    return out;
-};
-
 Array.prototype.mat4_clone = function (out = glMatrix.mat4.create()) {
     glMatrix.mat4.copy(out, this);
     return out;
@@ -405,6 +405,28 @@ Array.prototype.mat4_getPosition = function (out = glMatrix.vec3.create()) {
     glMatrix.mat4.getTranslation(out, this);
     return out;
 };
+
+Array.prototype.mat4_getRotation = function (out = glMatrix.vec3.create()) {
+    return this.mat4_getRotationDegrees(out);
+};
+
+Array.prototype.mat4_getRotationDegrees = function () {
+    let quat = glMatrix.quat.create();
+    return function (out = glMatrix.vec3.create()) {
+        this.mat4_getRotationQuat(quat);
+        quat.quat_toDegrees(out);
+        return out;
+    };
+}();
+
+Array.prototype.mat4_getRotationRadians = function () {
+    let quat = glMatrix.quat.create();
+    return function (out = glMatrix.vec3.create()) {
+        this.mat4_getRotationQuat(quat);
+        quat.quat_toRadians(out);
+        return out;
+    };
+}();
 
 Array.prototype.mat4_getRotationQuat = function () {
     let scale = glMatrix.vec3.create();
@@ -422,7 +444,61 @@ Array.prototype.mat4_getRotationQuat = function () {
     };
 }();
 
+Array.prototype.mat4_getScale = function (out = glMatrix.vec3.create()) {
+    glMatrix.mat4.getScaling(out, this);
+    return out;
+};
+
 //New Methods
+
+Array.prototype.mat4_setPosition = function (position) {
+    this[12] = position[0];
+    this[13] = position[1];
+    this[14] = position[2];
+    return this;
+};
+
+Array.prototype.mat4_setRotation = function (rotation) {
+    this.mat4_setRotationDegrees(rotation);
+    return this;
+};
+
+Array.prototype.mat4_setRotationDegrees = function () {
+    let quat = glMatrix.quat.create();
+    return function (rotation) {
+        this.mat4_setRotationQuat(rotation.vec3_degreesToQuat(quat));
+        return this;
+    };
+}();
+
+Array.prototype.mat4_setRotationRadians = function () {
+    let vector = glMatrix.vec3.create();
+    return function (rotation) {
+        this.mat4_setRotationDegrees(rotation.vec3_toDegrees(vector));
+        return this;
+    };
+}();
+
+Array.prototype.mat4_setRotationQuat = function () {
+    let position = glMatrix.vec3.create();
+    let scale = glMatrix.vec3.create();
+    return function (rotation) {
+        this.mat4_getPosition(position);
+        this.mat4_getScale(scale);
+        this.mat4_setPositionRotationQuatScale(position, rotation, scale);
+        return this;
+    };
+}();
+
+Array.prototype.mat4_setScale = function () {
+    let tempScale = glMatrix.vec3.create();
+    return function (scale) {
+        glMatrix.mat4.getScaling(tempScale, this);
+        glMatrix.vec3.divide(tempScale, scale, tempScale);
+        glMatrix.mat4.scale(this, this, tempScale);
+        return this;
+    };
+}();
 
 Array.prototype.mat4_setPositionRotationScale = function (position, rotation, scale) {
     this.mat4_setPositionRotationDegreesScale(this, position, rotation, scale);
@@ -530,16 +606,6 @@ Array.prototype.mat4_toLocal = function () {
             out[15] = 1;
         }
         return out;
-    };
-}();
-
-Array.prototype.mat4_setScale = function () {
-    let tempScale = glMatrix.vec3.create();
-    return function (scale) {
-        glMatrix.mat4.getScaling(tempScale, this);
-        glMatrix.vec3.divide(tempScale, scale, tempScale);
-        glMatrix.mat4.scale(this, this, tempScale);
-        return this;
     };
 }();
 

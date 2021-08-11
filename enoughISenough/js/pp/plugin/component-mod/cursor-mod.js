@@ -99,6 +99,7 @@ _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.hoverBehaviour = 
     } else if (this.hoveringObject && rayHit.hitCount == 0) {
         const cursorTarget = this.hoveringObject.getComponent("cursor-target");
 
+        /* Cursor up */
         if (this.isDown && this.isDown == this.lastIsDown) {
             if (cursorTarget) cursorTarget.onUp(this.hoveringObject, this);
             this.globalTarget.onUp(this.hoveringObject, this);
