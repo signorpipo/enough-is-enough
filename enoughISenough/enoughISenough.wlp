@@ -346,22 +346,26 @@
                     }
                 },
                 {
-                    "type": "pp-console-vr",
-                    "pp-console-vr": {
-                        "_myPlaneMaterial": "66",
-                        "_myTextMaterial": "DefaultFontMaterial",
-                        "_myHandedness": "left",
-                        "_myShowOnStart": true
-                    },
-                    "active": true
-                },
-                {
                     "type": "pp-easy-tune",
                     "pp-easy-tune": {
                         "_myShowVisibilityButton": true,
                         "_myHandedness": "left",
                         "_myPlaneMaterial": "66",
-                        "_myTextMaterial": "DefaultFontMaterial"
+                        "_myTextMaterial": "DefaultFontMaterial",
+                        "_myEnableAdditionalButtons": true,
+                        "_myShowOnStart": true,
+                        "_myEnableChangeVariableShortcut": true
+                    },
+                    "active": true
+                },
+                {
+                    "type": "pp-console-vr",
+                    "pp-console-vr": {
+                        "_myPlaneMaterial": "66",
+                        "_myTextMaterial": "DefaultFontMaterial",
+                        "_myHandedness": "left",
+                        "_myShowOnStart": false,
+                        "_myOverrideBrowserConsole": true
                     },
                     "active": true
                 }
@@ -654,7 +658,7 @@
             "components": [
                 {
                     "type": "test-prototype",
-                    "active": false
+                    "active": true
                 }
             ],
             "transformation": [
@@ -1063,7 +1067,7 @@
             "components": [
                 {
                     "type": "pp-set-hierarchy-active",
-                    "active": false,
+                    "active": true,
                     "pp-set-hierarchy-active": {
                         "_myHierarchyActive": false
                     }
@@ -1637,8 +1641,7 @@
             "version": [
                 0,
                 8,
-                7,
-                15
+                7
             ]
         },
         "vr": {
@@ -1659,13 +1662,14 @@
                 "js/test",
                 "js/pp/cauldron/component",
                 "js/pp/cauldron/utils",
-                "js/pp/extension",
                 "js/pp/debug",
                 "js/pp/cauldron/fsm",
                 "js/enoughISenough",
                 "js/enoughISenough/main",
                 "js/pp/tool/cauldron/component",
-                "js/pp/tool/widget-frame"
+                "js/pp/tool/widget-frame",
+                "js/pp/plugin/extension",
+                "js/pp/plugin/component-mod"
             ]
         },
         "editor": {
@@ -1691,7 +1695,11 @@
                 "optionalFeatures": {
                     "local-floor": true
                 }
-            }
+            },
+            "visualizeColliders": false
+        },
+        "physx": {
+            "enable": false
         }
     },
     "animations": {},

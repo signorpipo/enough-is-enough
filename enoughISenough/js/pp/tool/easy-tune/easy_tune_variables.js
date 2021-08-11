@@ -157,7 +157,7 @@ PP.EasyTuneBool = class EasyTuneBool extends PP.EasyTuneBoolArray {
 //EASY TUNE EASY TRANSFORM
 
 PP.EasyTuneEasyTransform = class EasyTuneEasyTransform extends PP.EasyTuneVariable {
-    constructor(name, value, scaleAsOne = true, positionStepPerSecond = 0.5, rotationStepPerSecond = 20, scaleStepPerSecond = 0.5) {
+    constructor(name, value, scaleAsOne = true, positionStepPerSecond = 1, rotationStepPerSecond = 50, scaleStepPerSecond = 1) {
         super(name, PP.EasyTuneVariableType.EASY_TRANSFORM);
 
         this.myPosition = value.mat4_getPosition();
