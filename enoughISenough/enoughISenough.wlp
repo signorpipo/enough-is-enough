@@ -1177,7 +1177,7 @@
                 0.0,
                 1.2999999,
                 0.0,
-                0.0,
+                0.0000081,
                 0.0,
                 0.0,
                 1.0
@@ -1206,7 +1206,13 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "components": [
+                {
+                    "active": false
+                }
+            ],
+            "deleted": true
         },
         "112": {
             "name": "Test Ring",
@@ -1231,12 +1237,43 @@
             ]
         },
         "113": {
+            "name": "MR NOT",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "text": "MR NOT",
+                        "material": "115"
+                    }
+                }
+            ],
+            "transformation": [
+                550.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                421.3241882,
+                353.5335083,
+                0.0,
+                0.0,
+                -353.5335083,
+                421.3241882,
+                0.0,
+                0.0,
+                168.0,
+                -184.0,
+                1.0
+            ],
+            "parent": "122"
+        },
+        "114": {
             "name": "Text",
             "components": [
                 {
                     "type": "text",
                     "text": {
-                        "text": "Mr NOT"
+                        "text": "Monke"
                     }
                 },
                 {
@@ -1257,9 +1294,220 @@
                 1.0,
                 0.0,
                 0.0,
-                1.8074123,
+                2.0000002,
                 0.0,
                 1.0
+            ],
+            "parent": null,
+            "deleted": true
+        },
+        "116": {
+            "name": "enough",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "text": "enough IS enough",
+                        "material": "117"
+                    }
+                },
+                {
+                    "type": "pp-easy-transform"
+                }
+            ],
+            "transformation": [
+                290.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                222.1522979,
+                186.4091186,
+                0.0,
+                0.0,
+                -186.4091186,
+                222.1522979,
+                0.0,
+                -7.0,
+                83.0001449,
+                -143.000061,
+                1.0
+            ],
+            "parent": "122"
+        },
+        "118": {
+            "link": {
+                "name": "Smaller Ring",
+                "file": "assets\\models\\ring.glb"
+            },
+            "parent": "112",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "name": "Smaller Ring",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "119"
+                    },
+                    "active": true
+                }
+            ]
+        },
+        "120": {
+            "link": {
+                "name": "Smaller Ring",
+                "file": "assets\\models\\ring.glb"
+            },
+            "parent": "112",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.4972696,
+                0.0,
+                1.0
+            ],
+            "name": "Smaller Ring 2",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "119"
+                    }
+                }
+            ],
+            "deleted": true
+        },
+        "121": {
+            "link": {
+                "name": "Smaller Ring",
+                "file": "assets\\models\\ring.glb"
+            },
+            "parent": "112",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.2837537,
+                0.0,
+                1.0
+            ],
+            "name": "Smaller Ring 2",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "119"
+                    },
+                    "active": true
+                }
+            ],
+            "deleted": true
+        },
+        "122": {
+            "name": "Test Title",
+            "parent": "32",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "components": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
             ]
         }
     },
@@ -1545,9 +1793,9 @@
                     0.5
                 ],
                 "diffuseColor": [
-                    0.4941176,
-                    0.145098,
-                    0.3254902,
+                    0.4862744,
+                    0.1067896,
+                    0.302928,
                     1.0
                 ],
                 "ambientColor": [
@@ -1583,6 +1831,83 @@
                     1.0
                 ]
             }
+        },
+        "115": {
+            "link": {
+                "name": "DefaultFontMaterial",
+                "file": "default"
+            },
+            "DistanceFieldVector": {
+                "outlineRange": [
+                    0.5,
+                    0.375
+                ],
+                "outlineColor": [
+                    0.5372549,
+                    0.1580161,
+                    0.354328,
+                    1.0
+                ],
+                "color": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ]
+            },
+            "name": "TitleFontMaterial"
+        },
+        "117": {
+            "link": {
+                "name": "DefaultFontMaterial",
+                "file": "default"
+            },
+            "DistanceFieldVector": {
+                "outlineRange": [
+                    0.5,
+                    0.375
+                ],
+                "outlineColor": [
+                    0.1423452,
+                    0.2110622,
+                    0.4078431,
+                    1.0
+                ],
+                "color": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ]
+            },
+            "name": "SubtitleFontMaterial"
+        },
+        "119": {
+            "link": {
+                "name": "Light Blue",
+                "file": "assets\\models\\ring.glb"
+            },
+            "Phong": {
+                "diffuseColor": [
+                    0.690196,
+                    0.4411755,
+                    0.0,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.2352941,
+                    0.1564005,
+                    0.0424452,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999899930335233e-7,
+                    9.999961321227602e-7,
+                    9.999999974752428e-7,
+                    1.0
+                ]
+            },
+            "name": "Gold"
         }
     },
     "shaders": {
@@ -1674,7 +1999,8 @@
         },
         "editor": {
             "camera": {
-                "near": 0.0099999
+                "near": 0.0099999,
+                "far": 10000.0
             }
         },
         "rendering": {
