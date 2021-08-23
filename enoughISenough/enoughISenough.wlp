@@ -3,24 +3,29 @@
         "14": {
             "name": "Player",
             "transformation": [
-                0.9999823,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0000005,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.9999786,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
                 1.0
             ],
-            "parent": "32"
+            "parent": "32",
+            "components": [
+                {
+                    "type": "howler-audio-listener"
+                }
+            ]
         },
         "15": {
             "name": "FloorPlane",
@@ -1994,7 +1999,8 @@
                 "js/pp/tool/cauldron/component",
                 "js/pp/tool/widget-frame",
                 "js/pp/plugin/extension",
-                "js/pp/plugin/component-mod"
+                "js/pp/plugin/component-mod",
+                "js/pp/cauldron/cauldron"
             ]
         },
         "editor": {
