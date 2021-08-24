@@ -10,11 +10,7 @@ WL.registerComponent('pp-gamepad-animator', {
     _myTopButton: { type: WL.Type.Object, default: null }
 }, {
     init: function () {
-        if (this._myHandedness == 0) {
-            this._myGamepad = PP.LeftGamepad; //@EDIT get gamepad LEFT here based on how you store it in your game
-        } else {
-            this._myGamepad = PP.RightGamepad; //@EDIT get gamepad RIGHT here based on how you store it in your game
-        }
+        this._myGamepad = null;
 
         this._myNormalDiffuseButtonColor = null; //@EDIT with the color you want, or leave null to keep the material color, set all color variables or none
         this._myNormalAmbientButtonColor = null; // set them like this [x/255, y/255, z/255, w/255]
@@ -28,6 +24,12 @@ WL.registerComponent('pp-gamepad-animator', {
         this._myIsMeshEnabled = false;
     },
     start: function () {
+        if (this._myHandedness == 0) {
+            this._myGamepad = PP.LeftGamepad; //@EDIT get gamepad LEFT here based on how you store it in your game
+        } else {
+            this._myGamepad = PP.RightGamepad; //@EDIT get gamepad RIGHT here based on how you store it in your game
+        }
+
         this._mySelectMaterial = this._mySelect.getComponent("mesh").material.clone();
         this._mySelect.getComponent("mesh").material = this._mySelectMaterial;
         this._mySelectPosition = new Float32Array(3);

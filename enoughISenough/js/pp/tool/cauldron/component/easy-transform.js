@@ -5,6 +5,7 @@ WL.registerComponent("pp-easy-transform", {
         PP.EasyTuneVariables.add(new PP.EasyTuneEasyTransform("Easy Transform", this.object.pp_getTransform(), this._myScaleAsOne));
     },
     start: function () {
+        PP.EasyTuneVariables.add(new PP.EasyTuneEasyTransform("Easy Transform", this.object.pp_getTransform(), this._myScaleAsOne));
         PP.SetEasyTuneWidgetActiveVariable("Easy Transform");
     },
     update: function () {

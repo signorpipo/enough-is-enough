@@ -13,12 +13,15 @@ WL.registerComponent('pp-easy-tune', {
         //Integer: PP.EasyTuneVariables.add(new PP.EasyTuneInt("Lives", 3, 1));
         //Bool: PP.EasyTuneVariables.add(new PP.EasyTuneBool("Run", false));
 
+        PP.EasyTuneVariables = new PP.EasyTuneVariableMap();
+
         this._myWidget = new PP.EasyTuneWidget();
         PP.SetEasyTuneWidgetActiveVariable = function (variableName) {
             this._myWidget.setEasyTuneWidgetActiveVariable(variableName);
         }.bind(this);
     },
     start: function () {
+
         let additionalSetup = {};
         additionalSetup.myHandednessIndex = this._myHandedness;
         additionalSetup.myHandedness = PP.InputUtils.getHandednessByIndex(this._myHandedness);
@@ -35,6 +38,8 @@ WL.registerComponent('pp-easy-tune', {
         this._myWidget.update(dt);
     }
 });
+
+PP.EasyTuneVariables = null;
 
 PP.SetEasyTuneWidgetActiveVariable = function () {
     console.log("SetEasyTuneWidgetActiveVariable function not initialized yet");

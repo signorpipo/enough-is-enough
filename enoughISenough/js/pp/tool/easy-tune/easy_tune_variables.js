@@ -37,8 +37,6 @@ PP.EasyTuneVariableMap = class EasyTuneVariableMap {
     }
 };
 
-PP.EasyTuneVariables = new PP.EasyTuneVariableMap();
-
 //Variable Types
 PP.EasyTuneVariableType = {
     NONE: 0,

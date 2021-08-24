@@ -34,12 +34,12 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
         this._myScrollThumbstickTimer = 0;
 
         this._myPulseTimer = 0;
-
-        this._myLeftGamepad = PP.LeftGamepad; //@EDIT get gamepad LEFT here based on how you store it in your game
-        this._myRightGamepad = PP.RightGamepad; //@EDIT get gamepad RIGHT here based on how you store it in your game
     }
 
     start(parentObject, additionalSetup) {
+        this._myLeftGamepad = PP.LeftGamepad; //@EDIT get gamepad LEFT here based on how you store it in your game
+        this._myRightGamepad = PP.RightGamepad; //@EDIT get gamepad RIGHT here based on how you store it in your game
+
         this._myAdditionalSetup = additionalSetup;
 
         this._myWidgetFrame.start(parentObject, additionalSetup);

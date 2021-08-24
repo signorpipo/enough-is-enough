@@ -8,6 +8,7 @@ WL.registerComponent('pp-console-vr', {
     _myTextMaterial: { type: WL.Type.Material, default: null }
 }, {
     init: function () {
+        this._myWidget = new PP.ConsoleVRWidget();
     },
     start: function () {
         let additionalSetup = {};
@@ -20,7 +21,6 @@ WL.registerComponent('pp-console-vr', {
         additionalSetup.myPlaneMaterial = this._myPlaneMaterial;
         additionalSetup.myTextMaterial = this._myTextMaterial;
 
-        this._myWidget = new PP.ConsoleVRWidget();
         this._myWidget.start(this.object, additionalSetup);
     },
     update: function (dt) {

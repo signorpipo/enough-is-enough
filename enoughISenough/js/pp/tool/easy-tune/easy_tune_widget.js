@@ -21,15 +21,7 @@ PP.EasyTuneWidget = class EasyTuneWidget {
 
         this._myScrollVariableTimer = 0;
 
-        this._myRightGamepad = PP.RightGamepad; //@EDIT get right gamepad here based on how you store it in your game
-        this._myLeftGamepad = PP.LeftGamepad; //@EDIT get left gamepad here based on how you store it in your game
-
         this._myGamepad = null;
-        if (this._mySetup.myGamepadHandedness == PP.HandednessIndex.RIGHT) {
-            this._myGamepad = this._myRightGamepad;
-        } else if (this._mySetup.myGamepadHandedness == PP.HandednessIndex.LEFT) {
-            this._myGamepad = this._myLeftGamepad;
-        }
     }
 
     setEasyTuneWidgetActiveVariable(variableName) {
@@ -44,6 +36,14 @@ PP.EasyTuneWidget = class EasyTuneWidget {
     }
 
     start(parentObject, additionalSetup, easyTuneVariables) {
+        this._myRightGamepad = PP.RightGamepad; //@EDIT get right gamepad here based on how you store it in your game
+        this._myLeftGamepad = PP.LeftGamepad; //@EDIT get left gamepad here based on how you store it in your game
+        if (this._mySetup.myGamepadHandedness == PP.HandednessIndex.RIGHT) {
+            this._myGamepad = this._myRightGamepad;
+        } else if (this._mySetup.myGamepadHandedness == PP.HandednessIndex.LEFT) {
+            this._myGamepad = this._myLeftGamepad;
+        }
+
         this._myIsStarted = true;
 
         this._myAdditionalSetup = additionalSetup;
