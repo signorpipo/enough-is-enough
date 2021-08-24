@@ -1,13 +1,29 @@
 PP.Timer = class Timer {
-    constructor(duration) {
+    constructor(duration, autoStart = true) {
         this._myDuration = duration;
         this._myOnEndCallbacks = new Map();
 
+        this._myIsDone = false;
+        this._myActive = false;
+
+        if (autoStart) {
+            this.start();
+        }
+    }
+
+    start() {
         this.reset();
+        this._myActive = true;
+    }
+
+    reset() {
+        this._myTimer = this._myDuration;
+        this._myIsDone = false;
+        this._myActive = false;
     }
 
     update(dt) {
-        if (!this._myIsDone) {
+        if (this._myActive && !this._myIsDone) {
             this._myTimer = Math.max(0, this._myTimer - dt);
             if (this._myTimer == 0) {
                 this._myIsDone = true;
@@ -19,12 +35,7 @@ PP.Timer = class Timer {
     }
 
     isDone() {
-        return this._myIsDone;
-    }
-
-    reset() {
-        this._myTimer = this._myDuration;
-        this._myIsDone = false;
+        return this._myActive && this._myIsDone;
     }
 
     onEnd(callback, id = null) {
