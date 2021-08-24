@@ -324,6 +324,9 @@
                 },
                 {
                     "type": "enough-IS-enough-gateway"
+                },
+                {
+                    "type": "pp-audio-manager"
                 }
             ]
         },
@@ -1514,6 +1517,16 @@
                 null,
                 null
             ]
+        },
+        "123": {
+            "name": "Test Audio",
+            "parent": "102",
+            "components": [
+                {
+                    "type": "test-audio",
+                    "active": true
+                }
+            ]
         }
     },
     "meshes": {
@@ -2000,7 +2013,8 @@
                 "js/pp/tool/widget-frame",
                 "js/pp/plugin/extension",
                 "js/pp/plugin/component-mod",
-                "js/pp/cauldron/cauldron"
+                "js/pp/cauldron/cauldron",
+                "js/pp/audio"
             ]
         },
         "editor": {
