@@ -1475,7 +1475,7 @@ WL.Object.prototype.pp_convertTransformLocalToObjectQuat = function (transform, 
 //Component
 
 WL.Object.prototype.pp_addComponent = function (type, params) {
-    this.addComponent(type, params);
+    return this.addComponent(type, params);
 };
 
 WL.Object.prototype.pp_getComponent = function (type, index) {
