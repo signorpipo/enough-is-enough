@@ -1486,6 +1486,10 @@ WL.Object.prototype.pp_getComponents = function (type) {
     return this.getComponents(type);
 };
 
+WL.Object.prototype.pp_getAllComponents = function () {
+    return this.getComponents(null);
+};
+
 WL.Object.prototype.pp_getComponentHierarchy = function (type, index) {
     let component = this.getComponent(type, index);
 
@@ -1544,10 +1548,6 @@ WL.Object.prototype.pp_getComponentsChildren = function (type) {
 
 //Active
 
-WL.Object.prototype.pp_getActive = function () {
-    return this.active;
-};
-
 WL.Object.prototype.pp_setActive = function (active) {
     this.active = active;
 };
@@ -1589,6 +1589,101 @@ WL.Object.prototype.pp_hasUniformScaleLocal = function () {
         return Math.abs(scale[0] - scale[1]) < this._pp_epsilon && Math.abs(scale[1] - scale[2]) < this._pp_epsilon && Math.abs(scale[0] - scale[2]) < this._pp_epsilon;
     };
 }();
+
+//Clone
+
+if (!PP) {
+    var PP = {};
+}
+
+PP.CloneParams = class CloneParams {
+    constructor() {
+        this.myIgnoreNonCloneable = false; // Ignore components that are not clonable
+        this.myIgnoreChildren = false;
+        this.myComponentsToIgnore = []; // Add Component Type like "mesh"
+
+        this.myDeepClone = false;
+
+        //Components Deep Clone Override
+        this.myMesh_MaterialDeepCloneOverride = null; // null means it does not override, otherwise use false or true
+    }
+};
+
+WL.Object.prototype.pp_clone = function (params = new PP.CloneParams()) {
+    let clonedObject = null;
+
+    if (this.pp_isClonable(params)) {
+        let objectsToCloneData = [];
+        objectsToCloneData.push([this.parent, this]);
+
+        while (objectsToCloneData.length > 0) {
+            let cloneData = objectsToCloneData.shift();
+            let parent = cloneData[0];
+            let objectToClone = cloneData[1];
+
+            let currentClonedObject = WL.scene.addObject(parent);
+            currentClonedObject.name = objectToClone.name.slice(0);
+
+            currentClonedObject.pp_setScaleLocal(objectToClone.pp_getScaleLocal());
+            currentClonedObject.pp_setTransformLocalQuat(objectToClone.pp_getTransformLocalQuat());
+
+            let components = objectToClone.pp_getAllComponents();
+            for (let component of components) {
+                if (params.myComponentsToIgnore.indexOf(component.type) == -1) {
+                    if (component.pp_clone != null) {
+                        let clonedComponent = component.pp_clone(currentClonedObject, params);
+                        clonedComponent.active = component.active; // not managing the fact that inactive components from editor haven't called start yet, but clones do
+                    }
+                }
+            }
+
+            if (!params.myIgnoreChildren) {
+                for (let child of objectToClone.children) {
+                    objectsToCloneData.push([currentClonedObject, child]);
+                }
+            }
+
+            if (clonedObject == null) {
+                clonedObject = currentClonedObject;
+            }
+        }
+    }
+
+    return clonedObject;
+};
+
+WL.Object.prototype.pp_isClonable = function (params = new PP.CloneParams()) {
+    if (params.myIgnoreNonCloneable) {
+        return true;
+    }
+
+    let isClonable = true;
+
+    let objects = [];
+    objects.push(this);
+
+    while (isClonable && objects.length > 0) {
+        let object = objects.shift();
+
+        let components = this.pp_getAllComponents();
+        for (let component of components) {
+            if (params.myComponentsToIgnore.indexOf(component.type) == -1) {
+                if (component.pp_clone == null) {
+                    isClonable = false;
+                    break;
+                }
+            }
+        }
+
+        if (isClonable && !params.myIgnoreChildren) {
+            for (let child of object.children) {
+                objects.push(child);
+            }
+        }
+    }
+
+    return isClonable;
+};
 
 //Cauldron
 
