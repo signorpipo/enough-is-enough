@@ -1,3 +1,15 @@
+//ARRAY
+Array.prototype.pp_remove = function (index) {
+    let elementRemoved = null;
+    if (index >= 0 && index < this.length) {
+        let arrayRemoved = this.splice(index, 1);
+        if (arrayRemoved.length == 1) {
+            elementRemoved = arrayRemoved[0];
+        }
+    }
+    return elementRemoved;
+};
+
 //VECTOR 3
 
 //glMatrix Bridge
