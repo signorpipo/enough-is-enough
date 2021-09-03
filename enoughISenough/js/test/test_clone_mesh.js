@@ -17,7 +17,7 @@ WL.registerComponent('test-clone-mesh', {
         //params.myComponentsToIgnore.push("mesh");
         this.cloned = this.objectToClone.pp_clone(params);
         this.cloned.pp_getPositionWorld();
-        this.cloned.pp_translate([0.11, 0, 0]);
+        this.cloned.pp_translate([0.5, 0, 0]);
         //console.log(this.cloned.pp_getPositionWorld());
 
     },
