@@ -344,16 +344,6 @@
                     }
                 },
                 {
-                    "type": "pp-gamepad-animator",
-                    "pp-gamepad-animator": {
-                        "_mySelect": "54",
-                        "_mySqueeze": "55",
-                        "_myThumbstick": "56",
-                        "_myBottomButton": "52",
-                        "_myTopButton": "57"
-                    }
-                },
-                {
                     "type": "pp-easy-tune",
                     "pp-easy-tune": {
                         "_myShowVisibilityButton": true,
@@ -361,7 +351,7 @@
                         "_myPlaneMaterial": "66",
                         "_myTextMaterial": "DefaultFontMaterial",
                         "_myEnableAdditionalButtons": true,
-                        "_myShowOnStart": true,
+                        "_myShowOnStart": false,
                         "_myEnableChangeVariableShortcut": true
                     },
                     "active": true
@@ -403,7 +393,8 @@
                 "name": "Left_Body<Left_Quest_Controller",
                 "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
             },
-            "parent": "50"
+            "parent": "50",
+            "deleted": true
         },
         "52": {
             "link": {
@@ -428,42 +419,48 @@
                 0.0001231,
                 -0.0252592,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "53": {
             "link": {
                 "name": "Left_Option_Button<Left_Quest_Controller",
                 "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
             },
-            "parent": "50"
+            "parent": "50",
+            "deleted": true
         },
         "54": {
             "link": {
                 "name": "Left_Select<Left_Quest_Controller",
                 "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
             },
-            "parent": "50"
+            "parent": "50",
+            "deleted": true
         },
         "55": {
             "link": {
                 "name": "Left_Squeeze<Left_Quest_Controller",
                 "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
             },
-            "parent": "50"
+            "parent": "50",
+            "deleted": true
         },
         "56": {
             "link": {
                 "name": "Left_Thumbstick<Left_Quest_Controller",
                 "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
             },
-            "parent": "50"
+            "parent": "50",
+            "deleted": true
         },
         "57": {
             "link": {
                 "name": "Left_Top_Button<Left_Quest_Controller",
                 "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
             },
-            "parent": "50"
+            "parent": "50",
+            "deleted": true
         },
         "58": {
             "link": {
@@ -476,17 +473,6 @@
                     "type": "input",
                     "input": {
                         "type": "hand right"
-                    }
-                },
-                {
-                    "type": "pp-gamepad-animator",
-                    "pp-gamepad-animator": {
-                        "_myHandedness": "right",
-                        "_mySelect": "62",
-                        "_mySqueeze": "63",
-                        "_myThumbstick": "64",
-                        "_myBottomButton": "60",
-                        "_myTopButton": "65"
                     }
                 },
                 {
@@ -527,49 +513,56 @@
             "parent": "58",
             "components": [
                 null
-            ]
+            ],
+            "deleted": true
         },
         "60": {
             "link": {
                 "name": "Right_Bottom_Button<Right_Quest_Controller",
                 "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
             },
-            "parent": "58"
+            "parent": "58",
+            "deleted": true
         },
         "61": {
             "link": {
                 "name": "Right_Option_Button<Right_Quest_Controller",
                 "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
             },
-            "parent": "58"
+            "parent": "58",
+            "deleted": true
         },
         "62": {
             "link": {
                 "name": "Right_Select<Right_Quest_Controller",
                 "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
             },
-            "parent": "58"
+            "parent": "58",
+            "deleted": true
         },
         "63": {
             "link": {
                 "name": "Right_Squeeze<Right_Quest_Controller",
                 "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
             },
-            "parent": "58"
+            "parent": "58",
+            "deleted": true
         },
         "64": {
             "link": {
                 "name": "Right_Thumbstick<Right_Quest_Controller",
                 "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
             },
-            "parent": "58"
+            "parent": "58",
+            "deleted": true
         },
         "65": {
             "link": {
                 "name": "Right_Top_Button<Right_Quest_Controller",
                 "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
             },
-            "parent": "58"
+            "parent": "58",
+            "deleted": true
         },
         "67": {
             "name": "Empty",
@@ -1619,6 +1612,177 @@
                 0.9986633,
                 1.0
             ]
+        },
+        "129": {
+            "link": {
+                "name": "Hand Piece",
+                "file": "assets\\models\\hand_piece.glb"
+            },
+            "parent": "58",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "107"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.0501593,
+                1.0
+            ],
+            "deleted": true
+        },
+        "130": {
+            "name": "Mesh",
+            "parent": "50",
+            "components": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                {
+                    "type": "vr-mode-active-switch"
+                },
+                {
+                    "type": "hand-mesh",
+                    "hand-mesh": {
+                        "_myHandPieceMesh": "128",
+                        "_myHandPieceMaterial": "119"
+                    },
+                    "active": true
+                }
+            ]
+        },
+        "131": {
+            "name": "Mesh",
+            "parent": "58",
+            "components": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                {
+                    "type": "vr-mode-active-switch"
+                },
+                {
+                    "type": "hand-mesh",
+                    "hand-mesh": {
+                        "_myHandPieceMesh": "128",
+                        "_myHandPieceMaterial": "119",
+                        "_myHandedness": "right"
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -1752,6 +1916,12 @@
             "link": {
                 "name": "Smaller Ring",
                 "file": "assets\\models\\ring.glb"
+            }
+        },
+        "128": {
+            "link": {
+                "name": "Hand Piece",
+                "file": "assets\\models\\hand_piece.glb"
             }
         }
     },
@@ -2018,6 +2188,12 @@
                 ]
             },
             "name": "Gold"
+        },
+        "127": {
+            "link": {
+                "name": "Material.001",
+                "file": "assets\\models\\hand_piece.glb"
+            }
         }
     },
     "shaders": {
@@ -2107,7 +2283,8 @@
                 "js/pp/plugin/component-mod",
                 "js/pp/cauldron/cauldron",
                 "js/pp/audio",
-                "js/enoughISenough/cauldron"
+                "js/enoughISenough/cauldron",
+                "js/pp/tool/cauldron/cauldron"
             ]
         },
         "editor": {
@@ -2145,7 +2322,8 @@
     "skins": {},
     "files": [
         "assets/models/quest_controllers_credits_Jezza3D.glb",
-        "assets/models/ring.glb"
+        "assets/models/ring.glb",
+        "assets/models/hand_piece.glb"
     ],
     "pipelines": {
         "69": {
