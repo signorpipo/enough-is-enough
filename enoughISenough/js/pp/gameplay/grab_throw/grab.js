@@ -3,7 +3,7 @@ WL.registerComponent('pp-grab', {
     _mySnapOnPivot: { type: WL.Type.Bool, default: false }
 }, {
     init: function () {
-        this._myHandPose = new PP.HandPose(PP.InputUtils.getHandednessByIndex(this._myHandedness + 1));
+        this._myHandPose = new PP.HandPose(PP.InputUtils.getHandednessByIndex(this._myHandedness));
 
         this._myGrabbed = null;
 
@@ -30,7 +30,7 @@ WL.registerComponent('pp-grab', {
         this._myThrowCallbacks = new Map();
     },
     start: function () {
-        if (this._myHandedness + 1 == PP.HandednessIndex.LEFT) {
+        if (this._myHandedness == PP.HandednessIndex.LEFT) {
             this._myGamepad = PP.LeftGamepad;
         } else {
             this._myGamepad = PP.RightGamepad;

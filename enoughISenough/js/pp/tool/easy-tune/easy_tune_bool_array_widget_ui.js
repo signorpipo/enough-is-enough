@@ -100,7 +100,7 @@ PP.EasyTuneBoolArrayWidgetUI = class EasyTuneBoolArrayWidgetUI {
 
     //Transforms
     _setTransforms() {
-        this.myPivotObject.setTranslationLocal(this._mySetup.myPivotObjectPositions[this._myAdditionalSetup.myHandednessIndex]);
+        this.myPivotObject.setTranslationLocal(this._mySetup.myPivotObjectPositions[this._myAdditionalSetup.myHandedness]);
 
         this.myBackPanel.setTranslationLocal(this._mySetup.myBackPanelPosition);
         this.myBackBackground.scale(this._mySetup.myBackBackgroundScale);

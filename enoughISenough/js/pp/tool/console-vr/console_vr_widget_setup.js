@@ -132,14 +132,14 @@ PP.ConsoleVRWidgetSetup = class ConsoleVRWidgetSetup {
         this.myNotifyIconBackgroundScale = [0.01, 0.01, 1];
 
         this.myNotifyIconPanelPositions = [];
-        this.myNotifyIconPanelPositions[PP.HandednessIndex.NONE] = [0, 0, 0];
-        this.myNotifyIconPanelPositions[PP.HandednessIndex.NONE][0] = -this.myMessagesBackgroundScale[0] + this.myNotifyIconBackgroundScale[0] + 0.01;
-        this.myNotifyIconPanelPositions[PP.HandednessIndex.NONE][1] = -this.myMessagesBackgroundScale[1] + this.myNotifyIconBackgroundScale[1] + 0.01;
-        this.myNotifyIconPanelPositions[PP.HandednessIndex.NONE][2] = this.myMessagesTextsPanelPosition[2] - 0.00001; //prevent glitches with text
+        this.myNotifyIconPanelPositions[PP.ToolHandedness.NONE] = [0, 0, 0];
+        this.myNotifyIconPanelPositions[PP.ToolHandedness.NONE][0] = -this.myMessagesBackgroundScale[0] + this.myNotifyIconBackgroundScale[0] + 0.01;
+        this.myNotifyIconPanelPositions[PP.ToolHandedness.NONE][1] = -this.myMessagesBackgroundScale[1] + this.myNotifyIconBackgroundScale[1] + 0.01;
+        this.myNotifyIconPanelPositions[PP.ToolHandedness.NONE][2] = this.myMessagesTextsPanelPosition[2] - 0.00001; //prevent glitches with text
 
-        this.myNotifyIconPanelPositions[PP.HandednessIndex.LEFT] = this.myNotifyIconPanelPositions[PP.HandednessIndex.NONE];
+        this.myNotifyIconPanelPositions[PP.ToolHandedness.LEFT] = this.myNotifyIconPanelPositions[PP.ToolHandedness.NONE];
 
-        this.myNotifyIconPanelPositions[PP.HandednessIndex.RIGHT] = this.myNotifyIconPanelPositions[PP.HandednessIndex.NONE];
+        this.myNotifyIconPanelPositions[PP.ToolHandedness.RIGHT] = this.myNotifyIconPanelPositions[PP.ToolHandedness.NONE];
 
         this.myNotifyIconCursorTargetPosition = [0, 0, 0];
         this.myNotifyIconCursorTargetPosition[2] = this.myButtonsPanelPosition[2] + this.myButtonTextPosition[2] - this.myMessagesTextsPanelPosition[2]; // a little behind the button target to avoid hiding it
@@ -185,7 +185,7 @@ PP.ConsoleVRWidgetSetup = class ConsoleVRWidgetSetup {
 
         this.myScrollDelay = 0.1;
         this.myScrollAmount = 1;
-        this.myScrollThumbstickHandedness = PP.HandednessIndex.RIGHT;
+        this.myScrollThumbstickHandedness = PP.ToolHandedness.RIGHT;
         this.myScrollThumbstickDelay = 0.1;
         this.myScrollThumbstickMinThreshold = 0.2;
         this.myScrollThumbstickAmount = 3;

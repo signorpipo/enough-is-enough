@@ -1,11 +1,8 @@
 PP.InputUtils = {
     getHandednessByIndex: function (index) {
-        let handedness = PP.Handedness.NONE;
+        let handedness = null;
 
         switch (index) {
-            case PP.HandednessIndex.NONE:
-                handedness = PP.Handedness.NONE;
-                break;
             case PP.HandednessIndex.LEFT:
                 handedness = PP.Handedness.LEFT;
                 break;
@@ -34,7 +31,7 @@ PP.InputUtils = {
         return inputSource;
     },
     getInputSourceType: function (handedness) {
-        let inputSourceType = PP.InputSourceType.NONE;
+        let inputSourceType = null;
 
         let inputSource = PP.InputUtils.getInputSource(handedness);
         if (inputSource) {

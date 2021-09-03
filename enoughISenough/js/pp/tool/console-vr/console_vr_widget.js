@@ -646,9 +646,9 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
     _updateScrollWithThumbstick(dt) {
         if (this._myWidgetFrame.myIsWidgetVisible) {
             let axes = [0, 0];
-            if (this._mySetup.myScrollThumbstickHandedness == PP.HandednessIndex.LEFT) {
+            if (this._mySetup.myScrollThumbstickHandedness == PP.ToolHandedness.LEFT) {
                 axes = this._myLeftGamepad.getAxesInfo().myAxes;
-            } else if (this._mySetup.myScrollThumbstickHandedness == PP.HandednessIndex.RIGHT) {
+            } else if (this._mySetup.myScrollThumbstickHandedness == PP.ToolHandedness.RIGHT) {
                 axes = this._myRightGamepad.getAxesInfo().myAxes;
             }
 
@@ -675,7 +675,7 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
             let pulseType = this._myAdditionalSetup.myPulseOnNewMessage;
             let pulseEnabled = pulseType == PP.ConsoleVRWidget.PulseOnNewMessage.ALWAYS || (!this._myWidgetFrame.myIsWidgetVisible && pulseType == PP.ConsoleVRWidget.PulseOnNewMessage.WHEN_HIDDEN);
             if (pulseEnabled && this._myPulseTimer == 0) {
-                if (this._myAdditionalSetup.myHandednessIndex == PP.HandednessIndex.RIGHT) {
+                if (this._myAdditionalSetup.myHandedness == PP.ToolHandedness.RIGHT) {
                     this._myRightGamepad.pulse(this._mySetup.myPulseIntensity, this._mySetup.myPulseDuration);
                 } else {
                     this._myLeftGamepad.pulse(this._mySetup.myPulseIntensity, this._mySetup.myPulseDuration);

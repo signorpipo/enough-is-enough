@@ -2106,7 +2106,8 @@
                 "js/pp/plugin/extension",
                 "js/pp/plugin/component-mod",
                 "js/pp/cauldron/cauldron",
-                "js/pp/audio"
+                "js/pp/audio",
+                "js/enoughISenough/cauldron"
             ]
         },
         "editor": {

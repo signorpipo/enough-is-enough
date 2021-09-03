@@ -12,8 +12,7 @@ WL.registerComponent('pp-console-vr', {
     },
     start: function () {
         let additionalSetup = {};
-        additionalSetup.myHandednessIndex = this._myHandedness;
-        additionalSetup.myHandedness = PP.InputUtils.getHandednessByIndex(this._myHandedness);
+        additionalSetup.myHandedness = [null, 'left', 'right'][this._myHandedness];
         additionalSetup.myOverrideBrowserConsole = this._myOverrideBrowserConsole;
         additionalSetup.myShowOnStart = this._myShowOnStart;
         additionalSetup.myShowVisibilityButton = this._myShowVisibilityButton;

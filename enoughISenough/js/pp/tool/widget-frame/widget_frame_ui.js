@@ -53,14 +53,14 @@ PP.WidgetFrameUI = class WidgetFrameUI {
             this._myInputSourceType = inputSourceType;
 
             if (!this._myIsPinned) {
-                this.myPivotObject.setTranslationLocal(this._mySetup.myPivotObjectTransforms[this._myInputSourceType][this._myAdditionalSetup.myHandednessIndex].myPosition);
+                this.myPivotObject.setTranslationLocal(this._mySetup.myPivotObjectTransforms[this._myInputSourceType][this._myAdditionalSetup.myHandedness].myPosition);
                 this.myPivotObject.resetRotation();
-                this.myPivotObject.rotateObject(this._mySetup.myPivotObjectTransforms[this._myInputSourceType][this._myAdditionalSetup.myHandednessIndex].myRotation);
+                this.myPivotObject.rotateObject(this._mySetup.myPivotObjectTransforms[this._myInputSourceType][this._myAdditionalSetup.myHandedness].myRotation);
             }
 
-            this.myWidgetObject.setTranslationLocal(this._mySetup.myWidgetObjectTransforms[this._myInputSourceType][this._myAdditionalSetup.myHandednessIndex].myPosition);
+            this.myWidgetObject.setTranslationLocal(this._mySetup.myWidgetObjectTransforms[this._myInputSourceType][this._myAdditionalSetup.myHandedness].myPosition);
             this.myWidgetObject.resetRotation();
-            this.myWidgetObject.rotateObject(this._mySetup.myWidgetObjectTransforms[this._myInputSourceType][this._myAdditionalSetup.myHandednessIndex].myRotation);
+            this.myWidgetObject.rotateObject(this._mySetup.myWidgetObjectTransforms[this._myInputSourceType][this._myAdditionalSetup.myHandedness].myRotation);
         }
     }
 
@@ -87,13 +87,13 @@ PP.WidgetFrameUI = class WidgetFrameUI {
     _setTransforms() {
         this.myPivotObject.setDirty();
 
-        this.myVisibilityButtonPanel.setTranslationLocal(this._mySetup.myVisibilityButtonPosition[this._myAdditionalSetup.myHandednessIndex].myPosition);
+        this.myVisibilityButtonPanel.setTranslationLocal(this._mySetup.myVisibilityButtonPosition[this._myAdditionalSetup.myHandedness].myPosition);
         this.myVisibilityButtonBackground.scale(this._mySetup.myVisibilityButtonBackgroundScale);
         this.myVisibilityButtonText.setTranslationLocal(this._mySetup.myVisibilityButtonTextPosition);
         this.myVisibilityButtonText.scale(this._mySetup.myVisibilityButtonTextScale);
         this.myVisibilityButtonCursorTarget.setTranslationLocal(this._mySetup.myVisibilityButtonCursorTargetPosition);
 
-        this.myPinButtonPanel.setTranslationLocal(this._mySetup.myPinButtonPosition[this._myAdditionalSetup.myHandednessIndex].myPosition);
+        this.myPinButtonPanel.setTranslationLocal(this._mySetup.myPinButtonPosition[this._myAdditionalSetup.myHandedness].myPosition);
 
         this.myPinButtonBackground.scale(this._mySetup.myFlagButtonBackgroundScale);
         this.myPinButtonText.setTranslationLocal(this._mySetup.myFlagButtonTextPosition);
