@@ -55,7 +55,6 @@ PP.FSM = class FSM {
         }
 
         if (this.hasState(initStateID)) {
-
             this._myCurrentStateData = this._myStateMap.get(initStateID);
             if (initTransitionObject && initTransitionObject.performInit) {
                 initTransitionObject.performInit(this, this._myCurrentStateData);

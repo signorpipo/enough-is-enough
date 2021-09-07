@@ -2284,7 +2284,8 @@
                 "js/pp/cauldron/cauldron",
                 "js/pp/audio",
                 "js/enoughISenough/cauldron",
-                "js/pp/tool/cauldron/cauldron"
+                "js/pp/tool/cauldron/cauldron",
+                "js/enoughISenough/main_fsm"
             ]
         },
         "editor": {
