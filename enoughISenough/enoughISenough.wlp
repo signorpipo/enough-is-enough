@@ -323,7 +323,10 @@
                     }
                 },
                 {
-                    "type": "enough-IS-enough-gateway"
+                    "type": "enough-IS-enough-gateway",
+                    "enough-IS-enough-gateway": {
+                        "_myRingsAnimator": "112"
+                    }
                 },
                 {
                     "type": "pp-audio-manager"
@@ -601,7 +604,10 @@
             "components": [
                 {
                     "type": "pp-player-height",
-                    "active": true
+                    "active": true,
+                    "pp-player-height": {
+                        "_myEyesHeight": 0.0
+                    }
                 }
             ]
         },
@@ -1216,7 +1222,7 @@
             "deleted": true
         },
         "112": {
-            "name": "Test Ring",
+            "name": "Rings",
             "parent": "32",
             "transformation": [
                 1.0,
@@ -1235,6 +1241,15 @@
                 1.0,
                 0.0,
                 1.0
+            ],
+            "components": [
+                {
+                    "type": "rings-animator",
+                    "rings-animator": {
+                        "_myRing": "110",
+                        "_mySmallerRing": "118"
+                    }
+                }
             ]
         },
         "113": {
@@ -1533,20 +1548,20 @@
             ],
             "parent": "102",
             "transformation": [
-                999.9999389,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                999.9999389,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                999.9999389,
+                1.0,
                 0.0,
                 0.0,
-                -999999.875,
+                0.0,
                 0.0,
                 1.0
             ]
@@ -1782,6 +1797,37 @@
                         "_myHandedness": "right"
                     }
                 }
+            ]
+        },
+        "132": {
+            "name": "Floor",
+            "parent": "32",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "7",
+                        "material": "133"
+                    }
+                }
+            ],
+            "transformation": [
+                10.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.0000011,
+                -9.9999761,
+                0.0,
+                0.0,
+                9.999999,
+                -0.0000011,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
             ]
         }
     },
@@ -2194,6 +2240,31 @@
                 "name": "Material.001",
                 "file": "assets\\models\\hand_piece.glb"
             }
+        },
+        "133": {
+            "name": "Black",
+            "Phong": {
+                "specularColor": [
+                    9.999899930335233e-7,
+                    9.99993744699168e-7,
+                    9.999999974752428e-7,
+                    1.0
+                ],
+                "shininess": 1,
+                "diffuseColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ]
+            },
+            "pipeline": "78"
         }
     },
     "shaders": {

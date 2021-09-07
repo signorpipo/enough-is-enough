@@ -48,7 +48,9 @@
         - pp_addComponent  / pp_getComponent  / pp_getComponentHierarchy / pp_getComponentChildren
         - pp_getComponents  / pp_getComponentsHierarchy / pp_getComponentsChildren
 
-        - pp_getActive  / pp_setActive  / pp_setActiveHierarchy     / pp_setActiveChildren
+        - pp_setActive  / pp_setActiveHierarchy     / pp_setActiveChildren
+
+        - pp_clone      / pp_isClonable
 
         - pp_getName    / pp_setName
         - pp_getChildren

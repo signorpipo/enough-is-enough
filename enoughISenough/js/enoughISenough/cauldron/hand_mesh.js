@@ -30,7 +30,6 @@ WL.registerComponent("hand-mesh", {
         for (let index of elementsToRemove) {
             rotations.pp_remove(index);
             endPositions.pp_remove(index);
-            console.error(rotations.length, endPositions.length);
         }
 
         let startPosition = [0, 0, 0];
