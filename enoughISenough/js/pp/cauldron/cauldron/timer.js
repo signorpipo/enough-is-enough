@@ -11,12 +11,16 @@ PP.Timer = class Timer {
         }
     }
 
-    start() {
-        this.reset();
+    start(duration = null) {
+        this.reset(duration);
         this._myStarted = true;
     }
 
-    reset() {
+    reset(duration = null) {
+        if (duration != null) {
+            this._myDuration = duration;
+        }
+
         this._myTimer = this._myDuration;
         this._myIsDone = false;
         this._myStarted = false;
@@ -57,6 +61,7 @@ PP.Timer = class Timer {
 
     setDuration(duration) {
         this._myDuration = duration;
+        this.reset();
     }
 
     onEnd(callback, id = null) {

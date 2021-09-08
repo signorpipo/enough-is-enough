@@ -6,11 +6,14 @@ class IntroState extends PP.State {
         this._myFSM.addState("wait_session", this.waitSession.bind(this));
         this._myFSM.addState("move_rings", this.checkRingsCompleted.bind(this));
         this._myFSM.addState("spawn_hands", this.handsUpdate.bind(this));
+        this._myFSM.addState("show_title", new ShowTitleState());
         this._myFSM.addState("done");
 
+        //this._myFSM.addTransition("wait_session", "show_title", "end");
         this._myFSM.addTransition("wait_session", "move_rings", "end", this.startRings.bind(this));
         this._myFSM.addTransition("move_rings", "spawn_hands", "end", this.startHands.bind(this));
-        this._myFSM.addTransition("spawn_hands", "done", "end");
+        this._myFSM.addTransition("spawn_hands", "show_title", "end");
+        this._myFSM.addTransition("show_title", "done", "end");
     }
 
     update(dt, fsm) {
@@ -27,7 +30,7 @@ class IntroState extends PP.State {
         }
     }
 
-    startRings(dt, fsm) {
+    startRings(fsm) {
         Global.myRingsAnimator.begin();
     }
 
@@ -37,7 +40,7 @@ class IntroState extends PP.State {
         }
     }
 
-    startHands(dt, fsm) {
+    startHands(fsm) {
         let timer = Math.pp_random(0.4, 0.8);
         let startFirst = Math.pp_randomInt(0, 1);
         if (startFirst == 0) {

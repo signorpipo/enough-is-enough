@@ -1,11 +1,11 @@
 class enoughISenough {
     constructor() {
-        this._myMainFSM = new MainFSM();
     }
 
     start() {
         this.prepareSFXSetups();
 
+        this._myMainFSM = new MainFSM();
         this._myMainFSM.start();
     }
 
@@ -18,27 +18,27 @@ class enoughISenough {
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/NOT_ENOUGH.wav");
-            manager.addAudioSetup(SFX_ID.NOT_ENOUGH, audioSetup);
+            manager.addAudioSetup(SfxID.NOT_ENOUGH, audioSetup);
         }
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/blabla_1.wav");
-            manager.addAudioSetup(SFX_ID.BLABLA_1, audioSetup);
+            manager.addAudioSetup(SfxID.BLABLA_1, audioSetup);
         }
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/blabla_2.wav");
-            manager.addAudioSetup(SFX_ID.BLABLA_2, audioSetup);
+            manager.addAudioSetup(SfxID.BLABLA_2, audioSetup);
         }
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/ring_rise.wav");
-            manager.addAudioSetup(SFX_ID.RING_RISE, audioSetup);
+            manager.addAudioSetup(SfxID.RING_RISE, audioSetup);
         }
     }
 }
 
-SFX_ID = {
+var SfxID = {
     NOT_ENOUGH: 0,
     BLABLA_1: 1,
     BLABLA_2: 2,

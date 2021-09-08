@@ -121,7 +121,7 @@ PP.FSM = class FSM {
     }
 
     isInState(stateID) {
-        return this._myCurrentStateData.myStateID == stateID;
+        return this._myCurrentStateData != null && this._myCurrentStateData.myStateID == stateID;
     }
 
     getCurrentState() {

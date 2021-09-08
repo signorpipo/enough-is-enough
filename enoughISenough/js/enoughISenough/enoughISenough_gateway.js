@@ -6,6 +6,8 @@ WL.registerComponent("enough-IS-enough-gateway", {
     init: function () {
         this.enoughISenough = new enoughISenough();
 
+        Global.myScene = this.object;
+
         Global.myRingsAnimator = this._myRingsAnimator.pp_getComponent("rings-animator");
         Global.myLeftHandAnimator = this._myLeftHandAnimator.pp_getComponent("hand-animator");
         Global.myRightHandAnimator = this._myRightHandAnimator.pp_getComponent("hand-animator");
@@ -23,6 +25,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
 });
 
 var Global = {
+    myScene: null,
     myRingsAnimator: null,
     myLeftHandAnimator: null,
     myRightHandAnimator: null,

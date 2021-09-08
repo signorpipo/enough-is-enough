@@ -10,7 +10,7 @@ WL.registerComponent('test-audio', {
         if (this.timer.isDone()) {
             this.timer.reset();
 
-            let player = PP.AudioManager.createAudioPlayer(SFX_ID.NOT_ENOUGH);
+            let player = PP.AudioManager.createAudioPlayer(SfxID.NOT_ENOUGH);
             player.play();
             player.registerAudioEventListener(PP.AudioEvent.END, this, function (id) { console.log(id); });
         }
