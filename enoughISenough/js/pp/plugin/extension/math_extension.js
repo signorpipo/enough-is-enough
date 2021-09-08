@@ -1,3 +1,7 @@
+if (!PP) {
+    var PP = {};
+}
+
 Math.pp_clamp = function (value, min, max) {
     return Math.min(Math.max(value, min), max);
 };
@@ -34,4 +38,16 @@ Math.pp_randomInt = function (min, max) {
 
 Math.pp_lerp = function (from, to, interpolationValue) {
     return interpolationValue * (to - from) + from;
+};
+
+PP.EasingFunction = {
+    linear: t => t,
+    easeIn: t => t * t * t,
+    easeOut: t => (t - 1) * (t - 1) * (t - 1) + 1,
+    easeInOut: t => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1
+};
+
+Math.pp_interpolate = function (from, to, interpolationValue, easingFunction = PP.EasingFunction.linear) {
+    let lerpValue = easingFunction(interpolationValue);
+    return Math.pp_lerp(from, to, lerpValue);
 };

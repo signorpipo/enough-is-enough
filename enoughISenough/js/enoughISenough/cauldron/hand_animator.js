@@ -107,7 +107,7 @@ class HandPiece {
         this._myScale = 0;
         this._myObject.pp_setScale(this._myScale);
 
-        this._myTimer = new PP.Timer(0.5);
+        this._myTimer = new PP.Timer(1);
     }
 
     start() {
@@ -119,7 +119,7 @@ class HandPiece {
         if (this._myIsActive && this._myScale != 1) {
             this._myTimer.update(dt);
 
-            this._myScale = this._myTimer.getPercentage();
+            this._myScale = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
             this._myObject.pp_setScale(this._myScale);
         }
 

@@ -25,7 +25,7 @@ WL.registerComponent("rings-animator", {
         this._myRing.pp_setPosition([0, -this._myRing.pp_getScale()[1] - 0.001, 0]);
         this._mySmallerRing.pp_setPosition([0, -this._mySmallerRing.pp_getScale()[1] - 0.001, 0]);
 
-        this._myTimer = new PP.Timer(4);
+        this._myTimer = new PP.Timer(5);
     },
     moveUp: function (dt, fsm) {
         this._myTimer.update(dt);
@@ -33,8 +33,8 @@ WL.registerComponent("rings-animator", {
         let startPositionRing = -this._myRing.pp_getScale()[1] - 0.001;
         let startPositionSmallerRing = -this._mySmallerRing.pp_getScale()[1] - 0.001;
 
-        this._myRing.pp_setPosition([0, Math.pp_lerp(startPositionRing, this._myRingsHeight, this._myTimer.getPercentage()), 0]);
-        this._mySmallerRing.pp_setPosition([0, Math.pp_lerp(startPositionSmallerRing, this._myRingsHeight, this._myTimer.getPercentage()), 0]);
+        this._myRing.pp_setPosition([0, Math.pp_interpolate(startPositionRing, this._myRingsHeight, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut), 0]);
+        this._mySmallerRing.pp_setPosition([0, Math.pp_interpolate(startPositionSmallerRing, this._myRingsHeight, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut), 0]);
 
         if (this._myTimer.isDone()) {
             this._myTimer.reset();
