@@ -7,7 +7,7 @@ class MainFSM {
     }
 
     start() {
-        this._myFSM.start(MainStates.Intro);
+        this._myFSM.init(MainStates.Intro);
     }
 
     update(dt) {

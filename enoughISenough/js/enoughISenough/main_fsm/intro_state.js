@@ -18,7 +18,7 @@ class IntroState extends PP.State {
     }
 
     init(fsm) {
-        this._myFSM.start("wait_session");
+        this._myFSM.init("wait_session");
     }
 
     waitSession(dt, fsm) {

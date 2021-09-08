@@ -84,9 +84,12 @@ WL.registerComponent("hand-animator", {
     },
     isDone: function () {
         let done = true;
+
         for (let piece of this._myHandPieces) {
             done &= piece.isDone();
         }
+
+        return done;
     }
 });
 
@@ -113,7 +116,7 @@ class HandPiece {
     }
 
     update(dt, interpolateValue) {
-        if (this._myIsActive && this._myScale < 1) {
+        if (this._myIsActive && this._myScale != 1) {
             this._myTimer.update(dt);
 
             this._myScale = this._myTimer.getPercentage();

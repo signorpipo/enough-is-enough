@@ -47,7 +47,7 @@ PP.FSM = class FSM {
         }
     }
 
-    start(initStateID, initTransition = null) {
+    init(initStateID, initTransition = null) {
         let initTransitionObject = initTransition;
         if (initTransition && typeof initTransition == 'function') {
             initTransitionObject = {};

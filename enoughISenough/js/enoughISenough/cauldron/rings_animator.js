@@ -19,7 +19,7 @@ WL.registerComponent("rings-animator", {
         this._myFSM.update(dt);
     },
     begin: function () {
-        this._myFSM.start("move up", this.initMoveUp.bind(this));
+        this._myFSM.init("move up", this.initMoveUp.bind(this));
     },
     initMoveUp: function () {
         this._myRing.pp_setPosition([0, -this._myRing.pp_getScale()[1] - 0.001, 0]);
