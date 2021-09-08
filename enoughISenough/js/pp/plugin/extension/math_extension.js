@@ -21,3 +21,17 @@ Math.pp_mapToNewInterval = function (value, originIntervalLeft, originIntervalRi
     let newValue = newIntervalLeft + ((newIntervalRight - newIntervalLeft) / (originIntervalRight - originIntervalLeft)) * (value - originIntervalLeft);
     return newValue;
 };
+
+//Interval is [min, max)
+Math.pp_random = function (min = 0, max = 1) {
+    return Math.random() * (max - min) + min;
+};
+
+//Interval is [min, max]
+Math.pp_randomInt = function (min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+Math.pp_lerp = function (from, to, interpolationValue) {
+    return interpolationValue * (to - from) + from;
+};

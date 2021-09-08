@@ -325,7 +325,9 @@
                 {
                     "type": "enough-IS-enough-gateway",
                     "enough-IS-enough-gateway": {
-                        "_myRingsAnimator": "112"
+                        "_myRingsAnimator": "112",
+                        "_myLeftHandAnimator": "130",
+                        "_myRightHandAnimator": "131"
                     }
                 },
                 {
@@ -1662,7 +1664,7 @@
             "deleted": true
         },
         "130": {
-            "name": "Mesh",
+            "name": "Animator",
             "parent": "50",
             "components": [
                 null,
@@ -1721,8 +1723,8 @@
                     "type": "vr-mode-active-switch"
                 },
                 {
-                    "type": "hand-mesh",
-                    "hand-mesh": {
+                    "type": "hand-animator",
+                    "hand-animator": {
                         "_myHandPieceMesh": "128",
                         "_myHandPieceMaterial": "119"
                     },
@@ -1731,7 +1733,7 @@
             ]
         },
         "131": {
-            "name": "Mesh",
+            "name": "Animator",
             "parent": "58",
             "components": [
                 null,
@@ -1790,8 +1792,8 @@
                     "type": "vr-mode-active-switch"
                 },
                 {
-                    "type": "hand-mesh",
-                    "hand-mesh": {
+                    "type": "hand-animator",
+                    "hand-animator": {
                         "_myHandPieceMesh": "128",
                         "_myHandPieceMaterial": "119",
                         "_myHandedness": "right"

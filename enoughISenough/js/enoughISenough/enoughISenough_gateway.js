@@ -1,10 +1,14 @@
 WL.registerComponent("enough-IS-enough-gateway", {
-    _myRingsAnimator: { type: WL.Type.Object }
+    _myRingsAnimator: { type: WL.Type.Object },
+    _myLeftHandAnimator: { type: WL.Type.Object },
+    _myRightHandAnimator: { type: WL.Type.Object },
 }, {
     init: function () {
         this.enoughISenough = new enoughISenough();
 
         Global.myRingsAnimator = this._myRingsAnimator.pp_getComponent("rings-animator");
+        Global.myLeftHandAnimator = this._myLeftHandAnimator.pp_getComponent("hand-animator");
+        Global.myRightHandAnimator = this._myRightHandAnimator.pp_getComponent("hand-animator");
     },
     start: function () {
         PP.EasyTuneVariables.add(new PP.EasyTuneNumber("Float", 0, 0.1, 3));
@@ -19,5 +23,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
 });
 
 var Global = {
-    myRingsAnimator: null
+    myRingsAnimator: null,
+    myLeftHandAnimator: null,
+    myRightHandAnimator: null,
 };

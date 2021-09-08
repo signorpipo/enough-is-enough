@@ -5,7 +5,7 @@ WL.registerComponent("rings-animator", {
 }, {
     init: function () {
         this._myFSM = new PP.FSM();
-        this._myFSM.setDebugLogActive(true);
+        //this._myFSM.setDebugLogActive(true);
         this._myFSM.addState("move up", this.moveUp.bind(this));
         this._myFSM.addState("done");
 
@@ -23,12 +23,19 @@ WL.registerComponent("rings-animator", {
     },
     initMoveUp: function () {
         this._myRing.pp_setPosition([0, -this._myRing.pp_getScale()[1] - 0.001, 0]);
-        this._mySmallerRing.pp_setPosition([0, -this._myRing.pp_getScale()[1] - 0.001, 0]);
+        this._mySmallerRing.pp_setPosition([0, -this._mySmallerRing.pp_getScale()[1] - 0.001, 0]);
 
         this._myTimer = new PP.Timer(4);
     },
     moveUp: function (dt, fsm) {
         this._myTimer.update(dt);
+
+        let startPositionRing = -this._myRing.pp_getScale()[1] - 0.001;
+        let startPositionSmallerRing = -this._mySmallerRing.pp_getScale()[1] - 0.001;
+
+        this._myRing.pp_setPosition([0, Math.pp_lerp(startPositionRing, this._myRingsHeight, this._myTimer.getPercentage()), 0]);
+        this._mySmallerRing.pp_setPosition([0, Math.pp_lerp(startPositionSmallerRing, this._myRingsHeight, this._myTimer.getPercentage()), 0]);
+
         if (this._myTimer.isDone()) {
             this._myTimer.reset();
 

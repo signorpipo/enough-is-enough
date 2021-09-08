@@ -4,7 +4,7 @@ PP.Timer = class Timer {
         this._myOnEndCallbacks = new Map();
 
         this._myIsDone = false;
-        this._myActive = false;
+        this._myStarted = false;
 
         if (autoStart) {
             this.start();
@@ -13,29 +13,50 @@ PP.Timer = class Timer {
 
     start() {
         this.reset();
-        this._myActive = true;
+        this._myStarted = true;
     }
 
     reset() {
         this._myTimer = this._myDuration;
         this._myIsDone = false;
-        this._myActive = false;
+        this._myStarted = false;
     }
 
     update(dt) {
-        if (this._myActive && !this._myIsDone) {
+        if (this._myStarted && !this._myIsDone) {
             this._myTimer = Math.max(0, this._myTimer - dt);
             if (this._myTimer == 0) {
-                this._myIsDone = true;
-                for (let value of this._myOnEndCallbacks.values()) {
-                    value();
-                }
+                this._done();
             }
         }
     }
 
+    isRunning() {
+        return this._myStarted;
+    }
+
     isDone() {
-        return this._myActive && this._myIsDone;
+        return this.isRunning() && this._myIsDone;
+    }
+
+    getDuration() {
+        return this._myDuration;
+    }
+
+    getTimer() {
+        return this._myTimer;
+    }
+
+    getPercentage() {
+        let percentage = 1;
+        if (this._myTimer > 0) {
+            percentage = (this._myDuration - this._myTimer) / this._myDuration;
+        }
+        return Math.pp_clamp(percentage, 0, 1);
+    }
+
+    setDuration(duration) {
+        this._myDuration = duration;
     }
 
     onEnd(callback, id = null) {
@@ -46,7 +67,11 @@ PP.Timer = class Timer {
         this._myOnEndCallbacks.delete(id);
     }
 
-    setDuration(duration) {
-        this._myDuration = duration;
+    _done() {
+        this._myTimer = 0;
+        this._myIsDone = true;
+        for (let value of this._myOnEndCallbacks.values()) {
+            value();
+        }
     }
 };

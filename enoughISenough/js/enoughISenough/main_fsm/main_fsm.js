@@ -1,7 +1,7 @@
 class MainFSM {
     constructor() {
         this._myFSM = new PP.FSM();
-        this._myFSM.setDebugLogActive(true);
+        //this._myFSM.setDebugLogActive(true);
 
         this._buildFSM();
     }
