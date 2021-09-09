@@ -14,42 +14,33 @@ PP.AudioEvent = {
     UNLOCK: "unlock"
 };
 
-PP.AudioSetup = class AudioSetup {
-    constructor(audioFilePath = null) {
-        this.myAudioFilePath = audioFilePath.slice(0);
-
-        this.myLoop = false;
-        this.myAutoplay = false;
-        this.myVolume = 1.0;
-        this.myPitch = 1.0;
-
-        this.myPool = 5;
-    }
-};
-
 PP.AudioPlayer = class AudioPlayer {
     constructor(audioSetupOrAudioFilePath) {
-        let audioSetup = audioSetupOrAudioFilePath;
         if (typeof audioSetupOrAudioFilePath === 'string') {
-            audioSetup = new PP.AudioSetup(audioSetupOrAudioFile);
+            this._myAudioSetup = new PP.AudioSetup(audioSetupOrAudioFile);
+        } else {
+            this._myAudioSetup = audioSetupOrAudioFilePath.clone();
+        }
+
+        if (this._myAudioSetup.myRate != null) {
+            this._myAudioSetup.myPitch = this._myAudioSetup.myRate;
+        } else {
+            this._myAudioSetup.myRate = this._myAudioSetup.myPitch;
         }
 
         this._myAudio = new Howl({
-            src: [audioSetup.myAudioFilePath],
-            loop: audioSetup.myLoop,
-            volume: audioSetup.myVolume,
-            autoplay: audioSetup.myAutoplay,
-            rate: audioSetup.myPitch,
-            pool: audioSetup.myPool,
+            src: [this._myAudioSetup.myAudioFilePath],
+            loop: this._myAudioSetup.myLoop,
+            volume: this._myAudioSetup.myVolume,
+            autoplay: this._myAudioSetup.myAutoplay,
+            rate: this._myAudioSetup.myPitch,
+            pool: this._myAudioSetup.myPool,
             preload: true
         });
 
+        this._myAudio._pannerAttr.refDistance = this._myAudioSetup.myReferenceDistance;
+
         this._myLastID = null;
-
-        this._myIsSpatial = false;
-
-        this._myPosition = null;
-        this._myPitch = null;
 
         this._myCallbackMap = new Map();
         for (let eventKey in PP.AudioEvent) {
@@ -64,8 +55,8 @@ PP.AudioPlayer = class AudioPlayer {
         if (id != null) {
             this._myLastID = id;
 
-            this.updatePosition(this._myPosition, true);
-            this.updatePitch(this._myPitch, true);
+            this.updatePosition(this._myAudioSetup.myPosition, true);
+            this.updatePitch(this._myAudioSetup.myPitch, true);
         }
 
         return id;
@@ -86,7 +77,7 @@ PP.AudioPlayer = class AudioPlayer {
     updatePosition(position, updateOnlyLast = false) {
         this.setPosition(position);
 
-        if (this._myIsSpatial && position) {
+        if (this._myAudioSetup.mySpatial && position) {
             if (updateOnlyLast) {
                 this._myAudio.pos(position[0], position[1], position[2], this._myLastID);
             } else {
@@ -107,24 +98,25 @@ PP.AudioPlayer = class AudioPlayer {
         }
     }
 
+    updateRate(rate, updateOnlyLast = false) {
+        this.updatePitch(rate, updateOnlyLast);
+    }
+
     setSpatial(spatial) {
-        this._myIsSpatial = spatial;
+        this._myAudioSetup.mySpatial = spatial;
     }
 
     setPosition(position) {
-        this._myPosition = position;
+        this._myAudioSetup.myPosition = position;
     }
 
     setPitch(pitch) {
-        this._myPitch = pitch;
+        this._myAudioSetup.myPitch = pitch;
+        this._myAudioSetup.myRate = pitch;
     }
 
-    resetPosition() {
-        this.setPosition(null);
-    }
-
-    resetPitch() {
-        this.setPitch(null);
+    setRate(rate) {
+        this.setPitch(rate);
     }
 
     registerAudioEventListener(audioEvent, id, callback) {

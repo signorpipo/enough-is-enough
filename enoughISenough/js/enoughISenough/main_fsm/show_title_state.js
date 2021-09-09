@@ -25,11 +25,15 @@ class ShowTitleState extends PP.State {
         this._mySubtitle.pp_setScale(290);
         this._mySubtitle.pp_setRotation([40, 0, 0]);
 
+        this._myTitleCenterPosition = [0, 168, -184];
+        this._mySubtitleCenterPosition = [-7, 83, -143];
+
         this._myCharAudios = [];
         this._myCharAudios[0] = PP.AudioManager.createAudioPlayer(SfxID.BLABLA_2);
         this._myCharAudios[1] = PP.AudioManager.createAudioPlayer(SfxID.BLABLA_1);
 
         this._myNotEnoughAudio = PP.AudioManager.createAudioPlayer(SfxID.NOT_ENOUGH);
+        this._myNotEnoughAudio.setPosition(this._mySubtitleCenterPosition);
 
         this._myFSM = new PP.FSM();
         this._myFSM.setDebugLogActive(true);
@@ -60,8 +64,8 @@ class ShowTitleState extends PP.State {
     }
 
     prepareShowTitle(fsm) {
-        this._myCharAudios[0].setPosition(this._myTitle.pp_getPosition());
-        this._myCharAudios[1].setPosition(this._myTitle.pp_getPosition());
+        this._myCharAudios[0].setPosition(this._myTitleCenterPosition);
+        this._myCharAudios[1].setPosition(this._myTitleCenterPosition);
 
         this._myCharMinTime = 0.5;
         this._myCharMaxTime = 0.5;
@@ -98,8 +102,8 @@ class ShowTitleState extends PP.State {
     }
 
     prepareShowSub1(fsm) {
-        this._myCharAudios[0].setPosition(this._mySubtitle.pp_getPosition());
-        this._myCharAudios[1].setPosition(this._mySubtitle.pp_getPosition());
+        this._myCharAudios[0].setPosition(this._mySubtitleCenterPosition);
+        this._myCharAudios[1].setPosition(this._mySubtitleCenterPosition);
 
         this._myCharMinTime = 0.15;
         this._myCharMaxTime = 0.15;
@@ -150,8 +154,8 @@ class ShowTitleState extends PP.State {
     }
 
     prepareShowSub2(fsm) {
-        this._myCharAudios[0].setPosition(this._mySubtitle.pp_getPosition());
-        this._myCharAudios[1].setPosition(this._mySubtitle.pp_getPosition());
+        this._myCharAudios[0].setPosition(this._mySubtitleCenterPosition);
+        this._myCharAudios[1].setPosition(this._mySubtitleCenterPosition);
 
         this._myCharMinTime = 0.15;
         this._myCharMaxTime = 0.15;

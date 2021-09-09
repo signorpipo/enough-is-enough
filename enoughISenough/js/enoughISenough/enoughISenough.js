@@ -18,16 +18,19 @@ class enoughISenough {
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/NOT_ENOUGH.wav");
+            audioSetup.myReferenceDistance = 1000000;
             manager.addAudioSetup(SfxID.NOT_ENOUGH, audioSetup);
         }
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/blabla_1.wav");
+            audioSetup.myReferenceDistance = 1000000;
             manager.addAudioSetup(SfxID.BLABLA_1, audioSetup);
         }
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/blabla_2.wav");
+            audioSetup.myReferenceDistance = 1000000;
             manager.addAudioSetup(SfxID.BLABLA_2, audioSetup);
         }
 

@@ -9,8 +9,8 @@ class IntroState extends PP.State {
         this._myFSM.addState("show_title", new ShowTitleState());
         this._myFSM.addState("done");
 
-        //this._myFSM.addTransition("wait_session", "show_title", "end");
-        this._myFSM.addTransition("wait_session", "move_rings", "end", this.startRings.bind(this));
+        this._myFSM.addTransition("wait_session", "show_title", "end");
+        //this._myFSM.addTransition("wait_session", "move_rings", "end", this.startRings.bind(this));
         this._myFSM.addTransition("move_rings", "spawn_hands", "end", this.startHands.bind(this));
         this._myFSM.addTransition("spawn_hands", "show_title", "end");
         this._myFSM.addTransition("show_title", "done", "end");
