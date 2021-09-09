@@ -274,10 +274,18 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
     _stringifyItem(item) {
         if (typeof item === 'object') {
             let stringifiedItem = null;
-            let linesBetweenItems = (Array.isArray(item)) ? 0 : 2;
+            let linesBetweenItems = this._isArray(item) ? 0 : 2;
 
             try {
-                stringifiedItem = JSON.stringify(item, null, linesBetweenItems); //first try with default replacer
+                if (!this._isFloat32Array(item)) {
+                    stringifiedItem = JSON.stringify(item, null, linesBetweenItems); //first try with default replacer
+                } else {
+                    let arrayCopy = []; // I do this just cause Float32Array does not print like normal Array
+                    for (let i = 0; i < item.length; i++) {
+                        arrayCopy[i] = item[i];
+                    }
+                    stringifiedItem = JSON.stringify(arrayCopy, null, linesBetweenItems); //first try with default replacer
+                }
             } catch (error) {
                 let cache = new WeakSet();
                 stringifiedItem = JSON.stringify(item, function (key, value) {
@@ -291,7 +299,7 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
                 }, linesBetweenItems);
             }
 
-            if (Array.isArray(item)) {
+            if (this._isArray(item)) {
                 stringifiedItem = stringifiedItem.split(",").join(", ");
             }
 
@@ -683,6 +691,14 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
                 this._myPulseTimer = this._mySetup.myPulseDelay;
             }
         }
+    }
+
+    _isArray(item) {
+        return Array.isArray(item) || this._isFloat32Array(item);
+    }
+
+    _isFloat32Array(item) {
+        return item.constructor && item.constructor.name == "Float32Array";
     }
 };
 
