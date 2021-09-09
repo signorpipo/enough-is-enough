@@ -22,25 +22,19 @@ PP.AudioPlayer = class AudioPlayer {
             this._myAudioSetup = audioSetupOrAudioFilePath.clone();
         }
 
-        if (this._myAudioSetup.myRate != null) {
-            this._myAudioSetup.myPitch = this._myAudioSetup.myRate;
-        } else {
-            this._myAudioSetup.myRate = this._myAudioSetup.myPitch;
-        }
-
         this._myAudio = new Howl({
             src: [this._myAudioSetup.myAudioFilePath],
             loop: this._myAudioSetup.myLoop,
             volume: this._myAudioSetup.myVolume,
             autoplay: this._myAudioSetup.myAutoplay,
-            rate: this._myAudioSetup.myPitch,
+            rate: this._myAudioSetup.myRate,
             pool: this._myAudioSetup.myPool,
             preload: true
         });
 
         this._myAudio._pannerAttr.refDistance = this._myAudioSetup.myReferenceDistance;
 
-        this._myLastID = null;
+        this._myLastAudioID = null;
 
         this._myCallbackMap = new Map();
         for (let eventKey in PP.AudioEvent) {
@@ -51,15 +45,13 @@ PP.AudioPlayer = class AudioPlayer {
     }
 
     play() {
-        let id = this._myAudio.play();
-        if (id != null) {
-            this._myLastID = id;
+        let audioID = this._myAudio.play();
+        if (audioID != null) {
+            this._myLastAudioID = audioID;
 
             this.updatePosition(this._myAudioSetup.myPosition, true);
             this.updatePitch(this._myAudioSetup.myPitch, true);
         }
-
-        return id;
     }
 
     stop() {
@@ -79,7 +71,7 @@ PP.AudioPlayer = class AudioPlayer {
 
         if (this._myAudioSetup.mySpatial && position) {
             if (updateOnlyLast) {
-                this._myAudio.pos(position[0], position[1], position[2], this._myLastID);
+                this._myAudio.pos(position[0], position[1], position[2], this._myLastAudioID);
             } else {
                 this._myAudio.pos(position[0], position[1], position[2]);
             }
@@ -87,19 +79,19 @@ PP.AudioPlayer = class AudioPlayer {
     }
 
     updatePitch(pitch, updateOnlyLast = false) {
-        this.setPitch(pitch);
-
-        if (pitch != null) {
-            if (updateOnlyLast) {
-                this._myAudio.rate(pitch, this._myLastID);
-            } else {
-                this._myAudio.rate(pitch);
-            }
-        }
+        this.updateRate(pitch, updateOnlyLast);
     }
 
     updateRate(rate, updateOnlyLast = false) {
-        this.updatePitch(rate, updateOnlyLast);
+        this.setRate(rate);
+
+        if (rate != null) {
+            if (updateOnlyLast) {
+                this._myAudio.rate(rate, this._myLastAudioID);
+            } else {
+                this._myAudio.rate(rate);
+            }
+        }
     }
 
     setSpatial(spatial) {
@@ -112,28 +104,27 @@ PP.AudioPlayer = class AudioPlayer {
 
     setPitch(pitch) {
         this._myAudioSetup.myPitch = pitch;
-        this._myAudioSetup.myRate = pitch;
     }
 
     setRate(rate) {
-        this.setPitch(rate);
+        this._myAudioSetup.myRate = rate;
     }
 
-    registerAudioEventListener(audioEvent, id, callback) {
-        this._myCallbackMap.get(audioEvent).set(id, callback);
+    registerAudioEventListener(audioEvent, listenerID, callback) {
+        this._myCallbackMap.get(audioEvent).set(listenerID, callback);
     }
 
-    unregisterAudioEventListener(audioEvent, id) {
-        this._myCallbackMap.get(audioEvent).delete(id);
+    unregisterAudioEventListener(audioEvent, listenerID) {
+        this._myCallbackMap.get(audioEvent).delete(listenerID);
     }
 
     _addListeners() {
         for (let eventKey in PP.AudioEvent) {
             let event = PP.AudioEvent[eventKey];
-            this._myAudio.on(event, function (id) {
+            this._myAudio.on(event, function (audioID) {
                 let callbacks = this._myCallbackMap.get(event);
                 for (let value of callbacks.values()) {
-                    value(id);
+                    value(audioID);
                 }
             }.bind(this));
         }

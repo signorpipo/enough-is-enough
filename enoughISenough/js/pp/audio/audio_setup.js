@@ -6,8 +6,7 @@ PP.AudioSetup = class AudioSetup {
         this.myAutoplay = false;
 
         this.myVolume = 1.0;
-        this.myPitch = 1.0; //From 0.5 to 4.0
-        this.myRate = null; //If u specify a value for the rate, it will override the pitch. From 0.5 to 4.0
+        this._myRate = 1.0; //From 0.5 to 4.0
 
         this.myPool = 5;
 
@@ -37,5 +36,21 @@ PP.AudioSetup = class AudioSetup {
         audioSetup.myReferenceDistance = this.myReferenceDistance;
 
         return audioSetup;
+    }
+
+    get myPitch() {
+        return this._myRate;
+    }
+
+    get myRate() {
+        return this._myRate;
+    }
+
+    set myPitch(pitch) {
+        this._myRate = pitch;
+    }
+
+    set myRate(rate) {
+        this._myRate = rate;
     }
 };

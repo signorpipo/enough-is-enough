@@ -36,6 +36,7 @@ class enoughISenough {
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/ring_rise.wav");
+            audioSetup.myRate = 0.8;
             manager.addAudioSetup(SfxID.RING_RISE, audioSetup);
         }
     }
