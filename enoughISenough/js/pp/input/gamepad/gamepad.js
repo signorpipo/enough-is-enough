@@ -213,7 +213,7 @@ PP.Gamepad = class Gamepad {
      * @param {number} intensity range from 0 to 1
      * @param {number} duration specified in seconds, 0 means 1 frame
      */
-    pulse(intensity, duration) {
+    pulse(intensity, duration = 0) {
         this._myPulseData.myIntensity = Math.min(Math.max(intensity, 0), 1); //clamp 
         this._myPulseData.myDuration = Math.max(duration, 0);
     }

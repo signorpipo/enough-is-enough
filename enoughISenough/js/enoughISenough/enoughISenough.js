@@ -39,6 +39,12 @@ class enoughISenough {
             audioSetup.myRate = 0.8;
             manager.addAudioSetup(SfxID.RING_RISE, audioSetup);
         }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/hand_piece_appear.wav");
+            audioSetup.myVolume = 0.2;
+            manager.addAudioSetup(SfxID.HAND_PIECE_APPEAR, audioSetup);
+        }
     }
 }
 
@@ -46,5 +52,6 @@ var SfxID = {
     NOT_ENOUGH: 0,
     BLABLA_1: 1,
     BLABLA_2: 2,
-    RING_RISE: 3
+    RING_RISE: 3,
+    HAND_PIECE_APPEAR: 4
 };

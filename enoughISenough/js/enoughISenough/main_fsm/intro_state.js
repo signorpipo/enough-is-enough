@@ -9,11 +9,13 @@ class IntroState extends PP.State {
         this._myFSM.addState("show_title", new ShowTitleState());
         this._myFSM.addState("done");
 
-        this._myFSM.addTransition("wait_session", "show_title", "end");
-        //this._myFSM.addTransition("wait_session", "move_rings", "end", this.startRings.bind(this));
+        //this._myFSM.addTransition("wait_session", "show_title", "end");
+        this._myFSM.addTransition("wait_session", "move_rings", "end", this.startRings.bind(this));
         this._myFSM.addTransition("move_rings", "spawn_hands", "end", this.startHands.bind(this));
         this._myFSM.addTransition("spawn_hands", "show_title", "end");
         this._myFSM.addTransition("show_title", "done", "end");
+
+        this._myTimer = new PP.Timer(2);
     }
 
     update(dt, fsm) {
@@ -26,16 +28,25 @@ class IntroState extends PP.State {
 
     waitSession(dt, fsm) {
         if (WL.xrSession) {
+            this._myTimer.update(dt);
+        }
+
+        if (this._myTimer.isDone()) {
             fsm.perform("end");
         }
     }
 
     startRings(fsm) {
         Global.myRingsAnimator.begin();
+        this._myTimer.start(0.75);
     }
 
     checkRingsCompleted(dt, fsm) {
         if (Global.myRingsAnimator.isDone()) {
+            this._myTimer.update(dt);
+        }
+
+        if (this._myTimer.isDone()) {
             fsm.perform("end");
         }
     }
@@ -50,6 +61,8 @@ class IntroState extends PP.State {
             this._myLeftHandTimer = new PP.Timer(timer);
             this._myRightHandTimer = new PP.Timer(0);
         }
+
+        this._myTimer.start(1.25);
     }
 
     handsUpdate(dt, fsm) {
@@ -67,6 +80,10 @@ class IntroState extends PP.State {
         }
 
         if (Global.myLeftHandAnimator.isDone() && Global.myRightHandAnimator.isDone()) {
+            this._myTimer.update(dt);
+        }
+
+        if (this._myTimer.isDone()) {
             fsm.perform("end");
         }
     }

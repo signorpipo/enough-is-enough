@@ -51,6 +51,7 @@ WL.registerComponent("hand-animator", {
         this._myGamepad = PP.Gamepads[PP.InputUtils.getHandednessByIndex(this._myHandedness)];
 
         this._myAppearList = [];
+        this._myStarted = false;
     },
     update: function (dt) {
         for (let piece of this._myHandPieces) {
@@ -65,8 +66,13 @@ WL.registerComponent("hand-animator", {
                 this._myAppearList.shift();
             }
         }
+
+        if (this._myStarted && !this.isDone()) {
+            this._myGamepad.pulse(0.5);
+        }
     },
     begin: function () {
+        this._myStarted = true;
         this._myAppearList = [];
 
         let indexList = [];
@@ -108,11 +114,16 @@ class HandPiece {
         this._myObject.pp_setScale(this._myScale);
 
         this._myTimer = new PP.Timer(1);
+
+        this._myAudio = PP.AudioManager.createAudioPlayer(SfxID.HAND_PIECE_APPEAR);
+        this._myAudio.setPitch(Math.pp_random(0.7, 1));
     }
 
     start() {
         this._myIsActive = true;
         this._myObject.pp_setActive(this._myIsActive);
+
+        this._myAudio.play();
     }
 
     update(dt, interpolateValue) {
@@ -125,6 +136,8 @@ class HandPiece {
 
         glMatrix.vec3.lerp(this._myCurrentPosition, this._myEndPosition, this._myStartPosition, interpolateValue);
         this._myObject.pp_setPositionLocal(this._myCurrentPosition);
+
+        this._myAudio.updatePosition(this._myObject.pp_getPosition());
     }
 
     isDone() {
