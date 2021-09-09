@@ -1,9 +1,9 @@
 class ShowTitleState extends PP.State {
     constructor() {
         super();
-
-        this._myTitle = WL.scene.addObject(Global.myScene);
-        this._mySubtitle = WL.scene.addObject(Global.myScene);
+        this._myTitlesObject = WL.scene.addObject(Global.myScene);
+        this._myTitle = WL.scene.addObject(this._myTitlesObject);
+        this._mySubtitle = WL.scene.addObject(this._myTitlesObject);
 
         this._myTitleTextComponent = this._myTitle.addComponent('text');
         this._myTitleTextComponent.alignment = WL.Alignment.Left;
@@ -148,12 +148,21 @@ class ShowTitleState extends PP.State {
 
     showSubIS(dt, fsm) {
         this._myCharTimer.update(dt);
+
+        let rumbleValue = 0.04;
+        Global.myPlayerRumbleObject.pp_setPosition([Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue)]);
+        rumbleValue = 8;
+        this._myTitlesObject.pp_setPosition([Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue)]);
+
         if (this._myCharTimer.isDone()) {
             fsm.perform("end");
         }
     }
 
     prepareShowSub2(fsm) {
+        Global.myPlayerRumbleObject.pp_resetPosition();
+        this._myTitlesObject.pp_resetPosition();
+
         this._myCharAudios[0].setPosition(this._mySubtitleCenterPosition);
         this._myCharAudios[1].setPosition(this._mySubtitleCenterPosition);
 

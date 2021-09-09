@@ -1,4 +1,5 @@
 WL.registerComponent("enough-IS-enough-gateway", {
+    _myPlayerRumbleObject: { type: WL.Type.Object },
     _myRingsAnimator: { type: WL.Type.Object },
     _myLeftHandAnimator: { type: WL.Type.Object },
     _myRightHandAnimator: { type: WL.Type.Object },
@@ -8,6 +9,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
         Global.myScene = this.object;
 
+        Global.myPlayerRumbleObject = this._myPlayerRumbleObject;
         Global.myRingsAnimator = this._myRingsAnimator.pp_getComponent("rings-animator");
         Global.myLeftHandAnimator = this._myLeftHandAnimator.pp_getComponent("hand-animator");
         Global.myRightHandAnimator = this._myRightHandAnimator.pp_getComponent("hand-animator");
@@ -26,6 +28,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
 var Global = {
     myScene: null,
+    myPlayerRumbleObject: null,
     myRingsAnimator: null,
     myLeftHandAnimator: null,
     myRightHandAnimator: null,

@@ -115,7 +115,7 @@
         },
         "18": {
             "name": "Eye Left",
-            "parent": "84",
+            "parent": "138",
             "components": [
                 {
                     "type": "view"
@@ -128,17 +128,17 @@
                 }
             ],
             "transformation": [
-                1.0,
+                1.0000133,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                1.0000003,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                1.0000152,
                 0.0,
                 0.0,
                 0.0,
@@ -148,7 +148,7 @@
         },
         "19": {
             "name": "Eye Right",
-            "parent": "84",
+            "parent": "138",
             "components": [
                 {
                     "type": "view"
@@ -161,17 +161,17 @@
                 }
             ],
             "transformation": [
-                1.0,
+                1.0000133,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                1.0000003,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                1.0000152,
                 0.0,
                 0.0,
                 0.0,
@@ -322,7 +322,9 @@
                     "enough-IS-enough-gateway": {
                         "_myRingsAnimator": "112",
                         "_myLeftHandAnimator": "130",
-                        "_myRightHandAnimator": "131"
+                        "_myRightHandAnimator": "131",
+                        "_myRumbleObject": "136",
+                        "_myPlayerRumbleObject": "138"
                     }
                 },
                 {
@@ -355,7 +357,7 @@
                 {
                     "type": "pp-easy-tune",
                     "pp-easy-tune": {
-                        "_myShowVisibilityButton": true,
+                        "_myShowVisibilityButton": false,
                         "_myHandedness": "left",
                         "_myPlaneMaterial": "66",
                         "_myTextMaterial": "DefaultFontMaterial",
@@ -373,7 +375,8 @@
                         "_myHandedness": "left",
                         "_myShowOnStart": false,
                         "_myOverrideBrowserConsole": true,
-                        "_myPulseOnNewMessage": "none"
+                        "_myPulseOnNewMessage": "none",
+                        "_myShowVisibilityButton": false
                     },
                     "active": true
                 }
@@ -1271,6 +1274,9 @@
                         "text": "MR NOT",
                         "material": "115"
                     }
+                },
+                {
+                    "type": "pp-easy-transform"
                 }
             ],
             "transformation": [
@@ -1335,10 +1341,8 @@
                     "text": {
                         "text": "enough IS enough",
                         "material": "117"
-                    }
-                },
-                {
-                    "type": "pp-easy-transform"
+                    },
+                    "active": true
                 }
             ],
             "transformation": [
@@ -1856,7 +1860,8 @@
                         "material": "115",
                         "alignment": "left",
                         "justification": "line"
-                    }
+                    },
+                    "active": true
                 }
             ],
             "transformation": [
@@ -1889,10 +1894,8 @@
                         "material": "117",
                         "alignment": "left",
                         "justification": "line"
-                    }
-                },
-                {
-                    "type": "pp-easy-transform"
+                    },
+                    "active": true
                 }
             ],
             "transformation": [
@@ -1914,6 +1917,68 @@
                 1.0
             ],
             "parent": "122"
+        },
+        "136": {
+            "name": "Rumble Space",
+            "parent": "14",
+            "deleted": true
+        },
+        "137": {
+            "name": "MR NOT",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "text": "MR NOT",
+                        "material": "115"
+                    }
+                },
+                {
+                    "type": "pp-easy-transform"
+                }
+            ],
+            "transformation": [
+                40.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                30.6417579,
+                25.7115287,
+                0.0,
+                0.0,
+                -25.7115287,
+                30.6417579,
+                0.0,
+                2.0,
+                11.6289215,
+                -10.2567462,
+                1.0
+            ],
+            "parent": "32",
+            "deleted": true
+        },
+        "138": {
+            "name": "Rumble Space",
+            "parent": "84",
+            "transformation": [
+                0.9999866,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.9999996,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.9999847,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
         }
     },
     "meshes": {
