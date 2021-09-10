@@ -194,6 +194,6 @@ PP.ConsoleVRWidgetSetup = class ConsoleVRWidgetSetup {
         this.myPulseIntensity = 0.3;
         this.myPulseDuration = 0.085;
 
-        this.myClearOriginalConsoleWhenClearPressed = true;
+        this.myClearBrowserConsoleWhenClearPressed = true;
     }
 };

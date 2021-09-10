@@ -338,6 +338,9 @@
                         "_myTitle": "115",
                         "_mySubtitle": "117"
                     }
+                },
+                {
+                    "type": "pp-mute-all"
                 }
             ]
         },
@@ -375,7 +378,7 @@
                         "_myHandedness": "left",
                         "_myShowOnStart": false,
                         "_myOverrideBrowserConsole": true,
-                        "_myPulseOnNewMessage": "none",
+                        "_myPulseOnNewMessage": "never",
                         "_myShowVisibilityButton": false
                     },
                     "active": true

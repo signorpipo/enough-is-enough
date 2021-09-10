@@ -61,6 +61,7 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
         this._myOldBrowserConsole[PP.ConsoleVRWidget.ConsoleFunction.INFO] = console.info;
         this._myOldBrowserConsole[PP.ConsoleVRWidget.ConsoleFunction.DEBUG] = console.debug;
         this._myOldBrowserConsole[PP.ConsoleVRWidget.ConsoleFunction.ASSERT] = console.assert;
+        this._myOldBrowserConsoleClear = console.clear;
 
         if (this._myAdditionalSetup.myOverrideBrowserConsole) {
             console.log = this._consolePrint.bind(this, PP.ConsoleVRWidget.ConsoleFunction.LOG, PP.ConsoleVRWidget.Sender.BROWSER_CONSOLE);
@@ -69,6 +70,7 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
             console.info = this._consolePrint.bind(this, PP.ConsoleVRWidget.ConsoleFunction.INFO, PP.ConsoleVRWidget.Sender.BROWSER_CONSOLE);
             console.debug = this._consolePrint.bind(this, PP.ConsoleVRWidget.ConsoleFunction.DEBUG, PP.ConsoleVRWidget.Sender.BROWSER_CONSOLE);
             console.assert = this._consolePrint.bind(this, PP.ConsoleVRWidget.ConsoleFunction.ASSERT, PP.ConsoleVRWidget.Sender.BROWSER_CONSOLE);
+            console.clear = this._clearConsole.bind(this, true, PP.ConsoleVRWidget.Sender.BROWSER_CONSOLE);
 
             window.addEventListener('error', function (errorEvent) {
                 this._consolePrint(PP.ConsoleVRWidget.ConsoleFunction.ERROR, PP.ConsoleVRWidget.Sender.WINDOW, "Uncaught", errorEvent.error.stack);
@@ -85,6 +87,7 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
         this._myOldConsoleVR[PP.ConsoleVRWidget.ConsoleFunction.INFO] = PP.ConsoleVR.info;
         this._myOldConsoleVR[PP.ConsoleVRWidget.ConsoleFunction.DEBUG] = PP.ConsoleVR.debug;
         this._myOldConsoleVR[PP.ConsoleVRWidget.ConsoleFunction.ASSERT] = PP.ConsoleVR.assert;
+        this._myOldConsoleVRClear = PP.ConsoleVR.clear;
 
         PP.ConsoleVR.log = this._consolePrint.bind(this, PP.ConsoleVRWidget.ConsoleFunction.LOG, PP.ConsoleVRWidget.Sender.CONSOLE_VR);
         PP.ConsoleVR.error = this._consolePrint.bind(this, PP.ConsoleVRWidget.ConsoleFunction.ERROR, PP.ConsoleVRWidget.Sender.CONSOLE_VR);
@@ -92,6 +95,7 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
         PP.ConsoleVR.info = this._consolePrint.bind(this, PP.ConsoleVRWidget.ConsoleFunction.INFO, PP.ConsoleVRWidget.Sender.CONSOLE_VR);
         PP.ConsoleVR.debug = this._consolePrint.bind(this, PP.ConsoleVRWidget.ConsoleFunction.DEBUG, PP.ConsoleVRWidget.Sender.CONSOLE_VR);
         PP.ConsoleVR.assert = this._consolePrint.bind(this, PP.ConsoleVRWidget.ConsoleFunction.ASSERT, PP.ConsoleVRWidget.Sender.CONSOLE_VR);
+        PP.ConsoleVR.clear = this._clearConsole.bind(this, true, PP.ConsoleVRWidget.Sender.CONSOLE_VR);
     }
 
     update(dt) {
@@ -549,14 +553,25 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
         }
     }
 
-    _clearConsole() {
-        if (this._myWidgetFrame.myIsWidgetVisible) {
+    _clearConsole(codeDrivenClear = false, sender = null) {
+        if (this._myWidgetFrame.myIsWidgetVisible || codeDrivenClear) {
             this._myMessages = [];
             this._clampScrollOffset();
             this._updateAllTexts();
 
-            if (this._mySetup.myClearOriginalConsoleWhenClearPressed) {
-                console.clear();
+            if (codeDrivenClear) {
+                switch (sender) {
+                    case PP.ConsoleVRWidget.Sender.BROWSER_CONSOLE:
+                        this._myOldBrowserConsoleClear.apply(console);
+                        break;
+                    case PP.ConsoleVRWidget.Sender.CONSOLE_VR:
+                        this._myOldConsoleVRClear.apply(PP.ConsoleVR);
+                        break;
+                    default:
+                        break;
+                }
+            } else if (this._mySetup.myClearBrowserConsoleWhenClearPressed) {
+                PP.ConsoleVR._myRealClear();
             }
         }
     }
@@ -718,7 +733,7 @@ PP.ConsoleVRWidget.Sender = {
 };
 
 PP.ConsoleVRWidget.PulseOnNewMessage = {
-    NONE: 0,
+    NEVER: 0,
     ALWAYS: 1,
     WHEN_HIDDEN: 2,
 };
@@ -756,29 +771,51 @@ PP.ConsoleVRWidget.Message = class Message {
 };
 
 PP.ConsoleVR = {
-    realLog: console.log,
-    realError: console.error,
-    realWarn: console.warn,
-    realInfo: console.info,
-    realDebug: console.debug,
-    realAssert: console.assert,
+    _myRealLog: console.log,
+    _myRealError: console.error,
+    _myRealWarn: console.warn,
+    _myRealInfo: console.info,
+    _myRealDebug: console.debug,
+    _myRealAssert: console.assert,
+    _myRealClear: console.clear,
+    _myAffectBrowserConsole: true,
 
     log: function (...args) {
-        this.realLog.apply(console, args);
+        if (this._myAffectBrowserConsole) {
+            this._myRealLog.apply(console, args);
+        }
     },
     error: function (...args) {
-        this.realError.apply(console, args);
+        if (this._myAffectBrowserConsole) {
+            this._myRealError.apply(console, args);
+        }
     },
     warn: function (...args) {
-        this.realWarn.apply(console, args);
+        if (this._myAffectBrowserConsole) {
+            this._myRealWarn.apply(console, args);
+        }
     },
     info: function (...args) {
-        this.realInfo.apply(console, args);
+        if (this._myAffectBrowserConsole) {
+            this._myRealInfo.apply(console, args);
+        }
     },
     debug: function (...args) {
-        this.realDebug.apply(console, args);
+        if (this._myAffectBrowserConsole) {
+            this._myRealDebug.apply(console, args);
+        }
     },
     assert: function (...args) {
-        this.realAssert.apply(console, args);
+        if (this._myAffectBrowserConsole) {
+            this._myRealAssert.apply(console, args);
+        }
+    },
+    clear: function () {
+        if (this._myAffectBrowserConsole) {
+            this._myRealClear.apply(console);
+        }
+    },
+    setAffectBrowserConsole: function (affectBrowserConsole) {
+        this._myAffectBrowserConsole = affectBrowserConsole;
     }
 };
