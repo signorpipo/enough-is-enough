@@ -344,7 +344,8 @@
                     "active": false
                 },
                 {
-                    "type": "clear-console-on-session"
+                    "type": "clear-console-on-session",
+                    "active": false
                 }
             ]
         },

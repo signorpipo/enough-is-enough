@@ -36,7 +36,7 @@ class ShowTitleState extends PP.State {
         this._myNotEnoughAudio.setPosition(this._mySubtitleCenterPosition);
 
         this._myFSM = new PP.FSM();
-        this._myFSM.setDebugLogActive(true);
+        this._myFSM.setDebugLogActive(true, "Show Title");
         this._myFSM.addState("show_title", this.showTitle.bind(this));
         this._myFSM.addState("show_sub_1", this.showSub1.bind(this));
         this._myFSM.addState("show_sub_IS", this.showSubIS.bind(this));

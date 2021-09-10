@@ -32,6 +32,7 @@ PP.FSM = class FSM {
         this._myTransitionMap = new Map();
 
         this._myDebugLogActive = false;
+        this._myDebugLogName = "FSM";
     }
 
     addState(stateID, state = null) {
@@ -79,8 +80,10 @@ PP.FSM = class FSM {
             }
 
             if (this._myDebugLogActive) {
-                console.log("FSM - Init:", initStateID);
+                console.log(this._myDebugLogName, "- Init:", initStateID);
             }
+        } else if (this._myDebugLogActive) {
+            console.warn(this._myDebugLogName, "- Init state not found:", initStateID);
         }
     }
 
@@ -114,15 +117,15 @@ PP.FSM = class FSM {
                 this._myCurrentStateData = transitionToPerform.myToStateData;
 
                 if (this._myDebugLogActive) {
-                    console.log("FSM - From:", fromState.myStateID, "- To:", toState.myStateID, "- With:", transitionID);
+                    console.log(this._myDebugLogName, "- From:", fromState.myStateID, "- To:", toState.myStateID, "- With:", transitionID);
                 }
 
                 return true;
             } else if (this._myDebugLogActive) {
-                console.log("FSM - No Transition:", transitionID, "- From:", this._myCurrentStateData.myStateID);
+                console.warn(this._myDebugLogName, "- No Transition:", transitionID, "- From:", this._myCurrentStateData.myStateID);
             }
         } else if (this._myDebugLogActive) {
-            console.log("FSM - FSM not started yet");
+            console.warn(this._myDebugLogName, "- FSM not initialized yet");
         }
 
         return false;
@@ -237,8 +240,11 @@ PP.FSM = class FSM {
         return hasTransition;
     }
 
-    setDebugLogActive(active) {
+    setDebugLogActive(active, debugLogName = null) {
         this._myDebugLogActive = active;
+        if (debugLogName) {
+            this._myDebugLogName = "FSM: ".concat(debugLogName);
+        }
     }
 
     _getTransitionMapFromState(fromStateID) {
