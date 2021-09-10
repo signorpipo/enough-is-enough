@@ -32,39 +32,72 @@ PP.ButtonEvent = {
 PP.ButtonInfo = class ButtonInfo {
     constructor() {
         this.myIsPressed = false;
-        this.myIsPrevPressed = false;
+        this.myPrevIsPressed = false;
 
         this.myIsTouched = false;
-        this.myIsPrevTouched = false;
+        this.myPrevIsTouched = false;
 
         this.myValue = 0.0;
         this.myPrevValue = 0.0;
+
+        this.myTimePressed = 0;
+        this.myPrevTimePressed = 0;
+
+        this.myTimeNotPressed = 0;
+        this.myPrevTimeNotPressed = 0;
+
+        this.myTimeTouched = 0;
+        this.myPrevTimeTouched = 0;
+
+        this.myTimeNotTouched = 0;
+        this.myPrevTimeNotTouched = 0;
+
+        this.myFastPressCount = 0;
+        this.myPrevFastPressCount = 0;
+
+        this.myFastTouchCount = 0;
+        this.myPrevFastTouchCount = 0;
     }
 
     isPressStart() {
-        return this.myIsPressed && !this.myIsPrevPressed;
+        return this.myIsPressed && !this.myPrevIsPressed;
     }
 
-    isPressEnd() {
-        return !this.myIsPressed && this.myIsPrevPressed;
+    isPressEnd(fastPressCount = null) {
+        return (!this.myIsPressed && this.myPrevIsPressed) && (fastPressCount == null || this.myFastPressCount == fastPressCount);
     }
 
     isTouchStart() {
-        return this.myIsTouched && !this.myIsPrevTouched;
+        return this.myIsTouched && !this.myPrevIsTouched;
     }
 
-    isTouchEnd() {
-        return !this.myIsTouched && this.myIsPrevTouched;
+    isTouchEnd(fastTouchCount = null) {
+        return (!this.myIsTouched && this.myPrevIsTouched) && (fastTouchCount == null || this.myFastTouchCount == fastTouchCount);
     }
 
     clone() {
         let value = new ButtonInfo();
         value.myIsPressed = this.myIsPressed;
-        value.myIsPrevPressed = this.myIsPrevPressed;
+        value.myPrevIsPressed = this.myPrevIsPressed;
         value.myIsTouched = this.myIsTouched;
-        value.myIsPrevTouched = this.myIsPrevTouched;
+        value.myPrevIsTouched = this.myPrevIsTouched;
         value.myValue = this.myValue;
         value.myPrevValue = this.myPrevValue;
+
+        value.myTimePressed = this.myTimePressed;
+        value.myPrevTimePressed = this.myPrevTimePressed;
+        value.myTimeNotPressed = this.myTimeNotPressed;
+        value.myPrevTimeNotPressed = this.myPrevTimeNotPressed;
+
+        value.myTimeTouched = this.myTimeTouched;
+        value.myPrevTimeTouched = this.myPrevTimeTouched;
+        value.myTimeNotTouched = this.myTimeNotTouched;
+        value.myPrevTimeNotTouched = this.myPrevTimeNotTouched;
+
+        value.myFastPressCount = this.myFastPressCount;
+        value.myPrevFastPressCount = this.myPrevFastPressCount;
+        value.myFastTouchCount = this.myFastTouchCount;
+        value.myPrevFastTouchCount = this.myPrevFastTouchCount;
 
         return value;
     }
@@ -147,6 +180,10 @@ PP.Gamepad = class Gamepad {
         }
 
         this._myPulseData = new PP.PulseData();
+
+        //Setup
+        this._myFastPressMaxDelay = 0.3;
+        this._myFastTouchMaxDelay = 0.3;
     }
 
     /**
@@ -234,7 +271,7 @@ PP.Gamepad = class Gamepad {
     update(dt) {
         this._preUpdateButtonInfos();
         this._updateButtonInfos();
-        this._postUpdateButtonInfos();
+        this._postUpdateButtonInfos(dt);
 
         this._preUpdateAxesInfos();
         this._updateAxesInfos();
@@ -245,8 +282,8 @@ PP.Gamepad = class Gamepad {
 
     _preUpdateButtonInfos() {
         this.myButtonInfos.forEach(function (item) {
-            item.myIsPrevPressed = item.myIsPressed;
-            item.myIsPrevTouched = item.myIsTouched;
+            item.myPrevIsPressed = item.myIsPressed;
+            item.myPrevIsTouched = item.myIsTouched;
             item.myPrevValue = item.myValue;
         });
     }
@@ -293,18 +330,72 @@ PP.Gamepad = class Gamepad {
         button.myValue = internalButton.value;
     }
 
-    _postUpdateButtonInfos() {
+    _postUpdateButtonInfos(dt) {
+        this.myButtonInfos.forEach(function (item) {
+            if (item.myIsPressed) {
+                item.myTimePressed += dt;
+                if (!item.myPrevIsPressed) {
+                    item.myPrevTimeNotPressed = item.myTimeNotPressed;
+                    item.myTimeNotPressed = 0;
+                }
+
+                if (item.myPrevTimeNotPressed + item.myTimePressed > this._myFastPressMaxDelay && item.myFastPressCount > 0) {
+                    item.myPrevFastPressCount = item.myFastPressCount;
+                    item.myFastPressCount = 0;
+                }
+            } else {
+                item.myTimeNotPressed += dt;
+                if (item.myPrevIsPressed) {
+                    item.myFastPressCount += 1;
+
+                    item.myPrevTimePressed = item.myTimePressed;
+                    item.myTimePressed = 0;
+                }
+
+                if (item.myTimeNotPressed > this._myFastPressMaxDelay && item.myFastPressCount > 0) {
+                    item.myPrevFastPressCount = item.myFastPressCount;
+                    item.myFastPressCount = 0;
+                }
+            }
+
+            if (item.myIsTouched) {
+                item.myTimeTouched += dt;
+                if (!item.myPrevIsTouched) {
+                    item.myPrevTimeNotTouched = item.myTimeNotTouched;
+                    item.myTimeNotTouched = 0;
+                }
+
+                if (item.myPrevTimeNotTouched + item.myTimeTouched > this._myFastTouchMaxDelay && item.myFastTouchCount > 0) {
+                    item.myPrevFastTouchCount = item.myFastTouchCount;
+                    item.myFastTouchCount = 0;
+                }
+            } else {
+                item.myTimeNotTouched += dt;
+                if (item.myPrevIsTouched) {
+                    item.myFastTouchCount += 1;
+
+                    item.myPrevTimeTouched = item.myTimeTouched;
+                    item.myTimeTouched = 0;
+                }
+
+                if (item.myTimeNotTouched > this._myFastTouchMaxDelay && item.myFastTouchCount > 0) {
+                    item.myPrevFastTouchCount = item.myFastTouchCount;
+                    item.myFastTouchCount = 0;
+                }
+            }
+        }.bind(this));
+
         for (let typeKey in PP.ButtonType) {
             let buttonInfo = this.myButtonInfos[PP.ButtonType[typeKey]];
             let buttonCallbacks = this._myButtonCallbacks[PP.ButtonType[typeKey]];
 
             //PRESSED
-            if (buttonInfo.myIsPressed && !buttonInfo.myIsPrevPressed) {
+            if (buttonInfo.myIsPressed && !buttonInfo.myPrevIsPressed) {
                 let callbacksMap = buttonCallbacks[PP.ButtonEvent.PRESS_START];
                 this._triggerCallbacks(callbacksMap, buttonInfo);
             }
 
-            if (!buttonInfo.myIsPressed && buttonInfo.myIsPrevPressed) {
+            if (!buttonInfo.myIsPressed && buttonInfo.myPrevIsPressed) {
                 let callbacksMap = buttonCallbacks[PP.ButtonEvent.PRESS_END];
                 this._triggerCallbacks(callbacksMap, buttonInfo);
             }
@@ -318,12 +409,12 @@ PP.Gamepad = class Gamepad {
             }
 
             //TOUCHED
-            if (buttonInfo.myIsTouched && !buttonInfo.myIsPrevTouched) {
+            if (buttonInfo.myIsTouched && !buttonInfo.myPrevIsTouched) {
                 let callbacksMap = buttonCallbacks[PP.ButtonEvent.TOUCH_START];
                 this._triggerCallbacks(callbacksMap, buttonInfo);
             }
 
-            if (!buttonInfo.myIsTouched && buttonInfo.myIsPrevTouched) {
+            if (!buttonInfo.myIsTouched && buttonInfo.myPrevIsTouched) {
                 let callbacksMap = buttonCallbacks[PP.ButtonEvent.TOUCH_END];
                 this._triggerCallbacks(callbacksMap, buttonInfo);
             }
