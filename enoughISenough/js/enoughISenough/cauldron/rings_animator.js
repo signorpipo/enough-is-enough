@@ -51,7 +51,14 @@ WL.registerComponent("rings-animator", {
             fsm.perform("end");
         }
     },
-    isDone() {
+    isDone: function () {
         return this._myFSM.isInState("done");
+    },
+    skip: function () {
+        this._myRing.pp_setPosition([0, this._myRingsHeight, 0]);
+        this._mySmallerRing.pp_setPosition([0, this._myRingsHeight, 0]);
+        this._myRingAudio.stop();
+
+        this._myFSM.perform("end");
     }
 });

@@ -6,7 +6,7 @@ class enoughISenough {
         this.prepareSFXSetups();
 
         this._myMainFSM = new MainFSM();
-        this._myMainFSM.start();
+        this._myMainFSM.init();
     }
 
     update(dt) {

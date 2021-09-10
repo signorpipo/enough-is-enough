@@ -340,7 +340,11 @@
                     }
                 },
                 {
-                    "type": "pp-mute-all"
+                    "type": "pp-mute-all",
+                    "active": false
+                },
+                {
+                    "type": "clear-console-on-session"
                 }
             ]
         },

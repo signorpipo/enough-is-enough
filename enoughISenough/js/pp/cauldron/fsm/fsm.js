@@ -7,6 +7,22 @@
         transitionFunction(fsm, fromStateData, toStateData, transitionData)
 */
 
+PP.StateData = class StateData {
+    constructor(stateID, stateObject) {
+        this.myStateID = stateID;
+        this.myStateObject = stateObject;
+    }
+};
+
+PP.TransitionData = class TransitionData {
+    constructor(transitionID, fromStateData, toStateData, transitionObject) {
+        this.myTransitionID = transitionID;
+        this.myFromStateData = fromStateData;
+        this.myToStateData = toStateData;
+        this.myTransitionObject = transitionObject;
+    }
+};
+
 PP.FSM = class FSM {
 
     constructor() {
@@ -227,21 +243,5 @@ PP.FSM = class FSM {
 
     _getTransitionMapFromState(fromStateID) {
         return this._myTransitionMap.get(fromStateID);
-    }
-};
-
-PP.StateData = class StateData {
-    constructor(stateID, stateObject) {
-        this.myStateID = stateID;
-        this.myStateObject = stateObject;
-    }
-};
-
-PP.TransitionData = class TransitionData {
-    constructor(transitionID, fromStateData, toStateData, transitionObject) {
-        this.myTransitionID = transitionID;
-        this.myFromStateData = fromStateData;
-        this.myToStateData = toStateData;
-        this.myTransitionObject = transitionObject;
     }
 };

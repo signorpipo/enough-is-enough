@@ -96,6 +96,13 @@ WL.registerComponent("hand-animator", {
         }
 
         return done;
+    },
+    skip: function () {
+        for (let piece of this._myHandPieces) {
+            piece.skip();
+        }
+
+        this._myAppearList = [];
     }
 });
 
@@ -142,5 +149,15 @@ class HandPiece {
 
     isDone() {
         return this._myScale == 1;
+    }
+
+    skip() {
+        this._myIsActive = true;
+        this._myObject.pp_setActive(this._myIsActive);
+
+        this._myAudio.stop();
+
+        this._myScale = 1;
+        this._myObject.pp_setScale(this._myScale);
     }
 }

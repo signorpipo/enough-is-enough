@@ -56,6 +56,12 @@ class ShowTitleState extends PP.State {
         this._myFSM.init("show_title", this.prepareShowTitle.bind(this));
     }
 
+    end(fsm, transition, state) {
+        if (transition.myTransitionID == "skip") {
+            this._skip();
+        }
+    }
+
     update(dt, fsm) {
         this._myFSM.update(dt);
         if (this._myFSM.isInState("done")) {
@@ -178,5 +184,17 @@ class ShowTitleState extends PP.State {
 
     showSub2(dt, fsm) {
         this.showSub1(dt, fsm);
+    }
+
+    _skip() {
+        this._myCharAudios[0].stop();
+        this._myCharAudios[1].stop();
+        this._myNotEnoughAudio.stop();
+
+        Global.myPlayerRumbleObject.pp_resetPosition();
+        this._myTitlesObject.pp_resetPosition();
+
+        this._myTitleTextComponent.text = "MR NOT";
+        this._mySubtitleTextComponent.text = "enough IS enough";
     }
 }

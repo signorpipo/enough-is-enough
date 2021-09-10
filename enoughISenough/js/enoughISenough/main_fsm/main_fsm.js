@@ -6,7 +6,7 @@ class MainFSM {
         this._buildFSM();
     }
 
-    start() {
+    init() {
         this._myFSM.init(MainStates.Intro);
     }
 
