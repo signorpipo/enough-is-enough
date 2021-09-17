@@ -341,7 +341,7 @@
                 },
                 {
                     "type": "pp-mute-all",
-                    "active": false
+                    "active": true
                 },
                 {
                     "type": "clear-console-on-session",
@@ -1404,6 +1404,17 @@
                         "material": "119"
                     },
                     "active": true
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "kinematic": true,
+                        "gravity": false,
+                        "shape": "triangleMesh",
+                        "triangleMesh": {
+                            "mesh": "109"
+                        }
+                    }
                 }
             ]
         },
@@ -1478,22 +1489,22 @@
         },
         "122": {
             "name": "Test Title",
-            "parent": "32",
+            "parent": "102",
             "transformation": [
-                1.0,
+                999.9999389,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                999.9999389,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                999.9999389,
                 0.0,
                 0.0,
-                0.0,
+                -999999.875,
                 0.0,
                 1.0
             ],
@@ -1545,13 +1556,7 @@
                 null,
                 null,
                 null,
-                null,
-                {
-                    "type": "pp-set-hierarchy-active",
-                    "pp-set-hierarchy-active": {
-                        "_myHierarchyActive": false
-                    }
-                }
+                null
             ]
         },
         "123": {
@@ -1987,6 +1992,121 @@
                 0.0,
                 1.0
             ]
+        },
+        "139": {
+            "name": "PhysX",
+            "parent": "110",
+            "components": [
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "triangleMesh",
+                        "triangleMesh": {
+                            "mesh": "108",
+                            "scaling": [
+                                1.2999999,
+                                0.8,
+                                1.2999999
+                            ]
+                        },
+                        "kinematic": true,
+                        "gravity": false,
+                        "convexMesh": {
+                            "mesh": "108"
+                        },
+                        "box": {
+                            "extents": [
+                                1.2999999,
+                                0.1,
+                                1.2999999
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "140": {
+            "name": "Test PhysX",
+            "parent": "102",
+            "transformation": [
+                999.9999389,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                999.9999389,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                999.9999389,
+                0.0,
+                0.0,
+                -999999.875,
+                0.0,
+                1.0
+            ]
+        },
+        "141": {
+            "name": "Cube",
+            "parent": "140",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "8",
+                        "material": "25"
+                    }
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "triangleMesh": {
+                            "mesh": "8",
+                            "scaling": [
+                                0.1,
+                                0.1,
+                                0.1
+                            ]
+                        },
+                        "convexMesh": {
+                            "mesh": "8",
+                            "scaling": [
+                                0.1,
+                                0.1,
+                                0.1
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "vr-mode-active-switch"
+                }
+            ],
+            "transformation": [
+                0.1,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.1,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.1,
+                0.0,
+                0.0,
+                1.4891208,
+                -0.6519167,
+                1.0
+            ]
+        },
+        "142": {
+            "name": "Empty.005",
+            "parent": "141",
+            "deleted": true
         }
     },
     "meshes": {
@@ -2481,7 +2601,8 @@
             "version": [
                 0,
                 8,
-                7
+                8,
+                6
             ]
         },
         "vr": {
@@ -2545,7 +2666,7 @@
             "visualizeColliders": false
         },
         "physx": {
-            "enable": false
+            "enable": true
         }
     },
     "animations": {},
