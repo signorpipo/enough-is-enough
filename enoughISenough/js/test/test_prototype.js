@@ -694,6 +694,19 @@ WL.registerComponent('test-prototype', {
             this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformWorldToObjectQuat(this.object.pp_convertTransformLocalToWorldQuat(this.object.pp_convertTransformObjectToLocalQuat(defaultQuat2))));
             this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformObjectToWorldQuat(this.object.pp_convertTransformLocalToObjectQuat(this.object.pp_convertTransformWorldToLocalQuat(this.object.pp_getTransformWorldQuat()))));
             this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformWorldToObjectQuat(this.object.pp_convertTransformLocalToWorldQuat(this.object.pp_convertTransformObjectToLocalQuat(this.object.pp_getTransformWorldQuat()))));
+
+            console.warn("\nCONVERT TRANSFORM OBJECT WORLD UNIFORM\n");
+            this.object.pp_setScale([3, 3, 3]);
+            child.pp_setScale([2, 2, 2]);
+
+            this.consoleWarnMatrix4Fixed(child.pp_getTransformWorldMatrix());
+            this.consoleWarnMatrix4Fixed(this.object.pp_getTransformWorldMatrix());
+
+            this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformObjectToWorld(child.pp_getTransformLocalMatrix()));
+            this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformObjectToWorldMatrix(defaultMatrix));
+            this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformWorldToObject(this.object.pp_getTransformWorldMatrix()));
+            this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformWorldToObjectMatrix(this.object.pp_getTransformWorldMatrix()));
+            this.consoleWarnMatrix4Fixed(this.object.pp_convertTransformWorldToObjectMatrix(this.object.pp_convertTransformObjectToWorldMatrix(defaultMatrix)));
         }
 
         console.warn("\nUNIFORM SCALE\n");
@@ -716,7 +729,6 @@ WL.registerComponent('test-prototype', {
         this.object.pp_setActive(false);
         this.object.pp_setActiveHierarchy(true);
         this.object.pp_setActiveChildren(true);
-        this.object.pp_getActive();
         this.object.pp_getChildren();
         this.object.pp_markDirty();
         this.object.pp_equals(this.object.pp_getParent());

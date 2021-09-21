@@ -21,7 +21,7 @@
         - this.object.pp_getPosition(position)
         - the out parameter is always the last
 
-    List of methods (without extra "append" labels):
+    List of methods (without extra "append" labels like World or Radians):
         - pp_getPosition    / pp_setPosition    / pp_resetPosition
         - pp_getRotation    / pp_setRotation    / pp_resetRotation
         - pp_getScale       / pp_setScale (u can specify a single number instead of a vector to uniform scale easily)   / pp_resetScale 
@@ -56,7 +56,7 @@
         - pp_getChildren
         - pp_markDirty
         - pp_equals
-        - pp_destroy  
+        - pp_destroy
 */
 
 
@@ -661,16 +661,16 @@ WL.Object.prototype.pp_resetRotation = function () {
 };
 
 WL.Object.prototype.pp_resetRotationWorld = function () {
-    let zero = glMatrix.quat.create();
+    let identity = glMatrix.quat.create();
     return function () {
-        this.pp_setRotationWorldQuat(zero);
+        this.pp_setRotationWorldQuat(identity);
     };
 }();
 
 WL.Object.prototype.pp_resetRotationLocal = function () {
-    let zero = glMatrix.quat.create();
+    let identity = glMatrix.quat.create();
     return function () {
-        this.pp_setRotationLocalQuat(zero);
+        this.pp_setRotationLocalQuat(identity);
     };
 }();
 
@@ -1085,7 +1085,7 @@ WL.Object.prototype.pp_lookAtWorld = function () {
     let currentPosition = glMatrix.vec3.create();
     let targetPosition = glMatrix.vec3.create();
     let targetToMatrix = glMatrix.mat4.create();
-    let scale = glMatrix.vec3.create();
+    let rotation = glMatrix.quat.create();
     return function (direction, up = this.pp_getUpWorld(internalUp)) {
         glMatrix.vec3.copy(internalUp, up); //to avoid changing the forwarded up
         let angle = glMatrix.vec3.angle(direction, internalUp);
@@ -1105,12 +1105,10 @@ WL.Object.prototype.pp_lookAtWorld = function () {
         this.pp_getPositionWorld(currentPosition);
         glMatrix.vec3.add(targetPosition, currentPosition, direction);
         glMatrix.mat4.targetTo(targetToMatrix, targetPosition, currentPosition, internalUp);
-        targetToMatrix[12] = currentPosition[0];
-        targetToMatrix[13] = currentPosition[1];
-        targetToMatrix[14] = currentPosition[2];
-        glMatrix.mat4.scale(targetToMatrix, targetToMatrix, this.pp_getScaleWorld(scale));
+        glMatrix.mat4.getRotation(rotation, targetToMatrix);
+        glMatrix.quat.normalize(rotation, rotation);
 
-        this.pp_setTransformWorldMatrix(targetToMatrix);
+        this.pp_setRotationWorldQuat(rotation);
     };
 }();
 
@@ -1119,7 +1117,7 @@ WL.Object.prototype.pp_lookAtLocal = function () {
     let currentPosition = glMatrix.vec3.create();
     let targetPosition = glMatrix.vec3.create();
     let targetToMatrix = glMatrix.mat4.create();
-    let scale = glMatrix.vec3.create();
+    let rotation = glMatrix.quat.create();
     return function (direction, up = this.pp_getUpLocal(internalUp)) {
         glMatrix.vec3.copy(internalUp, up); //to avoid changing the forwarded up
         let angle = glMatrix.vec3.angle(direction, internalUp);
@@ -1139,12 +1137,10 @@ WL.Object.prototype.pp_lookAtLocal = function () {
         this.pp_getPositionLocal(currentPosition);
         glMatrix.vec3.add(targetPosition, currentPosition, direction);
         glMatrix.mat4.targetTo(targetToMatrix, targetPosition, currentPosition, internalUp);
-        targetToMatrix[12] = currentPosition[0];
-        targetToMatrix[13] = currentPosition[1];
-        targetToMatrix[14] = currentPosition[2];
-        glMatrix.mat4.scale(targetToMatrix, targetToMatrix, this.pp_getScaleLocal(scale));
+        glMatrix.mat4.getRotation(rotation, targetToMatrix);
+        glMatrix.quat.normalize(rotation, rotation);
 
-        this.pp_setTransformLocalMatrix(targetToMatrix);
+        this.pp_setRotationLocalQuat(rotation);
     };
 }();
 
@@ -1364,16 +1360,6 @@ WL.Object.prototype.pp_convertTransformWorldToObjectMatrix = function () {
             resultTransform[14] = position[2];
             resultTransform[15] = 1;
         }
-        return resultTransform;
-    };
-}();
-
-WL.Object.prototype.pp_convertTransformWorldToObjectQuat = function () {
-    let convertTransform = glMatrix.quat2.create();
-    return function (transform, resultTransform = glMatrix.quat2.create()) {
-        this.pp_getTransformWorldQuat(convertTransform);
-        glMatrix.quat2.conjugate(convertTransform, convertTransform);
-        glMatrix.quat2.mul(resultTransform, convertTransform, transform);
         return resultTransform;
     };
 }();
