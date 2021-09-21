@@ -129,7 +129,15 @@ Array.prototype.vec3_isConcordant = function (vector) {
     return glMatrix.vec3.angle(this, vector) <= Math.PI / 2;
 };
 
-Array.prototype.vec3_rotateAroundAxis = function () {
+Array.prototype.vec3_rotateAroundAxis = function (axis, angle, origin, out) {
+    return this.vec3_rotateAroundAxisDegrees(axis, angle, origin, out);
+};
+
+Array.prototype.vec3_rotateAroundAxisDegrees = function (axis, angle, origin, out) {
+    return this.vec3_rotateAroundAxisRadians(axis, glMatrix.glMatrix.toRadian(angle), origin, out);
+};
+
+Array.prototype.vec3_rotateAroundAxisRadians = function () {
     let quat = glMatrix.quat.create();
     return function (axis, angle, origin = [0, 0, 0], out = glMatrix.vec3.create()) {
         glMatrix.vec3.sub(out, this, origin);
@@ -384,9 +392,17 @@ Array.prototype.quat2_toTransformMatrix = function (out = glMatrix.mat4.create()
     return out;
 };
 
+Array.prototype.quat2_toMat4 = function (out) {
+    return this.quat2_toTransformMatrix(out);
+};
+
 Array.prototype.quat2_fromTransformMatrix = function (transformMatrix) {
     transformMatrix.mat4_toTransformQuat(this);
     return this;
+};
+
+Array.prototype.quat2_fromMat4 = function (transformMatrix) {
+    return this.quat2_fromTransformMatrix(transformMatrix);
 };
 
 //MATRIX 4
@@ -634,15 +650,23 @@ Array.prototype.mat4_toTransformQuat = function () {
     let rotation = glMatrix.quat.create();
     return function (out = glMatrix.quat2.create()) {
         glMatrix.mat4.getTranslation(position, this);
-        this.mat4_getRotationQuat(rotation, this);
+        this.mat4_getRotationQuat(rotation);
         glMatrix.quat2.fromRotationTranslation(out, rotation, position);
         return out;
     };
 }();
 
+Array.prototype.mat4_toQuat2 = function (out) {
+    return this.mat4_toTransformQuat(out);
+};
+
 Array.prototype.mat4_fromTransformQuat = function (transformQuat) {
     transformQuat.quat2_toTransformMatrix(this);
     return this;
+};
+
+Array.prototype.mat4_fromQuat2 = function (transformQuat) {
+    return this.mat4_fromTransformQuat(transformQuat);
 };
 
 //CREATION

@@ -1,3 +1,15 @@
+//ARRAY
+Float32Array.prototype.pp_remove = function (index) {
+    let elementRemoved = null;
+    if (index >= 0 && index < this.length) {
+        let arrayRemoved = this.splice(index, 1);
+        if (arrayRemoved.length == 1) {
+            elementRemoved = arrayRemoved[0];
+        }
+    }
+    return elementRemoved;
+};
+
 //VECTOR 3
 
 //glMatrix Bridge
@@ -117,7 +129,15 @@ Float32Array.prototype.vec3_isConcordant = function (vector) {
     return glMatrix.vec3.angle(this, vector) <= Math.PI / 2;
 };
 
-Float32Array.prototype.vec3_rotateAroundAxis = function () {
+Float32Array.prototype.vec3_rotateAroundAxis = function (axis, angle, origin, out) {
+    return this.vec3_rotateAroundAxisDegrees(axis, angle, origin, out);
+};
+
+Float32Array.prototype.vec3_rotateAroundAxisDegrees = function (axis, angle, origin, out) {
+    return this.vec3_rotateAroundAxisRadians(axis, glMatrix.glMatrix.toRadian(angle), origin, out);
+};
+
+Float32Array.prototype.vec3_rotateAroundAxisRadians = function () {
     let quat = glMatrix.quat.create();
     return function (axis, angle, origin = [0, 0, 0], out = glMatrix.vec3.create()) {
         glMatrix.vec3.sub(out, this, origin);
@@ -372,9 +392,17 @@ Float32Array.prototype.quat2_toTransformMatrix = function (out = glMatrix.mat4.c
     return out;
 };
 
+Float32Array.prototype.quat2_toMat4 = function (out) {
+    return this.quat2_toTransformMatrix(out);
+};
+
 Float32Array.prototype.quat2_fromTransformMatrix = function (transformMatrix) {
     transformMatrix.mat4_toTransformQuat(this);
     return this;
+};
+
+Float32Array.prototype.quat2_fromMat4 = function (transformMatrix) {
+    return this.quat2_fromTransformMatrix(transformMatrix);
 };
 
 //MATRIX 4
@@ -628,9 +656,17 @@ Float32Array.prototype.mat4_toTransformQuat = function () {
     };
 }();
 
+Float32Array.prototype.mat4_toQuat2 = function (out) {
+    return this.mat4_toTransformQuat(out);
+};
+
 Float32Array.prototype.mat4_fromTransformQuat = function (transformQuat) {
     transformQuat.quat2_toTransformMatrix(this);
     return this;
+};
+
+Float32Array.prototype.mat4_fromQuat2 = function (transformQuat) {
+    return this.mat4_fromTransformQuat(transformQuat);
 };
 
 //CREATION
