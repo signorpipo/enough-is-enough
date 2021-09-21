@@ -72,12 +72,14 @@ PP.FSM = class FSM {
         }
 
         if (this.hasState(initStateID)) {
-            this._myCurrentStateData = this._myStateMap.get(initStateID);
+            let initStateData = this._myStateMap.get(initStateID);
             if (initTransitionObject && initTransitionObject.performInit) {
-                initTransitionObject.performInit(this, this._myCurrentStateData);
-            } else if (this._myCurrentStateData.myStateObject && this._myCurrentStateData.myStateObject.init) {
-                this._myCurrentStateData.myStateObject.init(this);
+                initTransitionObject.performInit(this, initStateData);
+            } else if (initStateData.myStateObject && initStateData.myStateObject.init) {
+                initStateData.myStateObject.init(this, initStateData);
             }
+
+            this._myCurrentStateData = initStateData;
 
             if (this._myDebugLogActive) {
                 console.log(this._myDebugLogName, "- Init:", initStateID);
@@ -143,6 +145,10 @@ PP.FSM = class FSM {
         return this._myCurrentStateData != null && this._myCurrentStateData.myStateID == stateID;
     }
 
+    hasBeenInit() {
+        return this._myCurrentStateData != null;
+    }
+
     getCurrentState() {
         return this._myCurrentStateData;
     }
@@ -157,6 +163,22 @@ PP.FSM = class FSM {
 
     getState(stateID) {
         return this._myStateMap.get(stateID);
+    }
+
+    getStates() {
+        return this._myStateMap.values();
+    }
+
+    getTransitions() {
+        let transitions = [];
+
+        for (let transitionsPerStateMap of this._myTransitionMap.values()) {
+            for (let transitionData of transitionsPerStateMap.values()) {
+                transitions.push(transitionData);
+            }
+        }
+
+        return transitions;
     }
 
     getTransitionsFromState(fromStateID) {
