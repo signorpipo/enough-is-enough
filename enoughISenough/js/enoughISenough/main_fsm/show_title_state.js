@@ -156,7 +156,7 @@ class ShowTitleState extends PP.State {
         this._myCharTimer.update(dt);
 
         let rumbleValue = 0.04;
-        Global.myPlayerRumbleObject.pp_setPosition([Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue)]);
+        Global.myPlayerRumbleObject.pp_setPositionLocal([Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue)]);
         rumbleValue = 8;
         this._myTitlesObject.pp_setPosition([Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue)]);
 
@@ -166,7 +166,7 @@ class ShowTitleState extends PP.State {
     }
 
     prepareShowSub2(fsm) {
-        Global.myPlayerRumbleObject.pp_resetPosition();
+        Global.myPlayerRumbleObject.pp_resetPositionLocal();
         this._myTitlesObject.pp_resetPosition();
 
         this._myCharAudios[0].setPosition(this._mySubtitleCenterPosition);
@@ -191,7 +191,7 @@ class ShowTitleState extends PP.State {
         this._myCharAudios[1].stop();
         this._myNotEnoughAudio.stop();
 
-        Global.myPlayerRumbleObject.pp_resetPosition();
+        Global.myPlayerRumbleObject.pp_resetPositionLocal();
         this._myTitlesObject.pp_resetPosition();
 
         this._myTitleTextComponent.text = "MR NOT";

@@ -1,7 +1,7 @@
 class MainFSM {
     constructor() {
         this._myFSM = new PP.FSM();
-        //this._myFSM.setDebugLogActive(true);
+        this._myFSM.setDebugLogActive(true, "Main");
 
         this._buildFSM();
     }
@@ -16,7 +16,7 @@ class MainFSM {
 
     _buildFSM() {
         this._myFSM.addState(MainStates.Intro, new IntroState());
-        this._myFSM.addState(MainStates.Menu, new MenuState());
+        this._myFSM.addState(MainStates.Menu, new MenuState(this._myFSM));
         this._myFSM.addState(MainStates.PrepareGame, new PrepareGameState());
         this._myFSM.addState(MainStates.Story, new StoryState());
         this._myFSM.addState(MainStates.Arcade, new ArcadeState());

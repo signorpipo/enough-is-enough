@@ -14,13 +14,13 @@ class IntroState extends PP.State {
         this._myFSM.addTransition("wait_start", "move_rings", "end", this.startRings.bind(this));
         this._myFSM.addTransition("move_rings", "spawn_hands", "end", this.startHands.bind(this));
         this._myFSM.addTransition("spawn_hands", "show_title", "end");
-        this._myFSM.addTransition("show_title", "done", "end");
+        this._myFSM.addTransition("show_title", "done", "end", this.endIntro.bind(this));
 
         //skip
         this._myFSM.addTransition("wait_start", "move_rings", "skip");
         this._myFSM.addTransition("move_rings", "spawn_hands", "skip", this.skipRings.bind(this));
         this._myFSM.addTransition("spawn_hands", "show_title", "skip", this.skipHands.bind(this));
-        this._myFSM.addTransition("show_title", "done", "skip");
+        this._myFSM.addTransition("show_title", "done", "skip", this.skipIntro.bind(this));
 
         this._myTimer = new PP.Timer(2);
     }
@@ -28,7 +28,7 @@ class IntroState extends PP.State {
     update(dt, fsm) {
         this._myFSM.update(dt);
 
-        if (!this._myFSM.isInState("wait_session") && PP.RightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(3)) {
+        if (!this._myFSM.isInState("wait_session") && PP.RightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
             while (!this._myFSM.isInState("done")) {
                 this._myFSM.perform("skip");
             }
@@ -36,6 +36,7 @@ class IntroState extends PP.State {
     }
 
     init(fsm) {
+        this._myParentFSM = fsm;
         this._myFSM.init("wait_session");
     }
 
@@ -112,5 +113,14 @@ class IntroState extends PP.State {
     skipHands() {
         Global.myLeftHandAnimator.skip();
         Global.myRightHandAnimator.skip();
+    }
+
+    endIntro(fsm) {
+        this._myParentFSM.perform(MainTransitions.End);
+    }
+
+    skipIntro(fsm, fromState, toState, transition) {
+        fromState.myStateObject.end(fsm, transition, fromState);
+        this._myParentFSM.perform(MainTransitions.Skip);
     }
 }

@@ -10,6 +10,9 @@ WL.registerComponent("rings-animator", {
         this._myFSM.addState("done");
 
         this._myFSM.addTransition("move up", "done", "end");
+
+        Global.myRingHeight = this._myRingsHeight;
+        Global.myRingRadius = 0.65;
     },
     start: function () {
         this._myRing.pp_setPosition([0, -1, 0]);

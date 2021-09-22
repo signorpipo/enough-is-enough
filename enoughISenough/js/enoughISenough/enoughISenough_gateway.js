@@ -32,4 +32,7 @@ var Global = {
     myRingsAnimator: null,
     myLeftHandAnimator: null,
     myRightHandAnimator: null,
+    myMenuObjects: null,
+    myRingRadius: 0,
+    myRingHeight: 0,
 };

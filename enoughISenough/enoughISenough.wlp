@@ -128,20 +128,20 @@
                 }
             ],
             "transformation": [
-                1.0000133,
+                1.0000134,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0000003,
+                1.0000004,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0000152,
+                1.0000153,
                 0.0,
                 0.0,
-                0.0,
+                2.384185791015625e-7,
                 0.0,
                 1.0
             ]
@@ -161,20 +161,20 @@
                 }
             ],
             "transformation": [
-                1.0000133,
+                1.0000134,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0000003,
+                1.0000004,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0000152,
+                1.0000153,
                 0.0,
                 0.0,
-                0.0,
+                2.384185791015625e-7,
                 0.0,
                 1.0
             ]
@@ -345,7 +345,7 @@
                 },
                 {
                     "type": "clear-console-on-session",
-                    "active": false
+                    "active": true
                 }
             ]
         },
@@ -615,7 +615,7 @@
                 1.0000152,
                 0.0,
                 0.0,
-                0.0,
+                1.6499999,
                 0.0,
                 1.0
             ],
@@ -624,7 +624,7 @@
                     "type": "pp-player-height",
                     "active": true,
                     "pp-player-height": {
-                        "_myEyesHeight": 0.0
+                        "_myEyesHeight": 1.6499999
                     }
                 }
             ]
@@ -654,21 +654,21 @@
             "name": "Test Prototype",
             "parent": "102",
             "transformation": [
-                2.7510056,
-                -0.2406818,
-                -1.1721936,
+                2751005.0,
+                -240681.8125,
+                -1172193.375,
                 0.0,
-                0.1661805,
-                0.9673504,
-                0.1913848,
+                166180.578125,
+                967350.375,
+                191384.78125,
                 0.0,
-                0.7252426,
-                -0.4808664,
-                1.8007967,
+                725242.5625,
+                -480866.375,
+                1800796.5,
                 0.0,
-                1.0000008,
-                -4.4703483581542978e-8,
-                -4.172325134277344e-7,
+                999996.0625,
+                -1000999744.0,
+                -7.8124995,
                 1.0
             ],
             "components": [
@@ -1282,9 +1282,6 @@
                         "text": "MR NOT",
                         "material": "115"
                     }
-                },
-                {
-                    "type": "pp-easy-transform"
                 }
             ],
             "transformation": [
@@ -2107,6 +2104,295 @@
             "name": "Empty.005",
             "parent": "141",
             "deleted": true
+        },
+        "143": {
+            "name": "Menu Objects",
+            "parent": "32",
+            "components": [
+                {
+                    "type": "pp-deactivate-on-first-update"
+                },
+                {
+                    "type": "menu-objects",
+                    "menu-objects": {
+                        "_myStartChallenge": "144",
+                        "_myStartArcade": "144"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                3.0,
+                1.0
+            ]
+        },
+        "144": {
+            "name": "Start Arcade",
+            "parent": "143",
+            "transformation": [
+                0.1,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.1,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.1,
+                0.0,
+                0.0,
+                0.0,
+                -0.417077,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "8",
+                            "scaling": [
+                                0.1,
+                                0.1,
+                                0.1
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "aabb": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.1
+                            ]
+                        },
+                        "groups": 1,
+                        "box": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.1
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "145": {
+            "name": "Mesh",
+            "parent": "144",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "8",
+                        "material": "25"
+                    },
+                    "active": true
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "146": {
+            "name": "Position Cube",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "8",
+                        "material": "26"
+                    }
+                },
+                {
+                    "type": "pp-set-hierarchy-active",
+                    "pp-set-hierarchy-active": {
+                        "_myHierarchyActive": false
+                    }
+                }
+            ],
+            "transformation": [
+                0.05,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.05,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                1.0499999,
+                -0.6499999,
+                1.0
+            ]
+        },
+        "147": {
+            "name": "Nose",
+            "parent": "145",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "9",
+                        "material": "26"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.8999999,
+                1.0
+            ]
+        },
+        "148": {
+            "name": "Mesh",
+            "parent": "58",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "128",
+                        "material": "25"
+                    }
+                },
+                {
+                    "type": "pp-deactivate-on-first-update"
+                }
+            ]
+        },
+        "149": {
+            "name": "Mesh",
+            "parent": "50",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "128",
+                        "material": "25"
+                    }
+                },
+                {
+                    "type": "pp-deactivate-on-first-update"
+                }
+            ],
+            "transformation": [
+                -1.192133254335204e-7,
+                -1.0000339,
+                0.0,
+                0.0,
+                1.0000188,
+                -1.1921152065497157e-7,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0000146,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "150": {
+            "name": "Trigger",
+            "parent": "58",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                -0.0099999,
+                -0.05,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "collision",
+                    "collision": {
+                        "sphere": {
+                            "radius": 0.0799999
+                        },
+                        "groups": 1
+                    }
+                },
+                {
+                    "type": "pp-grab",
+                    "pp-grab": {
+                        "_myHandedness": "right",
+                        "_myGrabButton": "squeeze",
+                        "_myThrowVelocitySource": "hand",
+                        "_myThrowMaxLinearSpeed": 15.0,
+                        "_myThrowMaxAngularSpeed": 1080.0,
+                        "_myThrowLinearSpeedBoost": 1.75
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -2601,8 +2887,7 @@
             "version": [
                 0,
                 8,
-                8,
-                6
+                8
             ]
         },
         "vr": {
@@ -2657,13 +2942,15 @@
             "xrButtonColor": "white",
             "webxr": {
                 "requiredFeatures": {
-                    "local-floor": true
+                    "local-floor": false
                 },
                 "optionalFeatures": {
-                    "local-floor": true
+                    "local-floor": false
                 }
             },
-            "visualizeColliders": false
+            "visualizeColliders": true,
+            "enableRuntimeGltf": false,
+            "visualizePhysX": false
         },
         "physx": {
             "enable": true
