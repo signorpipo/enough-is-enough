@@ -2,8 +2,11 @@ if (!PP) {
     var PP = {};
 }
 
-Math.pp_clamp = function (value, min, max) {
-    return Math.min(Math.max(value, min), max);
+Math.pp_clamp = function (value, intervalStart, intervalEnd) {
+    if (intervalStart < intervalEnd) {
+        return Math.min(Math.max(value, intervalStart), intervalEnd);
+    }
+    return Math.min(Math.max(value, intervalEnd), intervalStart);
 };
 
 Math.pp_toDegrees = function (angle) {
@@ -21,8 +24,10 @@ Math.pp_roundDecimal = function (number, decimalPlaces) {
     return number;
 };
 
-Math.pp_mapToNewInterval = function (value, originIntervalLeft, originIntervalRight, newIntervalLeft, newIntervalRight) {
-    let newValue = newIntervalLeft + ((newIntervalRight - newIntervalLeft) / (originIntervalRight - originIntervalLeft)) * (value - originIntervalLeft);
+// Start interval value doesn't need to be lower than the end one, so you can map from [0,1] to [3,2], where 3 is greater than 2
+Math.pp_mapToNewInterval = function (value, originIntervalStart, originIntervalEnd, newIntervalStart, newIntervalEnd) {
+    let clampedValue = Math.pp_clamp(value, originIntervalStart, originIntervalEnd);
+    let newValue = newIntervalStart + ((newIntervalEnd - newIntervalStart) / (originIntervalEnd - originIntervalStart)) * (clampedValue - originIntervalStart);
     return newValue;
 };
 

@@ -23,19 +23,19 @@ PP.HandPose = class HandPose {
     }
 
     getPosition() {
-        return this._myPosition;
+        return this._myPosition.slice(0);
     }
 
     getRotation() {
-        return this._myRotation;
+        return this._myRotation.slice(0);
     }
 
     getLinearVelocity() {
-        return this._myLinearVelocity;
+        return this._myLinearVelocity.slice(0);
     }
 
     getAngularVelocity() {
-        return this._myAngularVelocity;
+        return this._myAngularVelocity.slice(0);
     }
 
     start() {

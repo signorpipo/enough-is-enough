@@ -14,3 +14,12 @@ List of the things not to do
 - create score (based on time survived?)
 - create menu (only start)
 
+Menu Objects:
+- Start Story
+- Start Arcade (easy?)
+- Leaderboards (easy?)
+- Disk throw 5 times to clear data
+- Watermelon
+- Zesty Market
+- Go to Not Enough (Watermelon?)
+- ??
