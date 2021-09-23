@@ -28,6 +28,7 @@ class IntroState extends PP.State {
     update(dt, fsm) {
         this._myFSM.update(dt);
 
+        //TEMP MORE PRESS
         if (!this._myFSM.isInState("wait_session") && PP.RightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
             while (!this._myFSM.isInState("done")) {
                 this._myFSM.perform("skip");

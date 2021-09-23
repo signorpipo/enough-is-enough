@@ -2,16 +2,21 @@ class MenuState extends PP.State {
     constructor() {
         super();
 
+        this._myResetCount = 0;
+
         this._myFSM = new PP.FSM();
         this._myFSM.setDebugLogActive(true, "Menu");
         this._myFSM.addState("ready", this._readyUpdate.bind(this));
         this._myFSM.addState("unspawning_arcade_hard", this._unspawn.bind(this));
+        this._myFSM.addState("unspawning_arcade_normal", this._unspawn.bind(this));
         this._myFSM.addState("unspawning_story", this._unspawn.bind(this));
         this._myFSM.addState("done");
 
         this._myFSM.addTransition("ready", "unspawning_arcade_hard", "unspawn_arcade_hard", this._startUnspawning.bind(this));
+        this._myFSM.addTransition("ready", "unspawning_arcade_normal", "unspawn_arcade_normal", this._startUnspawning.bind(this));
         this._myFSM.addTransition("ready", "unspawning_story", "unspawn_story", this._startUnspawning.bind(this));
         this._myFSM.addTransition("unspawning_arcade_hard", "done", "end", this._endArcadeHard.bind(this));
+        this._myFSM.addTransition("unspawning_arcade_normal", "done", "end", this._endArcadeNormal.bind(this));
         this._myFSM.addTransition("unspawning_story", "done", "end", this._endStory.bind(this));
 
         this._myMenuItems = [];
@@ -42,24 +47,72 @@ class MenuState extends PP.State {
         }
 
         this._myFSM.init("ready");
+
+        this._myResetCount = 0;
     }
 
     _readyUpdate(dt, fsm) {
         for (let item of this._myMenuItems) {
             item.update(dt);
         }
+
+        //TEMP REMOVE THIS
+        if (PP.RightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
+            this._myFSM.perform("unspawn_story");
+        }
     }
 
     _startUnspawning(fsm) {
+        this._myUnspawnList = [];
 
+        let indexList = [];
+        for (let i = 0; i < this._myMenuItems.length; i++) {
+            if (this._myMenuItems[i].canUnspawn()) {
+                indexList.push(i);
+            }
+
+            this._myMenuItems[i].setAutoSpawn(false);
+        }
+
+        while (indexList.length > 0) {
+            let randomIndex = Math.pp_randomInt(0, indexList.length - 1);
+            let index = indexList.pp_remove(randomIndex);
+
+            let randomTimer = Math.pp_random(0.20, 0.25);
+            this._myUnspawnList.push([index, new PP.Timer(randomTimer)]);
+        }
     }
 
     _unspawn(dt, fsm) {
+        if (this._myUnspawnList.length > 0) {
+            let first = this._myUnspawnList[0];
+            first[1].update(dt);
+            if (first[1].isDone()) {
+                this._myMenuItems[first[0]].unspawn();
+                this._myUnspawnList.shift();
+            }
+        }
 
+        for (let item of this._myMenuItems) {
+            item.update(dt);
+        }
+
+        let done = true;
+        for (let item of this._myMenuItems) {
+            done &= item.isInactive();
+        }
+
+        if (done) {
+            fsm.perform("end");
+        }
     }
 
     _endArcadeHard(fsm) {
         this._myParentFSM.perform(MainTransitions.StartArcadeHard);
+    }
+
+    _endArcadeNormal(fsm) {
+        this._myParentFSM.perform(MainTransitions.StartArcadeNormal);
     }
 
     _endStory(fsm) {
@@ -83,42 +136,66 @@ class MenuState extends PP.State {
         positions.push(initialPosition.vec3_rotateAroundAxis([0, 1, 0], -rotation * 4));
 
         {
-            let startStory = new MenuItem(Global.myMenuObjects.get(MenuObjectType.START_STORY), positions[0]);
+            let startStory = new MenuItem(Global.myMenuObjects.get(MenuObjectType.START_STORY), positions[0], function () {
+                this._myFSM.perform("unspawn_story");
+            }.bind(this));
             this._myMenuItems.push(startStory);
         }
 
         {
-            let startArcadeHard = new MenuItem(Global.myMenuObjects.get(MenuObjectType.START_ARCADE_HARD), positions[2]);
+            let startArcadeHard = new MenuItem(Global.myMenuObjects.get(MenuObjectType.START_ARCADE_HARD), positions[2], function () {
+                this._myFSM.perform("unspawn_arcade_hard");
+            }.bind(this));
             this._myMenuItems.push(startArcadeHard);
         }
 
         {
-            let startArcadeNormal = new MenuItem(Global.myMenuObjects.get(MenuObjectType.START_ARCADE_NORMAL), positions[1]);
+            let startArcadeNormal = new MenuItem(Global.myMenuObjects.get(MenuObjectType.START_ARCADE_NORMAL), positions[1], function () {
+                this._myFSM.perform("unspawn_arcade_normal");
+            }.bind(this));
             this._myMenuItems.push(startArcadeNormal);
         }
 
         {
-            let leaderboardArcadeHard = new MenuItem(Global.myMenuObjects.get(MenuObjectType.LEADERBOARD_ARCADE_HARD), positions[4]);
+            let leaderboardArcadeHard = new MenuItem(Global.myMenuObjects.get(MenuObjectType.LEADERBOARD_ARCADE_HARD), positions[4], function () {
+                //get leaderboard object and component and ask for a refresh
+            }.bind(this));
             this._myMenuItems.push(leaderboardArcadeHard);
         }
 
         {
-            let leaderboardArcadeNormal = new MenuItem(Global.myMenuObjects.get(MenuObjectType.LEADERBOARD_ARCADE_NORMAL), positions[3]);
+            let leaderboardArcadeNormal = new MenuItem(Global.myMenuObjects.get(MenuObjectType.LEADERBOARD_ARCADE_NORMAL), positions[3], function () {
+                //get leaderboard object and component and ask for a refresh
+            }.bind(this));
             this._myMenuItems.push(leaderboardArcadeNormal);
         }
 
         {
-            let zestyMarket = new MenuItem(Global.myMenuObjects.get(MenuObjectType.ZESTY_MARKET), positions[6]);
+            let zestyMarket = new MenuItem(Global.myMenuObjects.get(MenuObjectType.ZESTY_MARKET), positions[6], function () {
+                //get zesty object and component and ask for a refresh if it is possible
+            }.bind(this));
             this._myMenuItems.push(zestyMarket);
         }
 
         {
-            let floppyDisk = new MenuItem(Global.myMenuObjects.get(MenuObjectType.FLOPPY_DISK), positions[5]);
+            let floppyDisk = new MenuItem(Global.myMenuObjects.get(MenuObjectType.FLOPPY_DISK), positions[5], function () {
+                this._myResetCount++;
+
+                if (this._myResetCount >= 5) {
+                    this._myResetCount = 0;
+                    console.log("RESET");
+                }
+            }.bind(this));
             this._myMenuItems.push(floppyDisk);
         }
 
         {
-            let wondermelon = new MenuItem(Global.myMenuObjects.get(MenuObjectType.WONDERMELON), positions[7]);
+            let wondermelon = new MenuItem(Global.myMenuObjects.get(MenuObjectType.WONDERMELON), positions[7], function () {
+                if (WL.xrSession) {
+                    WL.xrSession.end();
+                }
+                window.open("https://elia-ducceschi.itch.io/not-enough", "_blank");
+            }.bind(this));
             this._myMenuItems.push(wondermelon);
         }
     }
@@ -141,7 +218,7 @@ class MenuItem {
 
         this._myFSM = new PP.FSM();
 
-        this._myFSM.setDebugLogActive(true, "Menu Item");
+        //this._myFSM.setDebugLogActive(true, "Menu Item");
         this._myFSM.addState("inactive", this._inactiveUpdate.bind(this));
         this._myFSM.addState("spawning", this._spawning.bind(this));
         this._myFSM.addState("ready", this._readyUpdate.bind(this));
@@ -149,9 +226,9 @@ class MenuItem {
 
         this._myFSM.addTransition("inactive", "spawning", "spawn", this._startSpawn.bind(this));
         this._myFSM.addTransition("spawning", "ready", "end", this._startReady.bind(this));
+        this._myFSM.addTransition("spawning", "unspawning", "unspawn", this._startUnspawn.bind(this));
         this._myFSM.addTransition("ready", "unspawning", "unspawn", this._startUnspawn.bind(this));
         this._myFSM.addTransition("unspawning", "inactive", "end", this._startInactive.bind(this));
-        this._myFSM.addTransition("inactive", "inactive", "unspawn");
     }
 
     init(timeBeforeFirstSpawn) {
@@ -169,19 +246,23 @@ class MenuItem {
         this._myAutoSpawn = autoSpawn;
     }
 
-    _inactiveUpdate(dt, fsm) {
-        this._myTimer.update(dt);
-        if (this._myTimer.isDone() && this._myAutoSpawn) {
-            fsm.perform("spawn");
-        }
-    }
-
     unspawn() {
         this._myFSM.perform("unspawn");
     }
 
     canUnspawn() {
         return this._myFSM.canPerform("unspawn");
+    }
+
+    isInactive() {
+        return this._myFSM.isInState("inactive");
+    }
+
+    _inactiveUpdate(dt, fsm) {
+        this._myTimer.update(dt);
+        if (this._myTimer.isDone() && this._myAutoSpawn) {
+            fsm.perform("spawn");
+        }
     }
 
     _startSpawn() {
@@ -215,7 +296,7 @@ class MenuItem {
     }
 
     _readyUpdate(dt) {
-        if (this._myObject.pp_getPosition()[1] <= 0.05 || this._myObject.pp_getPosition()[1] > 20) {
+        if (this._myObject.pp_getPosition()[1] <= 0.05 || this._myObject.pp_getPosition()[1] > 20 || this._myObject.pp_getPosition().vec3_length() > 50) {
             if (this._myCallbackOnFall) {
                 this._myCallbackOnFall();
             }
@@ -226,6 +307,10 @@ class MenuItem {
     _startUnspawn() {
         this._myTimer.start(PP.EasyTuneVariables.get("Unspawn Menu Time"));
         this._myPhysx.kinematic = true;
+
+        if (!this._myGrabbable.isGrabbed()) {
+            this._myPhysx.kinematic = false;
+        }
     }
 
     _unspawning(dt) {

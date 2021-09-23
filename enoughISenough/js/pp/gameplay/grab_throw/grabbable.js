@@ -8,7 +8,7 @@ WL.registerComponent('pp-grabbable', {
         this._myUngrabCallbacks = new Map();
     },
     start: function () {
-        this._myPhysx = this.object.getComponent('physx');
+        this._myPhysx = this.object.pp_getComponent('physx');
     },
     onDeactivate: function () {
         if (this._myIsGrabbed) {
