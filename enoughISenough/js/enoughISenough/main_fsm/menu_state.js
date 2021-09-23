@@ -1,18 +1,17 @@
 class MenuState extends PP.State {
-    constructor(fsm) {
+    constructor() {
         super();
-        this._myParentFSM = fsm;
 
         this._myFSM = new PP.FSM();
         this._myFSM.setDebugLogActive(true, "Menu");
         this._myFSM.addState("ready", this._readyUpdate.bind(this));
-        this._myFSM.addState("unspawning_arcade", this._unspawn.bind(this));
+        this._myFSM.addState("unspawning_arcade_hard", this._unspawn.bind(this));
         this._myFSM.addState("unspawning_story", this._unspawn.bind(this));
         this._myFSM.addState("done");
 
-        this._myFSM.addTransition("ready", "unspawning_arcade", "unspawn_arcade", this._startUnspawning.bind(this));
+        this._myFSM.addTransition("ready", "unspawning_arcade_hard", "unspawn_arcade_hard", this._startUnspawning.bind(this));
         this._myFSM.addTransition("ready", "unspawning_story", "unspawn_story", this._startUnspawning.bind(this));
-        this._myFSM.addTransition("unspawning_arcade", "done", "end", this._endArcade.bind(this));
+        this._myFSM.addTransition("unspawning_arcade_hard", "done", "end", this._endArcadeHard.bind(this));
         this._myFSM.addTransition("unspawning_story", "done", "end", this._endStory.bind(this));
 
         this._myMenuItems = [];
@@ -28,10 +27,12 @@ class MenuState extends PP.State {
     }
 
     start(fsm, transitionID) {
+        this._myParentFSM = fsm;
+
         let times = [];
-        times[0] = Math.pp_random(0.25, 0.75);
+        times[0] = Math.pp_random(0.15, 0.55);
         for (let i = 1; i < this._myMenuItems.length; i++) {
-            times[i] = times[i - 1] + Math.pp_random(0.25, 0.75);
+            times[i] = times[i - 1] + Math.pp_random(0.15, 0.55);
         }
 
         for (let item of this._myMenuItems) {
@@ -57,30 +58,68 @@ class MenuState extends PP.State {
 
     }
 
-    _endArcade(fsm) {
-        this._myParentFSM.perform(MainTransitions.PrepareArcade);
+    _endArcadeHard(fsm) {
+        this._myParentFSM.perform(MainTransitions.StartArcadeHard);
     }
 
     _endStory(fsm) {
-        this._myParentFSM.perform(MainTransitions.PrepareStory);
+        this._myParentFSM.perform(MainTransitions.StartStory);
     }
 
     _fillMenuItems() {
         let positions = [];
         let ringHeight = Global.myRingHeight;
         let ringRadius = Global.myRingRadius;
-        let rotation = 35;
+        let rotation = 45;
 
         let initialPosition = [0, ringHeight, -ringRadius];
+        positions.push(initialPosition.vec3_clone());
         positions.push(initialPosition.vec3_rotateAroundAxis([0, 1, 0], rotation));
         positions.push(initialPosition.vec3_rotateAroundAxis([0, 1, 0], -rotation));
         positions.push(initialPosition.vec3_rotateAroundAxis([0, 1, 0], rotation * 2));
         positions.push(initialPosition.vec3_rotateAroundAxis([0, 1, 0], -rotation * 2));
-        positions.push(initialPosition.vec3_rotateAroundAxis([0, 1, 0], 180));
+        positions.push(initialPosition.vec3_rotateAroundAxis([0, 1, 0], rotation * 3));
+        positions.push(initialPosition.vec3_rotateAroundAxis([0, 1, 0], -rotation * 3));
+        positions.push(initialPosition.vec3_rotateAroundAxis([0, 1, 0], -rotation * 4));
 
         {
-            let startArcade = new MenuItem(Global.myMenuObjects.get(MenuObjectType.START_ARCADE), positions[0]);
-            this._myMenuItems.push(startArcade);
+            let startStory = new MenuItem(Global.myMenuObjects.get(MenuObjectType.START_STORY), positions[0]);
+            this._myMenuItems.push(startStory);
+        }
+
+        {
+            let startArcadeHard = new MenuItem(Global.myMenuObjects.get(MenuObjectType.START_ARCADE_HARD), positions[2]);
+            this._myMenuItems.push(startArcadeHard);
+        }
+
+        {
+            let startArcadeNormal = new MenuItem(Global.myMenuObjects.get(MenuObjectType.START_ARCADE_NORMAL), positions[1]);
+            this._myMenuItems.push(startArcadeNormal);
+        }
+
+        {
+            let leaderboardArcadeHard = new MenuItem(Global.myMenuObjects.get(MenuObjectType.LEADERBOARD_ARCADE_HARD), positions[4]);
+            this._myMenuItems.push(leaderboardArcadeHard);
+        }
+
+        {
+            let leaderboardArcadeNormal = new MenuItem(Global.myMenuObjects.get(MenuObjectType.LEADERBOARD_ARCADE_NORMAL), positions[3]);
+            this._myMenuItems.push(leaderboardArcadeNormal);
+        }
+
+        {
+            let zestyMarket = new MenuItem(Global.myMenuObjects.get(MenuObjectType.ZESTY_MARKET), positions[6]);
+            this._myMenuItems.push(zestyMarket);
+        }
+
+        {
+            let floppyDisk = new MenuItem(Global.myMenuObjects.get(MenuObjectType.FLOPPY_DISK), positions[5]);
+            this._myMenuItems.push(floppyDisk);
+        }
+
+        {
+            let wondermelon = new MenuItem(Global.myMenuObjects.get(MenuObjectType.WONDERMELON), positions[7]);
+            this._myMenuItems.push(wondermelon);
         }
     }
 }

@@ -16,42 +16,36 @@ class MainFSM {
 
     _buildFSM() {
         this._myFSM.addState(MainStates.Intro, new IntroState());
-        this._myFSM.addState(MainStates.Menu, new MenuState(this._myFSM));
-        this._myFSM.addState(MainStates.PrepareGame, new PrepareGameState());
+        this._myFSM.addState(MainStates.Menu, new MenuState());
         this._myFSM.addState(MainStates.Story, new StoryState());
-        this._myFSM.addState(MainStates.Arcade, new ArcadeState());
-        this._myFSM.addState(MainStates.PrepareMenu, new PrepareMenuState());
+        this._myFSM.addState(MainStates.ArcadeHard, new ArcadeState());
+        this._myFSM.addState(MainStates.ArcadeNormal, new ArcadeState());
 
         this._myFSM.addTransition(MainStates.Intro, MainStates.Menu, MainTransitions.End);
         this._myFSM.addTransition(MainStates.Intro, MainStates.Menu, MainTransitions.Skip);
 
-        this._myFSM.addTransition(MainStates.Menu, MainStates.PrepareGame, MainTransitions.PrepareStory);
-        this._myFSM.addTransition(MainStates.Menu, MainStates.PrepareGame, MainTransitions.PrepareArcade);
+        this._myFSM.addTransition(MainStates.Menu, MainStates.Story, MainTransitions.StartStory);
+        this._myFSM.addTransition(MainStates.Menu, MainStates.ArcadeHard, MainTransitions.StartArcadeHard);
+        this._myFSM.addTransition(MainStates.Menu, MainStates.ArcadeNormal, MainTransitions.StartArcadeNormal);
 
-        this._myFSM.addTransition(MainStates.PrepareGame, MainStates.Story, MainTransitions.StartStory);
-        this._myFSM.addTransition(MainStates.PrepareGame, MainStates.Arcade, MainTransitions.StartArcade);
-
-        this._myFSM.addTransition(MainStates.Story, MainStates.PrepareMenu, MainTransitions.End);
-        this._myFSM.addTransition(MainStates.Arcade, MainStates.PrepareMenu, MainTransitions.End);
-
-        this._myFSM.addTransition(MainStates.PrepareMenu, MainStates.Menu, MainTransitions.End);
+        this._myFSM.addTransition(MainStates.Story, MainStates.Menu, MainTransitions.End);
+        this._myFSM.addTransition(MainStates.ArcadeHard, MainStates.Menu, MainTransitions.End);
+        this._myFSM.addTransition(MainStates.ArcadeNormal, MainStates.Menu, MainTransitions.End);
     }
 }
 
 var MainStates = {
     Intro: "Intro",
     Menu: "Menu",
-    PrepareGame: "PrepareGame",
     Story: "Story",
-    Arcade: "Arcade",
-    PrepareMenu: "PrepareMenu"
+    ArcadeHard: "ArcadeHard",
+    ArcadeNormal: "ArcadeNormal",
 };
 
 var MainTransitions = {
     End: "End",
     Skip: "Skip",
-    PrepareStory: "PrepareStory",
-    PrepareArcade: "PrepareArcade",
     StartStory: "StartStory",
-    StartArcade: "StartArcade"
+    StartArcadeHard: "StartArcadeHard",
+    StartArcadeNormal: "StartArcadeNormal"
 };
