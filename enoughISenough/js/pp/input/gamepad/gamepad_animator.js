@@ -25,9 +25,9 @@ WL.registerComponent('pp-gamepad-animator', {
     },
     start: function () {
         if (this._myHandedness == 0) {
-            this._myGamepad = PP.LeftGamepad; //@EDIT get gamepad LEFT here based on how you store it in your game
+            this._myGamepad = PP.myLeftGamepad; //@EDIT get gamepad LEFT here based on how you store it in your game
         } else {
-            this._myGamepad = PP.RightGamepad; //@EDIT get gamepad RIGHT here based on how you store it in your game
+            this._myGamepad = PP.myRightGamepad; //@EDIT get gamepad RIGHT here based on how you store it in your game
         }
 
         this._mySelectMaterial = this._mySelect.getComponent("mesh").material.clone();

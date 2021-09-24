@@ -29,7 +29,7 @@ class IntroState extends PP.State {
         this._myFSM.update(dt);
 
         //TEMP MORE PRESS
-        if (!this._myFSM.isInState("wait_session") && PP.RightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
+        if (!this._myFSM.isInState("wait_session") && PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
             while (!this._myFSM.isInState("done")) {
                 this._myFSM.perform("skip");
             }
@@ -120,8 +120,8 @@ class IntroState extends PP.State {
         this._myParentFSM.perform(MainTransitions.End);
     }
 
-    skipIntro(fsm, fromState, toState, transition) {
-        fromState.myStateObject.end(fsm, transition, fromState);
+    skipIntro(fsm, transition) {
+        transition.myFromStateData.myStateObject.end(fsm, transition);
         this._myParentFSM.perform(MainTransitions.Skip);
     }
 }

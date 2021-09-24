@@ -13,7 +13,7 @@ class enoughISenough {
     }
 
     prepareSFXSetups() {
-        let manager = PP.AudioManager;
+        let manager = Global.myAudioManager;
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/NOT_ENOUGH.wav");

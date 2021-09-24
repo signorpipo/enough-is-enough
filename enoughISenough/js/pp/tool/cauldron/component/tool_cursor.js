@@ -81,12 +81,12 @@ WL.registerComponent('pp-tool-cursor', {
 
         if (targetComponent) {
             if (this._myHandedness == 0) {
-                if (PP.LeftGamepad) {
-                    PP.LeftGamepad.pulse(0.4, 0);
+                if (PP.myLeftGamepad) {
+                    PP.myLeftGamepad.pulse(0.4, 0);
                 }
             } else {
-                if (PP.RightGamepad) {
-                    PP.RightGamepad.pulse(0.4, 0);
+                if (PP.myRightGamepad) {
+                    PP.myRightGamepad.pulse(0.4, 0);
                 }
             }
         }

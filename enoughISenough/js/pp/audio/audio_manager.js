@@ -1,4 +1,4 @@
-PP.AudioManagerClass = class AudioManagerClass {
+PP.AudioManager = class AudioManager {
     constructor() {
         this._myAudioSetupMap = new Map();
     }

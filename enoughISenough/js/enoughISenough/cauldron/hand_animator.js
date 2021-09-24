@@ -48,7 +48,7 @@ WL.registerComponent("hand-animator", {
             this._myHandPieces[i] = new HandPiece(piece, startPosition, endPositions[i]);
         }
 
-        this._myGamepad = PP.Gamepads[PP.InputUtils.getHandednessByIndex(this._myHandedness)];
+        this._myGamepad = PP.myGamepads[PP.InputUtils.getHandednessByIndex(this._myHandedness)];
 
         this._myAppearList = [];
         this._myStarted = false;
@@ -122,7 +122,7 @@ class HandPiece {
 
         this._myTimer = new PP.Timer(1);
 
-        this._myAudio = PP.AudioManager.createAudioPlayer(SfxID.HAND_PIECE_APPEAR);
+        this._myAudio = Global.myAudioManager.createAudioPlayer(SfxID.HAND_PIECE_APPEAR);
         this._myAudio.setPitch(Math.pp_random(0.7, 1));
     }
 

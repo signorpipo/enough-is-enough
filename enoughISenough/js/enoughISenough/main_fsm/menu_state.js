@@ -25,8 +25,8 @@ class MenuState extends PP.State {
 
         this._fillMenuItems();
 
-        PP.EasyTuneVariables.add(new PP.EasyTuneNumber("Unspawn Menu Time", 0.05, 0.1, 3));
-        PP.EasyTuneVariables.add(new PP.EasyTuneNumber("Unspawn Menu Scale", 3, 1, 3));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Unspawn Menu Time", 0.05, 0.1, 3));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Unspawn Menu Scale", 3, 1, 3));
     }
 
     update(dt, fsm) {
@@ -63,7 +63,7 @@ class MenuState extends PP.State {
         this._myMenuTitle.update(dt);
 
         //TEMP REMOVE THIS
-        if (PP.RightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
+        if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
             this._myFSM.perform("unspawn_story");
         }
     }
@@ -315,7 +315,7 @@ class MenuItem {
     }
 
     _startUnspawn() {
-        this._myTimer.start(PP.EasyTuneVariables.get("Unspawn Menu Time"));
+        this._myTimer.start(PP.myEasyTuneVariables.get("Unspawn Menu Time"));
         this._myPhysx.kinematic = true;
 
         if (!this._myGrabbable.isGrabbed()) {
@@ -326,7 +326,7 @@ class MenuItem {
     _unspawning(dt) {
         this._myTimer.update(dt);
 
-        let scaleMultiplier = Math.pp_interpolate(1, PP.EasyTuneVariables.get("Unspawn Menu Scale"), this._myTimer.getPercentage());
+        let scaleMultiplier = Math.pp_interpolate(1, PP.myEasyTuneVariables.get("Unspawn Menu Scale"), this._myTimer.getPercentage());
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
 
         if (this._myTimer.isDone()) {

@@ -34,9 +34,9 @@ WL.registerComponent('pp-grab', {
     },
     start: function () {
         if (this._myHandedness == PP.HandednessIndex.LEFT) {
-            this._myGamepad = PP.LeftGamepad;
+            this._myGamepad = PP.myLeftGamepad;
         } else {
-            this._myGamepad = PP.RightGamepad;
+            this._myGamepad = PP.myRightGamepad;
         }
 
         let buttonType = PP.ButtonType.SQUEEZE;

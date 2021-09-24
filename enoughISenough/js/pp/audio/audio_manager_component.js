@@ -1,7 +1,7 @@
 WL.registerComponent("pp-audio-manager", {
 }, {
     init: function () {
-        PP.AudioManager = new PP.AudioManagerClass();
+        PP.myAudioManager = new PP.AudioManagerClass();
     },
     start: function () {
     },
@@ -9,4 +9,4 @@ WL.registerComponent("pp-audio-manager", {
     }
 });
 
-PP.AudioManager = null;
+PP.myAudioManager = null;

@@ -36,8 +36,8 @@ PP.EasyTuneWidget = class EasyTuneWidget {
     }
 
     start(parentObject, additionalSetup, easyTuneVariables) {
-        this._myRightGamepad = PP.RightGamepad; //@EDIT get right gamepad here based on how you store it in your game
-        this._myLeftGamepad = PP.LeftGamepad; //@EDIT get left gamepad here based on how you store it in your game
+        this._myRightGamepad = PP.myRightGamepad; //@EDIT get right gamepad here based on how you store it in your game
+        this._myLeftGamepad = PP.myLeftGamepad; //@EDIT get left gamepad here based on how you store it in your game
         if (this._mySetup.myGamepadHandedness == PP.ToolHandedness.RIGHT) {
             this._myGamepad = this._myRightGamepad;
         } else if (this._mySetup.myGamepadHandedness == PP.ToolHandedness.LEFT) {

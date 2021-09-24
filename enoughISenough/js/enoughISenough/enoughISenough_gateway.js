@@ -5,7 +5,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
     _myRightHandAnimator: { type: WL.Type.Object },
 }, {
     init: function () {
-        PP.AudioManager = new PP.AudioManagerClass(); //could be inside Global, don't want to change now
+        Global.myAudioManager = new PP.AudioManager();
 
         Global.myScene = this.object;
 
@@ -17,9 +17,9 @@ WL.registerComponent("enough-IS-enough-gateway", {
         this.enoughISenough = new enoughISenough();
     },
     start: function () {
-        PP.EasyTuneVariables.add(new PP.EasyTuneNumber("Float", 0, 0.1, 3));
-        PP.EasyTuneVariables.add(new PP.EasyTuneInt("Int", 0, 1));
-        PP.EasyTuneVariables.add(new PP.EasyTuneBool("Bool", false));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float", 0, 0.1, 3));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Int", 0, 1));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Bool", false));
 
         this.enoughISenough.start();
     },
@@ -30,6 +30,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
 var Global = {
     myScene: null,
+    myAudioManager: null,
     myPlayerRumbleObject: null,
     myRingsAnimator: null,
     myLeftHandAnimator: null,

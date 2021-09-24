@@ -18,7 +18,7 @@ WL.registerComponent("rings-animator", {
         this._myRing.pp_setPosition([0, -1, 0]);
         this._mySmallerRing.pp_setPosition([0, -1, 0]);
 
-        this._myRingAudio = PP.AudioManager.createAudioPlayer(SfxID.RING_RISE);
+        this._myRingAudio = Global.myAudioManager.createAudioPlayer(SfxID.RING_RISE);
     },
     update: function (dt) {
         this._myFSM.update(dt);

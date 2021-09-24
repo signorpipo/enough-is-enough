@@ -3,14 +3,14 @@ WL.registerComponent('pp-debug-global-data', {
     _myFlatMaterial: { type: WL.Type.Material },
 }, {
     init: function () {
-        PP.DebugData.myRootObject = WL.scene.addObject(null);
+        PP.myDebugData.myRootObject = WL.scene.addObject(null);
 
-        PP.DebugData.myCubeMesh = this._myCubeMesh;
-        PP.DebugData.myFlatMaterial = this._myFlatMaterial;
+        PP.myDebugData.myCubeMesh = this._myCubeMesh;
+        PP.myDebugData.myFlatMaterial = this._myFlatMaterial;
     },
 });
 
-PP.DebugData = {
+PP.myDebugData = {
     myRootObject: null,
     myCubeMesh: null,
     myFlatMaterial: null

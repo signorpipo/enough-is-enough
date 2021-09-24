@@ -100,13 +100,13 @@ PP.DebugLine = class DebugLine {
     }
 
     _buildLine() {
-        this._myLineRootObject = WL.scene.addObject(PP.DebugData.myRootObject);
+        this._myLineRootObject = WL.scene.addObject(PP.myDebugData.myRootObject);
         this._myLineObject = WL.scene.addObject(this._myLineRootObject);
         this._myLineObject.scale([0.01, 0.01, 0.01]);
 
         this._myLineMesh = this._myLineObject.addComponent('mesh');
-        this._myLineMesh.mesh = PP.DebugData.myCubeMesh;
-        this._myLineMesh.material = PP.DebugData.myFlatMaterial.clone();
+        this._myLineMesh.mesh = PP.myDebugData.myCubeMesh;
+        this._myLineMesh.material = PP.myDebugData.myFlatMaterial.clone();
     }
 
     _markDirty() {

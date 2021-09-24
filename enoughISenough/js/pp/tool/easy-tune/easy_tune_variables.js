@@ -1,5 +1,5 @@
 //Variable Map
-PP.EasyTuneVariableMap = class EasyTuneVariableMap {
+PP.EasyTuneVariables = class EasyTuneVariables {
     constructor() {
         this._myMap = new Map();
     }

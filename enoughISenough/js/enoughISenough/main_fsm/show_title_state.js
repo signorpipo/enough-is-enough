@@ -32,10 +32,10 @@ class ShowTitleState extends PP.State {
         this._mySubtitleCenterPosition = [-7, 83, -143];
 
         this._myCharAudios = [];
-        this._myCharAudios[0] = PP.AudioManager.createAudioPlayer(SfxID.BLABLA_2);
-        this._myCharAudios[1] = PP.AudioManager.createAudioPlayer(SfxID.BLABLA_1);
+        this._myCharAudios[0] = Global.myAudioManager.createAudioPlayer(SfxID.BLABLA_2);
+        this._myCharAudios[1] = Global.myAudioManager.createAudioPlayer(SfxID.BLABLA_1);
 
-        this._myNotEnoughAudio = PP.AudioManager.createAudioPlayer(SfxID.NOT_ENOUGH);
+        this._myNotEnoughAudio = Global.myAudioManager.createAudioPlayer(SfxID.NOT_ENOUGH);
         this._myNotEnoughAudio.setPosition(this._mySubtitleCenterPosition);
 
         this._myFSM = new PP.FSM();

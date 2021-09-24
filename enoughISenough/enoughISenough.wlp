@@ -3892,7 +3892,7 @@
                     "local-floor": false
                 }
             },
-            "visualizeColliders": true,
+            "visualizeColliders": false,
             "enableRuntimeGltf": false,
             "visualizePhysX": false
         },

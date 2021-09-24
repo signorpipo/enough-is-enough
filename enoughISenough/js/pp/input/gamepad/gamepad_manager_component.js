@@ -6,23 +6,20 @@
 WL.registerComponent('pp-gamepad-manager', {
 }, {
     init: function () {
-        PP.LeftGamepad = new PP.Gamepad(PP.GamepadHandedness.LEFT);
-        PP.RightGamepad = new PP.Gamepad(PP.GamepadHandedness.RIGHT);
+        this._myGamepadManager = new PP.GamepadManager();
 
-        PP.Gamepads = [];
-        PP.Gamepads[PP.Handedness.LEFT] = PP.LeftGamepad;
-        PP.Gamepads[PP.Handedness.RIGHT] = PP.RightGamepad;
+        PP.myLeftGamepad = this._myGamepadManager.getLeftGamepad();
+        PP.myRightGamepad = this._myGamepadManager.getRightGamepad();
+        PP.myGamepads = this._myGamepadManager.getGamepads();
     },
     start: function () {
-        PP.LeftGamepad.start();
-        PP.RightGamepad.start();
+        this._myGamepadManager.start();
     },
     update: function (dt) {
-        PP.LeftGamepad.update(dt);
-        PP.RightGamepad.update(dt);
+        this._myGamepadManager.update(dt);
     },
 });
 
-PP.LeftGamepad = null;
-PP.RightGamepad = null;
-PP.Gamepads = null;
+PP.myLeftGamepad = null;
+PP.myRightGamepad = null;
+PP.myGamepads = null;
