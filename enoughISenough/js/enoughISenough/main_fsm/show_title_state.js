@@ -60,7 +60,7 @@ class ShowTitleState extends PP.State {
     }
 
     end(fsm, transition, state) {
-        if (transition.myTransitionID == "skip") {
+        if (transition.myID == "skip") {
             this._skip();
         }
     }

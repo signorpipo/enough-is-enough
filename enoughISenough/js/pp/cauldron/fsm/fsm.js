@@ -2,24 +2,24 @@
     You can also use plain functions for state/transition if u want to do something simpler and faster
 
     Signatures:
-        stateUpdateFunction(dt, fsm, stateData)
+        stateUpdateFunction(dt, fsm)
         initFunction(fsm, initStateData)
-        transitionFunction(fsm, fromStateData, toStateData, transitionData)
+        transitionFunction(fsm, transitionData)
 */
 
 PP.StateData = class StateData {
     constructor(stateID, stateObject) {
-        this.myStateID = stateID;
-        this.myStateObject = stateObject;
+        this.myID = stateID;
+        this.myObject = stateObject;
     }
 };
 
 PP.TransitionData = class TransitionData {
     constructor(transitionID, fromStateData, toStateData, transitionObject) {
-        this.myTransitionID = transitionID;
-        this.myFromStateData = fromStateData;
-        this.myToStateData = toStateData;
-        this.myTransitionObject = transitionObject;
+        this.myID = transitionID;
+        this.myFromState = fromStateData;
+        this.myToState = toStateData;
+        this.myObject = transitionObject;
     }
 };
 
@@ -75,8 +75,8 @@ PP.FSM = class FSM {
             let initStateData = this._myStateMap.get(initStateID);
             if (initTransitionObject && initTransitionObject.performInit) {
                 initTransitionObject.performInit(this, initStateData);
-            } else if (initStateData.myStateObject && initStateData.myStateObject.init) {
-                initStateData.myStateObject.init(this, initStateData);
+            } else if (initStateData.myObject && initStateData.myObject.init) {
+                initStateData.myObject.init(this, initStateData);
             }
 
             this._myCurrentStateData = initStateData;
@@ -90,41 +90,41 @@ PP.FSM = class FSM {
     }
 
     update(dt) {
-        if (this._myCurrentStateData && this._myCurrentStateData.myStateObject && this._myCurrentStateData.myStateObject.update) {
-            this._myCurrentStateData.myStateObject.update(dt, this, this._myCurrentStateData);
+        if (this._myCurrentStateData && this._myCurrentStateData.myObject && this._myCurrentStateData.myObject.update) {
+            this._myCurrentStateData.myObject.update(dt, this, this._myCurrentStateData);
         }
     }
 
     perform(transitionID) {
         if (this._myCurrentStateData) {
             if (this.canPerform(transitionID)) {
-                let transitions = this._myTransitionMap.get(this._myCurrentStateData.myStateID);
+                let transitions = this._myTransitionMap.get(this._myCurrentStateData.myID);
                 let transitionToPerform = transitions.get(transitionID);
 
                 let fromState = this._myCurrentStateData;
-                let toState = this._myStateMap.get(transitionToPerform.myToStateData.myStateID);
+                let toState = this._myStateMap.get(transitionToPerform.myToState.myID);
 
-                if (transitionToPerform.myTransitionObject && transitionToPerform.myTransitionObject.perform) {
-                    transitionToPerform.myTransitionObject.perform(this, transitionToPerform);
+                if (transitionToPerform.myObject && transitionToPerform.myObject.perform) {
+                    transitionToPerform.myObject.perform(this, transitionToPerform);
                 } else {
-                    if (fromState.myStateObject && fromState.myStateObject.end) {
-                        fromState.myStateObject.end(this, transitionToPerform);
+                    if (fromState.myObject && fromState.myObject.end) {
+                        fromState.myObject.end(this, transitionToPerform);
                     }
 
-                    if (toState.myStateObject && toState.myStateObject.end) {
-                        toState.myStateObject.start(this, transitionToPerform);
+                    if (toState.myObject && toState.myObject.end) {
+                        toState.myObject.start(this, transitionToPerform);
                     }
                 }
 
-                this._myCurrentStateData = transitionToPerform.myToStateData;
+                this._myCurrentStateData = transitionToPerform.myToState;
 
                 if (this._myDebugLogActive) {
-                    console.log(this._myDebugLogName, "- From:", fromState.myStateID, "- To:", toState.myStateID, "- With:", transitionID);
+                    console.log(this._myDebugLogName, "- From:", fromState.myID, "- To:", toState.myID, "- With:", transitionID);
                 }
 
                 return true;
             } else if (this._myDebugLogActive) {
-                console.warn(this._myDebugLogName, "- No Transition:", transitionID, "- From:", this._myCurrentStateData.myStateID);
+                console.warn(this._myDebugLogName, "- No Transition:", transitionID, "- From:", this._myCurrentStateData.myID);
             }
         } else if (this._myDebugLogActive) {
             console.warn(this._myDebugLogName, "- FSM not initialized yet");
@@ -134,15 +134,15 @@ PP.FSM = class FSM {
     }
 
     canPerform(transitionID) {
-        return this.hasTransitionFromState(this._myCurrentStateData.myStateID, transitionID);
+        return this.hasTransitionFromState(this._myCurrentStateData.myID, transitionID);
     }
 
     canGoTo(stateID, transitionID = null) {
-        return this.hasTransitionFromStateToState(this._myCurrentStateData.myStateID, stateID, transitionID);
+        return this.hasTransitionFromStateToState(this._myCurrentStateData.myID, stateID, transitionID);
     }
 
     isInState(stateID) {
-        return this._myCurrentStateData != null && this._myCurrentStateData.myStateID == stateID;
+        return this._myCurrentStateData != null && this._myCurrentStateData.myID == stateID;
     }
 
     hasBeenInit() {
@@ -154,11 +154,11 @@ PP.FSM = class FSM {
     }
 
     getCurrentTransitions() {
-        return this.getTransitionsFromState(this._myCurrentStateData.myStateID);
+        return this.getTransitionsFromState(this._myCurrentStateData.myID);
     }
 
     getCurrentTransitionsToState(stateID) {
-        return this.getTransitionsFromStateToState(this._myCurrentStateData.myStateID, stateID);
+        return this.getTransitionsFromStateToState(this._myCurrentStateData.myID, stateID);
     }
 
     getState(stateID) {
@@ -191,7 +191,7 @@ PP.FSM = class FSM {
 
         let transitionsToState = [];
         for (let transitionData of transitionMap.values()) {
-            if (transitionData.myToStateData.myStateID == toStateID) {
+            if (transitionData.myToState.myID == toStateID) {
                 transitionsToState.push(transitionData);
             }
         }
@@ -207,7 +207,7 @@ PP.FSM = class FSM {
             for (let transitionMap of this._myTransitionMap.values()) {
                 let toDelete = [];
                 for (let [transitionID, transitionData] of transitionMap.entries()) {
-                    if (transitionData.myToStateData.myStateID == stateID) {
+                    if (transitionData.myToState.myID == stateID) {
                         toDelete.push(transitionID);
                     }
                 }
@@ -239,7 +239,7 @@ PP.FSM = class FSM {
         let transitions = this.getTransitionsFromState(fromStateID);
 
         let transitionIndex = transitions.findIndex(function (transition) {
-            return transition.myTransitionID == transitionID;
+            return transition.myID == transitionID;
         });
 
         return transitionIndex >= 0;
@@ -251,7 +251,7 @@ PP.FSM = class FSM {
         let hasTransition = false;
         if (transitionID) {
             let transitionIndex = transitions.findIndex(function (transition) {
-                return transition.myTransitionID == transitionID;
+                return transition.myID == transitionID;
             });
 
             hasTransition = transitionIndex >= 0;

@@ -121,7 +121,7 @@ class IntroState extends PP.State {
     }
 
     skipIntro(fsm, transition) {
-        transition.myFromStateData.myStateObject.end(fsm, transition);
+        transition.myFromState.myObject.end(fsm, transition);
         this._myParentFSM.perform(MainTransitions.Skip);
     }
 }

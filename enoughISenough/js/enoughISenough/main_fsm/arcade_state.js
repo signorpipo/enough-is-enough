@@ -16,7 +16,7 @@ class ArcadeState extends PP.State {
     }
 
     start(fsm, transition) {
-        if (transition.myTransitionID == MainTransitions.StartArcadeHard) {
+        if (transition.myID == MainTransitions.StartArcadeHard) {
             this._myIsHard = true;
         }
 
