@@ -38,6 +38,7 @@ var Global = {
     myMenuObjects: null,
     myRingRadius: 0,
     myRingHeight: 0,
+    myTitlesObject: null,
     myTitleObject: null,
     mySubtitleObject: null
 };

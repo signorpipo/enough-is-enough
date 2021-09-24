@@ -21,7 +21,7 @@ class MenuState extends PP.State {
 
         this._myMenuItems = [];
 
-        this._myMenuTitle = new MenuTitle(Global.myTitleObject, Global.mySubtitleObject);
+        this._myMenuTitle = new MenuTitle(Global.myTitlesObject, Global.myTitleObject, Global.mySubtitleObject);
 
         this._fillMenuItems();
 
@@ -349,7 +349,8 @@ class MenuItem {
 }
 
 class MenuTitle {
-    constructor(titleObject, subtitleObject) {
+    constructor(titlesObject, titleObject, subtitleObject) {
+        this._myTitlesObject = titlesObject;
         this._myTitleObject = titleObject;
         this._mySubtitleObject = subtitleObject;
 
@@ -372,6 +373,7 @@ class MenuTitle {
 
         //Setup
         this._mySpawnTime = 1.5;
+        this._myHideScale = 0.95;
     }
 
     spawn(timeToStart) {
@@ -421,6 +423,8 @@ class MenuTitle {
                 color = this._mySubtitleText.material.outlineColor;
                 color[3] = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
                 this._mySubtitleText.material.outlineColor = color;
+
+                this._myTitlesObject.pp_setScale(Math.pp_interpolate(this._myHideScale, 1, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut));
             }
 
             if (this._myTimer.isDone()) {
@@ -448,6 +452,10 @@ class MenuTitle {
                 color = this._mySubtitleText.material.outlineColor;
                 color[3] = 1 - PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
                 this._mySubtitleText.material.outlineColor = color;
+
+                let scale = Math.pp_interpolate(1, this._myHideScale, this._myTimer.getPercentage(), PP.EasingFunction.linear);
+                console.log(scale);
+                this._myTitlesObject.pp_setScale(scale);
             }
 
             if (this._myTimer.isDone()) {

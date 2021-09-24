@@ -2,9 +2,11 @@ class ShowTitleState extends PP.State {
     constructor() {
         super();
         this._myTitlesObject = WL.scene.addObject(Global.myScene);
-        this._myTitle = WL.scene.addObject(this._myTitlesObject);
-        this._mySubtitle = WL.scene.addObject(this._myTitlesObject);
+        this._myTitlesRumbleObject = WL.scene.addObject(this._myTitlesObject);
+        this._myTitle = WL.scene.addObject(null);
+        this._mySubtitle = WL.scene.addObject(null);
 
+        Global.myTitlesObject = this._myTitlesObject;
         Global.myTitleObject = this._myTitle;
         Global.mySubtitleObject = this._mySubtitle;
 
@@ -20,6 +22,9 @@ class ShowTitleState extends PP.State {
         this._mySubtitleTextComponent.material = Materials.mySubtitle.clone();
         this._mySubtitleTextComponent.text = " ";
 
+        this._myTitlesObjectPosition = [-10, 133, -164];
+        this._myTitlesObject.pp_setPosition(this._myTitlesObjectPosition);
+
         this._myTitle.pp_setPosition([-104, 153, -196]);
         this._myTitle.pp_setScale(550);
         this._myTitle.pp_setRotation([40, 0, 0]);
@@ -27,6 +32,9 @@ class ShowTitleState extends PP.State {
         this._mySubtitle.pp_setPosition([-138, 77, -148]);
         this._mySubtitle.pp_setScale(290);
         this._mySubtitle.pp_setRotation([40, 0, 0]);
+
+        this._myTitle.pp_setParent(this._myTitlesRumbleObject);
+        this._mySubtitle.pp_setParent(this._myTitlesRumbleObject);
 
         this._myTitleCenterPosition = [0, 168, -184];
         this._mySubtitleCenterPosition = [-7, 83, -143];
@@ -161,7 +169,7 @@ class ShowTitleState extends PP.State {
         let rumbleValue = 0.04;
         Global.myPlayerRumbleObject.pp_setPositionLocal([Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue)]);
         rumbleValue = 8;
-        this._myTitlesObject.pp_setPosition([Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue)]);
+        this._myTitlesRumbleObject.pp_setPositionLocal([Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue)]);
 
         if (this._myCharTimer.isDone()) {
             fsm.perform("end");
@@ -170,7 +178,7 @@ class ShowTitleState extends PP.State {
 
     prepareShowSub2(fsm) {
         Global.myPlayerRumbleObject.pp_resetPositionLocal();
-        this._myTitlesObject.pp_resetPosition();
+        this._myTitlesRumbleObject.pp_resetPositionLocal();
 
         this._myCharAudios[0].setPosition(this._mySubtitleCenterPosition);
         this._myCharAudios[1].setPosition(this._mySubtitleCenterPosition);
@@ -195,7 +203,7 @@ class ShowTitleState extends PP.State {
         this._myNotEnoughAudio.stop();
 
         Global.myPlayerRumbleObject.pp_resetPositionLocal();
-        this._myTitlesObject.pp_resetPosition();
+        this._myTitlesRumbleObject.pp_resetPositionLocal();
 
         this._myTitleTextComponent.text = "MR NOT";
         this._mySubtitleTextComponent.text = "enough IS enough";
