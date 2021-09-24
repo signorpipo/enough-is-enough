@@ -454,7 +454,6 @@ class MenuTitle {
                 this._mySubtitleText.material.outlineColor = color;
 
                 let scale = Math.pp_interpolate(1, this._myHideScale, this._myTimer.getPercentage(), PP.EasingFunction.linear);
-                console.log(scale);
                 this._myTitlesObject.pp_setScale(scale);
             }
 

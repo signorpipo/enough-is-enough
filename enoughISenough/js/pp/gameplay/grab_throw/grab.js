@@ -76,7 +76,7 @@ WL.registerComponent('pp-grab', {
                 if (grabbable && grabbable.active) {
                     this._myGrabbable = grabbable;
                     this._myGrabbable.grab(this.object);
-                    this._myGrabbable.registerUngrabEventListener(this, this._onUngrab.bind(this));
+                    this._myGrabbable.registerReleaseEventListener(this, this._onRelease.bind(this));
 
                     if (this._mySnapOnPivot) {
                         this._myGrabbable.object.resetTranslation();
@@ -91,7 +91,7 @@ WL.registerComponent('pp-grab', {
     },
     _throw: function (e) {
         if (this._myGrabbable) {
-            this._myGrabbable.unregisterUngrabEventListener(this);
+            this._myGrabbable.unregisterReleaseEventListener(this);
 
             let linearVelocity = this._computeReleaseLinearVelocity();
             let angularVelocity = this._computeReleaseAngularVelocity();
@@ -103,8 +103,8 @@ WL.registerComponent('pp-grab', {
             this._myGrabbable = null;
         }
     },
-    _onUngrab() {
-        this._myGrabbable.unregisterUngrabEventListener(this);
+    _onRelease() {
+        this._myGrabbable.unregisterReleaseEventListener(this);
         this._myGrabbable = null;
     },
     _updateVelocityHistory() {

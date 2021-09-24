@@ -5,20 +5,16 @@ WL.registerComponent('pp-grabbable', {
 
         this._myOldParent = this.object.parent;
 
-        this._myUngrabCallbacks = new Map();
+        this._myReleaseCallbacks = new Map(); // Signature: callback(isThrow)
     },
     start: function () {
         this._myPhysx = this.object.pp_getComponent('physx');
     },
     onDeactivate: function () {
-        if (this._myIsGrabbed) {
-            this._ungrab();
-        }
+        this.release();
     },
     grab: function (grabber) {
-        if (this._myIsGrabbed) {
-            this._ungrab();
-        }
+        this.release();
 
         this._myPhysx.kinematic = true;
 
@@ -29,12 +25,19 @@ WL.registerComponent('pp-grabbable', {
     },
     throw: function (linearVelocity, angularVelocity) {
         if (this._myIsGrabbed) {
-            this.object.pp_setParent(this._myOldParent);
-            this._myIsGrabbed = false;
-            this._myPhysx.kinematic = false;
+            this._release();
 
             this._myPhysx.linearVelocity = linearVelocity;
             this._myPhysx.angularVelocity = angularVelocity;
+
+            this._myReleaseCallbacks.forEach(function (value) { value(true); });
+        }
+    },
+    release() {
+        if (this._myIsGrabbed) {
+            this._release();
+
+            this._myReleaseCallbacks.forEach(function (value) { value(false); });
         }
     },
     getLinearVelocity() {
@@ -46,16 +49,20 @@ WL.registerComponent('pp-grabbable', {
     isGrabbed() {
         return this._myIsGrabbed;
     },
-    registerUngrabEventListener(id, callback) {
-        this._myUngrabCallbacks.set(id, callback);
+    registerReleaseEventListener(id, callback) {
+        this._myReleaseCallbacks.set(id, callback);
     },
-    unregisterUngrabEventListener(id) {
-        this._myUngrabCallbacks.delete(id);
+    unregisterReleaseEventListener(id) {
+        this._myReleaseCallbacks.delete(id);
     },
-    _ungrab() {
-        this._myUngrabCallbacks.forEach(function (value) { value(); });
-
-        this._myIsGrabbed = false;
+    _release() {
         this.object.pp_setParent(this._myOldParent);
+        this._myIsGrabbed = false;
+
+        //TEMP u can't set kinematic if physx is inactive because it will crash
+        if (this._myPhysx.active) {
+            this._myPhysx.kinematic = false;
+        }
     }
+
 });
