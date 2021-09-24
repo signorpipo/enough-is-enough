@@ -13,22 +13,22 @@ PP.State = class State {
 
     //Called every frame if this is the current state
     //You can retrieve this state data by calling fsm.getCurrentState()
-    update(dt, fsm) {
+    update(dt, fsm, ...args) {
     }
 
     //Called when the fsm is started with this init state if no init transition object is specified or it does not have a performInit function
     //Since the state is set as the current one after the init, you can't use fsm.getCurrentState() to get it, so it is forwarded as a param if needed
-    init(fsm, state) {
+    init(fsm, state, ...args) {
     }
 
     //Called when entering this state if no transition object is specified or it does not have a perform function
     //You can get this state data by accesing to the to state data inside the transition
-    start(fsm, transition) {
+    start(fsm, transition, ...args) {
     }
 
     //Called when exiting this state if no transition function is specified
     //You can get this state data by accesing to the from state data inside the transition
-    end(fsm, transition) {
+    end(fsm, transition, ...args) {
     }
 
 };

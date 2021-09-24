@@ -229,23 +229,25 @@ class MenuItem {
         this._myFSM = new PP.FSM();
 
         //this._myFSM.setDebugLogActive(true, "Menu Item");
+        this._myFSM.addState("init");
         this._myFSM.addState("inactive", this._inactiveUpdate.bind(this));
         this._myFSM.addState("spawning", this._spawning.bind(this));
         this._myFSM.addState("ready", this._readyUpdate.bind(this));
         this._myFSM.addState("unspawning", this._unspawning.bind(this));
 
+        this._myFSM.addTransition("init", "inactive", "reset", this._reset.bind(this));
         this._myFSM.addTransition("inactive", "spawning", "spawn", this._startSpawn.bind(this));
         this._myFSM.addTransition("spawning", "ready", "end", this._startReady.bind(this));
         this._myFSM.addTransition("spawning", "unspawning", "unspawn", this._startUnspawn.bind(this));
         this._myFSM.addTransition("ready", "unspawning", "unspawn", this._startUnspawn.bind(this));
         this._myFSM.addTransition("unspawning", "inactive", "end", this._startInactive.bind(this));
+        this._myFSM.addTransition("inactive", "inactive", "reset", this._reset.bind(this));
+
+        this._myFSM.init("init");
     }
 
     init(timeBeforeFirstSpawn) {
-        this._myFSM.init("inactive");
-        this._myObject.pp_setActiveHierarchy(false);
-        this._myTimer.start(timeBeforeFirstSpawn);
-        this._myAutoSpawn = true;
+        this._myFSM.perform("reset", timeBeforeFirstSpawn);
     }
 
     update(dt) {
@@ -266,6 +268,12 @@ class MenuItem {
 
     isInactive() {
         return this._myFSM.isInState("inactive");
+    }
+
+    _reset(fsm, transition, timeBeforeFirstSpawn) {
+        this._myObject.pp_setActiveHierarchy(false);
+        this._myTimer.start(timeBeforeFirstSpawn);
+        this._myAutoSpawn = true;
     }
 
     _inactiveUpdate(dt, fsm) {

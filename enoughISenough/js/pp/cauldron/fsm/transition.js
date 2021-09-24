@@ -9,13 +9,13 @@
 PP.Transition = class Transition {
 
     //Called if this is used as an init transition for the fsm
-    performInit(fsm, initState) {
+    performInit(fsm, initState, ...args) {
 
     }
 
     //Called when performing a transition
     //You can find the from and to states inside the transition params
-    perform(fsm, transition) {
+    perform(fsm, transition, ...args) {
     }
 
 };

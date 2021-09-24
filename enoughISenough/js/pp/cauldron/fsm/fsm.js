@@ -64,7 +64,7 @@ PP.FSM = class FSM {
         }
     }
 
-    init(initStateID, initTransition = null) {
+    init(initStateID, initTransition = null, ...args) {
         let initTransitionObject = initTransition;
         if (initTransition && typeof initTransition == 'function') {
             initTransitionObject = {};
@@ -74,9 +74,9 @@ PP.FSM = class FSM {
         if (this.hasState(initStateID)) {
             let initStateData = this._myStateMap.get(initStateID);
             if (initTransitionObject && initTransitionObject.performInit) {
-                initTransitionObject.performInit(this, initStateData);
+                initTransitionObject.performInit(this, initStateData, ...args);
             } else if (initStateData.myObject && initStateData.myObject.init) {
-                initStateData.myObject.init(this, initStateData);
+                initStateData.myObject.init(this, initStateData, ...args);
             }
 
             this._myCurrentStateData = initStateData;
@@ -89,13 +89,13 @@ PP.FSM = class FSM {
         }
     }
 
-    update(dt) {
+    update(dt, ...args) {
         if (this._myCurrentStateData && this._myCurrentStateData.myObject && this._myCurrentStateData.myObject.update) {
-            this._myCurrentStateData.myObject.update(dt, this, this._myCurrentStateData);
+            this._myCurrentStateData.myObject.update(dt, this, ...args);
         }
     }
 
-    perform(transitionID) {
+    perform(transitionID, ...args) {
         if (this._myCurrentStateData) {
             if (this.canPerform(transitionID)) {
                 let transitions = this._myTransitionMap.get(this._myCurrentStateData.myID);
@@ -105,14 +105,14 @@ PP.FSM = class FSM {
                 let toState = this._myStateMap.get(transitionToPerform.myToState.myID);
 
                 if (transitionToPerform.myObject && transitionToPerform.myObject.perform) {
-                    transitionToPerform.myObject.perform(this, transitionToPerform);
+                    transitionToPerform.myObject.perform(this, transitionToPerform, ...args);
                 } else {
                     if (fromState.myObject && fromState.myObject.end) {
-                        fromState.myObject.end(this, transitionToPerform);
+                        fromState.myObject.end(this, transitionToPerform, ...args);
                     }
 
                     if (toState.myObject && toState.myObject.end) {
-                        toState.myObject.start(this, transitionToPerform);
+                        toState.myObject.start(this, transitionToPerform, ...args);
                     }
                 }
 
