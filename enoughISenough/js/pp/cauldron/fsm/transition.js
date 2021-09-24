@@ -3,7 +3,7 @@
     It's more like an example of what is needed
     
     The param transition (forwarded at the end every function) is of type PP.TransitionData and can be used to retrieve the transitionID and other data
-    The state params are of type PP.StateData and can be used to retrieve the stateID and other data
+    The initState param is of type PP.StateData and can be used to retrieve the stateID and other data
 */
 
 PP.Transition = class Transition {
@@ -13,8 +13,9 @@ PP.Transition = class Transition {
 
     }
 
-    //Called when performing a transition fromState -> toState
-    perform(fsm, fromState, toState, transition) {
+    //Called when performing a transition
+    //You can find the from and to states inside the transition params
+    perform(fsm, transition) {
     }
 
 };

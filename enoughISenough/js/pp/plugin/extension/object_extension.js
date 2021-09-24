@@ -1536,8 +1536,12 @@ WL.Object.prototype.pp_getComponentsChildren = function (type) {
 
 //Active
 
-WL.Object.prototype.pp_setActive = function (active) {
-    this.active = active;
+WL.Object.prototype.pp_setActive = function (active, applyToHierarchy = true) {
+    if (applyToHierarchy) {
+        this.pp_setActiveHierarchy(active);
+    } else {
+        this.active = active;
+    }
 };
 
 WL.Object.prototype.pp_setActiveHierarchy = function (active) {

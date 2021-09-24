@@ -5,6 +5,9 @@ class ShowTitleState extends PP.State {
         this._myTitle = WL.scene.addObject(this._myTitlesObject);
         this._mySubtitle = WL.scene.addObject(this._myTitlesObject);
 
+        Global.myTitleObject = this._myTitle;
+        Global.mySubtitleObject = this._mySubtitle;
+
         this._myTitleTextComponent = this._myTitle.addComponent('text');
         this._myTitleTextComponent.alignment = WL.Alignment.Left;
         this._myTitleTextComponent.justification = WL.Justification.Line;

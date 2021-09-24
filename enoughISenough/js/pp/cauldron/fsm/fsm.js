@@ -105,14 +105,14 @@ PP.FSM = class FSM {
                 let toState = this._myStateMap.get(transitionToPerform.myToStateData.myStateID);
 
                 if (transitionToPerform.myTransitionObject && transitionToPerform.myTransitionObject.perform) {
-                    transitionToPerform.myTransitionObject.perform(this, fromState, toState, transitionToPerform);
+                    transitionToPerform.myTransitionObject.perform(this, transitionToPerform);
                 } else {
                     if (fromState.myStateObject && fromState.myStateObject.end) {
-                        fromState.myStateObject.end(this, transitionToPerform, fromState);
+                        fromState.myStateObject.end(this, transitionToPerform);
                     }
 
                     if (toState.myStateObject && toState.myStateObject.end) {
-                        toState.myStateObject.start(this, transitionToPerform, toState);
+                        toState.myStateObject.start(this, transitionToPerform);
                     }
                 }
 

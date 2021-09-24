@@ -1,10 +1,9 @@
 class enoughISenough {
     constructor() {
+        this.prepareSFXSetups();
     }
 
     start() {
-        this.prepareSFXSetups();
-
         this._myMainFSM = new MainFSM();
         this._myMainFSM.init();
     }

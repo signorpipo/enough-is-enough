@@ -21,6 +21,8 @@ class MenuState extends PP.State {
 
         this._myMenuItems = [];
 
+        this._myMenuTitle = new MenuTitle(Global.myTitleObject, Global.mySubtitleObject);
+
         this._fillMenuItems();
 
         PP.EasyTuneVariables.add(new PP.EasyTuneNumber("Unspawn Menu Time", 0.05, 0.1, 3));
@@ -46,6 +48,8 @@ class MenuState extends PP.State {
             item.init(timeBeforeFirstSpawn);
         }
 
+        this._myMenuTitle.spawn(Math.pp_random(0.35, 0.7));
+
         this._myFSM.init("ready");
 
         this._myResetCount = 0;
@@ -55,6 +59,8 @@ class MenuState extends PP.State {
         for (let item of this._myMenuItems) {
             item.update(dt);
         }
+
+        this._myMenuTitle.update(dt);
 
         //TEMP REMOVE THIS
         if (PP.RightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
@@ -81,6 +87,8 @@ class MenuState extends PP.State {
             let randomTimer = Math.pp_random(0.20, 0.25);
             this._myUnspawnList.push([index, new PP.Timer(randomTimer)]);
         }
+
+        this._myMenuTitle.unspawn(Math.pp_random(0.35, 0.7));
     }
 
     _unspawn(dt, fsm) {
@@ -97,10 +105,13 @@ class MenuState extends PP.State {
             item.update(dt);
         }
 
+        this._myMenuTitle.update(dt);
+
         let done = true;
         for (let item of this._myMenuItems) {
             done &= item.isInactive();
         }
+        done &= this._myMenuTitle.isHidden();
 
         if (done) {
             fsm.perform("end");
@@ -183,7 +194,6 @@ class MenuState extends PP.State {
 
                 if (this._myResetCount >= 5) {
                     this._myResetCount = 0;
-                    console.log("RESET");
                 }
             }.bind(this));
             this._myMenuItems.push(floppyDisk);
@@ -328,4 +338,116 @@ class MenuItem {
         this._myObject.pp_setActiveHierarchy(false);
         this._myTimer.start(1);
     }
+}
+
+class MenuTitle {
+    constructor(titleObject, subtitleObject) {
+        this._myTitleObject = titleObject;
+        this._mySubtitleObject = subtitleObject;
+
+        this._myTitleText = this._myTitleObject.pp_getComponent("text");
+        this._mySubtitleText = this._mySubtitleObject.pp_getComponent("text");
+
+        this._myStartTimer = new PP.Timer(1, false);
+        this._myTimer = new PP.Timer(1, false);
+
+        this._myFSM = new PP.FSM();
+
+        //this._myFSM.setDebugLogActive(true, "Menu Title");
+        this._myFSM.addState("spawn", this._spawnUpdate.bind(this));
+        this._myFSM.addState("unspawn", this._unspawnUpdate.bind(this));
+
+        this._myFSM.addTransition("spawn", "unspawn", "unspawn");
+        this._myFSM.addTransition("unspawn", "spawn", "spawn");
+
+        this._myFSM.init("spawn");
+
+        //Setup
+        this._mySpawnTime = 1.5;
+    }
+
+    spawn(timeToStart) {
+        if (!this._myTitleText.active) {
+            this._myTitleObject.pp_setActive(true);
+            this._mySubtitleObject.pp_setActive(true);
+
+            this._myTimer.start(this._mySpawnTime);
+        }
+
+        this._myStartTimer.start(timeToStart);
+        this._myFSM.perform("spawn");
+    }
+
+    unspawn(timeToStart) {
+        this._myTimer.start(this._mySpawnTime);
+        this._myStartTimer.start(timeToStart);
+        this._myFSM.perform("unspawn");
+    }
+
+    update(dt) {
+        this._myFSM.update(dt);
+    }
+
+    isHidden() {
+        return !this._myTimer.isRunning();
+    }
+
+    _spawnUpdate(dt) {
+        this._myStartTimer.update(dt);
+        if (this._myStartTimer.isDone()) {
+            if (this._myTimer.isRunning()) {
+                this._myTimer.update(dt);
+                this._myTitleText.material.color[3] = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
+
+                let color = this._myTitleText.material.color;
+                color[3] = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
+                this._myTitleText.material.color = color;
+
+                color = this._myTitleText.material.outlineColor;
+                color[3] = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
+                this._myTitleText.material.outlineColor = color;
+
+                color = this._mySubtitleText.material.color;
+                color[3] = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
+                this._mySubtitleText.material.color = color;
+                color = this._mySubtitleText.material.outlineColor;
+                color[3] = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
+                this._mySubtitleText.material.outlineColor = color;
+            }
+
+            if (this._myTimer.isDone()) {
+                this._myTimer.reset();
+            }
+        }
+    }
+
+    _unspawnUpdate(dt) {
+        this._myStartTimer.update(dt);
+        if (this._myStartTimer.isDone()) {
+            if (this._myTimer.isRunning()) {
+                this._myTimer.update(dt);
+                let color = this._myTitleText.material.color;
+                color[3] = 1 - PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
+                this._myTitleText.material.color = color;
+
+                color = this._myTitleText.material.outlineColor;
+                color[3] = 1 - PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
+                this._myTitleText.material.outlineColor = color;
+
+                color = this._mySubtitleText.material.color;
+                color[3] = 1 - PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
+                this._mySubtitleText.material.color = color;
+                color = this._mySubtitleText.material.outlineColor;
+                color[3] = 1 - PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
+                this._mySubtitleText.material.outlineColor = color;
+            }
+
+            if (this._myTimer.isDone()) {
+                this._myTimer.reset();
+                this._myTitleObject.pp_setActive(false);
+                this._mySubtitleObject.pp_setActive(false);
+            }
+        }
+    }
+
 }

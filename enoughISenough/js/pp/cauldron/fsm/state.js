@@ -4,28 +4,31 @@
     
     If you don't specify some methods the fsm will just skip them
     Or consider them always valid
-        If you don't specify an isReadyForTransition function it will be like it's always true 
 
-    The param state (forwarded at the end every function) is of type PP.StateData and can be used to retrieve the stateID and other data
-    The param transition is of type PP.TransitionData and can be used to retrieve the transitionID and other data
+    The param state is of type PP.StateData and can be used to retrieve the stateID and other data
+    The param transition is of type PP.TransitionData and can be used to retrieve the transitionID, the from and to states and other data
 */
 
 PP.State = class State {
 
     //Called every frame if this is the current state
-    update(dt, fsm, state) {
+    //You can retrieve this state data by calling fsm.getCurrentState()
+    update(dt, fsm) {
     }
 
     //Called when the fsm is started with this init state if no init transition object is specified or it does not have a performInit function
+    //Since the state is set as the current one after the init, you can't use fsm.getCurrentState() to get it, so it is forwarded as a param if needed
     init(fsm, state) {
     }
 
     //Called when entering this state if no transition object is specified or it does not have a perform function
-    start(fsm, transition, state) {
+    //You can get this state data by accesing to the to state data inside the transition
+    start(fsm, transition) {
     }
 
     //Called when exiting this state if no transition function is specified
-    end(fsm, transition, state) {
+    //You can get this state data by accesing to the from state data inside the transition
+    end(fsm, transition) {
     }
 
 };

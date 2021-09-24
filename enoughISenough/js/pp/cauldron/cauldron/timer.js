@@ -27,7 +27,7 @@ PP.Timer = class Timer {
     }
 
     update(dt) {
-        if (this._myStarted && !this._myIsDone) {
+        if (this.isRunning()) {
             this._myTimer = Math.max(0, this._myTimer - dt);
             if (this._myTimer == 0) {
                 this._done();
@@ -35,12 +35,16 @@ PP.Timer = class Timer {
         }
     }
 
-    isRunning() {
+    isDone() {
+        return this._myIsDone;
+    }
+
+    isStarted() {
         return this._myStarted;
     }
 
-    isDone() {
-        return this.isRunning() && this._myIsDone;
+    isRunning() {
+        return this.isStarted() && !this.isDone();
     }
 
     getDuration() {
