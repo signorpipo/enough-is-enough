@@ -226,6 +226,11 @@ class MenuItem {
 
         this._myAutoSpawn = true;
 
+        this._myThrowTimer = new PP.Timer(5, false);
+        this._myGrabbable.registerGrabEventListener(this, this._onGrab.bind(this));
+        this._myGrabbable.registerThrowEventListener(this, this._onThrow.bind(this));
+        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
+
         this._myFSM = new PP.FSM();
 
         //this._myFSM.setDebugLogActive(true, "Menu Item");
@@ -252,6 +257,7 @@ class MenuItem {
 
     update(dt) {
         this._myFSM.update(dt);
+        this._myThrowTimer.update(dt);
     }
 
     setAutoSpawn(autoSpawn) {
@@ -311,11 +317,12 @@ class MenuItem {
         if (!this._myGrabbable.isGrabbed()) {
             this._myPhysx.kinematic = false;
         }
+        this._myThrowTimer.reset();
     }
 
     _readyUpdate(dt) {
         if (this._myObject.pp_getPosition()[1] <= 0.05 || this._myObject.pp_getPosition()[1] > 20 || this._myObject.pp_getPosition().vec3_length() > 50) {
-            if (this._myCallbackOnFall) {
+            if (this._myCallbackOnFall && WL.xrSession && this._myThrowTimer.isRunning()) {
                 this._myCallbackOnFall();
             }
             this._myFSM.perform("unspawn");
@@ -345,6 +352,18 @@ class MenuItem {
     _startInactive() {
         this._myObject.pp_setActiveHierarchy(false);
         this._myTimer.start(1);
+    }
+
+    _onGrab() {
+        this._myThrowTimer.reset();
+    }
+
+    _onThrow() {
+        this._myThrowTimer.start();
+    }
+
+    _onXRSessionEnd() {
+        this._myThrowTimer.reset();
     }
 }
 
