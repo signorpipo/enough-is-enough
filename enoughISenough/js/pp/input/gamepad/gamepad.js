@@ -163,8 +163,9 @@ PP.Gamepad = class Gamepad {
         this._mySqueezeStart = false;
         this._mySqueezeEnd = false;
 
-        this.myInputSource = null;
-        this.myGamepad = null;
+        this._myIsXRSessionActive = false;
+        this._myInputSource = null;
+        this._myGamepad = null;
 
         this._myButtonCallbacks = [];
         for (let typeKey in PP.ButtonType) {
@@ -242,7 +243,7 @@ PP.Gamepad = class Gamepad {
      */
     isGamepadActive() {
         //connected == null is to fix webxr emulator that leaves that field undefined
-        return this.myGamepad != null && (this.myGamepad.connected == null || this.myGamepad.connected);
+        return this._myIsXRSessionActive && this._myGamepad != null && (this._myGamepad.connected == null || this._myGamepad.connected);
     }
 
     /**
@@ -314,6 +315,11 @@ PP.Gamepad = class Gamepad {
         }
 
         if (this._mySqueezeEnd) {
+            buttonSqueeze.myIsPressed = false;
+        }
+
+        if (!this.isGamepadActive()) {
+            buttonSelect.myIsPressed = false;
             buttonSqueeze.myIsPressed = false;
         }
     }
@@ -479,14 +485,14 @@ PP.Gamepad = class Gamepad {
     _getInternalButton(buttonType) {
         let buttonData = { pressed: false, touched: false, value: 0 };
         if (this.isGamepadActive()) {
-            if (buttonType < this.myGamepad.buttons.length) {
-                let gamepadButton = this.myGamepad.buttons[buttonType];
+            if (buttonType < this._myGamepad.buttons.length) {
+                let gamepadButton = this._myGamepad.buttons[buttonType];
                 buttonData.pressed = gamepadButton.pressed;
                 buttonData.touched = gamepadButton.touched;
                 buttonData.value = gamepadButton.value;
-            } else if (buttonType == PP.ButtonType.BOTTOM_BUTTON && this.myGamepad.buttons.length >= 3) {
+            } else if (buttonType == PP.ButtonType.BOTTOM_BUTTON && this._myGamepad.buttons.length >= 3) {
                 //This way if you are using a basic touch controller bottom button will work anyway
-                let touchButton = this.myGamepad.buttons[2];
+                let touchButton = this._myGamepad.buttons[2];
                 buttonData.pressed = touchButton.pressed;
                 buttonData.touched = touchButton.touched;
                 buttonData.value = touchButton.value;
@@ -499,7 +505,7 @@ PP.Gamepad = class Gamepad {
     _getInternalAxes() {
         let axes = [0.0, 0.0];
         if (this.isGamepadActive()) {
-            let internalAxes = this.myGamepad.axes;
+            let internalAxes = this._myGamepad.axes;
             if (internalAxes.length == 4) {
                 //in this case it could be both touch axes or thumbstick axes, that depends on the controller
                 //to support both I simply choose the absolute max value (unused axes will always be 0)
@@ -522,10 +528,10 @@ PP.Gamepad = class Gamepad {
                 axes[0] = internalAxes[0];
                 axes[1] = internalAxes[1];
             }
-        }
 
-        //y axis is recorder negative when thumbstick is pressed forward for weird reasons
-        axes[1] = -axes[1];
+            //y axis is recorder negative when thumbstick is pressed forward for weird reasons
+            axes[1] = -axes[1];
+        }
 
         return axes;
     }
@@ -553,10 +559,10 @@ PP.Gamepad = class Gamepad {
         let hapticActuator = null;
 
         if (this.isGamepadActive()) {
-            if (this.myGamepad.hapticActuators && this.myGamepad.hapticActuators.length > 0) {
-                hapticActuator = this.myGamepad.hapticActuators[0];
+            if (this._myGamepad.hapticActuators && this._myGamepad.hapticActuators.length > 0) {
+                hapticActuator = this._myGamepad.hapticActuators[0];
             } else {
-                hapticActuator = this.myGamepad.vibrationActuator;
+                hapticActuator = this._myGamepad.vibrationActuator;
             }
         }
 
@@ -567,9 +573,9 @@ PP.Gamepad = class Gamepad {
         session.addEventListener('inputsourceschange', function (event) {
             if (event.removed) {
                 for (let item of event.removed) {
-                    if (item.gamepad == this.myGamepad) {
-                        this.myInputSource = null;
-                        this.myGamepad = null;
+                    if (item.gamepad == this._myGamepad) {
+                        this._myInputSource = null;
+                        this._myGamepad = null;
                     }
                 }
             }
@@ -577,8 +583,8 @@ PP.Gamepad = class Gamepad {
             if (event.added) {
                 for (let item of event.added) {
                     if (item.handedness == this.myHandedness) {
-                        this.myInputSource = item;
-                        this.myGamepad = item.gamepad;
+                        this._myInputSource = item;
+                        this._myGamepad = item.gamepad;
                     }
                 }
             }
@@ -589,11 +595,15 @@ PP.Gamepad = class Gamepad {
 
         session.addEventListener('squeezestart', this._squeezeStart.bind(this));
         session.addEventListener('squeezeend', this._squeezeEnd.bind(this));
+
+        this._myIsXRSessionActive = true;
     }
 
     _onXRSessionEnd(session) {
-        this.myInputSource = null;
-        this.myGamepad = null;
+        this._myInputSource = null;
+        this._myGamepad = null;
+
+        this._myIsXRSessionActive = false;
     }
 
     //Select and Squeeze are managed this way to be more compatible
