@@ -3,10 +3,9 @@ if (!PP) {
 }
 
 Math.pp_clamp = function (value, intervalStart, intervalEnd) {
-    if (intervalStart < intervalEnd) {
-        return Math.min(Math.max(value, intervalStart), intervalEnd);
-    }
-    return Math.min(Math.max(value, intervalEnd), intervalStart);
+    let min = Math.min(intervalStart, intervalEnd);
+    let max = Math.max(intervalStart, intervalEnd);
+    return Math.min(Math.max(value, min), max);
 };
 
 Math.pp_toDegrees = function (angle) {
@@ -31,14 +30,40 @@ Math.pp_mapToNewInterval = function (value, originIntervalStart, originIntervalE
     return newValue;
 };
 
-//Interval is [min, max)
-Math.pp_random = function (min = 0, max = 1) {
-    return Math.random() * (max - min) + min;
+//Interval is [intervalStart, intervalEnd)
+Math.pp_random = function (intervalStart = 0, intervalEnd = 1) {
+    return Math.random() * (intervalEnd - intervalStart) + intervalStart;
 };
 
-//Interval is [min, max]
-Math.pp_randomInt = function (min, max) {
+//Interval is [intervalStart, intervalEnd]
+Math.pp_randomInt = function (intervalStart, intervalEnd) {
+    let min = Math.min(intervalStart, intervalEnd);
+    let max = Math.max(intervalStart, intervalEnd);
     return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+//Return 1 or -1
+Math.pp_randomSign = function () {
+    return (Math.random() < 0.5) ? 1 : -1;
+};
+
+//You give it a list of parameters and returns one
+Math.pp_randomPick = function (...args) {
+    let random = null;
+
+    if (args.length > 0) {
+        if (args.length == 1 && args[0].length != null) {
+            if (args[0].length > 0) {
+                let randomIndex = Math.pp_randomInt(0, args[0].length - 1);
+                random = args[0][randomIndex];
+            }
+        } else {
+            let randomIndex = Math.pp_randomInt(0, args.length - 1);
+            random = args[randomIndex];
+        }
+    }
+
+    return random;
 };
 
 Math.pp_lerp = function (from, to, interpolationValue) {

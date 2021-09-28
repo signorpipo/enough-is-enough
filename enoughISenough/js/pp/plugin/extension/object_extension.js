@@ -50,7 +50,7 @@
 
         - pp_setActive  / pp_setActiveHierarchy     / pp_setActiveChildren
 
-        - pp_clone      / pp_isClonable
+        - pp_clone      / pp_isCloneable
 
         - pp_getName    / pp_setName
         - pp_getChildren
@@ -1604,7 +1604,7 @@ PP.CloneParams = class CloneParams {
 WL.Object.prototype.pp_clone = function (params = new PP.CloneParams()) {
     let clonedObject = null;
 
-    if (this.pp_isClonable(params)) {
+    if (this.pp_isCloneable(params)) {
         let objectsToCloneData = [];
         objectsToCloneData.push([this.parent, this]);
 
@@ -1644,37 +1644,37 @@ WL.Object.prototype.pp_clone = function (params = new PP.CloneParams()) {
     return clonedObject;
 };
 
-WL.Object.prototype.pp_isClonable = function (params = new PP.CloneParams()) {
+WL.Object.prototype.pp_isCloneable = function (params = new PP.CloneParams()) {
     if (params.myIgnoreNonCloneable) {
         return true;
     }
 
-    let isClonable = true;
+    let isCloneable = true;
 
     let objects = [];
     objects.push(this);
 
-    while (isClonable && objects.length > 0) {
+    while (isCloneable && objects.length > 0) {
         let object = objects.shift();
 
         let components = this.pp_getAllComponents();
         for (let component of components) {
             if (params.myComponentsToIgnore.indexOf(component.type) == -1) {
                 if (component.pp_clone == null) {
-                    isClonable = false;
+                    isCloneable = false;
                     break;
                 }
             }
         }
 
-        if (isClonable && !params.myIgnoreChildren) {
+        if (isCloneable && !params.myIgnoreChildren) {
             for (let child of object.children) {
                 objects.push(child);
             }
         }
     }
 
-    return isClonable;
+    return isCloneable;
 };
 
 //Cauldron
