@@ -155,7 +155,7 @@ class MenuState extends PP.State {
     }
 
     _endStory(fsm) {
-        this._myParentFSM.perform(MainTransitions.StartStory);
+        this._myParentFSM.performDelayed(MainTransitions.StartStory);
     }
 
     _endReset(fsm) {

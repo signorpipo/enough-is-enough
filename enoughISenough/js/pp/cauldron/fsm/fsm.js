@@ -23,16 +23,34 @@ PP.TransitionData = class TransitionData {
     }
 };
 
+PP.PendingPerform = class PendingPerform {
+    constructor(transitionID, ...args) {
+        this.myID = transitionID;
+        this.myArgs = args;
+    }
+};
+
+PP.PerformDelayedType = {
+    QUEUE: 0,
+    KEEP_FIRST: 1,
+    KEEP_LAST: 2
+};
+
 PP.FSM = class FSM {
 
-    constructor() {
+    constructor(isPerformDelayed = false, performDelayedType = PP.PerformDelayedType.QUEUE) {
         this._myCurrentStateData = null;
 
         this._myStateMap = new Map();
         this._myTransitionMap = new Map();
 
         this._myDebugLogActive = false;
+        this._myDebugShowDelayedInfo = false;
         this._myDebugLogName = "FSM";
+
+        this._myIsPerformDelayed = isPerformDelayed;
+        this._myPerformDelayedType = performDelayedType;
+        this._myPendingPerforms = [];
     }
 
     addState(stateID, state = null) {
@@ -114,47 +132,52 @@ PP.FSM = class FSM {
     }
 
     update(dt, ...args) {
+        if (this._myPendingPerforms.length > 0) {
+            for (let i = 0; i < this._myPendingPerforms.length; i++) {
+                this._perform(this._myPendingPerforms[i].myID, true, ...this._myPendingPerforms[i].myArgs);
+            }
+            this._myPendingPerforms = [];
+        }
+
         if (this._myCurrentStateData && this._myCurrentStateData.myObject && this._myCurrentStateData.myObject.update) {
             this._myCurrentStateData.myObject.update(dt, this, ...args);
         }
     }
 
     perform(transitionID, ...args) {
-        if (this._myCurrentStateData) {
-            if (this.canPerform(transitionID)) {
-                let transitions = this._myTransitionMap.get(this._myCurrentStateData.myID);
-                let transitionToPerform = transitions.get(transitionID);
+        if (this._myIsPerformDelayed) {
+            this.performDelayed(transitionID, ...args);
+        } else {
+            this.performImmediate(transitionID, ...args);
+        }
+    }
 
-                let fromState = this._myCurrentStateData;
-                let toState = this._myStateMap.get(transitionToPerform.myToState.myID);
+    performDelayed(transitionID, ...args) {
+        let performDelayed = false;
 
-                if (transitionToPerform.myObject && transitionToPerform.myObject.perform) {
-                    transitionToPerform.myObject.perform(this, transitionToPerform, ...args);
-                } else {
-                    if (fromState.myObject && fromState.myObject.end) {
-                        fromState.myObject.end(this, transitionToPerform, ...args);
-                    }
-
-                    if (toState.myObject && toState.myObject.start) {
-                        toState.myObject.start(this, transitionToPerform, ...args);
-                    }
+        switch (this._myPerformDelayedType) {
+            case PP.PerformDelayedType.QUEUE:
+                this._myPendingPerforms.push(new PP.PendingPerform(transitionID, ...args));
+                performDelayed = true;
+                break;
+            case PP.PerformDelayedType.KEEP_FIRST:
+                if (!this.hasPendingPerforms()) {
+                    this._myPendingPerforms.push(new PP.PendingPerform(transitionID, ...args));
+                    performDelayed = true;
                 }
-
-                this._myCurrentStateData = transitionToPerform.myToState;
-
-                if (this._myDebugLogActive) {
-                    console.log(this._myDebugLogName, "- From:", fromState.myID, "- To:", toState.myID, "- With:", transitionID);
-                }
-
-                return true;
-            } else if (this._myDebugLogActive) {
-                console.warn(this._myDebugLogName, "- No Transition:", transitionID, "- From:", this._myCurrentStateData.myID);
-            }
-        } else if (this._myDebugLogActive) {
-            console.warn(this._myDebugLogName, "- FSM not initialized yet");
+                break;
+            case PP.PerformDelayedType.KEEP_LAST:
+                this.resetPendingPerforms();
+                this._myPendingPerforms.push(new PP.PendingPerform(transitionID, ...args));
+                performDelayed = true;
+                break;
         }
 
-        return false;
+        return performDelayed;
+    }
+
+    performImmediate(transitionID, ...args) {
+        return this._perform(transitionID, false, ...args);
     }
 
     canPerform(transitionID) {
@@ -174,7 +197,16 @@ PP.FSM = class FSM {
     }
 
     reset() {
+        this.resetState();
+        this.resetPendingPerforms();
+    }
+
+    resetState() {
         this._myCurrentStateData = null;
+    }
+
+    resetPendingPerforms() {
+        this._myPendingPerforms = [];
     }
 
     getCurrentState() {
@@ -290,6 +322,30 @@ PP.FSM = class FSM {
         return hasTransition;
     }
 
+    setPerformDelayed(isPerformDelayed) {
+        this._myIsPerformDelayed = isPerformDelayed;
+    }
+
+    setPerformDelayedType(performDelayedType) {
+        this._myPerformDelayedType = performDelayedType;
+    }
+
+    isPerformDelayed() {
+        return this._myIsPerformDelayed;
+    }
+
+    getPerformDelayedType() {
+        return this._myPerformDelayedType;
+    }
+
+    hasPendingPerforms() {
+        return this._myPendingPerforms.length > 0;
+    }
+
+    getPendingPerforms() {
+        return this._myPendingPerforms.slice(0);
+    }
+
     clone(deepClone = false) {
         if (deepClone && !this.isDeepCloneable()) {
             return null;
@@ -298,7 +354,12 @@ PP.FSM = class FSM {
         let cloneFSM = new PP.FSM();
 
         cloneFSM._myDebugLogActive = this._myDebugLogActive;
+        cloneFSM._myDebugShowDelayedInfo = this._myDebugShowDelayedInfo;
         cloneFSM._myDebugLogName = this._myDebugLogName.slice(0);
+
+        cloneFSM._myIsPerformDelayed = this._myIsPerformDelayed;
+        cloneFSM._myPerformDelayedType = this._myPerformDelayedType;
+        cloneFSM._myPendingPerforms = this._myPendingPerforms.slice(0);
 
         for (let entry of this._myStateMap.entries()) {
             let stateData = null;
@@ -355,12 +416,60 @@ PP.FSM = class FSM {
         return isDeepCloneable;
     }
 
-    setDebugLogActive(active, debugLogName = null) {
+    setDebugLogActive(active, debugLogName = null, showDelayedInfo = false) {
         this._myDebugLogActive = active;
+        this._myDebugShowDelayedInfo = showDelayedInfo;
         if (debugLogName) {
             this._myDebugLogName = "FSM: ".concat(debugLogName);
         }
     }
+
+    _perform(transitionID, isDelayed, ...args) {
+        if (this._myCurrentStateData) {
+            if (this.canPerform(transitionID)) {
+                let transitions = this._myTransitionMap.get(this._myCurrentStateData.myID);
+                let transitionToPerform = transitions.get(transitionID);
+
+                let fromState = this._myCurrentStateData;
+                let toState = this._myStateMap.get(transitionToPerform.myToState.myID);
+
+                if (transitionToPerform.myObject && transitionToPerform.myObject.perform) {
+                    transitionToPerform.myObject.perform(this, transitionToPerform, ...args);
+                } else {
+                    if (fromState.myObject && fromState.myObject.end) {
+                        fromState.myObject.end(this, transitionToPerform, ...args);
+                    }
+
+                    if (toState.myObject && toState.myObject.start) {
+                        toState.myObject.start(this, transitionToPerform, ...args);
+                    }
+                }
+
+                this._myCurrentStateData = transitionToPerform.myToState;
+
+                if (this._myDebugLogActive) {
+                    let consoleArguments = [this._myDebugLogName, "- From:", fromState.myID, "- To:", toState.myID, "- With:", transitionID];
+                    if (this._myDebugShowDelayedInfo) {
+                        consoleArguments.push(isDelayed ? "- Delayed" : "- Immediate");
+                    }
+                    console.log(...consoleArguments);
+                }
+
+                return true;
+            } else if (this._myDebugLogActive) {
+                let consoleArguments = [this._myDebugLogName, "- No Transition:", transitionID, "- From:", this._myCurrentStateData.myID];
+                if (this._myDebugShowDelayedInfo) {
+                    consoleArguments.push(isDelayed ? "- Delayed" : "- Immediate");
+                }
+                console.warn(...consoleArguments);
+            }
+        } else if (this._myDebugLogActive) {
+            console.warn(this._myDebugLogName, "- FSM not initialized yet", isDelayed ? "- Delayed" : "- Immediate");
+        }
+
+        return false;
+    }
+
 
     _getTransitionMapFromState(fromStateID) {
         return this._myTransitionMap.get(fromStateID);
