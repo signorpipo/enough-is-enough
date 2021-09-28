@@ -36,10 +36,22 @@ PP.FSM = class FSM {
     }
 
     addState(stateID, state = null) {
-        let stateObject = state;
-        if (state && typeof state == 'function') {
+        let stateObject = null;
+        if (!state || typeof state == 'function') {
             stateObject = {};
-            stateObject.update = state;
+            if (typeof state == 'function') {
+                stateObject.update = state;
+            } else {
+                stateObject.update = null;
+            }
+            stateObject.clone = function () {
+                let cloneObject = {};
+                cloneObject.update = this.update;
+                cloneObject.clone = this.clone;
+                return cloneObject;
+            };
+        } else {
+            stateObject = state;
         }
 
         let stateData = new PP.StateData(stateID, stateObject);
@@ -48,10 +60,22 @@ PP.FSM = class FSM {
     }
 
     addTransition(fromStateID, toStateID, transitionID, transition = null) {
-        let transitionObject = transition;
-        if (transition && typeof transition == 'function') {
+        let transitionObject = null;
+        if (!transition || typeof transition == 'function') {
             transitionObject = {};
-            transitionObject.perform = transition;
+            if (typeof transition == 'function') {
+                transitionObject.perform = transition;
+            } else {
+                transitionObject.perform = null;
+            }
+            transitionObject.clone = function () {
+                let cloneObject = {};
+                cloneObject.perform = this.perform;
+                cloneObject.clone = this.clone;
+                return cloneObject;
+            };
+        } else {
+            transitionObject = transition;
         }
 
         if (this.hasState(fromStateID) && this.hasState(toStateID)) {
@@ -111,7 +135,7 @@ PP.FSM = class FSM {
                         fromState.myObject.end(this, transitionToPerform, ...args);
                     }
 
-                    if (toState.myObject && toState.myObject.end) {
+                    if (toState.myObject && toState.myObject.start) {
                         toState.myObject.start(this, transitionToPerform, ...args);
                     }
                 }
@@ -147,6 +171,10 @@ PP.FSM = class FSM {
 
     hasBeenInit() {
         return this._myCurrentStateData != null;
+    }
+
+    reset() {
+        this._myCurrentStateData = null;
     }
 
     getCurrentState() {
@@ -260,6 +288,71 @@ PP.FSM = class FSM {
         }
 
         return hasTransition;
+    }
+
+    clone(deepClone = false) {
+        if (deepClone && !this.isDeepCloneable()) {
+            return null;
+        }
+
+        let cloneFSM = new PP.FSM();
+
+        cloneFSM._myDebugLogActive = this._myDebugLogActive;
+        cloneFSM._myDebugLogName = this._myDebugLogName.slice(0);
+
+        for (let entry of this._myStateMap.entries()) {
+            let stateData = null;
+
+            if (deepClone) {
+                stateData = new PP.StateData(entry[1].myID, entry[1].myObject.clone());
+            } else {
+                stateData = new PP.StateData(entry[1].myID, entry[1].myObject);
+            }
+
+            cloneFSM._myStateMap.set(entry[0], stateData);
+        }
+
+        for (let entry of this._myTransitionMap.entries()) {
+            let fromStateMap = new Map();
+            cloneFSM._myTransitionMap.set(entry[0], fromStateMap);
+
+            for (let tEntry of entry[1].entries()) {
+                let transitionData = null;
+
+                let fromState = cloneFSM.getState(tEntry[1].myFromState.myID);
+                let toState = cloneFSM.getState(tEntry[1].myToState.myID);
+
+                if (deepClone) {
+                    transitionData = new PP.TransitionData(tEntry[1].myID, fromState, toState, tEntry[1].myObject.clone());
+                } else {
+                    transitionData = new PP.TransitionData(tEntry[1].myID, fromState, toState, tEntry[1].myObject);
+                }
+
+                fromStateMap.set(transitionData.myID, transitionData);
+            }
+        }
+
+        if (this._myCurrentStateData) {
+            cloneFSM._myCurrentStateData = cloneFSM.getState(this._myCurrentStateData.myID);
+        }
+
+        return cloneFSM;
+    }
+
+    isDeepCloneable() {
+        let isDeepCloneable = true;
+
+        for (let entry of this._myStateMap.entries()) {
+            isDeepCloneable = isDeepCloneable && entry[1].myObject.clone != null;
+        }
+
+        for (let entry of this._myTransitionMap.entries()) {
+            for (let tEntry of entry[1].entries()) {
+                isDeepCloneable = isDeepCloneable && tEntry[1].myObject.clone != null;
+            }
+        }
+
+        return isDeepCloneable;
     }
 
     setDebugLogActive(active, debugLogName = null) {
