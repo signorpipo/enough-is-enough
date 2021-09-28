@@ -18,5 +18,6 @@ class StoryState extends PP.State {
     }
 
     end(fsm, transitionID) {
+        PP.SaveUtils.save("story_started_once", true);
     }
 }

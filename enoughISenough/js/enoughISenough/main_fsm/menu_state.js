@@ -7,6 +7,7 @@ class MenuState extends PP.State {
         this._myFSM = new PP.FSM();
         this._myFSM.setDebugLogActive(true, "Menu");
         this._myFSM.addState("ready", this._readyUpdate.bind(this));
+        this._myFSM.addState("unspawning_reset", this._unspawn.bind(this));
         this._myFSM.addState("unspawning_arcade_hard", this._unspawn.bind(this));
         this._myFSM.addState("unspawning_arcade_normal", this._unspawn.bind(this));
         this._myFSM.addState("unspawning_story", this._unspawn.bind(this));
@@ -15,13 +16,18 @@ class MenuState extends PP.State {
         this._myFSM.addTransition("ready", "unspawning_arcade_hard", "unspawn_arcade_hard", this._startUnspawning.bind(this));
         this._myFSM.addTransition("ready", "unspawning_arcade_normal", "unspawn_arcade_normal", this._startUnspawning.bind(this));
         this._myFSM.addTransition("ready", "unspawning_story", "unspawn_story", this._startUnspawning.bind(this));
+        this._myFSM.addTransition("ready", "unspawning_reset", "unspawn_reset", this._startUnspawningReset.bind(this));
         this._myFSM.addTransition("unspawning_arcade_hard", "done", "end", this._endArcadeHard.bind(this));
         this._myFSM.addTransition("unspawning_arcade_normal", "done", "end", this._endArcadeNormal.bind(this));
         this._myFSM.addTransition("unspawning_story", "done", "end", this._endStory.bind(this));
+        this._myFSM.addTransition("unspawning_reset", "done", "end", this._endReset.bind(this));
 
         this._myMenuItems = [];
+        this._myCurrentMenuItems = [];
 
         this._myMenuTitle = new MenuTitle(Global.myTitlesObject, Global.myTitleObject, Global.mySubtitleObject);
+
+        this._myNotEnough = new NotEnough();
 
         this._fillMenuItems();
 
@@ -36,13 +42,24 @@ class MenuState extends PP.State {
     start(fsm, transitionID) {
         this._myParentFSM = fsm;
 
+        let storyStartedOnce = PP.SaveUtils.loadBool("story_started_once");
+        if (storyStartedOnce) {
+            this._myCurrentMenuItems = [];
+            for (let item of this._myMenuItems) {
+                this._myCurrentMenuItems.push(item);
+            }
+        } else {
+            this._myCurrentMenuItems = [];
+            this._myCurrentMenuItems.push(this._myMenuItems[0]);
+        }
+
         let times = [];
         times[0] = Math.pp_random(0.15, 0.55);
-        for (let i = 1; i < this._myMenuItems.length; i++) {
+        for (let i = 1; i < this._myCurrentMenuItems.length; i++) {
             times[i] = times[i - 1] + Math.pp_random(0.15, 0.55);
         }
 
-        for (let item of this._myMenuItems) {
+        for (let item of this._myCurrentMenuItems) {
             let randomIndex = Math.pp_randomInt(0, times.length - 1);
             let timeBeforeFirstSpawn = times.pp_remove(randomIndex);
             item.init(timeBeforeFirstSpawn);
@@ -50,13 +67,14 @@ class MenuState extends PP.State {
 
         this._myMenuTitle.spawn(Math.pp_random(0.35, 0.7));
 
+        this._myFSM = this._myFSM.clone();
         this._myFSM.init("ready");
 
         this._myResetCount = 0;
     }
 
     _readyUpdate(dt, fsm) {
-        for (let item of this._myMenuItems) {
+        for (let item of this._myCurrentMenuItems) {
             item.update(dt);
         }
 
@@ -72,12 +90,12 @@ class MenuState extends PP.State {
         this._myUnspawnList = [];
 
         let indexList = [];
-        for (let i = 0; i < this._myMenuItems.length; i++) {
-            if (this._myMenuItems[i].canUnspawn()) {
+        for (let i = 0; i < this._myCurrentMenuItems.length; i++) {
+            if (this._myCurrentMenuItems[i].canUnspawn()) {
                 indexList.push(i);
             }
 
-            this._myMenuItems[i].setAutoSpawn(false);
+            this._myCurrentMenuItems[i].setAutoSpawn(false);
         }
 
         while (indexList.length > 0) {
@@ -91,29 +109,39 @@ class MenuState extends PP.State {
         this._myMenuTitle.unspawn(Math.pp_random(0.35, 0.7));
     }
 
+    _startUnspawningReset(fsm) {
+        this._myResetCount = 0;
+        PP.SaveUtils.save("story_started_once", false);
+        this._myNotEnough.start();
+
+        this._startUnspawning();
+    }
+
     _unspawn(dt, fsm) {
+        this._myNotEnough.update(dt);
+
         if (this._myUnspawnList.length > 0) {
             let first = this._myUnspawnList[0];
             first[1].update(dt);
             if (first[1].isDone()) {
-                this._myMenuItems[first[0]].unspawn();
+                this._myCurrentMenuItems[first[0]].unspawn();
                 this._myUnspawnList.shift();
             }
         }
 
-        for (let item of this._myMenuItems) {
+        for (let item of this._myCurrentMenuItems) {
             item.update(dt);
         }
 
         this._myMenuTitle.update(dt);
 
         let done = true;
-        for (let item of this._myMenuItems) {
-            done &= item.isInactive();
+        for (let item of this._myCurrentMenuItems) {
+            done = done && item.isInactive();
         }
-        done &= this._myMenuTitle.isHidden();
+        done = done && this._myMenuTitle.isHidden();
 
-        if (done) {
+        if (done && !this._myNotEnough.isNotEnoughing()) {
             fsm.perform("end");
         }
     }
@@ -128,6 +156,10 @@ class MenuState extends PP.State {
 
     _endStory(fsm) {
         this._myParentFSM.perform(MainTransitions.StartStory);
+    }
+
+    _endReset(fsm) {
+        this._myParentFSM.perform(MainTransitions.Reset);
     }
 
     _fillMenuItems() {
@@ -193,7 +225,7 @@ class MenuState extends PP.State {
                 this._myResetCount++;
 
                 if (this._myResetCount >= 5) {
-                    this._myResetCount = 0;
+                    this._myFSM.perform("unspawn_reset");
                 }
             }.bind(this));
             this._myMenuItems.push(floppyDisk);

@@ -7,6 +7,7 @@ class ShowTitleState extends PP.State {
         this._mySubtitle = WL.scene.addObject(null);
 
         Global.myTitlesObject = this._myTitlesObject;
+        Global.myTitlesRumbleObject = this._myTitlesRumbleObject;
         Global.myTitleObject = this._myTitle;
         Global.mySubtitleObject = this._mySubtitle;
 
@@ -43,8 +44,7 @@ class ShowTitleState extends PP.State {
         this._myCharAudios[0] = Global.myAudioManager.createAudioPlayer(SfxID.BLABLA_2);
         this._myCharAudios[1] = Global.myAudioManager.createAudioPlayer(SfxID.BLABLA_1);
 
-        this._myNotEnoughAudio = Global.myAudioManager.createAudioPlayer(SfxID.NOT_ENOUGH);
-        this._myNotEnoughAudio.setPosition(this._mySubtitleCenterPosition);
+        this._myNotEnough = new NotEnough(this._mySubtitleCenterPosition);
 
         this._myFSM = new PP.FSM();
         this._myFSM.setDebugLogActive(true, "Show Title");
@@ -157,29 +157,19 @@ class ShowTitleState extends PP.State {
     }
 
     prepareShowSubIS(fsm) {
-        this._myCharTimer = new PP.Timer(1);
-        this._myNotEnoughAudio.play();
+        this._myNotEnough.start();
 
         this._mySubtitleTextComponent.text = this._mySubtitleTextComponent.text.concat(" IS ");
     }
 
     showSubIS(dt, fsm) {
-        this._myCharTimer.update(dt);
-
-        let rumbleValue = 0.04;
-        Global.myPlayerRumbleObject.pp_setPositionLocal([Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue)]);
-        rumbleValue = 8;
-        this._myTitlesRumbleObject.pp_setPositionLocal([Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue)]);
-
-        if (this._myCharTimer.isDone()) {
+        this._myNotEnough.update(dt);
+        if (!this._myNotEnough.isNotEnoughing()) {
             fsm.perform("end");
         }
     }
 
     prepareShowSub2(fsm) {
-        Global.myPlayerRumbleObject.pp_resetPositionLocal();
-        this._myTitlesRumbleObject.pp_resetPositionLocal();
-
         this._myCharAudios[0].setPosition(this._mySubtitleCenterPosition);
         this._myCharAudios[1].setPosition(this._mySubtitleCenterPosition);
 
@@ -200,10 +190,8 @@ class ShowTitleState extends PP.State {
     _skip() {
         this._myCharAudios[0].stop();
         this._myCharAudios[1].stop();
-        this._myNotEnoughAudio.stop();
 
-        Global.myPlayerRumbleObject.pp_resetPositionLocal();
-        this._myTitlesRumbleObject.pp_resetPositionLocal();
+        this._myNotEnough.stop();
 
         this._myTitleTextComponent.text = "MR NOT";
         this._mySubtitleTextComponent.text = "enough IS enough";

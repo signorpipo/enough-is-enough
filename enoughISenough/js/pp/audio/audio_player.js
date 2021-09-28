@@ -110,6 +110,10 @@ PP.AudioPlayer = class AudioPlayer {
         this._myAudioSetup.myRate = rate;
     }
 
+    getDuration() {
+        return this._myAudio.duration();
+    }
+
     registerAudioEventListener(audioEvent, listenerID, callback) {
         this._myCallbackMap.get(audioEvent).set(listenerID, callback);
     }

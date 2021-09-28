@@ -27,6 +27,7 @@ class MainFSM {
         this._myFSM.addTransition(MainStates.Menu, MainStates.Story, MainTransitions.StartStory);
         this._myFSM.addTransition(MainStates.Menu, MainStates.ArcadeHard, MainTransitions.StartArcadeHard);
         this._myFSM.addTransition(MainStates.Menu, MainStates.ArcadeNormal, MainTransitions.StartArcadeNormal);
+        this._myFSM.addTransition(MainStates.Menu, MainStates.Menu, MainTransitions.Reset);
 
         this._myFSM.addTransition(MainStates.Story, MainStates.Menu, MainTransitions.End);
         this._myFSM.addTransition(MainStates.ArcadeHard, MainStates.Menu, MainTransitions.End);
@@ -47,5 +48,6 @@ var MainTransitions = {
     Skip: "Skip",
     StartStory: "StartStory",
     StartArcadeHard: "StartArcadeHard",
-    StartArcadeNormal: "StartArcadeNormal"
+    StartArcadeNormal: "StartArcadeNormal",
+    Reset: "Reset"
 };

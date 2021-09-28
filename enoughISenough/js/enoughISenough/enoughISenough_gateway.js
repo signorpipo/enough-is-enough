@@ -39,6 +39,7 @@ var Global = {
     myRingRadius: 0,
     myRingHeight: 0,
     myTitlesObject: null,
+    myTitlesRumbleObject: null,
     myTitleObject: null,
     mySubtitleObject: null
 };

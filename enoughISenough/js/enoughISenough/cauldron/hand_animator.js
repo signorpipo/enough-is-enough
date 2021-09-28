@@ -92,7 +92,7 @@ WL.registerComponent("hand-animator", {
         let done = true;
 
         for (let piece of this._myHandPieces) {
-            done &= piece.isDone();
+            done = done && piece.isDone();
         }
 
         return done;
