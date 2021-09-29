@@ -347,7 +347,7 @@ PP.FSM = class FSM {
     }
 
     clone(deepClone = false) {
-        if (deepClone && !this.isDeepCloneable()) {
+        if (!this.isCloneable(deepClone)) {
             return null;
         }
 
@@ -400,7 +400,11 @@ PP.FSM = class FSM {
         return cloneFSM;
     }
 
-    isDeepCloneable() {
+    isCloneable(deepClone = false) {
+        if (!deepClone) {
+            return true;
+        }
+
         let isDeepCloneable = true;
 
         for (let entry of this._myStateMap.entries()) {

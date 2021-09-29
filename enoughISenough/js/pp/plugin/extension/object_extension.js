@@ -1591,8 +1591,11 @@ if (!PP) {
 PP.CloneParams = class CloneParams {
     constructor() {
         this.myIgnoreNonCloneable = false; // Ignore components that are not clonable
-        this.myIgnoreChildren = false;
-        this.myComponentsToIgnore = []; // Add Component Type like "mesh"
+        this.myIgnoreChildren = false; // Clone only the given object without the children
+        this.myIgnoreComponents = false; // All components are ignored, cloning only the object hierarchy
+
+        this.myComponentsToIgnore = []; // Ignore all component types in this list (example: "mesh"), has lower priority over myComponentsToClone
+        this.myComponentsToClone = []; // Clone only the component types in this list (example: "mesh"), has higher priority over myComponentsToIgnore, if empty it's ignored
 
         this.myDeepClone = false;
 
@@ -1619,10 +1622,17 @@ WL.Object.prototype.pp_clone = function (params = new PP.CloneParams()) {
             currentClonedObject.pp_setScaleLocal(objectToClone.pp_getScaleLocal());
             currentClonedObject.pp_setTransformLocalQuat(objectToClone.pp_getTransformLocalQuat());
 
-            let components = objectToClone.pp_getAllComponents();
-            for (let component of components) {
-                if (params.myComponentsToIgnore.indexOf(component.type) == -1) {
-                    if (component.pp_clone != null) {
+            if (!params.myIgnoreComponents) {
+                let components = objectToClone.pp_getAllComponents();
+                for (let component of components) {
+                    let cloneComponent = false;
+                    if (params.myComponentsToClone.length > 0) {
+                        cloneComponent = params.myComponentsToClone.indexOf(component.type) != -1;
+                    } else {
+                        cloneComponent = params.myComponentsToIgnore.indexOf(component.type) == -1;
+                    }
+
+                    if (cloneComponent && component.pp_clone != null) {
                         let clonedComponent = component.pp_clone(currentClonedObject, params);
                         clonedComponent.active = component.active; // not managing the fact that inactive components from editor haven't called start yet, but clones do
                     }
@@ -1645,7 +1655,7 @@ WL.Object.prototype.pp_clone = function (params = new PP.CloneParams()) {
 };
 
 WL.Object.prototype.pp_isCloneable = function (params = new PP.CloneParams()) {
-    if (params.myIgnoreNonCloneable) {
+    if (params.myIgnoreNonCloneable || params.myIgnoreComponents) {
         return true;
     }
 
@@ -1659,11 +1669,16 @@ WL.Object.prototype.pp_isCloneable = function (params = new PP.CloneParams()) {
 
         let components = this.pp_getAllComponents();
         for (let component of components) {
-            if (params.myComponentsToIgnore.indexOf(component.type) == -1) {
-                if (component.pp_clone == null) {
-                    isCloneable = false;
-                    break;
-                }
+            let cloneComponent = false;
+            if (params.myComponentsToClone.length > 0) {
+                cloneComponent = params.myComponentsToClone.indexOf(component.type) != -1;
+            } else {
+                cloneComponent = params.myComponentsToIgnore.indexOf(component.type) == -1;
+            }
+
+            if (cloneComponent && component.pp_clone == null) {
+                isCloneable = false;
+                break;
             }
         }
 
