@@ -335,7 +335,7 @@
                 },
                 {
                     "type": "pp-mute-all",
-                    "active": false
+                    "active": true
                 },
                 {
                     "type": "clear-console-on-session",
@@ -1112,7 +1112,7 @@
                 0.001,
                 0.0,
                 0.0,
-                1000.0,
+                0.0,
                 0.0,
                 1.0
             ]
@@ -1483,22 +1483,22 @@
         },
         "122": {
             "name": "Test Title",
-            "parent": "102",
+            "parent": null,
             "transformation": [
-                999.9999389,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                999.9999389,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                999.9999389,
+                1.0,
                 0.0,
                 0.0,
-                -999999.875,
+                0.0,
                 0.0,
                 1.0
             ],
@@ -1550,7 +1550,13 @@
                 null,
                 null,
                 null,
-                null
+                null,
+                {
+                    "type": "pp-set-hierarchy-active",
+                    "pp-set-hierarchy-active": {
+                        "_myHierarchyActive": false
+                    }
+                }
             ]
         },
         "123": {

@@ -979,35 +979,180 @@ WL.Object.prototype.pp_rotateAxisObjectRadians = function () {
 
 //Rotate Around
 
-WL.Object.prototype.pp_rotateAround = function (position, axis, angle) {
-    this.pp_rotateAroundWorld(position, axis, angle);
+WL.Object.prototype.pp_rotateAround = function (rotation, origin) {
+    this.pp_rotateAroundWorld(rotation, origin);
 };
 
-WL.Object.prototype.pp_rotateAroundDegrees = function (position, axis, angle) {
-    this.pp_rotateAroundWorldDegrees(position, axis, angle);
+WL.Object.prototype.pp_rotateAroundDegrees = function (rotation, origin) {
+    this.pp_rotateAroundWorldDegrees(rotation, origin);
 };
 
-WL.Object.prototype.pp_rotateAroundRadians = function (position, axis, angle) {
-    this.pp_rotateAroundWorldRadians(position, axis, angle);
+WL.Object.prototype.pp_rotateAroundRadians = function (rotation, origin) {
+    this.pp_rotateAroundWorldRadians(rotation, origin);
+};
+
+WL.Object.prototype.pp_rotateAroundMatrix = function (rotation, origin) {
+    this.pp_rotateAroundWorldMatrix(rotation, origin);
+};
+
+WL.Object.prototype.pp_rotateAroundQuat = function (rotation, origin) {
+    this.pp_rotateAroundWorldQuat(rotation, origin);
 };
 
 //Rotate Around World
 
-WL.Object.prototype.pp_rotateAroundWorld = function (position, axis, angle) {
-    this.pp_rotateAroundWorldDegrees(position, axis, angle);
+WL.Object.prototype.pp_rotateAroundWorld = function (rotation, origin) {
+    this.pp_rotateAroundWorldDegrees(rotation, origin);
 };
 
-WL.Object.prototype.pp_rotateAroundWorldDegrees = function (position, axis, angle) {
-    this.pp_rotateAroundWorldRadians(position, axis, glMatrix.glMatrix.toRadian(angle));
-};
+WL.Object.prototype.pp_rotateAroundWorldDegrees = function () {
+    let rotationQuat = glMatrix.quat.create();
+    return function (rotation, origin) {
+        this._pp_degreesToQuaternion(rotation, rotationQuat);
+        this.pp_rotateAroundWorldQuat(rotationQuat, origin);
+    };
+}();
 
 WL.Object.prototype.pp_rotateAroundWorldRadians = function () {
+    let degreesRotation = glMatrix.vec3.create();
+    return function (rotation, origin) {
+        rotation.forEach(function (value, index, array) {
+            degreesRotation[index] = this._pp_toDegrees(value);
+        }.bind(this));
+        this.pp_rotateAroundWorldDegrees(degreesRotation, origin);
+    };
+}();
+
+WL.Object.prototype.pp_rotateAroundWorldMatrix = function () {
+    let rotationQuat = glMatrix.quat.create();
+    return function (rotation, origin) {
+        glMatrix.quat.fromMat3(rotationQuat, rotation);
+        glMatrix.quat.normalize(rotationQuat, rotationQuat);
+        this.pp_rotateAroundWorldQuat(rotationQuat, origin);
+    };
+}();
+
+WL.Object.prototype.pp_rotateAroundWorldQuat = function () {
+    let axis = glMatrix.vec3.create();
+    return function (rotation, origin) {
+        let angle = glMatrix.quat.getAxisAngle(axis, rotation);
+        this.pp_rotateAroundAxisWorldRadians(axis, angle, origin);
+    };
+}();
+
+//Rotate Around Local
+
+WL.Object.prototype.pp_rotateAroundLocal = function (rotation, origin) {
+    this.pp_rotateAroundLocalDegrees(rotation, origin);
+};
+
+WL.Object.prototype.pp_rotateAroundLocalDegrees = function () {
+    let rotationQuat = glMatrix.quat.create();
+    return function (rotation, origin) {
+        this._pp_degreesToQuaternion(rotation, rotationQuat);
+        this.pp_rotateAroundLocalQuat(rotationQuat, origin);
+    };
+}();
+
+WL.Object.prototype.pp_rotateAroundLocalRadians = function () {
+    let degreesRotation = glMatrix.vec3.create();
+    return function (rotation, origin) {
+        rotation.forEach(function (value, index, array) {
+            degreesRotation[index] = this._pp_toDegrees(value);
+        }.bind(this));
+        this.pp_rotateAroundLocalDegrees(degreesRotation, origin);
+    };
+}();
+
+WL.Object.prototype.pp_rotateAroundLocalMatrix = function () {
+    let rotationQuat = glMatrix.quat.create();
+    return function (rotation, origin) {
+        glMatrix.quat.fromMat3(rotationQuat, rotation);
+        glMatrix.quat.normalize(rotationQuat, rotationQuat);
+        this.pp_rotateAroundLocalQuat(rotationQuat, origin);
+    };
+}();
+
+WL.Object.prototype.pp_rotateAroundLocalQuat = function () {
+    let axis = glMatrix.vec3.create();
+    return function (rotation, origin) {
+        let angle = glMatrix.quat.getAxisAngle(axis, rotation);
+        this.pp_rotateAroundAxisLocalRadians(axis, angle, origin);
+    };
+}();
+
+//Rotate Around Object
+
+WL.Object.prototype.pp_rotateAroundObject = function (rotation, origin) {
+    this.pp_rotateAroundObjectDegrees(rotation, origin);
+};
+
+WL.Object.prototype.pp_rotateAroundObjectDegrees = function () {
+    let rotationQuat = glMatrix.quat.create();
+    return function (rotation, origin) {
+        this._pp_degreesToQuaternion(rotation, rotationQuat);
+        this.pp_rotateAroundObjectQuat(rotationQuat, origin);
+    };
+}();
+
+WL.Object.prototype.pp_rotateAroundObjectRadians = function () {
+    let degreesRotation = glMatrix.vec3.create();
+    return function (rotation, origin) {
+        rotation.forEach(function (value, index, array) {
+            degreesRotation[index] = this._pp_toDegrees(value);
+        }.bind(this));
+        this.pp_rotateAroundObjectDegrees(degreesRotation, origin);
+    };
+}();
+
+WL.Object.prototype.pp_rotateAroundObjectMatrix = function () {
+    let rotationQuat = glMatrix.quat.create();
+    return function (rotation, origin) {
+        glMatrix.quat.fromMat3(rotationQuat, rotation);
+        glMatrix.quat.normalize(rotationQuat, rotationQuat);
+        this.pp_rotateAroundObjectQuat(rotationQuat, origin);
+    };
+}();
+
+WL.Object.prototype.pp_rotateAroundObjectQuat = function () {
+    let axis = glMatrix.vec3.create();
+    return function (rotation, origin) {
+        let angle = glMatrix.quat.getAxisAngle(axis, rotation);
+        this.pp_rotateAroundAxisObjectRadians(axis, angle, origin);
+    };
+}();
+
+//Rotate Around Axis
+
+WL.Object.prototype.pp_rotateAroundAxis = function (axis, angle, origin) {
+    this.pp_rotateAroundAxisWorld(axis, angle, origin);
+};
+
+WL.Object.prototype.pp_rotateAroundAxisDegrees = function (axis, angle, origin) {
+    this.pp_rotateAroundAxisWorldDegrees(axis, angle, origin);
+};
+
+WL.Object.prototype.pp_rotateAroundAxisRadians = function (axis, angle, origin) {
+    this.pp_rotateAroundAxisWorldRadians(axis, angle, origin);
+};
+
+//Rotate Around Axis World
+
+WL.Object.prototype.pp_rotateAroundAxisWorld = function (axis, angle, origin) {
+    this.pp_rotateAroundAxisWorldDegrees(axis, angle, origin);
+};
+
+WL.Object.prototype.pp_rotateAroundAxisWorldDegrees = function (axis, angle, origin) {
+    this.pp_rotateAroundAxisWorldRadians(axis, glMatrix.glMatrix.toRadian(angle), origin);
+};
+
+WL.Object.prototype.pp_rotateAroundAxisWorldRadians = function () {
     let transformToRotate = glMatrix.quat2.create();
     let transformToRotateConjugate = glMatrix.quat2.create();
     let transformQuat = glMatrix.quat2.create();
     let defaultQuat = glMatrix.quat.create();
-    return function (position, axis, angle) {
-        glMatrix.quat2.fromRotationTranslation(transformToRotate, defaultQuat, position);
+    return function (axis, angle, origin) {
+        glMatrix.quat2.fromRotationTranslation(transformToRotate, defaultQuat, origin);
         this.pp_getTransformWorldQuat(transformQuat);
         glMatrix.quat2.conjugate(transformToRotateConjugate, transformToRotate);
         glMatrix.quat2.mul(transformQuat, transformToRotateConjugate, transformQuat);
@@ -1017,46 +1162,45 @@ WL.Object.prototype.pp_rotateAroundWorldRadians = function () {
     };
 }();
 
-//Rotate Around Local
+//Rotate Around Axis Local
 
-WL.Object.prototype.pp_rotateAroundLocal = function (position, axis, angle) {
-    this.pp_rotateAroundLocalDegrees(position, axis, angle);
+WL.Object.prototype.pp_rotateAroundAxisLocal = function (axis, angle, origin) {
+    this.pp_rotateAroundAxisLocalDegrees(axis, angle, origin);
 };
 
-WL.Object.prototype.pp_rotateAroundLocalDegrees = function (position, axis, angle) {
-    this.pp_rotateAroundLocalRadians(position, axis, glMatrix.glMatrix.toRadian(angle));
+WL.Object.prototype.pp_rotateAroundAxisLocalDegrees = function (axis, angle, origin) {
+    this.pp_rotateAroundAxisLocalRadians(axis, glMatrix.glMatrix.toRadian(angle), origin);
 };
 
-WL.Object.prototype.pp_rotateAroundLocalRadians = function () {
+WL.Object.prototype.pp_rotateAroundAxisLocalRadians = function () {
     let convertedPosition = glMatrix.vec3.create();
     let convertedAxis = glMatrix.vec3.create();
-    return function (position, axis, angle) {
-        this.pp_convertPositionLocalToWorld(position, convertedPosition);
+    return function (axis, angle, origin) {
+        this.pp_convertPositionLocalToWorld(origin, convertedPosition);
         this.pp_convertDirectionLocalToWorld(axis, convertedAxis);
-        this.pp_rotateAroundWorldRadians(convertedPosition, convertedAxis, angle);
+        this.pp_rotateAroundAxisWorldRadians(convertedAxis, angle, convertedPosition);
     };
 }();
 
-//Rotate Around Object
+//Rotate Around Axis Object
 
-WL.Object.prototype.pp_rotateAroundObject = function (position, axis, angle) {
-    this.pp_rotateAroundObjectDegrees(position, axis, angle);
+WL.Object.prototype.pp_rotateAroundAxisObject = function (axis, angle, origin) {
+    this.pp_rotateAroundAxisObjectDegrees(axis, angle, origin);
 };
 
-WL.Object.prototype.pp_rotateAroundObjectDegrees = function (position, axis, angle) {
-    this.pp_rotateAroundObjectRadians(position, axis, glMatrix.glMatrix.toRadian(angle));
+WL.Object.prototype.pp_rotateAroundAxisObjectDegrees = function (axis, angle, origin) {
+    this.pp_rotateAroundAxisObjectRadians(axis, glMatrix.glMatrix.toRadian(angle), origin);
 };
 
-WL.Object.prototype.pp_rotateAroundObjectRadians = function () {
+WL.Object.prototype.pp_rotateAroundAxisObjectRadians = function () {
     let convertedPosition = glMatrix.vec3.create();
     let convertedAxis = glMatrix.vec3.create();
-    return function (position, axis, angle) {
-        this.pp_convertPositionObjectToWorld(position, convertedPosition);
+    return function (axis, angle, origin) {
+        this.pp_convertPositionObjectToWorld(origin, convertedPosition);
         this.pp_convertDirectionObjectToWorld(axis, convertedAxis);
-        this.pp_rotateAroundWorldRadians(convertedPosition, convertedAxis, angle);
+        this.pp_rotateAroundAxisWorldRadians(convertedAxis, angle, convertedPosition);
     };
 }();
-
 
 //Scale
 

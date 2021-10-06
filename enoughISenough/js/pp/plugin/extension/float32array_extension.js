@@ -160,30 +160,44 @@ Float32Array.prototype.vec3_rotate = function (rotation, out) {
     return this.vec3_rotateDegrees(rotation, out);
 };
 
-Float32Array.prototype.vec3_rotateDegrees = function (rotation, out) {
-    return this.vec3_rotateAroundDegrees(rotation, undefined, out);
-};
+Float32Array.prototype.vec3_rotateDegrees = function () {
+    let zero = glMatrix.vec3.create();
+    return function (rotation, out) {
+        return this.vec3_rotateAroundDegrees(rotation, zero, out);
+    };
+}();
 
-Float32Array.prototype.vec3_rotateRadians = function (rotation, out) {
-    return this.vec3_rotateAroundRadians(rotation, undefined, out);
-};
+Float32Array.prototype.vec3_rotateRadians = function () {
+    let zero = glMatrix.vec3.create();
+    return function (rotation, out) {
+        return this.vec3_rotateAroundRadians(rotation, zero, out);
+    };
+}();
 
-Float32Array.prototype.vec3_rotateQuat = function (rotation, out) {
-    return this.vec3_rotateAroundQuat(rotation, undefined, out);
-
-};
+Float32Array.prototype.vec3_rotateQuat = function () {
+    let zero = glMatrix.vec3.create();
+    return function (rotation, out) {
+        return this.vec3_rotateAroundQuat(rotation, zero, out);
+    };
+}();
 
 Float32Array.prototype.vec3_rotateAxis = function (axis, angle, out) {
     return this.vec3_rotateAxisDegrees(axis, angle, out);
 };
 
-Float32Array.prototype.vec3_rotateAxisDegrees = function (axis, angle, out) {
-    return this.vec3_rotateAroundAxisDegrees(axis, angle, undefined, out);
-};
+Float32Array.prototype.vec3_rotateAxisDegrees = function () {
+    let zero = glMatrix.vec3.create();
+    return function (axis, angle, out) {
+        return this.vec3_rotateAroundAxisDegrees(axis, angle, zero, out);
+    };
+}();
 
-Float32Array.prototype.vec3_rotateAxisRadians = function (axis, angle, out = glMatrix.vec3.create()) {
-    return this.vec3_rotateAroundAxisRadians(axis, angle, undefined, out);
-};
+Float32Array.prototype.vec3_rotateAxisRadians = function () {
+    let zero = glMatrix.vec3.create();
+    return function (axis, angle, out) {
+        return this.vec3_rotateAroundAxisRadians(axis, angle, zero, out);
+    };
+}();
 
 Float32Array.prototype.vec3_rotateAround = function (rotation, origin, out) {
     return this.vec3_rotateAroundDegrees(rotation, origin, out);
@@ -191,7 +205,7 @@ Float32Array.prototype.vec3_rotateAround = function (rotation, origin, out) {
 
 Float32Array.prototype.vec3_rotateAroundDegrees = function () {
     let quat = glMatrix.quat.create();
-    return function (rotation, origin = [0, 0, 0], out = glMatrix.vec3.create()) {
+    return function (rotation, origin, out = glMatrix.vec3.create()) {
         rotation.vec3_degreesToQuat(quat);
         return this.vec3_rotateAroundQuat(quat, origin, out);
     };
@@ -199,13 +213,13 @@ Float32Array.prototype.vec3_rotateAroundDegrees = function () {
 
 Float32Array.prototype.vec3_rotateAroundRadians = function () {
     let quat = glMatrix.quat.create();
-    return function (rotation, origin = [0, 0, 0], out = glMatrix.vec3.create()) {
+    return function (rotation, origin, out = glMatrix.vec3.create()) {
         rotation.vec3_radiansToQuat(quat);
         return this.vec3_rotateAroundQuat(quat, origin, out);
     };
 }();
 
-Float32Array.prototype.vec3_rotateAroundQuat = function (rotation, origin = [0, 0, 0], out = glMatrix.vec3.create()) {
+Float32Array.prototype.vec3_rotateAroundQuat = function (rotation, origin, out = glMatrix.vec3.create()) {
     glMatrix.vec3.sub(out, this, origin);
     glMatrix.vec3.transformQuat(out, out, rotation);
     glMatrix.vec3.add(out, out, origin);
@@ -222,7 +236,7 @@ Float32Array.prototype.vec3_rotateAroundAxisDegrees = function (axis, angle, ori
 
 Float32Array.prototype.vec3_rotateAroundAxisRadians = function () {
     let quat = glMatrix.quat.create();
-    return function (axis, angle, origin = [0, 0, 0], out = glMatrix.vec3.create()) {
+    return function (axis, angle, origin, out = glMatrix.vec3.create()) {
         glMatrix.quat.setAxisAngle(quat, axis, angle);
         return this.vec3_rotateAroundQuat(quat, origin, out);
     };
@@ -326,9 +340,19 @@ Float32Array.prototype.vec3_convertDirectionToLocalQuat = function () {
 }();
 
 Float32Array.prototype.vec3_log = function (decimalPlaces = 4) {
-    console.log("[", this[0].toFixed(decimalPlaces), ",", this[1].toFixed(decimalPlaces), ",", this[2].toFixed(decimalPlaces), "]");
+    let message = "[".concat(this[0].toFixed(decimalPlaces)).concat(", ").concat(this[1].toFixed(decimalPlaces)).concat(", ").concat(this[2].toFixed(decimalPlaces)).concat("]");
+    console.log(message);
 };
 
+Float32Array.prototype.vec3_error = function (decimalPlaces = 4) {
+    let message = "[".concat(this[0].toFixed(decimalPlaces)).concat(", ").concat(this[1].toFixed(decimalPlaces)).concat(", ").concat(this[2].toFixed(decimalPlaces)).concat("]");
+    console.error(message);
+};
+
+Float32Array.prototype.vec3_warn = function (decimalPlaces = 4) {
+    let message = "[".concat(this[0].toFixed(decimalPlaces)).concat(", ").concat(this[1].toFixed(decimalPlaces)).concat(", ").concat(this[2].toFixed(decimalPlaces)).concat("]");
+    console.warn(message);
+};
 
 //QUAT
 

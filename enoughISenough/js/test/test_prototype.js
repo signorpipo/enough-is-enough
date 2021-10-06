@@ -484,57 +484,79 @@ WL.registerComponent('test-prototype', {
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
 
         console.warn("\nROTATE AROUND\n");
+        this.object.pp_rotateAround([-20, 0, 0], [1, 2, 3]);
+        this.object.pp_rotateAroundDegrees([-20, 0, 0], [1, 2, 3]);
+        this.object.pp_rotateAroundRadians([-20, 0, 0], [1, 2, 3]);
+        this.object.pp_rotateAroundMatrix([-20, 0, 0], [1, 2, 3]);
+        this.object.pp_rotateAroundQuat([-20, 0, 0], [1, 2, 3]);
+
+        this.object.pp_rotateAroundWorldDegrees([-20, 0, 0], [1, 2, 3]);
+        this.object.pp_rotateAroundWorldRadians([-20, 0, 0], [1, 2, 3]);
+        this.object.pp_rotateAroundWorldMatrix([-20, 0, 0], [1, 2, 3]);
+        this.object.pp_rotateAroundWorldQuat([-20, 0, 0], [1, 2, 3]);
+
+        this.object.pp_rotateAroundLocalDegrees([-20, 0, 0], [1, 2, 3]);
+        this.object.pp_rotateAroundLocalRadians([-20, 0, 0], [1, 2, 3]);
+        this.object.pp_rotateAroundLocalMatrix([-20, 0, 0], [1, 2, 3]);
+        this.object.pp_rotateAroundLocalQuat([-20, 0, 0], [1, 2, 3]);
+
+        this.object.pp_rotateAroundObjectDegrees([-20, 0, 0], [1, 2, 3]);
+        this.object.pp_rotateAroundObjectRadians([-20, 0, 0], [1, 2, 3]);
+        this.object.pp_rotateAroundObjectMatrix([-20, 0, 0], [1, 2, 3]);
+        this.object.pp_rotateAroundObjectQuat([-20, 0, 0], [1, 2, 3]);
+
+        console.warn("\nROTATE AROUND AXIS\n");
         this.object.pp_resetRotation();
         this.object.pp_rotateObject([20, 0, 0]);
         this.consoleWarnFixed(this.object.pp_getRotation());
-        this.object.pp_rotateAround(this.object.pp_getPosition(), [1, 0, 0], 20);
+        this.object.pp_rotateAroundAxis([1, 0, 0], 20, this.object.pp_getPosition());
         this.consoleWarnFixed(this.object.pp_getRotation());
-        this.object.pp_rotateAroundDegrees(this.object.pp_getPosition(), [1, 0, 0], 10);
+        this.object.pp_rotateAroundAxisDegrees([1, 0, 0], 10, this.object.pp_getPosition());
         this.consoleWarnFixed(this.object.pp_getRotation());
-        this.object.pp_rotateAroundRadians(this.object.pp_getParent().pp_getPosition(), [1, 0, 0], Math.pp_toRadians(10));
+        this.object.pp_rotateAroundAxisRadians([1, 0, 0], Math.pp_toRadians(10), this.object.pp_getParent().pp_getPosition());
         this.consoleWarnFixed(this.object.pp_getRotation());
 
-        console.warn("\nROTATE WORLD AROUND\n");
+        console.warn("\nROTATE WORLD AROUND AXIS\n");
         this.object.pp_resetRotationWorld();
         this.object.pp_rotateWorld([-20, 0, 0]);
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
-        this.object.pp_rotateAroundWorld(this.object.pp_getParent().pp_getPosition(), [1, 0, 0], -20);
+        this.object.pp_rotateAroundAxisWorld([1, 0, 0], -20, this.object.pp_getParent().pp_getPosition());
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
-        this.object.pp_rotateAroundWorldDegrees(this.object.pp_getParent().pp_getPosition(), [1, 0, 0], 10);
+        this.object.pp_rotateAroundAxisWorldDegrees([1, 0, 0], 10, this.object.pp_getParent().pp_getPosition());
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
-        this.object.pp_rotateAroundWorldRadians(this.object.pp_getParent().pp_getPosition(), [1, 0, 0], Math.pp_toRadians(10));
+        this.object.pp_rotateAroundAxisWorldRadians([1, 0, 0], Math.pp_toRadians(10), this.object.pp_getParent().pp_getPosition());
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
 
-        console.warn("\nROTATE LOCAL AROUND\n");
+        console.warn("\nROTATE LOCAL AROUND AXIS\n");
         this.object.pp_resetRotationLocal();
         this.object.pp_rotateLocal([-20, 0, 0]);
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
-        this.object.pp_rotateAroundLocal(this.object.pp_getPositionLocal(), [1, 0, 0], -20);
+        this.object.pp_rotateAroundAxisLocal([1, 0, 0], -20, this.object.pp_getPositionLocal());
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
-        this.object.pp_rotateAroundLocalDegrees(this.object.pp_getPositionLocal(), [1, 0, 0], 10);
+        this.object.pp_rotateAroundAxisLocalDegrees([1, 0, 0], 10, this.object.pp_getPositionLocal());
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
-        this.object.pp_rotateAroundLocalRadians([0, 0, 0], [1, 0, 0], Math.pp_toRadians(10));
+        this.object.pp_rotateAroundAxisLocalRadians([1, 0, 0], Math.pp_toRadians(10), [0, 0, 0]);
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
 
-        console.warn("\nROTATE OBJECT AROUND\n");
+        console.warn("\nROTATE OBJECT AROUND AXIS\n");
         this.object.pp_resetRotationWorld();
         this.object.pp_rotateWorld([-20, 0, 0]);
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
-        this.object.pp_rotateAroundObject([0, 1, 2], [1, 0, 0], -20);
+        this.object.pp_rotateAroundAxisObject([1, 0, 0], -20, [0, 1, 2]);
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
-        this.object.pp_rotateAroundObjectDegrees([0, 1, 2], [1, 0, 0], 10);
+        this.object.pp_rotateAroundAxisObjectDegrees([1, 0, 0], 10, [0, 1, 2]);
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
-        this.object.pp_rotateAroundObjectRadians([0, 1, 2], [1, 0, 0], Math.pp_toRadians(10));
+        this.object.pp_rotateAroundAxisObjectRadians([1, 0, 0], Math.pp_toRadians(10), [0, 1, 2]);
         this.consoleWarnFixed(this.object.pp_getRotationWorld());
 
         this.object.pp_resetRotationLocal();
         this.object.pp_rotateLocal([-20, 0, 0]);
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
-        this.object.pp_rotateAroundObject([0, 1, 2], [1, 0, 0], -20);
+        this.object.pp_rotateAroundAxisObject([1, 0, 0], -20, [0, 1, 2]);
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
-        this.object.pp_rotateAroundObjectDegrees([0, 1, 2], [1, 0, 0], 10);
+        this.object.pp_rotateAroundAxisObjectDegrees([1, 0, 0], 10, [0, 1, 2]);
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
-        this.object.pp_rotateAroundObjectRadians([0, 1, 2], [1, 0, 0], Math.pp_toRadians(10));
+        this.object.pp_rotateAroundAxisObjectRadians([1, 0, 0], Math.pp_toRadians(10), [0, 1, 2]);
         this.consoleWarnFixed(this.object.pp_getRotationLocal());
 
         console.warn("\nSCALE OBJECT\n");

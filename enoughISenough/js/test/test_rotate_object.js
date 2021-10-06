@@ -20,7 +20,7 @@ WL.registerComponent('test-rotate-object', {
             //this.object.pp_transformDirectionWorldToObject(axis, axis);
             //this.object.pp_rotateAxisObjectDegrees(axis, this._myX * dt);
             //this.object.pp_rotateObjectDegrees([this._myX * dt, this._myY * dt, this._myZ * dt]);
-            this.object.pp_rotateAroundObjectDegrees([0, 5, 5], axis, this._myX * dt);
+            this.object.pp_rotateAroundAxisObjectDegrees(axis, this._myX * dt, [0, 5, 5]);
         }
     }
 });
