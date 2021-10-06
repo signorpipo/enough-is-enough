@@ -3451,7 +3451,7 @@
                     "type": "mesh",
                     "mesh": {
                         "mesh": "8",
-                        "material": "25"
+                        "material": "35"
                     },
                     "active": true
                 }
@@ -3483,7 +3483,7 @@
                     "type": "mesh",
                     "mesh": {
                         "mesh": "9",
-                        "material": "26"
+                        "material": "34"
                     }
                 }
             ],

@@ -3,7 +3,6 @@ WL.registerComponent('pp-grabbable', {
     init: function () {
         this._myIsGrabbed = false;
 
-        this._myOldParent = this.object.parent;
         this._myGrabber = null;
 
         this._myGrabCallbacks = new Map(); // Signature: callback(grabbable, grabber)
@@ -11,6 +10,7 @@ WL.registerComponent('pp-grabbable', {
         this._myReleaseCallbacks = new Map(); // Signature: callback(grabbable, grabber, isThrow)
     },
     start: function () {
+        this._myOldParent = this.object.parent;
         this._myPhysx = this.object.pp_getComponent('physx');
     },
     onDeactivate: function () {

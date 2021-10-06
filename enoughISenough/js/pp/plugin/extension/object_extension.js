@@ -32,7 +32,7 @@
         - pp_getForward     / pp_getBackward
 
         - pp_translate      / pp_translateAxis
-        - pp_rotate         / pp_rotateAxis     / pp_rotateAround
+        - pp_rotate         / pp_rotateAxis     / pp_rotateAround    / pp_rotateAroundAxis
         - pp_scaleObject (for now scale only have this variant) (u can specify a single number instead of a vector to uniform scale easily)
 
         - pp_lookAt (u can avoid to specify up and the method will pickup the object up by default)
@@ -45,7 +45,7 @@
 
         - pp_hasUniformScale
 
-        - pp_addComponent  / pp_getComponent  / pp_getComponentHierarchy / pp_getComponentChildren
+        - pp_addComponent  / pp_addComponentInactive  /  pp_getComponent  / pp_getComponentHierarchy / pp_getComponentChildren
         - pp_getComponents  / pp_getComponentsHierarchy / pp_getComponentsChildren
 
         - pp_setActive  / pp_setActiveHierarchy     / pp_setActiveChildren
@@ -1610,6 +1610,11 @@ WL.Object.prototype.pp_addComponent = function (type, params) {
     return this.addComponent(type, params);
 };
 
+WL.Object.prototype.pp_addComponentInactive = function (type, params = {}) {
+    params["active"] = false;
+    return this.addComponent(type, params);
+};
+
 WL.Object.prototype.pp_getComponent = function (type, index) {
     return this.getComponent(type, index);
 };
@@ -1755,6 +1760,8 @@ WL.Object.prototype.pp_clone = function (params = new PP.CloneParams()) {
         let objectsToCloneData = [];
         objectsToCloneData.push([this.parent, this]);
 
+        //Create object hierarchy
+        let objectsToCloneComponentsData = [];
         while (objectsToCloneData.length > 0) {
             let cloneData = objectsToCloneData.shift();
             let parent = cloneData[0];
@@ -1767,20 +1774,7 @@ WL.Object.prototype.pp_clone = function (params = new PP.CloneParams()) {
             currentClonedObject.pp_setTransformLocalQuat(objectToClone.pp_getTransformLocalQuat());
 
             if (!params.myIgnoreComponents) {
-                let components = objectToClone.pp_getAllComponents();
-                for (let component of components) {
-                    let cloneComponent = false;
-                    if (params.myComponentsToClone.length > 0) {
-                        cloneComponent = params.myComponentsToClone.indexOf(component.type) != -1;
-                    } else {
-                        cloneComponent = params.myComponentsToIgnore.indexOf(component.type) == -1;
-                    }
-
-                    if (cloneComponent && component.pp_clone != null) {
-                        let clonedComponent = component.pp_clone(currentClonedObject, params);
-                        clonedComponent.active = component.active; // not managing the fact that inactive components from editor haven't called start yet, but clones do
-                    }
-                }
+                objectsToCloneComponentsData.push([objectToClone, currentClonedObject]);
             }
 
             if (!params.myIgnoreChildren) {
@@ -1792,6 +1786,41 @@ WL.Object.prototype.pp_clone = function (params = new PP.CloneParams()) {
             if (clonedObject == null) {
                 clonedObject = currentClonedObject;
             }
+        }
+
+        //Create components and init them (no start)
+        let componentsToActivateData = [];
+        while (objectsToCloneComponentsData.length > 0) {
+            let cloneData = objectsToCloneComponentsData.shift();
+            let objectToClone = cloneData[0];
+            let currentClonedObject = cloneData[1];
+
+            let components = objectToClone.pp_getAllComponents();
+            for (let component of components) {
+                let cloneComponent = false;
+                if (params.myComponentsToClone.length > 0) {
+                    cloneComponent = params.myComponentsToClone.indexOf(component.type) != -1;
+                } else {
+                    cloneComponent = params.myComponentsToIgnore.indexOf(component.type) == -1;
+                }
+
+                if (cloneComponent && component.pp_clone != null) {
+                    let clonedComponent = component.pp_clone(currentClonedObject, params);
+                    componentsToActivateData.push([clonedComponent, component.active]);
+                }
+            }
+        }
+
+        //Start components and set active flag
+        while (componentsToActivateData.length > 0) {
+            let cloneData = componentsToActivateData.shift();
+            let componentToActivate = cloneData[0];
+            let activeFlag = cloneData[1];
+
+            //Force component to call start now, after all the hierarchy has been created
+            //Not managing the fact that inactive components from editor haven't called start yet, but clones do, since there is no way to know
+            componentToActivate.active = true;
+            componentToActivate.active = activeFlag;
         }
     }
 
