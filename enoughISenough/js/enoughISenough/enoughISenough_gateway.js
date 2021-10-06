@@ -6,7 +6,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
 }, {
     init: function () {
         Global.myAudioManager = new PP.AudioManager();
-
+        Global.myParticlesManager = new ParticlesManager();
         Global.myScene = this.object;
 
         Global.myPlayerRumbleObject = this._myPlayerRumbleObject;
@@ -25,17 +25,20 @@ WL.registerComponent("enough-IS-enough-gateway", {
     },
     update: function (dt) {
         this.enoughISenough.update(dt);
+        Global.myParticlesManager.update(dt);
     }
 });
 
 var Global = {
     myScene: null,
     myAudioManager: null,
+    myParticlesManager: null,
     myPlayerRumbleObject: null,
     myRingsAnimator: null,
     myLeftHandAnimator: null,
     myRightHandAnimator: null,
-    myMenuObjects: null,
+    myGameObjects: new Map(),
+    myMeshObjects: new Map(),
     myRingRadius: 0,
     myRingHeight: 0,
     myTitlesObject: null,

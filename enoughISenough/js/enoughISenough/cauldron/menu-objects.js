@@ -9,31 +9,29 @@ WL.registerComponent('menu-objects', {
     _myFloppyDisk: { type: WL.Type.Object }
 }, {
     init: function () {
-        Global.myMenuObjects = new Map();
+        Global.myGameObjects.set(GameObjectType.START_STORY, this._myStartStory);
+        Global.myGameObjects.set(GameObjectType.START_ARCADE_HARD, this._myStartArcadeHard);
+        Global.myGameObjects.set(GameObjectType.START_ARCADE_NORMAL, this._myStartArcadeNormal);
+        Global.myGameObjects.set(GameObjectType.LEADERBOARD_ARCADE_HARD, this._myLeaderboardArcadeHard);
+        Global.myGameObjects.set(GameObjectType.LEADERBOARD_ARCADE_NORMAL, this._myLeaderboardArcadeNormal);
+        Global.myGameObjects.set(GameObjectType.WONDERMELON, this._myWondermelon);
+        Global.myGameObjects.set(GameObjectType.ZESTY_MARKET, this._myZestyMarket);
+        Global.myGameObjects.set(GameObjectType.FLOPPY_DISK, this._myFloppyDisk);
 
-        Global.myMenuObjects.set(MenuObjectType.START_STORY, this._myStartStory);
-        Global.myMenuObjects.set(MenuObjectType.START_ARCADE_HARD, this._myStartArcadeHard);
-        Global.myMenuObjects.set(MenuObjectType.START_ARCADE_NORMAL, this._myStartArcadeNormal);
-        Global.myMenuObjects.set(MenuObjectType.LEADERBOARD_ARCADE_HARD, this._myLeaderboardArcadeHard);
-        Global.myMenuObjects.set(MenuObjectType.LEADERBOARD_ARCADE_NORMAL, this._myLeaderboardArcadeNormal);
-        Global.myMenuObjects.set(MenuObjectType.WONDERMELON, this._myWondermelon);
-        Global.myMenuObjects.set(MenuObjectType.ZESTY_MARKET, this._myZestyMarket);
-        Global.myMenuObjects.set(MenuObjectType.FLOPPY_DISK, this._myFloppyDisk);
+        let cloneParams = new PP.CloneParams();
+        cloneParams.myComponentsToClone.push("mesh");
+        Global.myMeshObjects.set(GameObjectType.START_STORY, this._myStartStory.pp_clone(cloneParams));
+        Global.myMeshObjects.set(GameObjectType.START_ARCADE_HARD, this._myStartArcadeHard.pp_clone(cloneParams));
+        Global.myMeshObjects.set(GameObjectType.START_ARCADE_NORMAL, this._myStartArcadeNormal.pp_clone(cloneParams));
+        Global.myMeshObjects.set(GameObjectType.LEADERBOARD_ARCADE_HARD, this._myLeaderboardArcadeHard.pp_clone(cloneParams));
+        Global.myMeshObjects.set(GameObjectType.LEADERBOARD_ARCADE_NORMAL, this._myLeaderboardArcadeNormal.pp_clone(cloneParams));
+        Global.myMeshObjects.set(GameObjectType.WONDERMELON, this._myWondermelon.pp_clone(cloneParams));
+        Global.myMeshObjects.set(GameObjectType.ZESTY_MARKET, this._myZestyMarket.pp_clone(cloneParams));
+        Global.myMeshObjects.set(GameObjectType.FLOPPY_DISK, this._myFloppyDisk.pp_clone(cloneParams));
     },
     start: function () {
     },
     update: function (dt) {
     },
 });
-
-var MenuObjectType = {
-    START_STORY: 0,
-    START_ARCADE_HARD: 1,
-    START_ARCADE_NORMAL: 2,
-    LEADERBOARD_ARCADE_HARD: 3,
-    LEADERBOARD_ARCADE_NORMAL: 4,
-    WONDERMELON: 5,
-    ZESTY_MARKET: 6,
-    FLOPPY_DISK: 7
-};
 

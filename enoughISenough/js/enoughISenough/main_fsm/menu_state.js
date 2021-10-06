@@ -31,8 +31,8 @@ class MenuState extends PP.State {
 
         this._fillMenuItems();
 
-        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Unspawn Menu Time", 0.05, 0.1, 3));
-        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Unspawn Menu Scale", 3, 1, 3));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Unspawn Menu Time", 0.1, 0.1, 3));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Unspawn Menu Scale", 2.5, 1, 3));
     }
 
     update(dt, fsm) {
@@ -170,58 +170,58 @@ class MenuState extends PP.State {
 
         let initialPosition = [0, ringHeight, -ringRadius];
         positions.push(initialPosition.vec3_clone());
-        positions.push(initialPosition.vec3_rotateAroundAxis([0, 1, 0], rotation));
-        positions.push(initialPosition.vec3_rotateAroundAxis([0, 1, 0], -rotation));
-        positions.push(initialPosition.vec3_rotateAroundAxis([0, 1, 0], rotation * 2));
-        positions.push(initialPosition.vec3_rotateAroundAxis([0, 1, 0], -rotation * 2));
-        positions.push(initialPosition.vec3_rotateAroundAxis([0, 1, 0], rotation * 3));
-        positions.push(initialPosition.vec3_rotateAroundAxis([0, 1, 0], -rotation * 3));
-        positions.push(initialPosition.vec3_rotateAroundAxis([0, 1, 0], -rotation * 4));
+        positions.push(initialPosition.vec3_rotateAxis([0, 1, 0], rotation));
+        positions.push(initialPosition.vec3_rotateAxis([0, 1, 0], -rotation));
+        positions.push(initialPosition.vec3_rotateAxis([0, 1, 0], rotation * 2));
+        positions.push(initialPosition.vec3_rotateAxis([0, 1, 0], -rotation * 2));
+        positions.push(initialPosition.vec3_rotateAxis([0, 1, 0], rotation * 3));
+        positions.push(initialPosition.vec3_rotateAxis([0, 1, 0], -rotation * 3));
+        positions.push(initialPosition.vec3_rotateAxis([0, 1, 0], -rotation * 4));
 
         {
-            let startStory = new MenuItem(Global.myMenuObjects.get(MenuObjectType.START_STORY), positions[0], function () {
+            let startStory = new MenuItem(Global.myGameObjects.get(GameObjectType.START_STORY), GameObjectType.START_STORY, positions[0], function () {
                 this._myFSM.perform("unspawn_story");
             }.bind(this));
             this._myMenuItems.push(startStory);
         }
 
         {
-            let startArcadeHard = new MenuItem(Global.myMenuObjects.get(MenuObjectType.START_ARCADE_HARD), positions[2], function () {
+            let startArcadeHard = new MenuItem(Global.myGameObjects.get(GameObjectType.START_ARCADE_HARD), GameObjectType.START_ARCADE_HARD, positions[2], function () {
                 this._myFSM.perform("unspawn_arcade_hard");
             }.bind(this));
             this._myMenuItems.push(startArcadeHard);
         }
 
         {
-            let startArcadeNormal = new MenuItem(Global.myMenuObjects.get(MenuObjectType.START_ARCADE_NORMAL), positions[1], function () {
+            let startArcadeNormal = new MenuItem(Global.myGameObjects.get(GameObjectType.START_ARCADE_NORMAL), GameObjectType.START_ARCADE_NORMAL, positions[1], function () {
                 this._myFSM.perform("unspawn_arcade_normal");
             }.bind(this));
             this._myMenuItems.push(startArcadeNormal);
         }
 
         {
-            let leaderboardArcadeHard = new MenuItem(Global.myMenuObjects.get(MenuObjectType.LEADERBOARD_ARCADE_HARD), positions[4], function () {
+            let leaderboardArcadeHard = new MenuItem(Global.myGameObjects.get(GameObjectType.LEADERBOARD_ARCADE_HARD), GameObjectType.LEADERBOARD_ARCADE_HARD, positions[4], function () {
                 //get leaderboard object and component and ask for a refresh
             }.bind(this));
             this._myMenuItems.push(leaderboardArcadeHard);
         }
 
         {
-            let leaderboardArcadeNormal = new MenuItem(Global.myMenuObjects.get(MenuObjectType.LEADERBOARD_ARCADE_NORMAL), positions[3], function () {
+            let leaderboardArcadeNormal = new MenuItem(Global.myGameObjects.get(GameObjectType.LEADERBOARD_ARCADE_NORMAL), GameObjectType.LEADERBOARD_ARCADE_NORMAL, positions[3], function () {
                 //get leaderboard object and component and ask for a refresh
             }.bind(this));
             this._myMenuItems.push(leaderboardArcadeNormal);
         }
 
         {
-            let zestyMarket = new MenuItem(Global.myMenuObjects.get(MenuObjectType.ZESTY_MARKET), positions[6], function () {
+            let zestyMarket = new MenuItem(Global.myGameObjects.get(GameObjectType.ZESTY_MARKET), GameObjectType.ZESTY_MARKET, positions[6], function () {
                 //get zesty object and component and ask for a refresh if it is possible
             }.bind(this));
             this._myMenuItems.push(zestyMarket);
         }
 
         {
-            let floppyDisk = new MenuItem(Global.myMenuObjects.get(MenuObjectType.FLOPPY_DISK), positions[5], function () {
+            let floppyDisk = new MenuItem(Global.myGameObjects.get(GameObjectType.FLOPPY_DISK), GameObjectType.FLOPPY_DISK, positions[5], function () {
                 this._myResetCount++;
 
                 if (this._myResetCount >= 5) {
@@ -232,7 +232,7 @@ class MenuState extends PP.State {
         }
 
         {
-            let wondermelon = new MenuItem(Global.myMenuObjects.get(MenuObjectType.WONDERMELON), positions[7], function () {
+            let wondermelon = new MenuItem(Global.myGameObjects.get(GameObjectType.WONDERMELON), GameObjectType.WONDERMELON, positions[7], function () {
                 if (WL.xrSession) {
                     WL.xrSession.end();
                 }
@@ -244,8 +244,9 @@ class MenuState extends PP.State {
 }
 
 class MenuItem {
-    constructor(object, position, callbackOnFall = null) {
+    constructor(object, objectType, position, callbackOnFall = null) {
         this._myObject = object;
+        this._myObjectType = objectType;
         this._myPosition = position.slice(0);
         this._myFacing = [0, 0, 0].vec3_sub(position).vec3_removeComponentAlongAxis([0, 1, 0]);
         this._myPhysx = this._myObject.pp_getComponentHierarchy("physx");
@@ -377,6 +378,7 @@ class MenuItem {
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
 
         if (this._myTimer.isDone()) {
+            Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myScale, this._myObjectType);
             this._myFSM.perform("end");
         }
     }
