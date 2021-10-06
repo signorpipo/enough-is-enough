@@ -14,6 +14,16 @@ WL.MeshComponent.prototype.pp_clone = function (object, params) {
     return clone;
 };
 
+WL.CollisionComponent.prototype.pp_clone = function (object, params) {
+    let clone = object.addComponent("collision");
+
+    clone.collider = this.collider;
+    clone.extents = this.extents.slice(0);
+    clone.group = this.group;
+
+    return clone;
+};
+
 //TEMP not complete
 WL.PhysXComponent.prototype.pp_clone = function (object, params) {
     let clone = object.addComponent("physx");

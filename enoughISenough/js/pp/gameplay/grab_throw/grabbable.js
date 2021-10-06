@@ -87,5 +87,4 @@ WL.registerComponent('pp-grabbable', {
             this._myPhysx.kinematic = false;
         }
     }
-
 });
