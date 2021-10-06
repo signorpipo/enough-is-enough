@@ -3365,6 +3365,149 @@
                 -164.0,
                 1.0
             ]
+        },
+        "174": {
+            "name": "Throw Objects",
+            "parent": "32",
+            "components": [
+                {
+                    "type": "throw-objects"
+                },
+                {
+                    "type": "pp-deactivate-on-first-update"
+                }
+            ]
+        },
+        "175": {
+            "name": "Other Objects",
+            "parent": "32",
+            "components": [
+                {
+                    "type": "other-objects",
+                    "other-objects": {
+                        "_myMrNOT": "177"
+                    }
+                },
+                {
+                    "type": "pp-deactivate-on-first-update"
+                }
+            ]
+        },
+        "176": {
+            "name": "Empty.006",
+            "parent": "175",
+            "deleted": true
+        },
+        "177": {
+            "name": "Mr NOT",
+            "parent": "175",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.1,
+                0.0,
+                0.0,
+                3.0747025,
+                -2.7333407,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "aabb": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.1
+                            ]
+                        },
+                        "groups": 1,
+                        "box": {
+                            "extents": [
+                                1.0,
+                                1.0,
+                                0.1
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "178": {
+            "name": "Mesh",
+            "parent": "177",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "8",
+                        "material": "25"
+                    },
+                    "active": true
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "179": {
+            "name": "Nose",
+            "parent": "178",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "9",
+                        "material": "26"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.8999999,
+                1.0
+            ]
         }
     },
     "meshes": {
