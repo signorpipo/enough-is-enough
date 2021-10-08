@@ -7,6 +7,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
     init: function () {
         Global.myAudioManager = new PP.AudioManager();
         Global.myParticlesManager = new ParticlesManager();
+        Global.myObjectPoolMap = new ObjectPoolMap();
         Global.myScene = this.object;
 
         Global.myPlayerRumbleObject = this._myPlayerRumbleObject;
@@ -17,6 +18,10 @@ WL.registerComponent("enough-IS-enough-gateway", {
         this.enoughISenough = new enoughISenough();
     },
     start: function () {
+        for (let entry of Global.myMeshObjects.entries()) {
+            Global.myObjectPoolMap.addPool(entry[0], entry[1], 5);
+        }
+
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float", 0, 0.1, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Int", 0, 1));
         PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Bool", false));
@@ -44,5 +49,6 @@ var Global = {
     myTitlesObject: null,
     myTitlesRumbleObject: null,
     myTitleObject: null,
-    mySubtitleObject: null
+    mySubtitleObject: null,
+    myObjectPoolMap: null,
 };
