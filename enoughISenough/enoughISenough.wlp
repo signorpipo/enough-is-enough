@@ -4032,7 +4032,11 @@
                 "js/pp/audio",
                 "js/enoughISenough/cauldron",
                 "js/pp/tool/cauldron/cauldron",
-                "js/enoughISenough/main_fsm"
+                "js/enoughISenough/main_fsm",
+                "js/pp/plugin/component_mod",
+                "js/pp/tool/console_vr",
+                "js/pp/tool/widget_frame",
+                "js/pp/tool/easy_tune"
             ]
         },
         "editor": {
