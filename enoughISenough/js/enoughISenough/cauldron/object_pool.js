@@ -3,10 +3,10 @@ class ObjectPoolMap {
         this._myPoolMap = new Map();
     }
 
-    addPool(poolID, poolObject, initialPoolSize) {
+    addPool(poolID, poolObject, initialPoolSize, cloneParams = new PP.CloneParams()) {
         if (poolObject.pp_isCloneable()) {
             if (!this._myPoolMap.has(poolID)) {
-                let pool = new ObjectPool(poolObject, initialPoolSize);
+                let pool = new ObjectPool(poolObject, initialPoolSize, cloneParams);
                 this._myPoolMap.set(poolID, pool);
             } else {
                 console.error("Pool already created with this ID");
@@ -26,8 +26,8 @@ class ObjectPoolMap {
 }
 
 class ObjectPool {
-    constructor(poolObject, initialPoolSize) {
-        this._myPrototype = poolObject.pp_clone();
+    constructor(poolObject, initialPoolSize, cloneParams) {
+        this._myPrototype = poolObject.pp_clone(cloneParams);
 
         this._myAvailableObjects = [];
         this._myBusyObjects = [];
