@@ -1,7 +1,5 @@
 //Overall Deep Clone not implemented
-WL.MeshComponent.prototype.pp_clone = function (object, params) {
-    let clone = object.pp_addComponentInactive("mesh");
-
+WL.MeshComponent.prototype.pp_clone = function (clone, params) {
     if ((params.myDeepClone && params.myMesh_MaterialDeepCloneOverride == null) || params.myMesh_MaterialDeepCloneOverride) {
         clone.material = this.material.clone();
     } else {
@@ -14,9 +12,7 @@ WL.MeshComponent.prototype.pp_clone = function (object, params) {
     return clone;
 };
 
-WL.CollisionComponent.prototype.pp_clone = function (object, params) {
-    let clone = object.pp_addComponentInactive("collision");
-
+WL.CollisionComponent.prototype.pp_clone = function (clone, params) {
     clone.collider = this.collider;
     clone.extents = this.extents.slice(0);
     clone.group = this.group;
@@ -25,9 +21,7 @@ WL.CollisionComponent.prototype.pp_clone = function (object, params) {
 };
 
 //TEMP not complete
-WL.PhysXComponent.prototype.pp_clone = function (object, params) {
-    let clone = object.pp_addComponentInactive("physx");
-
+WL.PhysXComponent.prototype.pp_clone = function (clone, params) {
     clone.angularDamping = this.angularDamping;
     clone.angularVelocity = this.angularVelocity.slice(0);
 

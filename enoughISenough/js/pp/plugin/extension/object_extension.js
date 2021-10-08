@@ -45,7 +45,7 @@
 
         - pp_hasUniformScale
 
-        - pp_addComponent  / pp_addComponentInactive  /  pp_getComponent  / pp_getComponentHierarchy / pp_getComponentChildren
+        - pp_addComponent  /  pp_getComponent  / pp_getComponentHierarchy / pp_getComponentChildren
         - pp_getComponents  / pp_getComponentsHierarchy / pp_getComponentsChildren
 
         - pp_setActive  / pp_setActiveHierarchy     / pp_setActiveChildren
@@ -1606,12 +1606,23 @@ WL.Object.prototype.pp_convertTransformLocalToObjectQuat = function (transform, 
 
 //Component
 
-WL.Object.prototype.pp_addComponent = function (type, params) {
-    return this.addComponent(type, params);
-};
+WL.Object.prototype.pp_addComponent = function (type, paramsOrActive, active = null) {
+    let params = null;
 
-WL.Object.prototype.pp_addComponentInactive = function (type, params = {}) {
-    params["active"] = false;
+    if (typeof paramsOrActive == "boolean") {
+        params = {};
+        params["active"] = paramsOrActive;
+    } else {
+        params = paramsOrActive;
+
+        if (active != null) {
+            if (params == null) {
+                params = {};
+            }
+            params["active"] = active;
+        }
+    }
+
     return this.addComponent(type, params);
 };
 
@@ -1788,8 +1799,8 @@ WL.Object.prototype.pp_clone = function (params = new PP.CloneParams()) {
             }
         }
 
-        //Create components and init them (no start)
-        let componentsToActivateData = [];
+        //Create components
+        let componentsToCloneData = [];
         while (objectsToCloneComponentsData.length > 0) {
             let cloneData = objectsToCloneComponentsData.shift();
             let objectToClone = cloneData[0];
@@ -1805,22 +1816,21 @@ WL.Object.prototype.pp_clone = function (params = new PP.CloneParams()) {
                 }
 
                 if (cloneComponent && component.pp_clone != null) {
-                    let clonedComponent = component.pp_clone(currentClonedObject, params);
-                    componentsToActivateData.push([clonedComponent, component.active]);
+                    //Not managing the fact that inactive components from editor haven't called start yet, but clones do, since there is no way to know
+                    let clonedComponent = currentClonedObject.pp_addComponent(component.type);
+                    clonedComponent.active = component.active;
+                    componentsToCloneData.push([component, clonedComponent]);
                 }
             }
         }
 
-        //Start components and set active flag
-        while (componentsToActivateData.length > 0) {
-            let cloneData = componentsToActivateData.shift();
-            let componentToActivate = cloneData[0];
-            let activeFlag = cloneData[1];
+        //Now that all the hierarchy is completed (with components) we can clone them
+        while (componentsToCloneData.length > 0) {
+            let cloneData = componentsToCloneData.shift();
+            let componentToClone = cloneData[0];
+            let currentClonedComponent = cloneData[1];
 
-            //Force component to call start now, after all the hierarchy has been created
-            //Not managing the fact that inactive components from editor haven't called start yet, but clones do, since there is no way to know
-            componentToActivate.active = true;
-            componentToActivate.active = activeFlag;
+            componentToClone.pp_clone(currentClonedComponent, params);
         }
     }
 
