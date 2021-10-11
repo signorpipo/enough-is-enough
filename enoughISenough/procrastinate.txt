@@ -15,11 +15,135 @@ List of the things not to do
 - create menu (only start)
 
 Menu Objects:
-- Start Story
+- Start Story 
 - Start Arcade (easy?)
 - Leaderboards (easy?)
 - Disk throw 5 times to clear data
-- Watermelon
+- Wondermelon 
 - Zesty Market
-- Go to Not Enough (Watermelon?)
+- Go to Not Enough (Wondermelon?)
 - ??
+
+- Story (Moneta dorata tipo 1 up? davanti i tre cerchi del protagonista)
+- Arcade (joystick da sala giochi con la pallina argento o oro)
+- Leaderboard (pannello circondato da una cornice fluttuantina che so io)
+- Disk (Floppy disk)
+- Not Enough (Wondermelon)
+- Zesty Market (interfaccia come leaderboard)
+
+Learned:
+/ Cose per cui non mi sento abbastanza (GameDev)
+/ Cose che ho provato per sentirmi abbastanza (Disegnare)
+/ Cose che ho fatto che uso per dimostrare che sono abbastanza (Sbandierare)
+/ Cose che mi fanno / hanno fatto sentire abbastanza (Chenco) (?)
+/ Ossessioni / Cose che mi fanno sentire rotto / Cose che mi tormentano
+
+/ In generale, cose che ho imparato / ho provato che dovrebbero farmi sentire abbastanza, che siano abilità (Disegnare, Gamedev, Sbandierare), 
+/ o concetti, cose che ho imparato a lasciare andare, a rivalutare il peso che davano, o che io stesso davo, 
+/ con cui ho fatto pace e non dovrebbero farmi sentire non abbastanza (Genitori, Chenco, Psicologa)
+/ Oltre ciò, anche cose per cui tutt'ora non mi sento abbastanza, che si ho imparato / ho provato (quindi le mostro) ma che sono più una sofferenza,
+/ sono le cose con cui gioca di più per farmi crollare, nonostante anche per le altre mi faccia notare come comunque non sono abbastanza (come a volerle trasformare nel secondo tipo)
+/ come se più che io che le lancio per dimostrargli che valgo, è lui che le mette li per ricordarmi che non è vero, e io non posso che, al più, rilanciarle indietro,
+/ con rabbia, negando l'evidenza, perché non ho di meglio per confrontarlo (disperazione), oppure con la consapevolezza che so che migliorerò in quella cosa, o che almeno ci ho provato
+/ In aggiunte, le ossessioni, ciò che mi ricorda che ho dei problemi che mi fanno sentire male, giusto per buttarmi giù, che posso tirare per gli stessi motivi delle cose per cui tutt'ora non mi sento abbastanza
+/ (rabbia, disperazione, consapevolezza di migliorare, l'averci fatto pace)
+
+/ Alcuni oggetti, i più complessi per me potrebbero apparire sono in fasi successive
+
+- Timer
+- C++
+- Sbandieratori
+- Disegno (x2?) / Animazione
+- Piano (x2?)
+- Ubisoft 
+- Visore
+- Zesty
+- Wonderland (?)
+- Meditazione
+- Scrittura Videogiochi (?)
+- Amore (?)
+- Ring Fit / Palestra (?)
+- Pattinaggio
+- Amicizia (?)
+- GameDev (?)
+- Youtube / Twitter / Blog
+- Quill
+- PICO-8
+- Procreate
+- Garageband
+- Uscire / Pub / Birra
+- Calcetto
+- Competizione / Trofei / Multiplayer
+- Fase Orecchini / Capelli colorati
+- Essere un leader
+- LOL
+- Sesso / Pipi (?)
+- Me stesso / Specchio (?)
+- Volpe / Marco
+- Chenco
+- Psicologa
+- Wondermelon
+- Kingdom Hearts
+
+Fase 1:
+- 3 - Timer 
+- 3 - Zesty (Interfaccia come Leaderboard)
+- 3 - Disegno (Disegno con concept della tucia? Messo in un quadretto?) (barattolo di matite?) (matite in combo col disegno?)
+- 3 - C++ (C++ Primer Book)
+- 3 - Piano	(Piccola pianola)
+- 3 - Sbandieratore (Orso rosso e bianco)
+- 2 - Meditazione (Budda)
+- 2 - LoL (L di league of legends)
+- 2 - Orecchini	(una sfera con l'orecchino boccetta?)
+- 2 - Pattinaggio (Pattini)
+- 1 - Trofei (Trofeo lo stesso della challenge?)
+
+
+Fase 2:
+- 3 - Wondermelon (Wondermelon)
+- 3 - Visore	(visore)
+- 3 - Wonderland	(simbolo di wonderland)
+- 2 - Ring Fit	(l'anello in versione piu piccolo)
+- 2 - Psicologa	 (greek letter psi tipo candelabro)
+- 2 - PICO-8 (cartuccia pico 8 con il logo di pico 8 dentro)
+- 1 - Sesso	(melanzana?)
+
+Fase 3:
+- 3 - Ubisoft (lo stesso simbolo sul good guy)
+- 3 - Amore	(un cuore)
+- 3 - Volpe  (faccia di volpe cosi la riuso per moving out)
+- 3 - Chenco  (casco di halo?) ()
+- 3 - Specchio (uno specchio stile bella e la bestia)
+- 3 - Game Dev  (pupazzetto di ant)
+
+Fase 4:
+- 3 - Kingdom Hearts  (corona)
+
+
+
+Mr NOT:
+- Glad to see you again
+- Maybe we can have a little conversation
+- Why don't you show me what you have learned so far?
+
+/ Don't even bother
+
+- After our last time together
+- I see you have tried many things
+- Were they worth your time?
+
+/ Stop wasting my time too
+
+- You jump from one thing to another
+- Hoping to find what's yours
+- Don't you realize how meaningless this is? 
+
+/ There is no purpose left for you
+
+- You may think you are stronger now
+- You may feel free from judgment itself
+- You may fool yourself into believing this...
+- But after all has been said and done
+- You KNOW
+- It will always be...
+- NOT ENOUGH
