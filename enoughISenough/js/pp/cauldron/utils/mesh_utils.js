@@ -33,5 +33,36 @@ PP.MeshUtils = {
         });
 
         return mesh;
+    },
+    // alpha between 0 and 1
+    setAlpha: function (object, alpha) {
+        let meshComponents = object.pp_getComponentsHierarchy("mesh");
+
+        for (let meshComponent of meshComponents) {
+            if (meshComponent.material.color != null) {
+                let color = meshComponent.material.color;
+                color[3] = alpha;
+                meshComponent.material.color = color;
+            }
+
+            if (meshComponent.material.diffuseColor != null) {
+                let color = meshComponent.material.diffuseColor;
+                color[3] = alpha;
+                meshComponent.material.diffuseColor = color;
+            }
+
+            if (meshComponent.material.ambientColor != null) {
+                let color = meshComponent.material.ambientColor;
+                color[3] = alpha;
+                meshComponent.material.ambientColor = color;
+            }
+        }
+    },
+    setClonedMaterials: function (object) {
+        let meshComponents = object.pp_getComponentsHierarchy("mesh");
+
+        for (let meshComponent of meshComponents) {
+            meshComponent.material = meshComponent.material.clone();
+        }
     }
 };

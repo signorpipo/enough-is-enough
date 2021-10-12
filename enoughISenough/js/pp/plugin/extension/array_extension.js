@@ -37,7 +37,24 @@ Array.prototype.pp_findAndRemoveAll = function (callback) {
     return elementsRemoved;
 };
 
-//VECTOR 3
+// GENERIC VECTOR
+
+Array.prototype.vec_log = function (decimalPlaces = 4) {
+    let message = this._vec_buildConsoleMessage(decimalPlaces);
+    console.log(message);
+};
+
+Array.prototype.vec_error = function (decimalPlaces = 4) {
+    let message = this._vec_buildConsoleMessage(decimalPlaces);
+    console.error(message);
+};
+
+Array.prototype.vec_warn = function (decimalPlaces = 4) {
+    let message = this._vec_buildConsoleMessage(decimalPlaces);
+    console.warn(message);
+};
+
+// VECTOR 3
 
 //glMatrix Bridge
 
@@ -340,18 +357,15 @@ Array.prototype.vec3_convertDirectionToLocalQuat = function () {
 }();
 
 Array.prototype.vec3_log = function (decimalPlaces = 4) {
-    let message = "[".concat(this[0].toFixed(decimalPlaces)).concat(", ").concat(this[1].toFixed(decimalPlaces)).concat(", ").concat(this[2].toFixed(decimalPlaces)).concat("]");
-    console.log(message);
+    this.vec_log(decimalPlaces);
 };
 
 Array.prototype.vec3_error = function (decimalPlaces = 4) {
-    let message = "[".concat(this[0].toFixed(decimalPlaces)).concat(", ").concat(this[1].toFixed(decimalPlaces)).concat(", ").concat(this[2].toFixed(decimalPlaces)).concat("]");
-    console.error(message);
+    this.vec_error(decimalPlaces);
 };
 
 Array.prototype.vec3_warn = function (decimalPlaces = 4) {
-    let message = "[".concat(this[0].toFixed(decimalPlaces)).concat(", ").concat(this[1].toFixed(decimalPlaces)).concat(", ").concat(this[2].toFixed(decimalPlaces)).concat("]");
-    console.warn(message);
+    this.vec_warn(decimalPlaces);
 };
 
 //QUAT
@@ -833,3 +847,19 @@ Array.prototype._pp_epsilon = 0.000001;
 Array.prototype._pp_clamp = function (value, min, max) {
     return Math.min(Math.max(value, min), max);
 };
+
+Array.prototype._vec_buildConsoleMessage = function (decimalPlaces) {
+    let message = "[";
+
+    for (let i = 0; i < this.length; i++) {
+        if (i != 0) {
+            message = message.concat(", ");
+        }
+
+        message = message.concat(this[i].toFixed(decimalPlaces));
+    }
+
+    message = message.concat("]");
+    return message;
+};
+

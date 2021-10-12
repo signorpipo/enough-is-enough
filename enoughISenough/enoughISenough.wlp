@@ -3505,6 +3505,327 @@
                 0.8999999,
                 1.0
             ]
+        },
+        "180": {
+            "name": "Mr NOT",
+            "parent": "185",
+            "transformation": [
+                5.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                3.8302218,
+                3.2139384,
+                0.0,
+                0.0,
+                -2.5711507,
+                3.0641775,
+                0.0,
+                0.0,
+                11.0,
+                -18.0,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "aabb": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.1
+                            ]
+                        },
+                        "groups": 1,
+                        "box": {
+                            "extents": [
+                                5.0,
+                                5.0,
+                                4.0
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "pp-easy-transform"
+                }
+            ]
+        },
+        "181": {
+            "name": "Mesh",
+            "parent": "180",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "8",
+                        "material": "35"
+                    },
+                    "active": true
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "182": {
+            "name": "Nose",
+            "parent": "181",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "9",
+                        "material": "34"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.8999999,
+                1.0
+            ]
+        },
+        "183": {
+            "name": "BLA BLA",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "justification": "top",
+                        "text": "Why don't you show me what you have learned so far?",
+                        "material": "184"
+                    }
+                },
+                {
+                    "type": "pp-easy-transform",
+                    "pp-easy-transform": {
+                        "_myIndex": 1
+                    }
+                }
+            ],
+            "transformation": [
+                3.5,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                3.5,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                3.5,
+                0.0,
+                0.0,
+                2.4,
+                -9.0,
+                1.0
+            ],
+            "parent": "185"
+        },
+        "185": {
+            "name": "Mr NOT Blathering",
+            "parent": "102",
+            "transformation": [
+                999.9999389,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                999.9999389,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                999.9999389,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "186": {
+            "name": "Test Set Alpha",
+            "transformation": [
+                0.2,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.2,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.2,
+                0.0,
+                0.0,
+                1.8511146,
+                -1.5592491,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "test-set-alpha"
+                }
+            ]
+        },
+        "187": {
+            "name": "Empty.007",
+            "parent": "186",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "8",
+                        "material": "191"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "188": {
+            "name": "Empty.008",
+            "parent": "187",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "9",
+                        "material": "192"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.1179409,
+                0.0,
+                1.0
+            ]
+        },
+        "189": {
+            "name": "Empty.008",
+            "parent": "187",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "9",
+                        "material": "192"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                -1.1387395,
+                0.0,
+                1.0
+            ]
+        },
+        "190": {
+            "name": "Empty.009",
+            "parent": "188",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "10",
+                        "material": "26"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.7922868,
+                0.0,
+                1.0
+            ]
         }
     },
     "meshes": {
@@ -3941,6 +4262,104 @@
                 ]
             },
             "pipeline": "78"
+        },
+        "184": {
+            "link": {
+                "name": "DefaultFontMaterial",
+                "file": "default"
+            },
+            "DistanceFieldVector": {
+                "outlineRange": [
+                    0.5,
+                    0.5
+                ],
+                "outlineColor": [
+                    1.0,
+                    0.9999899,
+                    0.9999899,
+                    0.0
+                ],
+                "color": [
+                    0.3339484,
+                    0.3527323,
+                    0.3960784,
+                    1.0
+                ]
+            },
+            "name": "BlatherMaterial"
+        },
+        "191": {
+            "name": "Pink Alpha",
+            "Phong": {
+                "diffuseColor": [
+                    0.9098039,
+                    0.0,
+                    0.5411764,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999899930335233e-7,
+                    9.999911299019005e-7,
+                    9.999999974752428e-7,
+                    1.0
+                ],
+                "shininess": 10,
+                "ambientColor": [
+                    0.317647,
+                    0.0,
+                    0.2165777,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "192": {
+            "name": "Yellow Alpha",
+            "Phong": {
+                "diffuseColor": [
+                    1.0,
+                    0.8039215,
+                    0.0,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.3843137,
+                    0.3089579,
+                    0.0,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "193": {
+            "name": "Green Alpha",
+            "Phong": {
+                "diffuseColor": [
+                    0.1529411,
+                    0.7882353,
+                    0.5411764,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.0,
+                    0.2352941,
+                    0.1437908,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
         }
     },
     "shaders": {
@@ -4127,6 +4546,22 @@
                 "name": "Particle",
                 "file": "default"
             }
+        },
+        "194": {
+            "link": {
+                "name": "Phong Opaque",
+                "file": "default"
+            },
+            "name": "Phong Alpha",
+            "features": {
+                "ALPHA": true,
+                "ALPHA_MASKED": true
+            },
+            "blending": true,
+            "blendSrc": "source alpha",
+            "blendDest": "one minus source alpha",
+            "depthFunction": "less or equal",
+            "sampleAlphaToCoverage": false
         }
     }
 }
