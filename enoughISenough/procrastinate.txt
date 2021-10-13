@@ -119,8 +119,6 @@ Fase 3:
 Fase 4:
 - 3 - Kingdom Hearts  (corona)
 
-
-
 Mr NOT:
 - Glad to see you again
 - Maybe we can have a little conversation
@@ -147,3 +145,22 @@ Mr NOT:
 - You KNOW
 - It will always be...
 - NOT ENOUGH
+
+MUSIC:
+- sort of ambience creepy music
+- arcade music
+
+SFX:
+- grab (?)
+- object explode
+- mr not die
+- mr not laughing (per capire da dove arriva)
+- title appearing from dark (also usable for mr not appearing)
+- on object collision? like sound of something falling on the table (?)
+
+PULSE:
+- grab
+- not enough
+- collision (?)
+- release (?)
+

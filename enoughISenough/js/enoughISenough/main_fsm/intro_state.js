@@ -22,7 +22,7 @@ class IntroState extends PP.State {
         this._myFSM.addTransition("move_rings", "spawn_hands", "skip", this.skipRings.bind(this));
         this._myFSM.addTransition("spawn_hands", "show_title", "skip", this.skipHands.bind(this));
         this._myFSM.addTransition("show_title", "done", "skip", this.skipIntro.bind(this));
-        //this._myFSM.addTransition("move_rings", "temp", "skip", this.skipRings.bind(this));
+        //this._myFSM.addTransition("move_rings", "test", "skip", this.skipRings.bind(this));
 
         this._myTimer = new PP.Timer(2);
     }
@@ -32,7 +32,7 @@ class IntroState extends PP.State {
 
         //TEMP MORE PRESS
         if (!this._myFSM.isInState("wait_session") && PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
-            while (!this._myFSM.isInState("done") && !this._myFSM.isInState("temp")) {
+            while (!this._myFSM.isInState("done") && !this._myFSM.isInState("test")) {
                 this._myFSM.perform("skip");
             }
         }

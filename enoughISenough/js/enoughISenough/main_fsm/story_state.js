@@ -5,7 +5,7 @@ class StoryState extends PP.State {
         this._myFSM = new PP.FSM();
         this._myFSM.setDebugLogActive(true, "Story");
         this._myFSM.addState("init");
-        this._myFSM.addState("first_talk");
+        this._myFSM.addState("first_talk", new FirstTalkState());
         this._myFSM.addState("first_fight");
         this._myFSM.addState("first_defeat");
         this._myFSM.addState("second_talk");

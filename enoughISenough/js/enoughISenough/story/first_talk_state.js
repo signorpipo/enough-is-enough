@@ -23,9 +23,16 @@ class FirstTalkState extends PP.State {
         this._myFSM.init("init");
 
         this._myParentFSM = null;
+
+        this._myTimer = new PP.Timer(1);
+
+        //Setup
+        this._mySpawnTime = 1.5;
+        this._myHideScale = 0.95;
     }
 
     update(dt, fsm) {
+        this._myFSM.update(dt);
     }
 
     _prepareState() {
@@ -33,11 +40,32 @@ class FirstTalkState extends PP.State {
     }
 
     _prepareMrNOTAppear() {
+        this._myMrNOT = Global.myObjectPoolMap.getObject(GameObjectType.MR_NOT);
+        this._myMrNOT.pp_setPosition([0, 11, -18]);
+        this._myMrNOT.pp_setRotation([40, 0, 0]);
+        this._myMrNOT.pp_setScale([5, 5, 1]);
+        PP.MeshUtils.setAlpha(this._myMrNOT, 0);
+        this._myMrNOT.pp_setActive(true);
 
+        this._myTimer.start(this._mySpawnTime);
     }
 
     _updateMrNOTAppear(dt, fsm) {
+        if (this._myTimer.isRunning()) {
+            this._myTimer.update(dt);
+            PP.MeshUtils.setAlpha(this._myMrNOT, this._myTimer.getPercentage());
+            let currentScaleFactor = Math.pp_interpolate(this._myHideScale, 1, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
 
+            this._myMrNOT.pp_setScale([5, 5, 1]);
+            this._myMrNOT.pp_scaleObject(currentScaleFactor);
+
+            console.log(currentScaleFactor);
+            this._myMrNOT.pp_getScale().vec_log();
+
+            if (this._myTimer.isDone()) {
+                this._myTimer.reset();
+            }
+        }
     }
 
     _prepareTalk() {
@@ -62,7 +90,7 @@ class FirstTalkState extends PP.State {
 
     start(fsm, transition) {
         this._myParentFSM = fsm;
-        this._myFSM.init("start");
+        this._myFSM.perform("start");
     }
 
     end(fsm, transitionID) {

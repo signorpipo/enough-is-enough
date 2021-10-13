@@ -3416,7 +3416,7 @@
                 0.0,
                 0.0,
                 3.0747025,
-                -2.7333407,
+                5.5200519,
                 1.0
             ],
             "components": [
@@ -3451,7 +3451,7 @@
                     "type": "mesh",
                     "mesh": {
                         "mesh": "8",
-                        "material": "35"
+                        "material": "191"
                     },
                     "active": true
                 }
@@ -3483,7 +3483,7 @@
                     "type": "mesh",
                     "mesh": {
                         "mesh": "9",
-                        "material": "34"
+                        "material": "193"
                     }
                 }
             ],
@@ -3502,7 +3502,7 @@
                 0.0,
                 0.0,
                 0.0,
-                0.8999999,
+                0.8999977,
                 1.0
             ]
         },
@@ -3519,8 +3519,8 @@
                 3.2139384,
                 0.0,
                 0.0,
-                -2.5711507,
-                3.0641775,
+                -0.6427876,
+                0.7660443,
                 0.0,
                 0.0,
                 11.0,
@@ -3528,27 +3528,6 @@
                 1.0
             ],
             "components": [
-                {
-                    "type": "collision",
-                    "collision": {
-                        "collider": "box",
-                        "aabb": {
-                            "extents": [
-                                0.1,
-                                0.1,
-                                0.1
-                            ]
-                        },
-                        "groups": 1,
-                        "box": {
-                            "extents": [
-                                5.0,
-                                5.0,
-                                4.0
-                            ]
-                        }
-                    }
-                },
                 {
                     "type": "pp-easy-transform"
                 }
@@ -3609,7 +3588,7 @@
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                1.2999999,
                 0.0,
                 0.0,
                 0.0,
@@ -3659,17 +3638,17 @@
             "name": "Mr NOT Blathering",
             "parent": "102",
             "transformation": [
-                999.9999389,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                999.9999389,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                999.9999389,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
@@ -3701,7 +3680,8 @@
                 {
                     "type": "test-set-alpha"
                 }
-            ]
+            ],
+            "parent": "102"
         },
         "187": {
             "name": "Empty.007",
@@ -4455,7 +4435,9 @@
                 "js/pp/plugin/component_mod",
                 "js/pp/tool/console_vr",
                 "js/pp/tool/widget_frame",
-                "js/pp/tool/easy_tune"
+                "js/pp/tool/easy_tune",
+                "js/enoughISenough/story",
+                "js/pp/cauldron/fsm/state"
             ]
         },
         "editor": {
