@@ -30,6 +30,11 @@ PP.PendingPerform = class PendingPerform {
     }
 };
 
+PP.PerformType = {
+    IMMEDIATE: 0,
+    DELAYED: 1
+};
+
 PP.PerformDelayedType = {
     QUEUE: 0,
     KEEP_FIRST: 1,
@@ -38,7 +43,7 @@ PP.PerformDelayedType = {
 
 PP.FSM = class FSM {
 
-    constructor(isPerformDelayed = false, performDelayedType = PP.PerformDelayedType.QUEUE) {
+    constructor(performType = PP.PerformType.IMMEDIATE, performDelayedType = PP.PerformDelayedType.QUEUE) {
         this._myCurrentStateData = null;
 
         this._myStateMap = new Map();
@@ -48,7 +53,7 @@ PP.FSM = class FSM {
         this._myDebugShowDelayedInfo = false;
         this._myDebugLogName = "FSM";
 
-        this._myIsPerformDelayed = isPerformDelayed;
+        this._myPerformType = performType;
         this._myPerformDelayedType = performDelayedType;
         this._myPendingPerforms = [];
     }
@@ -145,7 +150,7 @@ PP.FSM = class FSM {
     }
 
     perform(transitionID, ...args) {
-        if (this._myIsPerformDelayed) {
+        if (this._myPerformType == PP.PerformType.DELAYED) {
             this.performDelayed(transitionID, ...args);
         } else {
             this.performImmediate(transitionID, ...args);
@@ -322,16 +327,16 @@ PP.FSM = class FSM {
         return hasTransition;
     }
 
-    setPerformDelayed(isPerformDelayed) {
-        this._myIsPerformDelayed = isPerformDelayed;
+    setPerformType(performType) {
+        this._myPerformType = performType;
+    }
+
+    getPerformType() {
+        return this._myPerformType;
     }
 
     setPerformDelayedType(performDelayedType) {
         this._myPerformDelayedType = performDelayedType;
-    }
-
-    isPerformDelayed() {
-        return this._myIsPerformDelayed;
     }
 
     getPerformDelayedType() {
@@ -357,7 +362,7 @@ PP.FSM = class FSM {
         cloneFSM._myDebugShowDelayedInfo = this._myDebugShowDelayedInfo;
         cloneFSM._myDebugLogName = this._myDebugLogName.slice(0);
 
-        cloneFSM._myIsPerformDelayed = this._myIsPerformDelayed;
+        cloneFSM._myPerformType = this._myPerformType;
         cloneFSM._myPerformDelayedType = this._myPerformDelayedType;
         cloneFSM._myPendingPerforms = this._myPendingPerforms.slice(0);
 
