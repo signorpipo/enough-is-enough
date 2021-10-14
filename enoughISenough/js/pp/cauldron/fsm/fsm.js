@@ -473,7 +473,11 @@ PP.FSM = class FSM {
                 console.warn(...consoleArguments);
             }
         } else if (this._myDebugLogActive) {
-            console.warn(this._myDebugLogName, "- FSM not initialized yet", isDelayed ? "- Delayed" : "- Immediate");
+            let consoleArguments = [this._myDebugLogName, "- FSM not initialized yet"];
+            if (this._myDebugShowDelayedInfo) {
+                consoleArguments.push(isDelayed ? "- Delayed" : "- Immediate");
+            }
+            console.warn(...consoleArguments);
         }
 
         return false;

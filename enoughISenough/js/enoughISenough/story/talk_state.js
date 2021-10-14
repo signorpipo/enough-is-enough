@@ -34,7 +34,7 @@ class TalkState extends PP.State {
 
         this._myTimer = new PP.Timer(1);
 
-        this._myTalk = new Talk(sentences);
+        this._myBlather = new Blather(sentences);
 
         //Setup
         this._mySpawnTime = 1.5;
@@ -77,12 +77,12 @@ class TalkState extends PP.State {
     }
 
     _prepareTalk() {
-        this._myTalk.start();
+        this._myBlather.start();
     }
 
     _updateTalk(dt, fsm) {
-        this._myTalk.update(dt);
-        if (this._myTalk.isDone()) {
+        this._myBlather.update(dt);
+        if (this._myBlather.isDone()) {
             fsm.perform("end");
         }
     }
@@ -122,31 +122,141 @@ class TalkState extends PP.State {
     }
 }
 
-class Talk {
+class Blather {
     constructor(sentences) {
-        this._myTalkTextObject = WL.scene.addObject(Global.myScene);
-        this._myTalkTextComponent = this._myTalkTextObject.pp_addComponent("text");
-        this._myTalkTextComponent.text = " ";
-        this._myTalkTextComponent.alignment = WL.Alignment.Left;
-        this._myTalkTextComponent.justification = WL.Justification.Top;
-        this._myTalkTextComponent.material = Materials.myText.clone();
-        this._myTalkTextComponent.material.outlineRange = [0.5, 0.5];
-        this._myTalkTextComponent.material.color = [1, 1, 1, 1];
-        this._myTalkTextComponent.material.outlineColor = [1, 1, 1, 0];
-        this._myTalkTextObject.pp_setActive(false);
+        this._myBlatherTextObject = WL.scene.addObject(Global.myScene);
+        this._myBlatherTextComponent = this._myBlatherTextObject.pp_addComponent("text");
+        this._myBlatherTextComponent.text = " ";
+        this._myBlatherTextComponent.text = "";
+        this._myBlatherTextComponent.alignment = WL.Alignment.Left;
+        this._myBlatherTextComponent.justification = WL.Justification.Top;
+        this._myBlatherTextComponent.material = Materials.myText.clone();
+        this._myBlatherTextComponent.material.outlineRange = [0.5, 0.5];
+        this._myBlatherTextComponent.material.color = [1, 1, 1, 1];
+        this._myBlatherTextComponent.material.outlineColor = [1, 1, 1, 1];
+        this._myBlatherTextObject.pp_setActive(false);
 
         this._mySentences = sentences;
+
+        this._myFSM = new PP.FSM();
+        this._myFSM.setDebugLogActive(true, "      Blather");
+        this._myFSM.addState("init");
+        this._myFSM.addState("first_wait", new PP.WaitState(0.5, "end"));
+        this._myFSM.addState("blather", this._updateBlather.bind(this));
+        this._myFSM.addState("wait", new PP.WaitState(1, "end"));
+        this._myFSM.addState("second_wait", new PP.WaitState(1.5, "end"));
+        this._myFSM.addState("done");
+
+        this._myFSM.addTransition("init", "first_wait", "start", this._prepareState.bind(this));
+        this._myFSM.addTransition("first_wait", "blather", "end", this._nextBlather.bind(this));
+        this._myFSM.addTransition("blather", "wait", "next");
+        this._myFSM.addTransition("wait", "blather", "end", this._nextBlather.bind(this));
+        this._myFSM.addTransition("blather", "second_wait", "end");
+        this._myFSM.addTransition("second_wait", "done", "end", this._done.bind(this));
+        this._myFSM.addTransition("done", "first_wait", "start", this._prepareState.bind(this));
+
+        this._myIsDone = false;
+        this._myCurrentSenteceIndex = 0;
+        this._myCurrentCharacterIndex = 0;
+
+        this._myCharacterTimer = new PP.Timer(0.1);
+        this._myNextTimer = new PP.Timer(0.1);
+
+        this._myCharAudios = [];
+        this._myCharAudios[0] = Global.myAudioManager.createAudioPlayer(SfxID.BLABLA_2);
+        this._myCharAudios[1] = Global.myAudioManager.createAudioPlayer(SfxID.BLABLA_1);
+
+        this._myFSM.init("init");
     }
 
     start() {
-
+        this._myFSM.perform("start");
     }
 
     update(dt) {
-
+        this._myFSM.update(dt);
     }
 
     isDone() {
-        return true;
+        return this._myIsDone;
+    }
+
+    _prepareState() {
+        this._myIsDone = false;
+        this._myCurrentSenteceIndex = -1;
+        this._myBlatherTextObject.pp_setActive(true);
+    }
+
+    _nextBlather() {
+        this._myIsDone = false;
+        this._myCurrentSenteceIndex++;
+        this._myCurrentCharacterIndex = 0;
+
+        this._setBlatherPosition();
+
+        this._myCharacterTimer.start();
+        this._myNextTimer.reset(1);
+    }
+
+    _updateBlather(dt, fsm) {
+        if (!this._myNextTimer.isRunning()) {
+            this._myCharacterTimer.update(dt);
+            let sentence = this._mySentences[this._myCurrentSenteceIndex];
+
+            if (this._myCharacterTimer.isDone()) {
+                let character = sentence[this._myCurrentCharacterIndex];
+                this._myBlatherTextComponent.text = this._myBlatherTextComponent.text.concat(character);
+
+                if (character != ' ') {
+                    let player = this._myCharAudios[this._myCurrentCharacterIndex % 2];
+                    player.play();
+                }
+
+                if (this._myCurrentCharacterIndex + 1 < sentence.length && sentence[this._myCurrentCharacterIndex + 1] == '.') {
+                    this._myCharacterTimer.start(0.3);
+                } else {
+                    this._myCharacterTimer.start(0.13);
+                }
+
+                this._myCurrentCharacterIndex++;
+            }
+
+            if (this._myCurrentCharacterIndex == sentence.length) {
+                if (this._myCurrentSenteceIndex < this._mySentences.length - 1) {
+                    this._myNextTimer.start(1);
+                } else {
+                    this._myNextTimer.start(2);
+                }
+            }
+        } else {
+            this._myNextTimer.update(dt);
+            if (this._myNextTimer.isDone()) {
+                if (this._myCurrentSenteceIndex < this._mySentences.length - 1) {
+                    this._myBlatherTextComponent.text = "";
+                    fsm.perform("next");
+                } else {
+                    this._myBlatherTextComponent.text = "";
+                    fsm.perform("end");
+                }
+            }
+        }
+    }
+
+    _done() {
+        this._myBlatherTextObject.pp_setActive(false);
+        this._myIsDone = true;
+    }
+
+    _setBlatherPosition() {
+        this._myBlatherTextObject.pp_setPosition([0, 2.4, -9]);
+        this._myBlatherTextObject.pp_setRotation([0, 0, 0]);
+        this._myBlatherTextObject.pp_setScale([3.5, 3.5, 3.5]);
+
+        this._myCharAudios[0].setPosition(this._myBlatherTextObject.pp_getPosition());
+        this._myCharAudios[1].setPosition(this._myBlatherTextObject.pp_getPosition());
+
+        let sentenceLength = this._mySentences[this._myCurrentSenteceIndex].length;
+        let displacement = sentenceLength * 0.096;
+        this._myBlatherTextObject.translateObject([-displacement, 0, 0]);
     }
 }

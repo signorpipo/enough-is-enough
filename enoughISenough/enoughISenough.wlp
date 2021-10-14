@@ -336,7 +336,7 @@
                 },
                 {
                     "type": "pp-mute-all",
-                    "active": true
+                    "active": false
                 },
                 {
                     "type": "clear-console-on-session",
@@ -3604,7 +3604,7 @@
                     "type": "text",
                     "text": {
                         "justification": "top",
-                        "text": "Why don't you show me what you have learned so far?",
+                        "text": "Home a? hagsf",
                         "material": "184"
                     }
                 },
@@ -3807,6 +3807,39 @@
                 0.0,
                 1.0
             ]
+        },
+        "195": {
+            "name": "BLA BLA",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "justification": "top",
+                        "text": "Home a? hagsf",
+                        "material": "184",
+                        "alignment": "left"
+                    }
+                }
+            ],
+            "transformation": [
+                3.5,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                3.5,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                3.5,
+                0.0,
+                -1.28371,
+                2.4,
+                -9.0,
+                1.0
+            ],
+            "parent": "185"
         }
     },
     "meshes": {

@@ -153,6 +153,7 @@ MUSIC:
 SFX:
 - grab (?)
 - object explode
+- object appear
 - mr not die
 - mr not laughing (per capire da dove arriva)
 - title appearing from dark (also usable for mr not appearing)
