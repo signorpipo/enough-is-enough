@@ -5,9 +5,9 @@ class StoryState extends PP.State {
         this._myFSM = new PP.FSM();
         this._myFSM.setDebugLogActive(true, "Story");
         this._myFSM.addState("init");
-        this._myFSM.addState("first_talk", new FirstTalkState());
+        this._myFSM.addState("first_talk", new TalkState(this._firstTalkSentences(), false));
         this._myFSM.addState("first_fight");
-        this._myFSM.addState("first_defeat");
+        this._myFSM.addState("first_defeat", new TalkState(this._firstDefeatSentences(), true));
         this._myFSM.addState("second_talk");
         this._myFSM.addState("second_fight");
         this._myFSM.addState("second_defeat");
@@ -68,5 +68,23 @@ class StoryState extends PP.State {
 
     end(fsm, transitionID) {
         PP.SaveUtils.save("story_started_once", true);
+    }
+
+    _firstTalkSentences() {
+        let sentences = [];
+
+        sentences.push("Glad to see you again");
+        sentences.push("Maybe we can have a little conversation");
+        sentences.push("Why don't you show me what you have learned so far?");
+
+        return sentences;
+    }
+
+    _firstDefeatSentences() {
+        let sentences = [];
+
+        sentences.push("Don't even bother");
+
+        return sentences;
     }
 }
