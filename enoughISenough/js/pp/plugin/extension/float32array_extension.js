@@ -37,6 +37,22 @@ Float32Array.prototype.pp_findAndRemoveAll = function (callback) {
     return elementsRemoved;
 };
 
+Float32Array.prototype.pp_clone = function () {
+    return this.slice(0);
+};
+
+Float32Array.prototype.pp_copy = function (array) {
+    while (this.length > array.length) {
+        this.pop();
+    }
+
+    for (let i = 0; i < array.size; i++) {
+        this[i] = array[i];
+    }
+
+    return this;
+};
+
 // GENERIC VECTOR
 
 Float32Array.prototype.vec_log = function (decimalPlaces = 4) {
@@ -52,6 +68,58 @@ Float32Array.prototype.vec_error = function (decimalPlaces = 4) {
 Float32Array.prototype.vec_warn = function (decimalPlaces = 4) {
     let message = this._vec_buildConsoleMessage(decimalPlaces);
     console.warn(message);
+};
+
+Float32Array.prototype.vec_scale = function (value, out = null) {
+    out = this._vec_prepareOut(out);
+
+    for (let i = 0; i < out.length; i++) {
+        out[i] = out[i] * value;
+    }
+
+    return out;
+};
+
+Float32Array.prototype.vec_round = function (out = null) {
+    out = this._vec_prepareOut(out);
+
+    for (let i = 0; i < out.length; i++) {
+        out[i] = Math.round(out[i]);
+    }
+
+    return out;
+};
+
+Float32Array.prototype.vec_floor = function (out = null) {
+    out = this._vec_prepareOut(out);
+
+    for (let i = 0; i < out.length; i++) {
+        out[i] = Math.floor(out[i]);
+    }
+
+    return out;
+};
+
+Float32Array.prototype.vec_ceil = function (out = null) {
+    out = this._vec_prepareOut(out);
+
+    for (let i = 0; i < out.length; i++) {
+        out[i] = Math.ceil(out[i]);
+    }
+
+    return out;
+};
+
+Float32Array.prototype.vec_clamp = function (intervalStart, intervalEnd, out = null) {
+    out = this._vec_prepareOut(out);
+
+    for (let i = 0; i < out.length; i++) {
+        let min = Math.min(intervalStart, intervalEnd);
+        let max = Math.max(intervalStart, intervalEnd);
+        out[i] = Math.min(Math.max(out[i], min), max);
+    }
+
+    return out;
 };
 
 // VECTOR 3
@@ -863,3 +931,12 @@ Float32Array.prototype._vec_buildConsoleMessage = function (decimalPlaces) {
     return message;
 };
 
+Float32Array.prototype._vec_prepareOut = function (out) {
+    if (out == null) {
+        out = this.pp_clone();
+    } else if (out != this) {
+        out.pp_copy(this);
+    }
+
+    return out;
+};

@@ -116,6 +116,10 @@ PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget {
 
             this._myValueRealValue += amountToAdd;
 
+            if (this._myVariable.myMin != null) {
+                this._myValueRealValue = Math.pp_clamp(this._myValueRealValue, this._myVariable.myMin, this._myVariable.myMax);
+            }
+
             let decimalPlacesMultiplier = Math.pow(10, this._myVariable.myDecimalPlaces);
             this._myVariable.myValue[this._myValueEditIndex] = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
             this._myUI.myValueTextComponents[this._myValueEditIndex].text = this._myVariable.myValue[this._myValueEditIndex].toFixed(this._myVariable.myDecimalPlaces);

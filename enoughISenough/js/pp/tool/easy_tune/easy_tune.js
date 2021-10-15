@@ -10,7 +10,7 @@ WL.registerComponent('pp-easy-tune', {
     init: function () {
         //Examples
         //Number: PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Speed", 10.32, 0.01, 3));
-        //Integer: PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Lives", 3, 1));
+        //Int: PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Lives", 3, 1));
         //Bool: PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Run", false));
 
         PP.myEasyTuneVariables = new PP.EasyTuneVariables();

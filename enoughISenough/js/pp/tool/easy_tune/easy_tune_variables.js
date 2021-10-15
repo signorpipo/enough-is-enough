@@ -80,19 +80,30 @@ PP.EasyTuneVariableArray = class EasyTuneVariableArray extends PP.EasyTuneVariab
 //NUMBER
 
 PP.EasyTuneNumberArray = class EasyTuneNumberArray extends PP.EasyTuneVariableArray {
-    constructor(name, value, stepPerSecond, decimalPlaces) {
-        super(name, PP.EasyTuneVariableType.NUMBER, value);
+    constructor(name, value, stepPerSecond, decimalPlaces, min = null, max = null) {
+        let tempValue = value.slice(0);
+
+        if (min != null) {
+            for (let i = 0; i < value.length; i++) {
+                tempValue[i] = Math.pp_clamp(tempValue[i], min, max);
+            }
+        }
+
+        super(name, PP.EasyTuneVariableType.NUMBER, tempValue);
 
         this.myDecimalPlaces = decimalPlaces;
         this.myStepPerSecond = stepPerSecond;
 
         this.myInitialStepPerSecond = this.myStepPerSecond;
+
+        this.myMin = min;
+        this.myMax = max;
     }
 };
 
 PP.EasyTuneNumber = class EasyTuneNumber extends PP.EasyTuneNumberArray {
-    constructor(name, value, stepPerSecond, decimalPlaces) {
-        super(name, [value], stepPerSecond, decimalPlaces);
+    constructor(name, value, stepPerSecond, decimalPlaces, min, max) {
+        super(name, [value], stepPerSecond, decimalPlaces, min, max);
     }
 
     getValue() {
@@ -105,14 +116,20 @@ PP.EasyTuneNumber = class EasyTuneNumber extends PP.EasyTuneNumberArray {
 };
 
 PP.EasyTuneInt = class EasyTuneInt extends PP.EasyTuneNumber {
-    constructor(name, value, stepPerSecond) {
-        super(name, value, stepPerSecond, 0);
+    constructor(name, value, stepPerSecond, min, max) {
+        super(name, value, stepPerSecond, 0, min, max);
     }
 };
 
 PP.EasyTuneIntArray = class EasyTuneIntArray extends PP.EasyTuneNumberArray {
-    constructor(name, value, stepPerSecond) {
-        super(name, value, stepPerSecond, 0);
+    constructor(name, value, stepPerSecond, min, max) {
+        let tempValue = value.slice(0);
+
+        for (let i = 0; i < value.length; i++) {
+            tempValue[i] = Math.round(tempValue[i]);
+        }
+
+        super(name, tempValue, stepPerSecond, 0, Math.round(min), Math.round(max));
     }
 };
 
