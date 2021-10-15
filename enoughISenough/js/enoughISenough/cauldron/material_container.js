@@ -4,18 +4,13 @@ WL.registerComponent("material-container", {
     _myText: { type: WL.Type.Material },
 }, {
     init: function () {
-        Materials.myTitle = this._myTitle;
-        Materials.mySubtitle = this._mySubtitle;
-        Materials.myText = this._myText;
+        Global.myMaterials = {};
+        Global.myMaterials.myTitle = this._myTitle;
+        Global.myMaterials.mySubtitle = this._mySubtitle;
+        Global.myMaterials.myText = this._myText;
     },
     start: function () {
     },
     update: function (dt) {
     }
 });
-
-var Materials = {
-    myTitle: null,
-    mySubtitle: null,
-    myText: null
-};

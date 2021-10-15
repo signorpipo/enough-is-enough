@@ -14,13 +14,13 @@ class ShowTitleState extends PP.State {
         this._myTitleTextComponent = this._myTitle.addComponent('text');
         this._myTitleTextComponent.alignment = WL.Alignment.Left;
         this._myTitleTextComponent.justification = WL.Justification.Line;
-        this._myTitleTextComponent.material = Materials.myTitle.clone();
+        this._myTitleTextComponent.material = Global.myMaterials.myTitle.clone();
         this._myTitleTextComponent.text = " ";
 
         this._mySubtitleTextComponent = this._mySubtitle.addComponent('text');
         this._mySubtitleTextComponent.alignment = WL.Alignment.Left;
         this._mySubtitleTextComponent.justification = WL.Justification.Line;
-        this._mySubtitleTextComponent.material = Materials.mySubtitle.clone();
+        this._mySubtitleTextComponent.material = Global.myMaterials.mySubtitle.clone();
         this._mySubtitleTextComponent.text = " ";
 
         this._myTitlesObjectPosition = [-10, 133, -164];

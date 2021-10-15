@@ -130,7 +130,7 @@ class Blather {
         this._myBlatherTextComponent.text = "";
         this._myBlatherTextComponent.alignment = WL.Alignment.Left;
         this._myBlatherTextComponent.justification = WL.Justification.Top;
-        this._myBlatherTextComponent.material = Materials.myText.clone();
+        this._myBlatherTextComponent.material = Global.myMaterials.myText.clone();
         this._myBlatherTextComponent.material.outlineRange = [0.5, 0.5];
         this._myBlatherTextComponent.material.color = [1, 1, 1, 1];
         this._myBlatherTextComponent.material.outlineColor = [1, 1, 1, 1];
