@@ -38,15 +38,17 @@ class StoryState extends PP.State {
         this._myFSM.addTransition("MrNOT", "it_will_always_be_not_enough", "end");
         this._myFSM.addTransition("MrNOT", "MrNOT_defeat", "defeat");
 
-        this._myFSM.addTransition("it_will_always_be_not_enough", "done", "end");
+        this._myFSM.addTransition("it_will_always_be_not_enough", "done", "end", this._backToMenu.bind(this));
 
-        this._myFSM.addTransition("first_defeat", "done", "end");
-        this._myFSM.addTransition("second_defeat", "done", "end");
-        this._myFSM.addTransition("third_defeat", "done", "end");
+        this._myFSM.addTransition("first_defeat", "done", "end", this._backToMenu.bind(this));
+        this._myFSM.addTransition("second_defeat", "done", "end", this._backToMenu.bind(this));
+        this._myFSM.addTransition("third_defeat", "done", "end", this._backToMenu.bind(this));
 
         this._myFSM.addTransition("done", "first_talk", "start");
 
         this._myFSM.init("init");
+
+        this._myParentFSM = null;
     }
 
     update(dt, fsm) {
@@ -57,17 +59,27 @@ class StoryState extends PP.State {
             this._myFSM.init("init");
             fsm.perform(MainTransitions.End);
         }
+
+        //TEMP REMOVE THIS
+        if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(1)) {
+            this._myFSM.perform("defeat");
+        }
     }
 
     init(fsm) {
     }
 
     start(fsm, transitionID) {
+        this._myParentFSM = fsm;
         this._myFSM.perform("start");
     }
 
     end(fsm, transitionID) {
         PP.SaveUtils.save("story_started_once", true);
+    }
+
+    _backToMenu(fsm) {
+        this._myParentFSM.perform(MainTransitions.End);
     }
 
     _firstTalkSentences() {

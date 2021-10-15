@@ -14,8 +14,8 @@ class TalkState extends PP.State {
 
         if (isDefeat) {
             this._myFSM.addTransition("init", "first_wait", "start", this._prepareState.bind(this));
-            this._myFSM.addTransition("first_wait", "talk", "end", this._prepareMrNOTAppear.bind(this));
-            this._myFSM.addTransition("talk", "second_wait", "end", this._prepareMrNOTDisappear.bind(this));
+            this._myFSM.addTransition("first_wait", "talk", "end", this._prepareTalk.bind(this));
+            this._myFSM.addTransition("talk", "second_wait", "end");
             this._myFSM.addTransition("second_wait", "done", "end", this._startFight.bind(this));
             this._myFSM.addTransition("done", "first_wait", "start", this._prepareState.bind(this));
         } else {
