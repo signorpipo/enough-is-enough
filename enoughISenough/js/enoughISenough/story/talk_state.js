@@ -45,8 +45,8 @@ class TalkState extends PP.State {
         this._myFSM.update(dt);
     }
 
-    _prepareState() {
-
+    _prepareState(fsm, transition) {
+        transition.myToState.myObject.start(fsm, transition);
     }
 
     _prepareMrNOTAppear() {

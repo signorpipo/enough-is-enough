@@ -28,8 +28,8 @@ class FirstFightState extends PP.State {
     update(dt, fsm) {
     }
 
-    _prepareState() {
-
+    _prepareState(fsm, transition) {
+        transition.myToState.myObject.start(fsm, transition);
     }
 
     _prepareFight() {

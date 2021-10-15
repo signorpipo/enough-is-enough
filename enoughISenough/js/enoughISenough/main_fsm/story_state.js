@@ -88,8 +88,8 @@ class StoryState extends PP.State {
         let sentences = [];
 
         sentences.push("Glad to see you again");
-        sentences.push("Maybe we can have a little conversation");
-        sentences.push("Why don't you show me what you have learned so far?");
+        //sentences.push("Maybe we can have a little conversation");
+        //sentences.push("Why don't you show me what you have learned so far?");
 
         return sentences;
     }
