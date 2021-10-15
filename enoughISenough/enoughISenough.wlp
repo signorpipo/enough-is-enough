@@ -344,6 +344,12 @@
                 },
                 {
                     "type": "pp-gamepad-manager"
+                },
+                {
+                    "type": "enable-debug-shortcuts",
+                    "enable-debug-shortcuts": {
+                        "_myShortcutsEnabled": true
+                    }
                 }
             ]
         },

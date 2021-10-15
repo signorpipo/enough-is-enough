@@ -80,14 +80,16 @@ class MenuState extends PP.State {
 
         this._myMenuTitle.update(dt);
 
-        //TEMP REMOVE THIS
-        if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
-            this._myFSM.perform("unspawn_story");
-        }
+        if (Global.myDebugShortcutsEnabled) {
+            //TEMP REMOVE THIS
+            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
+                this._myFSM.perform("unspawn_story");
+            }
 
-        //TEMP REMOVE THIS
-        if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(1)) {
-            this._myFSM.perform("unspawn_arcade_hard");
+            //TEMP REMOVE THIS
+            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(1)) {
+                this._myFSM.perform("unspawn_arcade_hard");
+            }
         }
     }
 

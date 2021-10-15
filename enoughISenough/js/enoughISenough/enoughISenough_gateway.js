@@ -51,4 +51,5 @@ var Global = {
     myTitleObject: null,
     mySubtitleObject: null,
     myObjectPoolMap: null,
+    myDebugShortcutsEnabled: false
 };

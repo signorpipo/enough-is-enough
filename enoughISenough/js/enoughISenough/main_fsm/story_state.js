@@ -54,15 +54,17 @@ class StoryState extends PP.State {
     update(dt, fsm) {
         this._myFSM.update(dt);
 
-        //TEMP REMOVE THIS
-        if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
-            this._myFSM.init("init");
-            fsm.perform(MainTransitions.End);
-        }
+        if (Global.myDebugShortcutsEnabled) {
+            //TEMP REMOVE THIS
+            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
+                this._myFSM.init("init");
+                fsm.perform(MainTransitions.End);
+            }
 
-        //TEMP REMOVE THIS
-        if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(1)) {
-            this._myFSM.perform("defeat");
+            //TEMP REMOVE THIS
+            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(1)) {
+                this._myFSM.perform("defeat");
+            }
         }
     }
 
