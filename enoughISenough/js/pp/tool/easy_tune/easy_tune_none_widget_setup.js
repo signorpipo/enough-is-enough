@@ -41,10 +41,10 @@ PP.EasyTuneNoneWidgetSetup = class EasyTuneNoneWidgetSetup {
         this.mySideButtonCollisionExtents = this.mySideButtonBackgroundScale.slice(0);
         this.mySideButtonCollisionExtents[2] = this.myCursorTargetCollisionThickness;
 
-        this.myLeftSideButtonPosition = [0, 0, 0];
+        this.myLeftSideButtonPosition = [0, 0, -0.00001];
         this.myLeftSideButtonPosition[0] = -backgroundHalfWidth + this.mySideButtonBackgroundScale[0] + distanceFromBorder;
 
-        this.myRightSideButtonPosition = [0, 0, 0];
+        this.myRightSideButtonPosition = [0, 0, -0.00001];
         this.myRightSideButtonPosition[0] = backgroundHalfWidth - this.mySideButtonBackgroundScale[0] - distanceFromBorder;
 
         //Display

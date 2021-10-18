@@ -45,10 +45,10 @@ PP.EasyTuneEasyTransformWidgetSetup = class EasyTuneEasyTransformWidgetSetup {
         this.myLeftSideButtonPosition = [-0.13, 0, 0];
         this.myRightSideButtonPosition = [-this.myLeftSideButtonPosition[0], 0, 0];
 
-        this.myPreviousButtonPosition = [0, 0, 0];
+        this.myPreviousButtonPosition = [0, 0, -0.00001];
         this.myPreviousButtonPosition[0] = -backgroundHalfWidth + this.mySideButtonBackgroundScale[0] + distanceFromBorder;
 
-        this.myNextButtonPosition = [0, 0, 0];
+        this.myNextButtonPosition = [0, 0, -0.00001];
         this.myNextButtonPosition[0] = backgroundHalfWidth - this.mySideButtonBackgroundScale[0] - distanceFromBorder;
 
         this.myIncreaseButtonText = "+";
