@@ -53,6 +53,7 @@
         - pp_clone      / pp_isCloneable
 
         - pp_getName    / pp_setName
+        - pp_getID
         - pp_getChildren
         - pp_markDirty
         - pp_equals
@@ -1883,6 +1884,10 @@ WL.Object.prototype.pp_getName = function () {
 
 WL.Object.prototype.pp_setName = function (name) {
     this.name = name;
+};
+
+WL.Object.prototype.pp_getID = function () {
+    return this.objectId;
 };
 
 WL.Object.prototype.pp_getChildren = function () {

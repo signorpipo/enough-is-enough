@@ -51,6 +51,10 @@ PP.Timer = class Timer {
         return this._myDuration;
     }
 
+    setDuration(duration) {
+        this._myDuration = duration;
+    }
+
     getTimer() {
         return this._myTimer;
     }
@@ -61,11 +65,6 @@ PP.Timer = class Timer {
             percentage = (this._myDuration - this._myTimer) / this._myDuration;
         }
         return Math.pp_clamp(percentage, 0, 1);
-    }
-
-    setDuration(duration) {
-        this._myDuration = duration;
-        this.reset();
     }
 
     onEnd(callback, id = null) {

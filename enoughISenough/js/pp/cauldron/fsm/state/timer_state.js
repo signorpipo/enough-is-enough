@@ -1,12 +1,20 @@
-PP.WaitState = class WaitState extends PP.State {
-    constructor(timeToWait = 0, transitionToPerformOnEnd = null, ...transitionArgs) {
+PP.TimerState = class TimerState extends PP.State {
+    constructor(duration = 0, transitionToPerformOnEnd = null, ...transitionArgs) {
         super();
 
-        this._myTimeToWait = timeToWait;
         this._myTransitionToPerformOnEnd = transitionToPerformOnEnd;
         this._myTransitionArgs = transitionArgs;
 
-        this._myTimer = new PP.Timer(timeToWait);
+        this._myTimer = new PP.Timer(duration);
+    }
+
+    setDuration(duration) {
+        this._myTimer.setDuration(duration);
+    }
+
+    setTransitionToPerformOnEnd(transitionToPerformOnEnd, ...transitionArgs) {
+        this._myTransitionToPerformOnEnd = transitionToPerformOnEnd;
+        this._myTransitionArgs = transitionArgs;
     }
 
     onEnd(callback, id = null) {
@@ -26,8 +34,8 @@ PP.WaitState = class WaitState extends PP.State {
         }
     }
 
-    start(fsm, transition, timeToWait = null, transitionToPerformOnEnd = null, ...transitionArgs) {
-        this._myTimer.start(timeToWait);
+    start(fsm, transition, duration = null, transitionToPerformOnEnd = null, ...transitionArgs) {
+        this._myTimer.start(duration);
         if (transitionToPerformOnEnd != null) {
             this._myTransitionToPerformOnEnd = transitionToPerformOnEnd;
             this._myTransitionArgs = transitionArgs;

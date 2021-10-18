@@ -3536,11 +3536,6 @@
                 11.0,
                 -18.0,
                 1.0
-            ],
-            "components": [
-                {
-                    "type": "pp-easy-transform"
-                }
             ]
         },
         "181": {
@@ -3612,15 +3607,9 @@
                 {
                     "type": "text",
                     "text": {
-                        "justification": "top",
+                        "justification": "line",
                         "text": "Home a? hagsf",
                         "material": "184"
-                    }
-                },
-                {
-                    "type": "pp-easy-transform",
-                    "pp-easy-transform": {
-                        "_myIndex": 1
                     }
                 },
                 {
@@ -3641,7 +3630,7 @@
                 3.5,
                 0.0,
                 -2.980232238769532e-8,
-                2.4,
+                2.0731887,
                 -9.0,
                 1.0
             ],
@@ -3649,7 +3638,7 @@
         },
         "185": {
             "name": "Mr NOT Blathering",
-            "parent": "102",
+            "parent": null,
             "transformation": [
                 1.0,
                 0.0,
@@ -3826,7 +3815,7 @@
                 {
                     "type": "text",
                     "text": {
-                        "justification": "top",
+                        "justification": "line",
                         "text": "Home a? hagsf",
                         "material": "184",
                         "alignment": "left"
@@ -3847,8 +3836,81 @@
                 3.5,
                 0.0,
                 -1.28371,
-                2.4,
+                2.0740256,
                 -9.0,
+                1.0
+            ],
+            "parent": "185"
+        },
+        "196": {
+            "name": "NOT ENOUGH",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "justification": "line",
+                        "text": "NOT ENOUGH",
+                        "material": "184"
+                    }
+                },
+                {
+                    "type": "pp-easy-transform",
+                    "pp-easy-transform": {
+                        "_myIndex": 2,
+                        "_mySetAsDefault": true,
+                        "_myVariableName": "NOT ENOUGH"
+                    }
+                }
+            ],
+            "transformation": [
+                19.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                17.8541584,
+                6.4983863,
+                0.0,
+                0.0,
+                -6.4983863,
+                17.8541584,
+                0.0,
+                -2.980241120553728e-8,
+                4.0000004,
+                -10.5,
+                1.0
+            ],
+            "parent": "185"
+        },
+        "197": {
+            "name": "NOT ENOUGH",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "justification": "line",
+                        "text": "NOT ENOUGH",
+                        "material": "184",
+                        "alignment": "left"
+                    }
+                }
+            ],
+            "transformation": [
+                19.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                17.8541545,
+                6.4983768,
+                0.0,
+                0.0,
+                -6.4983768,
+                17.8541545,
+                0.0,
+                -5.8499999,
+                4.0000019,
+                -10.5,
                 1.0
             ],
             "parent": "185"

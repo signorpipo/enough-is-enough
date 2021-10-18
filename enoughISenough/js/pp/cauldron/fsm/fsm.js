@@ -107,7 +107,13 @@ PP.FSM = class FSM {
             let transitionData = new PP.TransitionData(transitionID, this.getState(fromStateID), this.getState(toStateID), transitionObject);
             fromMap.set(transitionID, transitionData);
         } else {
-            console.error("can't add the transition, states not found inside the fsm");
+            if (!this.hasState(fromStateID) && !this.hasState(toStateID)) {
+                console.error("Can't add transition:", transitionID, "- from state not found:", fromStateID, "- to state not found:", toStateID);
+            } else if (!this.hasState(fromStateID)) {
+                console.error("Can't add transition:", transitionID, "- from state not found:", fromStateID);
+            } else if (!this.hasState(toStateID)) {
+                console.error("Can't add transition:", transitionID, "- to state not found:", toStateID);
+            }
         }
     }
 

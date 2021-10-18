@@ -1,11 +1,16 @@
 WL.registerComponent("pp-easy-mesh-color", {
-    _myIndex: { type: WL.Type.Int, default: 0 },
+    _myVariableName: { type: WL.Type.String, default: "" },
+    _mySetAsDefault: { type: WL.Type.Bool, default: false },
     _myColorType: { type: WL.Type.Enum, values: ['color', 'diffuse color', 'diffuse color with ambient shade factor', 'ambient color', 'specular color', 'emissive color', 'fog color'], default: 'color' },
     _myAmbientShadeFactor: { type: WL.Type.Float, default: 0 } // If less than 0 use the same diffuse color but darkened by the factor specified, brightened otherwise
 
 }, {
     init: function () {
-        this._myVariableName = "Easy Mesh Color ".concat(this._myIndex);
+        if (this._myVariableName == "") {
+            this._myEasyTuneVariableName = "Mesh Color ".concat(this.object.objectId);
+        } else {
+            this._myEasyTuneVariableName = "Mesh Color ".concat(this._myVariableName);
+        }
     },
     start: function () {
         this._myMeshMaterial = this.object.pp_getComponent("mesh").material;
@@ -13,13 +18,13 @@ WL.registerComponent("pp-easy-mesh-color", {
         let color = this._myMeshMaterial[this._myColorVariableNames[this._myColorType]].pp_clone();
         color = color.vec_scale(255);
         color = color.vec_round();
-        PP.myEasyTuneVariables.add(new PP.EasyTuneIntArray(this._myVariableName, color, 50, 0, 255));
-        if (this._myIndex == 0) {
-            PP.setEasyTuneWidgetActiveVariable(this._myVariableName);
+        PP.myEasyTuneVariables.add(new PP.EasyTuneIntArray(this._myEasyTuneVariableName, color, 50, 0, 255));
+        if (this._mySetAsDefault) {
+            PP.setEasyTuneWidgetActiveVariable(this._myEasyTuneVariableName);
         }
     },
     update: function () {
-        let color = PP.myEasyTuneVariables.get(this._myVariableName).vec_scale(1 / 255);
+        let color = PP.myEasyTuneVariables.get(this._myEasyTuneVariableName).vec_scale(1 / 255);
         this._myMeshMaterial[this._myColorVariableNames[this._myColorType]] = color;
         if (this._myColorType == 2) {
             let ambientColor = color.pp_clone();
