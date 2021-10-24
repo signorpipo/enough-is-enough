@@ -28,8 +28,8 @@ WL.registerComponent("hand-animator", {
 
         let elementsToRemove = [7, 5, 4];
         for (let index of elementsToRemove) {
-            rotations.pp_remove(index);
-            endPositions.pp_remove(index);
+            rotations.pp_removeIndex(index);
+            endPositions.pp_removeIndex(index);
         }
 
         let startPosition = [0, 0, 0];
@@ -82,7 +82,7 @@ WL.registerComponent("hand-animator", {
 
         while (indexList.length > 0) {
             let randomIndex = Math.pp_randomInt(0, indexList.length - 1);
-            let index = indexList.pp_remove(randomIndex);
+            let index = indexList.pp_removeIndex(randomIndex);
 
             let randomTimer = Math.pp_random(0.15, 0.45);
             this._myAppearList.push([index, new PP.Timer(randomTimer)]);

@@ -1,4 +1,4 @@
-WL.registerComponent('other-objects', {
+WL.registerComponent('mr_NOT_object', {
     _myMrNOT: { type: WL.Type.Object },
 }, {
     init: function () {

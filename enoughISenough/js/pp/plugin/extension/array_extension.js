@@ -1,5 +1,23 @@
 //ARRAY
-Array.prototype.pp_remove = function (index) {
+
+Array.prototype.pp_find = function (callback) {
+    let elementFound = undefined;
+
+    let index = this.findIndex(callback);
+    if (index >= 0) {
+        elementFound = this[index];
+    }
+
+    return elementFound;
+};
+
+Array.prototype.pp_findAll = function (callback) {
+    let elementsFound = this.filter(callback);
+
+    return elementsFound;
+};
+
+Array.prototype.pp_removeIndex = function (index) {
     let elementRemoved = undefined;
 
     if (index >= 0 && index < this.length) {
@@ -12,29 +30,37 @@ Array.prototype.pp_remove = function (index) {
     return elementRemoved;
 };
 
-Array.prototype.pp_findAndRemove = function (callback) {
-    let elementFound = undefined;
+Array.prototype.pp_remove = function (callback) {
+    let elementRemoved = undefined;
 
     let index = this.findIndex(callback);
     if (index >= 0) {
-        elementFound = this.pp_remove(index);
+        elementRemoved = this.pp_removeIndex(index);
     }
 
-    return elementFound;
+    return elementRemoved;
 };
 
-Array.prototype.pp_findAndRemoveAll = function (callback) {
+Array.prototype.pp_removeAll = function (callback) {
     let elementsRemoved = [];
 
     let currentElement = undefined;
     do {
-        currentElement = this.pp_findAndRemove(callback);
+        currentElement = this.pp_remove(callback);
         if (currentElement !== undefined) {
             elementsRemoved.push(currentElement);
         }
     } while (currentElement !== undefined);
 
     return elementsRemoved;
+};
+
+Array.prototype.pp_removeEqual = function (elementToFind) {
+    return this.pp_remove(element => element === elementToFind);
+};
+
+Array.prototype.pp_removeAllEqual = function (elementToFind) {
+    return this.pp_removeAll(element => element === elementToFind);
 };
 
 Array.prototype.pp_clone = function () {

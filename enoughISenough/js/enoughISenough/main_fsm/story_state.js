@@ -6,18 +6,21 @@ class StoryState extends PP.State {
         this._myFSM.setDebugLogActive(true, "Story");
         this._myFSM.addState("init");
         this._myFSM.addState("first_talk", new TalkState(this._firstTalkSentences(), false));
-        this._myFSM.addState("first_vent", new StoryVentState(0));
+        this._myFSM.addState("first_vent", new StoryVentState(0, this._firstEvidenceSetupList()));
         this._myFSM.addState("first_defeat", new TalkState(this._firstDefeatSentences(), true));
         this._myFSM.addState("second_talk", new TalkState(this._secondTalkSentences(), false));
-        this._myFSM.addState("second_vent", new StoryVentState(0));
+        this._myFSM.addState("second_vent", new StoryVentState(1, this._secondEvidenceSetupList()));
         this._myFSM.addState("second_defeat", new TalkState(this._secondDefeatSentences(), true));
+        this._myFSM.addState("third_talk", new TalkState(this._secondTalkSentences(), false));
+        this._myFSM.addState("third_vent", new StoryVentState(2, this._thirdEvidenceSetupList()));
+        this._myFSM.addState("third_defeat", new TalkState(this._thirdDefeatSentences(), true));
         this._myFSM.addState("MrNOT_talk", new TalkState(this._mrNOTTalkSentences(), false));
         this._myFSM.addState("MrNOT_vent", new MrNOTVentState());
         this._myFSM.addState("MrNOT_defeat", new TalkState(this._mrNOTDefeatSentences(), true));
         this._myFSM.addState("it_will_always_be_not_enough", new TalkState(this._NOTENOUGHTalkSentences(), true));
         this._myFSM.addState("done");
 
-        this._myFSM.addTransition("init", "it_will_always_be_not_enough", "start");
+        this._myFSM.addTransition("init", "first_vent", "start");
 
         this._myFSM.addTransition("first_talk", "first_vent", "end");
         this._myFSM.addTransition("first_vent", "first_defeat", "defeat");
@@ -25,7 +28,11 @@ class StoryState extends PP.State {
 
         this._myFSM.addTransition("second_talk", "second_vent", "end");
         this._myFSM.addTransition("second_vent", "second_defeat", "defeat");
-        this._myFSM.addTransition("second_vent", "MrNOT_talk", "end");
+        this._myFSM.addTransition("second_vent", "third_talk", "end");
+
+        this._myFSM.addTransition("third_talk", "third_vent", "end");
+        this._myFSM.addTransition("third_vent", "third_defeat", "defeat");
+        this._myFSM.addTransition("third_vent", "MrNOT_talk", "end");
 
         this._myFSM.addTransition("MrNOT_talk", "MrNOT_vent", "end");
         this._myFSM.addTransition("MrNOT_vent", "MrNOT_defeat", "defeat");
@@ -35,6 +42,7 @@ class StoryState extends PP.State {
 
         this._myFSM.addTransition("first_defeat", "done", "end", this._backToMenu.bind(this));
         this._myFSM.addTransition("second_defeat", "done", "end", this._backToMenu.bind(this));
+        this._myFSM.addTransition("third_defeat", "done", "end", this._backToMenu.bind(this));
         this._myFSM.addTransition("MrNOT_defeat", "done", "end", this._backToMenu.bind(this));
 
         this._myFSM.addTransition("done", "first_talk", "start");
@@ -45,6 +53,8 @@ class StoryState extends PP.State {
     }
 
     update(dt, fsm) {
+        Global.myStoryDuration += dt;
+
         if (Global.myDebugShortcutsEnabled && !(this._myFSM.isInState("first_vent") || this._myFSM.isInState("second_vent") || this._myFSM.isInState("MrNOT_vent"))) {
             //TEMP REMOVE THIS
             if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
@@ -67,6 +77,7 @@ class StoryState extends PP.State {
     start(fsm, transitionID) {
         this._myParentFSM = fsm;
         this._myFSM.perform("start");
+        Global.myStoryDuration = 0;
     }
 
     end(fsm, transitionID) {
@@ -113,7 +124,7 @@ class StoryState extends PP.State {
         return sentences;
     }
 
-    _mrNOTTalkSentences() {
+    _thirdTalkSentences() {
         let sentences = [];
 
         sentences.push(new Sentence("I've watched you jump from one thing to another", 1, 0));
@@ -123,10 +134,26 @@ class StoryState extends PP.State {
         return sentences;
     }
 
-    _mrNOTDefeatSentences() {
+    _thirdDefeatSentences() {
         let sentences = [];
 
         sentences.push(new Sentence("There is no purpose left for you", 2, 1.5));
+
+        return sentences;
+    }
+
+    _mrNOTTalkSentences() {
+        let sentences = [];
+
+        sentences.push(new Sentence("enough is enough", 1, 0));
+
+        return sentences;
+    }
+
+    _mrNOTDefeatSentences() {
+        let sentences = [];
+
+        sentences.push(new Sentence("", 2, 1.5));
 
         return sentences;
     }
@@ -143,5 +170,59 @@ class StoryState extends PP.State {
         sentences.push(new Sentence("NOT ENOUGH", 4, 4, true));
 
         return sentences;
+    }
+
+    _firstEvidenceSetupList() {
+        let evidenceSetupList = [];
+
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STORY_TIMER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRAWING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PIANO, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FLAG_WAVER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MEDITATION, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.LOL, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EARRING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.SKATING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 2));
+
+        return evidenceSetupList;
+    }
+
+    _secondEvidenceSetupList() {
+        let evidenceSetupList = [];
+
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STORY_TIMER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRAWING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PIANO, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FLAG_WAVER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MEDITATION, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.LOL, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EARRING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.SKATING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 2));
+
+        return evidenceSetupList;
+    }
+
+    _thirdEvidenceSetupList() {
+        let evidenceSetupList = [];
+
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STORY_TIMER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRAWING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PIANO, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FLAG_WAVER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MEDITATION, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.LOL, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EARRING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.SKATING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 2));
+
+        return evidenceSetupList;
     }
 }

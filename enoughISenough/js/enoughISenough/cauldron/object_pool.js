@@ -49,7 +49,7 @@ class ObjectPool {
     }
 
     release(object) {
-        let released = this._myBusyObjects.pp_findAndRemove(item => item.pp_equals(object));
+        let released = this._myBusyObjects.pp_remove(item => item.pp_equals(object));
         if (released) {
             released.pp_setActive(false);
             this._myAvailableObjects.push(released);

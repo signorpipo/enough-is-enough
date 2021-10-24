@@ -1,5 +1,5 @@
 //ARRAY
-Float32Array.prototype.pp_remove = function (index) {
+Float32Array.prototype.pp_removeIndex = function (index) {
     let elementRemoved = undefined;
 
     if (index >= 0 && index < this.length) {
@@ -12,29 +12,37 @@ Float32Array.prototype.pp_remove = function (index) {
     return elementRemoved;
 };
 
-Float32Array.prototype.pp_findAndRemove = function (callback) {
+Float32Array.prototype.pp_remove = function (callback) {
     let elementFound = undefined;
 
     let index = this.findIndex(callback);
     if (index >= 0) {
-        elementFound = this.pp_remove(index);
+        elementFound = this.pp_removeIndex(index);
     }
 
     return elementFound;
 };
 
-Float32Array.prototype.pp_findAndRemoveAll = function (callback) {
+Float32Array.prototype.pp_removeAll = function (callback) {
     let elementsRemoved = [];
 
     let currentElement = undefined;
     do {
-        currentElement = this.pp_findAndRemove(callback);
+        currentElement = this.pp_remove(callback);
         if (currentElement !== undefined) {
             elementsRemoved.push(currentElement);
         }
     } while (currentElement !== undefined);
 
     return elementsRemoved;
+};
+
+Float32Array.prototype.pp_removeEqual = function (elementToFind) {
+    return this.pp_remove(element => element === elementToFind);
+};
+
+Float32Array.prototype.pp_removeAllEqual = function (elementToFind) {
+    return this.pp_removeAll(element => element === elementToFind);
 };
 
 Float32Array.prototype.pp_clone = function () {

@@ -1,25 +1,25 @@
 /*
     How to use
 
-    By default methods work on World space and the transform is a matrix (and not a quat2)
+    By default the methods work on World space, rotations are in degrees and transforms are matrices (and not quat2)
 
-    You can usually append at the end of a method a keyword like World/Local(sometimes Object) to specify the space, examples:
-        - pp_getPositionLocal() to get the position in local space (parent space)
-        - pp_translateObject() to translate in object space
+    You can usually append at the end of a method a keyword like World/Local(sometimes Object) to specify the space, example:
+        - pp_getPositionLocal to get the position in local space (parent space)
+        - pp_translateObject to translate in object space
 
-    For rotations u can append Degrees/Radians/Quat/Matrix to use a specific version, examples
+    For rotations u can append Degrees/Radians/Quat/Matrix to use a specific version, example:
         - pp_getRotationDegrees
         - pp_setRotationLocalMatrix
         - pp_rotateWorldQuat
         
-    For transform u can append Quat/Matrix to use a specific version, examples
+    For transform u can append Quat/Matrix to use a specific version, example:
         - pp_getTransformQuat
         - pp_setTransformWorldMatrix
 
-    Methods leave u the choice of forwarding an out paramter or just get the return value, example:
+    The methods leave u the choice of forwarding an out parameter or just get the return value, example:
         - let position = this.object.pp_getPosition()
         - this.object.pp_getPosition(position)
-        - the out parameter is always the last
+        - the out parameter is always the last one
 
     List of methods (without extra "append" labels like World or Radians):
         - pp_getPosition    / pp_setPosition    / pp_resetPosition

@@ -149,14 +149,14 @@ PP.Gamepad = class Gamepad {
      * @param {PP.GamepadHandedness} handedness specifies which controller this gamepad will represent, left or right
      */
     constructor(handedness) {
-        this.myHandedness = handedness;
+        this._myHandedness = handedness;
 
-        this.myButtonInfos = [];
+        this._myButtonInfos = [];
         for (let key in PP.ButtonType) {
-            this.myButtonInfos[PP.ButtonType[key]] = new PP.ButtonInfo();
+            this._myButtonInfos[PP.ButtonType[key]] = new PP.ButtonInfo();
         }
 
-        this.myAxesInfo = new PP.AxesInfo();
+        this._myAxesInfo = new PP.AxesInfo();
 
         this._mySelectStart = false;
         this._mySelectEnd = false;
@@ -188,11 +188,18 @@ PP.Gamepad = class Gamepad {
     }
 
     /**
+     * @returns {PP.GamepadHandedness}
+     */
+    getHandedness() {
+        return this._myHandedness;
+    }
+
+    /**
      * @param {PP.ButtonType} buttonType
      * @returns {PP.ButtonInfo}
      */
     getButtonInfo(buttonType) {
-        return this.myButtonInfos[buttonType].clone();
+        return this._myButtonInfos[buttonType].clone();
     }
 
     /**
@@ -218,7 +225,7 @@ PP.Gamepad = class Gamepad {
      * @returns {PP.AxesInfo}
      */
     getAxesInfo() {
-        return this.myAxesInfo.clone();
+        return this._myAxesInfo.clone();
     }
 
     /**
@@ -282,7 +289,7 @@ PP.Gamepad = class Gamepad {
     }
 
     _preUpdateButtonInfos() {
-        this.myButtonInfos.forEach(function (item) {
+        this._myButtonInfos.forEach(function (item) {
             item.myPrevIsPressed = item.myIsPressed;
             item.myPrevIsTouched = item.myIsTouched;
             item.myPrevValue = item.myValue;
@@ -300,7 +307,7 @@ PP.Gamepad = class Gamepad {
 
     //This sadly must be done this way to be the most compatible
     _updateSelectAndSqueezePressed() {
-        let buttonSelect = this.myButtonInfos[PP.ButtonType.SELECT];
+        let buttonSelect = this._myButtonInfos[PP.ButtonType.SELECT];
 
         if (this._mySelectStart) {
             buttonSelect.myIsPressed = true;
@@ -309,7 +316,7 @@ PP.Gamepad = class Gamepad {
             buttonSelect.myIsPressed = false;
         }
 
-        let buttonSqueeze = this.myButtonInfos[PP.ButtonType.SQUEEZE];
+        let buttonSqueeze = this._myButtonInfos[PP.ButtonType.SQUEEZE];
         if (this._mySqueezeStart) {
             buttonSqueeze.myIsPressed = true;
         }
@@ -325,7 +332,7 @@ PP.Gamepad = class Gamepad {
     }
 
     _updateSingleButtonInfo(buttonType, updatePressed) {
-        let button = this.myButtonInfos[buttonType];
+        let button = this._myButtonInfos[buttonType];
         let internalButton = this._getInternalButton(buttonType);
 
         if (updatePressed) {
@@ -337,7 +344,7 @@ PP.Gamepad = class Gamepad {
     }
 
     _postUpdateButtonInfos(dt) {
-        this.myButtonInfos.forEach(function (item) {
+        this._myButtonInfos.forEach(function (item) {
             if (item.myIsPressed) {
                 item.myTimePressed += dt;
                 if (!item.myPrevIsPressed) {
@@ -392,7 +399,7 @@ PP.Gamepad = class Gamepad {
         }.bind(this));
 
         for (let typeKey in PP.ButtonType) {
-            let buttonInfo = this.myButtonInfos[PP.ButtonType[typeKey]];
+            let buttonInfo = this._myButtonInfos[PP.ButtonType[typeKey]];
             let buttonCallbacks = this._myButtonCallbacks[PP.ButtonType[typeKey]];
 
             //PRESSED
@@ -451,35 +458,35 @@ PP.Gamepad = class Gamepad {
     }
 
     _preUpdateAxesInfos() {
-        this.myAxesInfo.myPrevAxes = this.myAxesInfo.myAxes;
+        this._myAxesInfo.myPrevAxes = this._myAxesInfo.myAxes;
     }
 
     _updateAxesInfos() {
-        this.myAxesInfo.myAxes = this._getInternalAxes();
+        this._myAxesInfo.myAxes = this._getInternalAxes();
     }
 
     _postUpdateAxesInfos() {
         //X CHANGED
-        if (this.myAxesInfo.myAxes[0] != this.myAxesInfo.myPrevAxes[0]) {
+        if (this._myAxesInfo.myAxes[0] != this._myAxesInfo.myPrevAxes[0]) {
             let callbacksMap = this._myAxesCallbacks[PP.AxesEvent.X_CHANGED];
-            this._triggerCallbacks(callbacksMap, this.myAxesInfo);
+            this._triggerCallbacks(callbacksMap, this._myAxesInfo);
         }
 
         //Y CHANGED
-        if (this.myAxesInfo.myAxes[1] != this.myAxesInfo.myPrevAxes[1]) {
+        if (this._myAxesInfo.myAxes[1] != this._myAxesInfo.myPrevAxes[1]) {
             let callbacksMap = this._myAxesCallbacks[PP.AxesEvent.Y_CHANGED];
-            this._triggerCallbacks(callbacksMap, this.myAxesInfo);
+            this._triggerCallbacks(callbacksMap, this._myAxesInfo);
         }
 
         //AXES CHANGED
-        if (!glMatrix.vec2.exactEquals(this.myAxesInfo.myAxes, this.myAxesInfo.myPrevAxes)) {
+        if (!glMatrix.vec2.exactEquals(this._myAxesInfo.myAxes, this._myAxesInfo.myPrevAxes)) {
             let callbacksMap = this._myAxesCallbacks[PP.AxesEvent.AXES_CHANGED];
-            this._triggerCallbacks(callbacksMap, this.myAxesInfo);
+            this._triggerCallbacks(callbacksMap, this._myAxesInfo);
         }
 
         //ALWAYS        
         let callbacksMap = this._myAxesCallbacks[PP.AxesEvent.ALWAYS];
-        this._triggerCallbacks(callbacksMap, this.myAxesInfo);
+        this._triggerCallbacks(callbacksMap, this._myAxesInfo);
     }
 
     _getInternalButton(buttonType) {
@@ -570,7 +577,7 @@ PP.Gamepad = class Gamepad {
     }
 
     _onXRSessionStart(session) {
-        session.addEventListener('inputsourceschange', function (event) {
+        session.addEventListener("inputsourceschange", function (event) {
             if (event.removed) {
                 for (let item of event.removed) {
                     if (item.gamepad == this._myGamepad) {
@@ -582,7 +589,7 @@ PP.Gamepad = class Gamepad {
 
             if (event.added) {
                 for (let item of event.added) {
-                    if (item.handedness == this.myHandedness) {
+                    if (item.handedness == this._myHandedness) {
                         this._myInputSource = item;
                         this._myGamepad = item.gamepad;
                     }
@@ -590,11 +597,11 @@ PP.Gamepad = class Gamepad {
             }
         }.bind(this));
 
-        session.addEventListener('selectstart', this._selectStart.bind(this));
-        session.addEventListener('selectend', this._selectEnd.bind(this));
+        session.addEventListener("selectstart", this._selectStart.bind(this));
+        session.addEventListener("selectend", this._selectEnd.bind(this));
 
-        session.addEventListener('squeezestart', this._squeezeStart.bind(this));
-        session.addEventListener('squeezeend', this._squeezeEnd.bind(this));
+        session.addEventListener("squeezestart", this._squeezeStart.bind(this));
+        session.addEventListener("squeezeend", this._squeezeEnd.bind(this));
 
         this._myIsXRSessionActive = true;
     }
@@ -608,25 +615,25 @@ PP.Gamepad = class Gamepad {
 
     //Select and Squeeze are managed this way to be more compatible
     _selectStart(event) {
-        if (event.inputSource.handedness == this.myHandedness) {
+        if (event.inputSource.handedness == this._myHandedness) {
             this._mySelectStart = true;
         }
     }
 
     _selectEnd(event) {
-        if (event.inputSource.handedness == this.myHandedness) {
+        if (event.inputSource.handedness == this._myHandedness) {
             this._mySelectEnd = true;
         }
     }
 
     _squeezeStart(event) {
-        if (event.inputSource.handedness == this.myHandedness) {
+        if (event.inputSource.handedness == this._myHandedness) {
             this._mySqueezeStart = true;
         }
     }
 
     _squeezeEnd(event) {
-        if (event.inputSource.handedness == this.myHandedness) {
+        if (event.inputSource.handedness == this._myHandedness) {
             this._mySqueezeEnd = true;
         }
     }

@@ -8,7 +8,7 @@ class ParticlesManager {
             particles.update(dt);
         }
 
-        this._myParticlesList.pp_findAndRemoveAll(element => element.isDone());
+        this._myParticlesList.pp_removeAll(element => element.isDone());
     }
 
     explosion(position, objectScale, objectType) {
@@ -46,7 +46,7 @@ class ExplosionParticles {
             particle.update(dt);
         }
 
-        this._myParticles.pp_findAndRemoveAll(element => element.isDone());
+        this._myParticles.pp_removeAll(element => element.isDone());
 
     }
 

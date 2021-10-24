@@ -61,7 +61,7 @@ class MenuState extends PP.State {
 
         for (let item of this._myCurrentMenuItems) {
             let randomIndex = Math.pp_randomInt(0, times.length - 1);
-            let timeBeforeFirstSpawn = times.pp_remove(randomIndex);
+            let timeBeforeFirstSpawn = times.pp_removeIndex(randomIndex);
             item.init(timeBeforeFirstSpawn);
         }
 
@@ -107,7 +107,7 @@ class MenuState extends PP.State {
 
         while (indexList.length > 0) {
             let randomIndex = Math.pp_randomInt(0, indexList.length - 1);
-            let index = indexList.pp_remove(randomIndex);
+            let index = indexList.pp_removeIndex(randomIndex);
 
             let randomTimer = Math.pp_random(0.20, 0.25);
             this._myUnspawnList.push([index, new PP.Timer(randomTimer)]);
