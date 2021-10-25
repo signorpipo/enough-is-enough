@@ -330,9 +330,9 @@ class MenuItem {
     }
 
     _startSpawn() {
+        this._myObject.pp_setPosition(this._myPosition);
         this._myObject.pp_setActiveHierarchy(true);
         this._myObject.pp_setScale(0);
-        this._myObject.pp_setPosition(this._myPosition);
         this._myObject.pp_translate([0, 0.2, 0]);
         this._myObject.pp_lookAt(this._myFacing, [0, 1, 0]);
 
