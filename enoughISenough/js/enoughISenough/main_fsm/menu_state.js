@@ -87,7 +87,7 @@ class MenuState extends PP.State {
             }
 
             //TEMP REMOVE THIS
-            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(Global.myDebugShortcutsPress)) {
+            if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(Global.myDebugShortcutsPress)) {
                 this._myFSM.perform("unspawn_arcade_hard");
             }
         }
@@ -289,6 +289,8 @@ class MenuItem {
         this._myFSM.addTransition("inactive", "inactive", "reset", this._reset.bind(this));
 
         this._myFSM.init("init");
+
+        this._myPhysx.onCollision(this._onCollision.bind(this));
     }
 
     init(timeBeforeFirstSpawn) {
@@ -317,7 +319,7 @@ class MenuItem {
     }
 
     _reset(fsm, transition, timeBeforeFirstSpawn) {
-        this._myObject.pp_setActiveHierarchy(false);
+        this._disableObject();
         this._myTimer.start(timeBeforeFirstSpawn);
         this._myAutoSpawn = true;
     }
@@ -331,12 +333,14 @@ class MenuItem {
 
     _startSpawn() {
         this._myObject.pp_setPosition(this._myPosition);
-        this._myObject.pp_setActiveHierarchy(true);
         this._myObject.pp_setScale(0);
         this._myObject.pp_translate([0, 0.2, 0]);
         this._myObject.pp_lookAt(this._myFacing, [0, 1, 0]);
+        this._myObject.pp_setActive(true);
 
         this._myPhysx.kinematic = true;
+        this._myPhysx.linearVelocity = [0, 0, 0];
+        this._myPhysx.angularVelocity = [0, 0, 0];
 
         this._myTimer.start(1);
     }
@@ -391,7 +395,7 @@ class MenuItem {
     }
 
     _startInactive() {
-        this._myObject.pp_setActiveHierarchy(false);
+        this._disableObject();
         this._myTimer.start(1);
     }
 
@@ -405,6 +409,23 @@ class MenuItem {
 
     _onXRSessionEnd() {
         this._myThrowTimer.reset();
+    }
+
+    _disableObject() {
+        if (this._myPhysx.active) {
+            this._myPhysx.linearVelocity = [0, 0, 0];
+            this._myPhysx.angularVelocity = [0, 0, 0];
+            this._myPhysx.kinematic = true;
+            this._myObject.pp_setPosition([0, -10, 0]);
+        }
+        this._myObject.pp_setActive(false);
+    }
+
+    _onCollision() {
+        if (!this._myGrabbable.isGrabbed() && this._myPhysx.active && this._myPhysx.kinematic &&
+            (this._myFSM.getCurrentState().myID == "spawning")) {
+            this._myPhysx.kinematic = false;
+        }
     }
 }
 

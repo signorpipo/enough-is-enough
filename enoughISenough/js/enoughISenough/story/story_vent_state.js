@@ -48,7 +48,7 @@ class StoryVentState extends PP.State {
             }
 
             //TEMP REMOVE THIS
-            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(Global.myDebugShortcutsPress)) {
+            if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(Global.myDebugShortcutsPress)) {
                 this._myFSM.perform("skip");
                 this._ventLost();
             }

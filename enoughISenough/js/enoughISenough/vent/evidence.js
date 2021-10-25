@@ -24,6 +24,7 @@ class Evidence {
         this._myFacing = null;
 
         this._myTimer = new PP.Timer(0);
+        this._mySpawnTimer = new PP.Timer(0);
 
         this._myFSM = new PP.FSM();
         //this._myFSM.setDebugLogActive(true, "             Evidence Item");
@@ -43,6 +44,8 @@ class Evidence {
 
         this._myFSM.init("init");
         this.init();
+
+        this._myPhysx.onCollision(this._onCollision.bind(this));
     }
 
     getEvidenceSetup() {
@@ -77,33 +80,34 @@ class Evidence {
 
     hide() {
         this._myFSM.init("inactive");
-        this._myObject.pp_setActive(false);
+        this._disableObject();
     }
 
     _reset(fsm, transition) {
-        this._myObject.pp_setActive(false);
+        this._disableObject();
     }
 
     _startSpawn() {
         this._myObject.pp_setPosition(this._myPosition);
-        this._myObject.pp_setActive(true);
         this._myObject.pp_setScale(0);
         this._myObject.pp_translate([0, 0.2, 0]);
         this._myObject.pp_lookAt(this._myFacing, [0, 1, 0]);
+        this._myObject.pp_setActive(true);
 
-        // TEMP kinematic false with no gravity but on collision it adds gravity (only if kinematic false)
         this._myPhysx.kinematic = true;
+        this._myPhysx.linearVelocity = [0, 0, 0];
+        this._myPhysx.angularVelocity = [0, 0, 0];
 
-        this._myTimer.start(1);
+        this._mySpawnTimer.start(1);
     }
 
     _spawning(dt) {
-        this._myTimer.update(dt);
+        this._mySpawnTimer.update(dt);
 
-        let scaleMultiplier = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
+        let scaleMultiplier = PP.EasingFunction.easeInOut(this._mySpawnTimer.getPercentage());
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
 
-        if (this._myTimer.isDone()) {
+        if (this._mySpawnTimer.isDone()) {
             this._myFSM.perform("end");
         }
     }
@@ -144,7 +148,24 @@ class Evidence {
     }
 
     _startInactive() {
+        this._disableObject();
+    }
+
+    _disableObject() {
+        if (this._myPhysx.active) {
+            this._myPhysx.linearVelocity = [0, 0, 0];
+            this._myPhysx.angularVelocity = [0, 0, 0];
+            this._myPhysx.kinematic = true;
+            this._myObject.pp_setPosition([0, -10, 0]);
+        }
         this._myObject.pp_setActive(false);
+    }
+
+    _onCollision() {
+        if (!this._myGrabbable.isGrabbed() && this._myPhysx.active && this._myPhysx.kinematic &&
+            (this._myFSM.getCurrentState().myID == "spawning")) {
+            this._myPhysx.kinematic = false;
+        }
     }
 }
 
