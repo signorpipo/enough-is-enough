@@ -179,9 +179,9 @@ WL.registerComponent('pp-grab', {
         let velocity = null;
 
         if (this._myThrowVelocitySource == 0) {
-            velocity = this._myHandPose.getAngularVelocity();
+            velocity = this._myHandPose.getAngularVelocityRadians();
         } else {
-            velocity = this._myGrabbable.getAngularVelocity();
+            velocity = this._myGrabbable.getAngularVelocityRadians();
         }
 
         return velocity;

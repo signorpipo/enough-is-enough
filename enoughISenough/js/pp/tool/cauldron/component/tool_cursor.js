@@ -23,7 +23,9 @@ WL.registerComponent('pp-tool-cursor', {
         this._myCursorTargetCollisionGroup = 7;
     },
     start: function () {
-        this._myCursorObject = WL.scene.addObject(this.object);
+        this._myFixForwardObject = WL.scene.addObject(this.object);
+        this._myFixForwardObject.pp_rotateObject([0, 180, 0]);
+        this._myCursorObject = WL.scene.addObject(this._myFixForwardObject);
         this._myCursorObject.setTranslationLocal(this._myCursorPosition);
         this._myCursorObject.rotateObject(this._myCursorRotation);
 

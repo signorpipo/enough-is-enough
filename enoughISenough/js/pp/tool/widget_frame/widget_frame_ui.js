@@ -36,7 +36,7 @@ PP.WidgetFrameUI = class WidgetFrameUI {
             if (this._myIsPinned) {
                 this.myPivotObject.pp_setParent(null);
             } else {
-                this.myPivotObject.pp_setParent(this._myParentObject);
+                this.myPivotObject.pp_setParent(this.myFixForwardObject);
                 this._updateObjectsTransforms(true);
             }
         }
@@ -64,10 +64,11 @@ PP.WidgetFrameUI = class WidgetFrameUI {
         }
     }
 
-
     //Skeleton
     _createSkeleton() {
-        this.myPivotObject = WL.scene.addObject(this._myParentObject);
+        this.myFixForwardObject = WL.scene.addObject(this._myParentObject);
+        this.myFixForwardObject.pp_rotateObject([0, 180, 0]);
+        this.myPivotObject = WL.scene.addObject(this.myFixForwardObject);
         this.myWidgetObject = WL.scene.addObject(this.myPivotObject);
 
         this.myVisibilityButtonPanel = WL.scene.addObject(this.myPivotObject);

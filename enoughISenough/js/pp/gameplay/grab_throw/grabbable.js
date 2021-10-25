@@ -54,6 +54,12 @@ WL.registerComponent('pp-grabbable', {
         return this._myPhysx.linearVelocity.slice(0);
     },
     getAngularVelocity() {
+        return this.getAngularVelocityDegrees();
+    },
+    getAngularVelocityDegrees() {
+        return this._myPhysx.angularVelocity.vec3_toDegrees();
+    },
+    getAngularVelocityRadians() {
         return this._myPhysx.angularVelocity.slice(0);
     },
     isGrabbed() {

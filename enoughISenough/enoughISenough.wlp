@@ -361,12 +361,6 @@
             "parent": "84",
             "components": [
                 {
-                    "type": "input",
-                    "input": {
-                        "type": "hand left"
-                    }
-                },
-                {
                     "type": "pp-easy-tune",
                     "pp-easy-tune": {
                         "_myShowVisibilityButton": false,
@@ -391,6 +385,12 @@
                         "_myShowVisibilityButton": false
                     },
                     "active": true
+                },
+                {
+                    "type": "pp-set-hand-transform",
+                    "pp-set-hand-transform": {
+                        "_myFixForward": true
+                    }
                 }
             ],
             "name": "Hand Left",
@@ -495,18 +495,19 @@
             "parent": "84",
             "components": [
                 {
-                    "type": "input",
-                    "input": {
-                        "type": "hand right"
-                    }
-                },
-                {
                     "type": "pp-tool-cursor",
                     "pp-tool-cursor": {
                         "_myHandedness": "right",
                         "_myCursorMesh": "9",
                         "_myCursorMaterial": "66",
                         "_myShowFingerCursor": true
+                    }
+                },
+                {
+                    "type": "pp-set-hand-transform",
+                    "pp-set-hand-transform": {
+                        "_myHandedness": "right",
+                        "_myFixForward": true
                     }
                 }
             ],
@@ -2336,6 +2337,24 @@
                 {
                     "type": "pp-deactivate-on-first-update"
                 }
+            ],
+            "transformation": [
+                -0.9999993,
+                -1.5099571726295836e-7,
+                8.7422719730057e-8,
+                0.0,
+                -1.5099581673894137e-7,
+                1.0,
+                -1.5099581673894137e-7,
+                0.0,
+                -8.742269130834757e-8,
+                -1.5099571726295836e-7,
+                -0.9999993,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
             ]
         },
         "149": {
@@ -2350,25 +2369,26 @@
                     }
                 },
                 {
-                    "type": "pp-deactivate-on-first-update"
+                    "type": "pp-deactivate-on-first-update",
+                    "active": true
                 }
             ],
             "transformation": [
-                -1.192133254335204e-7,
-                -1.0000339,
+                0.000002,
+                -1.0000343,
+                0.0000016,
                 0.0,
+                -1.0000197,
+                -0.000002,
+                5.960463909104874e-7,
                 0.0,
-                1.0000188,
-                -1.1921152065497157e-7,
+                -5.960391717962921e-7,
+                -0.0000016,
+                -1.0000132,
                 0.0,
-                0.0,
-                0.0,
-                0.0,
-                1.0000146,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
+                -2.2351741790771486e-8,
+                0.0000041,
+                -1.6630110621917994e-8,
                 1.0
             ]
         },
@@ -2390,7 +2410,7 @@
                 0.0,
                 0.0,
                 -0.0099999,
-                -0.05,
+                0.05,
                 1.0
             ],
             "components": [

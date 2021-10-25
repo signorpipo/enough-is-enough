@@ -1,9 +1,10 @@
 PP.HandPose = class HandPose {
 
-    constructor(handedness, forceEmulatedVelocities) {
+    constructor(handedness, fixForward = false, forceEmulatedVelocities = false) {
         this._myInputSource = null;
 
         this._myHandedness = handedness;
+        this._myFixForward = fixForward;
         this._myForceEmulatedVelocities = forceEmulatedVelocities;
 
         this._myReferenceSpace = null;
@@ -15,7 +16,7 @@ PP.HandPose = class HandPose {
         this._myPrevRotation = [0, 0, 0, 0];
 
         this._myLinearVelocity = [0, 0, 0];
-        this._myAngularVelocity = [0, 0, 0];
+        this._myAngularVelocity = [0, 0, 0]; // Radians
     }
 
     getReferenceSpace() {
@@ -27,7 +28,37 @@ PP.HandPose = class HandPose {
     }
 
     getRotation() {
-        return this._myRotation.slice(0);
+        return this.getRotationDegrees();
+    }
+
+    getRotationDegrees() {
+        return this.getRotationQuat().quat_toDegrees();
+    }
+
+    getRotationRadians() {
+        return this.getRotationQuat().quat_toRadians();
+    }
+
+    getRotationQuat() {
+        let out = this._myRotation.slice(0);
+
+        if (this._myFixForward) {
+            out = glMatrix.quat.rotateY(out, out, Math.PI);
+        }
+
+        return out;
+    }
+
+    getTransform() {
+        return this.getTransformMatrix();
+    }
+
+    getTransformMatrix() {
+        return mat4_fromPositionRotationQuatScale(this._myPosition, this.getRotationQuat(), [1, 1, 1]);
+    }
+
+    getTransformQuat() {
+        return quat2_fromPositionRotationQuat(this._myPosition, this.getRotationQuat());
     }
 
     getLinearVelocity() {
@@ -35,7 +66,23 @@ PP.HandPose = class HandPose {
     }
 
     getAngularVelocity() {
+        return this.getAngularVelocityDegrees();
+    }
+
+    getAngularVelocityDegrees() {
+        return this._myAngularVelocity.vec3_toDegrees();
+    }
+
+    getAngularVelocityRadians() {
         return this._myAngularVelocity.slice(0);
+    }
+
+    setFixForward(fixForward) {
+        this._myFixForward = fixForward;
+    }
+
+    setForceEmulatedVelocities(forceEmulatedVelocities) {
+        this._myForceEmulatedVelocities = forceEmulatedVelocities;
     }
 
     start() {

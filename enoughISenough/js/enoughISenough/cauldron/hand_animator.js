@@ -6,7 +6,10 @@ WL.registerComponent("hand-animator", {
     init: function () {
     },
     start: function () {
-        let handPieceBase = WL.scene.addObject(this.object);
+        this._myHandObject = WL.scene.addObject(this.object);
+        this._myHandObject.pp_rotateObject([0, 180, 0]);
+
+        let handPieceBase = WL.scene.addObject(this._myHandObject);
         let mesh = handPieceBase.pp_addComponent("mesh");
         mesh.mesh = this._myHandPieceMesh;
         mesh.material = this._myHandPieceMaterial.clone();
