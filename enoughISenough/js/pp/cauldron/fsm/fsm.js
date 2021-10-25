@@ -15,11 +15,12 @@ PP.StateData = class StateData {
 };
 
 PP.TransitionData = class TransitionData {
-    constructor(transitionID, fromStateData, toStateData, transitionObject) {
+    constructor(transitionID, fromStateData, toStateData, transitionObject, skipStateFunction) {
         this.myID = transitionID;
         this.myFromState = fromStateData;
         this.myToState = toStateData;
         this.myObject = transitionObject;
+        this.mySkipStateFunction = skipStateFunction;
     }
 };
 
@@ -39,6 +40,13 @@ PP.PerformDelayedType = {
     QUEUE: 0,
     KEEP_FIRST: 1,
     KEEP_LAST: 2
+};
+
+PP.SkipStateFunction = {
+    NONE: 0,
+    END: 1,
+    START: 2,
+    BOTH: 3
 };
 
 PP.FSM = class FSM {
@@ -82,7 +90,7 @@ PP.FSM = class FSM {
         this._myTransitionMap.set(stateID, new Map());
     }
 
-    addTransition(fromStateID, toStateID, transitionID, transition = null) {
+    addTransition(fromStateID, toStateID, transitionID, transition = null, skipStateFunction = PP.SkipStateFunction.NONE) {
         let transitionObject = null;
         if (!transition || typeof transition == 'function') {
             transitionObject = {};
@@ -104,7 +112,7 @@ PP.FSM = class FSM {
         if (this.hasState(fromStateID) && this.hasState(toStateID)) {
             let fromMap = this._getTransitionMapFromState(fromStateID);
 
-            let transitionData = new PP.TransitionData(transitionID, this.getState(fromStateID), this.getState(toStateID), transitionObject);
+            let transitionData = new PP.TransitionData(transitionID, this.getState(fromStateID), this.getState(toStateID), transitionObject, skipStateFunction);
             fromMap.set(transitionID, transitionData);
         } else {
             if (!this.hasState(fromStateID) && !this.hasState(toStateID)) {
@@ -448,16 +456,18 @@ PP.FSM = class FSM {
                 let fromState = this._myCurrentStateData;
                 let toState = this._myStateMap.get(transitionToPerform.myToState.myID);
 
+                if (transitionToPerform.mySkipStateFunction != PP.SkipStateFunction.END && transitionToPerform.mySkipStateFunction != PP.SkipStateFunction.BOTH &&
+                    fromState.myObject && fromState.myObject.end) {
+                    fromState.myObject.end(this, transitionToPerform, ...args);
+                }
+
                 if (transitionToPerform.myObject && transitionToPerform.myObject.perform) {
                     transitionToPerform.myObject.perform(this, transitionToPerform, ...args);
-                } else {
-                    if (fromState.myObject && fromState.myObject.end) {
-                        fromState.myObject.end(this, transitionToPerform, ...args);
-                    }
+                }
 
-                    if (toState.myObject && toState.myObject.start) {
-                        toState.myObject.start(this, transitionToPerform, ...args);
-                    }
+                if (transitionToPerform.mySkipStateFunction != PP.SkipStateFunction.START && transitionToPerform.mySkipStateFunction != PP.SkipStateFunction.BOTH &&
+                    toState.myObject && toState.myObject.start) {
+                    toState.myObject.start(this, transitionToPerform, ...args);
                 }
 
                 this._myCurrentStateData = transitionToPerform.myToState;
@@ -488,7 +498,6 @@ PP.FSM = class FSM {
 
         return false;
     }
-
 
     _getTransitionMapFromState(fromStateID) {
         return this._myTransitionMap.get(fromStateID);

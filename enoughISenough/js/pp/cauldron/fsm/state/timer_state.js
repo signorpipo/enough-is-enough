@@ -5,7 +5,7 @@ PP.TimerState = class TimerState extends PP.State {
         this._myTransitionToPerformOnEnd = transitionToPerformOnEnd;
         this._myTransitionArgs = transitionArgs;
 
-        this._myTimer = new PP.Timer(duration);
+        this._myTimer = new PP.Timer(duration, false);
     }
 
     setDuration(duration) {

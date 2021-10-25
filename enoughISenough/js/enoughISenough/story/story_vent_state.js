@@ -49,7 +49,6 @@ class StoryVentState extends PP.State {
     }
 
     _prepareState(fsm, transition) {
-        transition.myToState.myObject.start(fsm, transition);
         Global.myVentDuration = 0;
     }
 

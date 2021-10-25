@@ -1,9 +1,9 @@
 WL.registerComponent('pp-set-head-transform', {
     _myLeftEye: { type: WL.Type.Object },
-    _myRightEye: { type: WL.Type.Object }
+    _myRightEye: { type: WL.Type.Object },
+    _myFixForward: { type: WL.Type.Bool, default: false }
 }, {
     init: function () {
-        this._myRotationToFixedHeadOrientation = [0, 1, 0, 0];
         this._myLeftEyePosition = glMatrix.vec3.create();
         this._myRightEyePosition = glMatrix.vec3.create();
         this._myCurrentHeadPosition = glMatrix.vec3.create();
@@ -19,6 +19,8 @@ WL.registerComponent('pp-set-head-transform', {
 
         this.object.setTranslationWorld(this._myCurrentHeadPosition);
         this.object.rotationWorld = this._myLeftEye.rotationWorld;
-        this.object.pp_rotateAxisObject([0, 1, 0], 180);
+        if (this._myFixForward) {
+            this.object.pp_rotateAxisObject([0, 1, 0], 180);
+        }
     },
 });
