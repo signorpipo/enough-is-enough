@@ -31,9 +31,11 @@ class IntroState extends PP.State {
         this._myFSM.update(dt);
 
         //TEMP MORE PRESS
-        if (!this._myFSM.isInState("wait_session") && PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
-            while (!this._myFSM.isInState("done") && !this._myFSM.isInState("test")) {
-                this._myFSM.perform("skip");
+        if (PP.SaveUtils.loadBool("story_started_once")) {
+            if (!this._myFSM.isInState("wait_session") && PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
+                while (!this._myFSM.isInState("done") && !this._myFSM.isInState("test")) {
+                    this._myFSM.perform("skip");
+                }
             }
         }
     }

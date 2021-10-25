@@ -45,6 +45,16 @@ class EvidenceManager {
 
     }
 
+    hide() {
+        this._myFSM.init("done");
+
+        for (let evidence of this._myActiveEvidences) {
+            evidence[0].hide();
+        }
+
+        this._evidencesHidden();
+    }
+
     isDone() {
         return this._myFSM.isInState("done");
     }
@@ -180,9 +190,14 @@ class EvidenceManager {
     }
 
     _evidencesHidden() {
+        for (let activeEvidence of this._myActiveEvidences) {
+            this._myInactiveEvidences.push(activeEvidence[0]);
+        }
+
         for (let toUnspawnEvidence of this._myToUnspawnEvidences) {
             this._myInactiveEvidences.push(toUnspawnEvidence[0]);
         }
+
         for (let toSpawnEvidence of this._myToSpawnEvidences) {
             this._myInactiveEvidences.push(toSpawnEvidence[0]);
         }
@@ -224,12 +239,13 @@ class EvidenceManager {
 
         // TEMP change with random unspawn instead of first one
         if (validEvidences.length == 0) {
-            let unspawnEvidences = this._myToUnspawnEvidences.pp_findAll(element => (
-                element[0].getEvidenceSetup().myCardinalPositions == null || element[0].getEvidenceSetup().myCardinalPositions.includes(cardinalPosition)
-            ));
-
-            for (let evidence of unspawnEvidences) {
-                validEvidences.push(evidence[0]);
+            for (let unspawnEvidence of this._myToUnspawnEvidences) {
+                let setup = unspawnEvidence[0].getEvidenceSetup();
+                if ((setup.myCardinalPositions == null || setup.myCardinalPositions.includes(cardinalPosition)) &&
+                    (setup.myStartSpawnTime == null || setup.myStartSpawnTime < Global.myVentDuration) &&
+                    (setup.myEndSpawnTime == null || setup.myEndSpawnTime > Global.myVentDuration)) {
+                    validEvidences.push(unspawnEvidence[0]);
+                }
             }
         }
 

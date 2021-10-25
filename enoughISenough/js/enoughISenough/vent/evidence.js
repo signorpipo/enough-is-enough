@@ -75,6 +75,11 @@ class Evidence {
         return this._myFSM.isInState("inactive");
     }
 
+    hide() {
+        this._myFSM.init("inactive");
+        this._myObject.pp_setActive(false);
+    }
+
     _reset(fsm, transition) {
         this._myObject.pp_setActive(false);
     }

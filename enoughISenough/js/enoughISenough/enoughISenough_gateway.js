@@ -52,7 +52,8 @@ var Global = {
     mySubtitleObject: null,
     myObjectPoolMap: null,
     myMaterials: null,
-    myDebugShortcutsEnabled: false,
     myStoryDuration: 0,
-    myVentDuration: 0
+    myVentDuration: 0,
+    myDebugShortcutsEnabled: false,
+    myDebugShortcutsPress: 1,
 };

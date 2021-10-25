@@ -20,6 +20,13 @@ class StoryVentState extends PP.State {
         this._myFSM.addTransition("defeat", "done", "end", this._ventLost.bind(this));
         this._myFSM.addTransition("done", "first_wait", "start", this._prepareState.bind(this));
 
+        this._myFSM.addTransition("init", "done", "skip");
+        this._myFSM.addTransition("first_wait", "done", "skip");
+        this._myFSM.addTransition("vent", "done", "skip", this._hideVent.bind(this));
+        this._myFSM.addTransition("vent", "done", "skip", this._hideVent.bind(this));
+        this._myFSM.addTransition("clean", "done", "skip", this._hideEvidences.bind(this));
+        this._myFSM.addTransition("defeat", "done", "skip", this._hideEvidences.bind(this));
+
         this._myFSM.init("init");
 
         this._myParentFSM = null;
@@ -35,15 +42,15 @@ class StoryVentState extends PP.State {
 
         if (Global.myDebugShortcutsEnabled) {
             //TEMP REMOVE THIS
-            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
-                this._myFSM.init("init");
-                this._myParentFSM.perform("end");
+            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(Global.myDebugShortcutsPress)) {
+                this._myFSM.perform("skip");
+                this._ventCompleted();
             }
 
             //TEMP REMOVE THIS
-            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(1)) {
-                this._myFSM.init("init");
-                this._myParentFSM.perform("defeat");
+            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(Global.myDebugShortcutsPress)) {
+                this._myFSM.perform("skip");
+                this._ventLost();
             }
         }
     }
@@ -88,11 +95,22 @@ class StoryVentState extends PP.State {
         this._myParentFSM.perform("end");
     }
 
+    _hideVent() {
+        this._hideEvidences();
+    }
+
+    _hideEvidences() {
+        this._myEvidenceManager.hide();
+    }
+
     start(fsm, transition) {
         this._myParentFSM = fsm;
         this._myFSM.perform("start");
     }
 
     end(fsm, transitionID) {
+        if (!this._myFSM.isInState("done")) {
+            this._myFSM.perform("skip");
+        }
     }
 }

@@ -28,6 +28,13 @@ class TalkState extends PP.State {
             this._myFSM.addTransition("done", "first_wait", "start", this._prepareState.bind(this));
         }
 
+        this._myFSM.addTransition("init", "done", "skip");
+        this._myFSM.addTransition("first_wait", "done", "skip");
+        this._myFSM.addTransition("mr_not_appear", "done", "skip", this._hideMrNOT.bind(this));
+        this._myFSM.addTransition("talk", "done", "skip", this._hideTalk.bind(this));
+        this._myFSM.addTransition("mr_not_disappear", "done", "skip", this._hideMrNOT.bind(this));
+        this._myFSM.addTransition("second_wait", "done", "skip");
+
         this._myFSM.init("init");
 
         this._myParentFSM = null;
@@ -43,6 +50,14 @@ class TalkState extends PP.State {
 
     update(dt, fsm) {
         this._myFSM.update(dt);
+
+        if (Global.myDebugShortcutsEnabled) {
+            //TEMP REMOVE THIS
+            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(Global.myDebugShortcutsPress)) {
+                this._myFSM.perform("skip");
+                this._startFight();
+            }
+        }
     }
 
     _prepareState(fsm, transition) {
@@ -113,12 +128,25 @@ class TalkState extends PP.State {
         this._myParentFSM.perform("end");
     }
 
+    _hideMrNOT() {
+        Global.myObjectPoolMap.releaseObject(GameObjectType.MR_NOT, this._myMrNOT);
+        this._myMrNOT = null;
+    }
+
+    _hideTalk() {
+        this._hideMrNOT();
+        this._myBlather.skip();
+    }
+
     start(fsm, transition) {
         this._myParentFSM = fsm;
         this._myFSM.perform("start");
     }
 
     end(fsm, transitionID) {
+        if (!this._myFSM.isInState("done")) {
+            this._myFSM.perform("skip");
+        }
     }
 }
 
@@ -169,6 +197,13 @@ class Blather {
         this._myFSM.addTransition("second_wait", "done", "end", this._done.bind(this));
         this._myFSM.addTransition("done", "first_wait", "start", this._prepareState.bind(this));
 
+        this._myFSM.addTransition("init", "done", "skip");
+        this._myFSM.addTransition("first_wait", "done", "skip");
+        this._myFSM.addTransition("blather", "done", "skip", this._done.bind(this));
+        this._myFSM.addTransition("wait", "done", "skip");
+        this._myFSM.addTransition("blather", "done", "skip", this._done.bind(this));
+        this._myFSM.addTransition("second_wait", "done", "skip");
+
         this._myIsDone = false;
         this._myCurrentSenteceIndex = 0;
         this._myCurrentCharacterIndex = 0;
@@ -185,6 +220,10 @@ class Blather {
 
     start() {
         this._myFSM.perform("start");
+    }
+
+    skip(dt) {
+        this._myFSM.perform("skip");
     }
 
     update(dt) {
@@ -271,6 +310,8 @@ class Blather {
     }
 
     _done() {
+        this._myBlatherTextComponent.text = "";
+        this._myBigBlatherTextComponent.text = "";
         this._myBlatherTextObject.pp_setActive(false);
         this._myBigBlatherTextObject.pp_setActive(false);
         this._myIsDone = true;

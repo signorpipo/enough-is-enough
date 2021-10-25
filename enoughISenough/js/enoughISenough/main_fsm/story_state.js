@@ -11,16 +11,16 @@ class StoryState extends PP.State {
         this._myFSM.addState("second_talk", new TalkState(this._secondTalkSentences(), false));
         this._myFSM.addState("second_vent", new StoryVentState(1, this._secondEvidenceSetupList()));
         this._myFSM.addState("second_defeat", new TalkState(this._secondDefeatSentences(), true));
-        this._myFSM.addState("third_talk", new TalkState(this._secondTalkSentences(), false));
+        this._myFSM.addState("third_talk", new TalkState(this._thirdTalkSentences(), false));
         this._myFSM.addState("third_vent", new StoryVentState(2, this._thirdEvidenceSetupList()));
         this._myFSM.addState("third_defeat", new TalkState(this._thirdDefeatSentences(), true));
-        this._myFSM.addState("MrNOT_talk", new TalkState(this._mrNOTTalkSentences(), false));
+        this._myFSM.addState("MrNOT_talk", new TalkState(this._mrNOTTalkSentences(), true));
         this._myFSM.addState("MrNOT_vent", new MrNOTVentState());
         this._myFSM.addState("MrNOT_defeat", new TalkState(this._mrNOTDefeatSentences(), true));
         this._myFSM.addState("it_will_always_be_not_enough", new TalkState(this._NOTENOUGHTalkSentences(), true));
         this._myFSM.addState("done");
 
-        this._myFSM.addTransition("init", "first_vent", "start");
+        this._myFSM.addTransition("init", "first_talk", "start");
 
         this._myFSM.addTransition("first_talk", "first_vent", "end");
         this._myFSM.addTransition("first_vent", "first_defeat", "defeat");
@@ -47,6 +47,11 @@ class StoryState extends PP.State {
 
         this._myFSM.addTransition("done", "first_talk", "start");
 
+        let states = this._myFSM.getStates();
+        for (let state of states) {
+            this._myFSM.addTransition(state.myID, "done", "skip", this._backToMenu.bind(this));
+        }
+
         this._myFSM.init("init");
 
         this._myParentFSM = null;
@@ -55,16 +60,10 @@ class StoryState extends PP.State {
     update(dt, fsm) {
         Global.myStoryDuration += dt;
 
-        if (Global.myDebugShortcutsEnabled && !(this._myFSM.isInState("first_vent") || this._myFSM.isInState("second_vent") || this._myFSM.isInState("MrNOT_vent"))) {
+        if (Global.myDebugShortcutsEnabled) {
             //TEMP REMOVE THIS
-            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
-                this._myFSM.init("init");
-                fsm.perform(MainTransitions.End);
-            }
-
-            //TEMP REMOVE THIS
-            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(1)) {
-                this._myFSM.perform("defeat");
+            if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(Global.myDebugShortcutsPress)) {
+                this._myFSM.perform("skip");
             }
         }
 

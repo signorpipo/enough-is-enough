@@ -82,12 +82,12 @@ class MenuState extends PP.State {
 
         if (Global.myDebugShortcutsEnabled) {
             //TEMP REMOVE THIS
-            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
+            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(Global.myDebugShortcutsPress)) {
                 this._myFSM.perform("unspawn_story");
             }
 
             //TEMP REMOVE THIS
-            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(1)) {
+            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(Global.myDebugShortcutsPress)) {
                 this._myFSM.perform("unspawn_arcade_hard");
             }
         }

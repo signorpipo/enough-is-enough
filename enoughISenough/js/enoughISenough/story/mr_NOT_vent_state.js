@@ -6,57 +6,69 @@ class MrNOTVentState extends PP.State {
         this._myFSM.setDebugLogActive(true, "   Vent");
         this._myFSM.addState("init");
         this._myFSM.addState("first_wait", new PP.TimerState(0.5, "end"));
-        this._myFSM.addState("vent", this._updateFight.bind(this));
+        this._myFSM.addState("vent", this._updateVent.bind(this));
         this._myFSM.addState("clean", this._updateClean.bind(this));
         this._myFSM.addState("defeat", this._updateDefeat.bind(this));
         this._myFSM.addState("second_wait", new PP.TimerState(0.5, "end"));
         this._myFSM.addState("done");
 
         this._myFSM.addTransition("init", "first_wait", "start", this._prepareState.bind(this));
-        this._myFSM.addTransition("first_wait", "vent", "end", this._prepareFight.bind(this));
+        this._myFSM.addTransition("first_wait", "vent", "end", this._prepareVent.bind(this));
         this._myFSM.addTransition("vent", "clean", "end", this._prepareClean.bind(this));
         this._myFSM.addTransition("vent", "defeat", "defeat", this._prepareDefeat.bind(this));
         this._myFSM.addTransition("clean", "done", "end", this._ventCompleted.bind(this));
         this._myFSM.addTransition("defeat", "done", "end", this._ventLost.bind(this));
         this._myFSM.addTransition("done", "first_wait", "start", this._prepareState.bind(this));
 
+        this._myFSM.addTransition("init", "done", "skip");
+        this._myFSM.addTransition("first_wait", "done", "skip");
+        this._myFSM.addTransition("vent", "done", "skip", this._hideVent.bind(this));
+        this._myFSM.addTransition("vent", "done", "skip", this._hideVent.bind(this));
+        this._myFSM.addTransition("clean", "done", "skip", this._hideEvidences.bind(this));
+        this._myFSM.addTransition("defeat", "done", "skip", this._hideEvidences.bind(this));
+
         this._myFSM.init("init");
 
         this._myParentFSM = null;
+
+        this._myEvidenceManager = new EvidenceManager(this._buildEvidenceSetupList());
     }
 
     update(dt, fsm) {
+        Global.myVentDuration += dt;
+
         this._myFSM.update(dt);
+        this._myEvidenceManager.update(dt);
 
         if (Global.myDebugShortcutsEnabled) {
             //TEMP REMOVE THIS
-            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(1)) {
-                this._myFSM.init("init");
-                this._myParentFSM.perform("end");
+            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(Global.myDebugShortcutsPress)) {
+                this._myFSM.perform("skip");
+                this._ventCompleted();
             }
 
             //TEMP REMOVE THIS
-            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(1)) {
-                this._myFSM.init("init");
-                this._myParentFSM.perform("defeat");
+            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(Global.myDebugShortcutsPress)) {
+                this._myFSM.perform("skip");
+                this._ventLost();
             }
         }
     }
 
     _prepareState(fsm, transition) {
-        transition.myToState.myObject.start(fsm, transition);
+        Global.myVentDuration = 0;
     }
 
-    _prepareFight() {
-
+    _prepareVent() {
+        this._myEvidenceManager.start();
     }
 
-    _updateFight(dt, fsm) {
+    _updateVent(dt, fsm) {
 
     }
 
     _prepareClean() {
-
+        this._myEvidenceManager.clean();
     }
 
     _updateClean(dt, fsm) {
@@ -64,7 +76,7 @@ class MrNOTVentState extends PP.State {
     }
 
     _prepareDefeat() {
-
+        this._myEvidenceManager.explode();
     }
 
     _updateDefeat(dt, fsm) {
@@ -83,11 +95,40 @@ class MrNOTVentState extends PP.State {
         this._myParentFSM.perform("end");
     }
 
+    _hideVent() {
+        this._hideEvidences();
+    }
+
+    _hideEvidences() {
+        this._myEvidenceManager.hide();
+    }
+
+    _buildEvidenceSetupList() {
+        let evidenceSetupList = [];
+
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STORY_TIMER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRAWING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PIANO, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FLAG_WAVER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MEDITATION, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.LOL, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EARRING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.SKATING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 2));
+
+        return evidenceSetupList;
+    }
+
     start(fsm, transition) {
         this._myParentFSM = fsm;
         this._myFSM.perform("start");
     }
 
     end(fsm, transitionID) {
+        if (!this._myFSM.isInState("done")) {
+            this._myFSM.perform("skip");
+        }
     }
 }
