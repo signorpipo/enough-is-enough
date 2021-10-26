@@ -41,7 +41,7 @@ PP.DebugAxes = class DebugAxes {
 
     setTransform(transform) {
         if (transform.length == 8) {
-            transform.quat2_toTransformMatrix(this._myTransform);
+            transform.quat2_toMatrix(this._myTransform);
         } else {
             this._myTransform.mat4_copy(transform);
         }

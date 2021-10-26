@@ -784,22 +784,14 @@ Array.prototype.quat2_toWorld = function (parentTransform, out = glMatrix.quat2.
     return out;
 };
 
-Array.prototype.quat2_toTransformMatrix = function (out = glMatrix.mat4.create()) {
+Array.prototype.quat2_toMatrix = function (out = glMatrix.mat4.create()) {
     glMatrix.mat4.fromQuat2(out, this);
     return out;
 };
 
-Array.prototype.quat2_toMat4 = function (out) {
-    return this.quat2_toTransformMatrix(out);
-};
-
-Array.prototype.quat2_fromTransformMatrix = function (transformMatrix) {
-    transformMatrix.mat4_toTransformQuat(this);
+Array.prototype.quat2_fromMatrix = function (transformMatrix) {
+    transformMatrix.mat4_toQuat(this);
     return this;
-};
-
-Array.prototype.quat2_fromMat4 = function (transformMatrix) {
-    return this.quat2_fromTransformMatrix(transformMatrix);
 };
 
 //MATRIX 3
@@ -1097,7 +1089,7 @@ Array.prototype.mat4_hasUniformScale = function () {
     };
 }();
 
-Array.prototype.mat4_toTransformQuat = function () {
+Array.prototype.mat4_toQuat = function () {
     let position = glMatrix.vec3.create();
     let rotation = glMatrix.quat.create();
     return function (out = glMatrix.quat2.create()) {
@@ -1108,17 +1100,9 @@ Array.prototype.mat4_toTransformQuat = function () {
     };
 }();
 
-Array.prototype.mat4_toQuat2 = function (out) {
-    return this.mat4_toTransformQuat(out);
-};
-
-Array.prototype.mat4_fromTransformQuat = function (transformQuat) {
-    transformQuat.quat2_toTransformMatrix(this);
+Array.prototype.mat4_fromQuat = function (transformQuat) {
+    transformQuat.quat2_toMatrix(this);
     return this;
-};
-
-Array.prototype.mat4_fromQuat2 = function (transformQuat) {
-    return this.mat4_fromTransformQuat(transformQuat);
 };
 
 //CREATION
