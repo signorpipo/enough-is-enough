@@ -134,6 +134,11 @@ PP.FSM = class FSM {
 
         if (this.hasState(initStateID)) {
             let initStateData = this._myStateMap.get(initStateID);
+
+            if (this._myDebugLogActive) {
+                console.log(this._myDebugLogName, "- Init:", initStateID);
+            }
+
             if (initTransitionObject && initTransitionObject.performInit) {
                 initTransitionObject.performInit(this, initStateData, ...args);
             } else if (initStateData.myObject && initStateData.myObject.init) {
@@ -141,10 +146,6 @@ PP.FSM = class FSM {
             }
 
             this._myCurrentStateData = initStateData;
-
-            if (this._myDebugLogActive) {
-                console.log(this._myDebugLogName, "- Init:", initStateID);
-            }
         } else if (this._myDebugLogActive) {
             console.warn(this._myDebugLogName, "- Init state not found:", initStateID);
         }
@@ -389,7 +390,7 @@ PP.FSM = class FSM {
                 stateData = new PP.StateData(entry[1].myID, entry[1].myObject);
             }
 
-            cloneFSM._myStateMap.set(entry[0], stateData);
+            cloneFSM._myStateMap.set(stateData.myID, stateData);
         }
 
         for (let entry of this._myTransitionMap.entries()) {
@@ -403,9 +404,9 @@ PP.FSM = class FSM {
                 let toState = cloneFSM.getState(tEntry[1].myToState.myID);
 
                 if (deepClone) {
-                    transitionData = new PP.TransitionData(tEntry[1].myID, fromState, toState, tEntry[1].myObject.clone());
+                    transitionData = new PP.TransitionData(tEntry[1].myID, fromState, toState, tEntry[1].myObject.clone(), tEntry[1].mySkipStateFunction);
                 } else {
-                    transitionData = new PP.TransitionData(tEntry[1].myID, fromState, toState, tEntry[1].myObject);
+                    transitionData = new PP.TransitionData(tEntry[1].myID, fromState, toState, tEntry[1].myObject, tEntry[1].mySkipStateFunction);
                 }
 
                 fromStateMap.set(transitionData.myID, transitionData);
@@ -456,6 +457,14 @@ PP.FSM = class FSM {
                 let fromState = this._myCurrentStateData;
                 let toState = this._myStateMap.get(transitionToPerform.myToState.myID);
 
+                if (this._myDebugLogActive) {
+                    let consoleArguments = [this._myDebugLogName, "- From:", fromState.myID, "- To:", toState.myID, "- With:", transitionID];
+                    if (this._myDebugShowDelayedInfo) {
+                        consoleArguments.push(isDelayed ? "- Delayed" : "- Immediate");
+                    }
+                    console.log(...consoleArguments);
+                }
+
                 if (transitionToPerform.mySkipStateFunction != PP.SkipStateFunction.END && transitionToPerform.mySkipStateFunction != PP.SkipStateFunction.BOTH &&
                     fromState.myObject && fromState.myObject.end) {
                     fromState.myObject.end(this, transitionToPerform, ...args);
@@ -471,14 +480,6 @@ PP.FSM = class FSM {
                 }
 
                 this._myCurrentStateData = transitionToPerform.myToState;
-
-                if (this._myDebugLogActive) {
-                    let consoleArguments = [this._myDebugLogName, "- From:", fromState.myID, "- To:", toState.myID, "- With:", transitionID];
-                    if (this._myDebugShowDelayedInfo) {
-                        consoleArguments.push(isDelayed ? "- Delayed" : "- Immediate");
-                    }
-                    console.log(...consoleArguments);
-                }
 
                 return true;
             } else if (this._myDebugLogActive) {
