@@ -3,7 +3,7 @@ class StoryVentState extends PP.State {
         super();
 
         this._myFSM = new PP.FSM();
-        this._myFSM.setDebugLogActive(true, "   Vent");
+        //this._myFSM.setDebugLogActive(true, "        Vent");
         this._myFSM.addState("init");
         this._myFSM.addState("first_wait", new PP.TimerState(0.5, "end"));
         this._myFSM.addState("vent", this._updateVent.bind(this));
@@ -32,6 +32,7 @@ class StoryVentState extends PP.State {
         this._myParentFSM = null;
 
         this._myEvidenceManager = new EvidenceManager(evidenceSetupList);
+        this._myVent = new Vent();
     }
 
     update(dt, fsm) {
@@ -61,10 +62,11 @@ class StoryVentState extends PP.State {
 
     _prepareVent() {
         this._myEvidenceManager.start();
+        this._myVent.start();
     }
 
     _updateVent(dt, fsm) {
-
+        this._myVent.update(dt);
     }
 
     _prepareClean() {
@@ -97,6 +99,7 @@ class StoryVentState extends PP.State {
 
     _hideVent() {
         this._hideEvidences();
+        this._myVent.stop();
     }
 
     _hideEvidences() {

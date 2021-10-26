@@ -8,7 +8,7 @@ class EvidenceManager {
         this._buildEvidences(evidenceSetupList);
 
         this._myFSM = new PP.FSM();
-        this._myFSM.setDebugLogActive(true, "       Evidence");
+        //this._myFSM.setDebugLogActive(true, "            Evidence");
         this._myFSM.addState("init");
         this._myFSM.addState("manage", this._updateManage.bind(this));
         this._myFSM.addState("clean", this._updateClean.bind(this));

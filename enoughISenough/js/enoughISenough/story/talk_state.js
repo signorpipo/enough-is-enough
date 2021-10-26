@@ -3,7 +3,7 @@ class TalkState extends PP.State {
         super();
 
         this._myFSM = new PP.FSM();
-        this._myFSM.setDebugLogActive(true, "   Talk");
+        //this._myFSM.setDebugLogActive(true, "        Talk");
         this._myFSM.addState("init");
         this._myFSM.addState("first_wait", new PP.TimerState(0.5, "end"));
         this._myFSM.addState("mr_not_appear", this._updateMrNOTAppear.bind(this));
@@ -181,7 +181,7 @@ class Blather {
         this._myTimerState = new PP.TimerState(1, "end");
 
         this._myFSM = new PP.FSM();
-        this._myFSM.setDebugLogActive(true, "      Blather");
+        //this._myFSM.setDebugLogActive(true, "            Blather");
         this._myFSM.addState("init");
         this._myFSM.addState("first_wait", new PP.TimerState(1, "end"));
         this._myFSM.addState("blather", this._updateBlather.bind(this));

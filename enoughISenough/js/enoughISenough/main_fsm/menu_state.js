@@ -5,7 +5,7 @@ class MenuState extends PP.State {
         this._myResetCount = 0;
 
         this._myFSM = new PP.FSM();
-        this._myFSM.setDebugLogActive(true, "Menu");
+        this._myFSM.setDebugLogActive(true, "    Menu");
         this._myFSM.addState("ready", this._readyUpdate.bind(this));
         this._myFSM.addState("unspawning_reset", this._unspawn.bind(this));
         this._myFSM.addState("unspawning_arcade_hard", this._unspawn.bind(this));
@@ -273,7 +273,7 @@ class MenuItem {
 
         this._myFSM = new PP.FSM();
 
-        //this._myFSM.setDebugLogActive(true, "Menu Item");
+        //this._myFSM.setDebugLogActive(true, "        Menu Item");
         this._myFSM.addState("init");
         this._myFSM.addState("inactive", this._inactiveUpdate.bind(this));
         this._myFSM.addState("spawning", this._spawning.bind(this));
@@ -443,7 +443,7 @@ class MenuTitle {
 
         this._myFSM = new PP.FSM();
 
-        //this._myFSM.setDebugLogActive(true, "Menu Title");
+        //this._myFSM.setDebugLogActive(true, "        Menu Title");
         this._myFSM.addState("spawn", this._spawnUpdate.bind(this));
         this._myFSM.addState("unspawn", this._unspawnUpdate.bind(this));
 

@@ -27,7 +27,7 @@ class Evidence {
         this._mySpawnTimer = new PP.Timer(0);
 
         this._myFSM = new PP.FSM();
-        //this._myFSM.setDebugLogActive(true, "             Evidence Item");
+        //this._myFSM.setDebugLogActive(true, "                Evidence Item");
         this._myFSM.addState("init");
         this._myFSM.addState("inactive");
         this._myFSM.addState("spawning", this._spawning.bind(this));
