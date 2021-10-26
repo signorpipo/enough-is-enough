@@ -586,6 +586,15 @@ Float32Array.prototype.quat_identity = function () {
     return this;
 };
 
+Float32Array.prototype.quat_length = function () {
+    return glMatrix.quat.length(this);
+};
+
+Float32Array.prototype.quat_invert = function (out = glMatrix.quat.create()) {
+    glMatrix.quat.invert(out, this);
+    return out;
+};
+
 Float32Array.prototype.quat_mul = function (rotation, out = glMatrix.quat.create()) {
     glMatrix.quat.mul(out, this, rotation);
     return out;
@@ -686,6 +695,51 @@ Float32Array.prototype.quat_addRotationRadians = function () {
 Float32Array.prototype.quat_addRotationQuat = function (rotation, out = glMatrix.quat.create()) {
     rotation.quat_mul(this, out);
     return out;
+};
+
+Float32Array.prototype.quat_subRotation = function (rotation, out) {
+    return this.quat_subRotationDegrees(rotation, out);
+};
+
+Float32Array.prototype.quat_subRotationDegrees = function () {
+    let quat = glMatrix.quat.create();
+    return function (rotation, out) {
+        rotation.vec3_degreesToQuat(quat);
+        return this.quat_subRotationQuat(quat, out);
+    };
+}();
+
+Float32Array.prototype.quat_subRotationRadians = function () {
+    let quat = glMatrix.quat.create();
+    return function (rotation, out) {
+        rotation.vec3_radiansToQuat(quat);
+        return this.quat_subRotationQuat(quat, out);
+    };
+}();
+
+Float32Array.prototype.quat_subRotationQuat = function () {
+    let inverse = glMatrix.quat.create();
+    return function (rotation, out = glMatrix.quat.create()) {
+        rotation.quat_invert(inverse);
+        this.quat_mul(inverse, out);
+        return out;
+    };
+}();
+
+Float32Array.prototype.quat_rotationTo = function (rotation, out) {
+    return this.quat_rotationToDegrees(rotation, out);
+};
+
+Float32Array.prototype.quat_rotationToDegrees = function (rotation, out) {
+    return rotation.quat_subRotationDegrees(this, out);
+};
+
+Float32Array.prototype.quat_rotationToRadians = function (rotation, out) {
+    return rotation.quat_subRotationRadians(this, out);
+};
+
+Float32Array.prototype.quat_rotationToQuat = function (rotation, out) {
+    return rotation.quat_subRotationQuat(this, out);
 };
 
 Float32Array.prototype.quat_toMatrix = function (out = glMatrix.mat3.create()) {
