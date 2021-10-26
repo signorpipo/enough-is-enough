@@ -181,7 +181,7 @@ Array.prototype.vec3_zero = function () {
     return this;
 };
 
-Array.prototype.vec3_angle = function (vector) {
+Array.prototype.vec3_angleBetween = function (vector) {
     return glMatrix.vec3.angle(this, vector);
 };
 
@@ -249,7 +249,7 @@ Array.prototype.vec3_isNormalized = function () {
     return Math.abs(glMatrix.vec3.length(this) - 1) < this._pp_epsilon;
 };
 
-Array.prototype.vec3_getComponentAlongAxis = function (axis, out = glMatrix.vec3.create()) {
+Array.prototype.vec3_componentAlongAxis = function (axis, out = glMatrix.vec3.create()) {
     let angle = glMatrix.vec3.angle(this, axis);
     let length = Math.cos(angle) * glMatrix.vec3.length(this);
 
@@ -261,7 +261,7 @@ Array.prototype.vec3_getComponentAlongAxis = function (axis, out = glMatrix.vec3
 Array.prototype.vec3_removeComponentAlongAxis = function () {
     let componentAlong = glMatrix.vec3.create();
     return function (axis, out = glMatrix.vec3.create()) {
-        this.vec3_getComponentAlongAxis(axis, componentAlong);
+        this.vec3_componentAlongAxis(axis, componentAlong);
         glMatrix.vec3.sub(out, this, componentAlong);
         return out;
     };
@@ -538,6 +538,26 @@ Array.prototype.vec3_radiansAddRotationQuat = function () {
     };
 }();
 
+Array.prototype.vec3_toMatrix = function (out = glMatrix.mat3.create()) {
+    return this.vec3_degreesToMatrix(out);
+};
+
+Array.prototype.vec3_degreesToMatrix = function () {
+    let quat = glMatrix.quat.create();
+    return function (out = glMatrix.mat3.create()) {
+        this.vec3_degreesToQuat(quat);
+        return quat.quat_toMatrix(out);
+    };
+}();
+
+Array.prototype.vec3_radiansToMatrix = function () {
+    let quat = glMatrix.quat.create();
+    return function (out = glMatrix.mat3.create()) {
+        this.vec3_radiansToQuat(quat);
+        return quat.quat_toMatrix(out);
+    };
+}();
+
 //QUAT
 
 //glMatrix Bridge
@@ -569,6 +589,33 @@ Array.prototype.quat_identity = function () {
 Array.prototype.quat_mul = function (rotation, out = glMatrix.quat.create()) {
     glMatrix.quat.mul(out, this, rotation);
     return out;
+};
+
+Array.prototype.quat_getAxis = function (out = glMatrix.vec3.create()) {
+    glMatrix.quat.getAxisAngle(out, this);
+    return out;
+};
+
+Array.prototype.quat_getAngle = function () {
+    let vector = glMatrix.vec3.create();
+    return function () {
+        let angle = glMatrix.quat.getAxisAngle(vector, this);
+        return angle;
+    };
+}();
+
+Array.prototype.quat_fromAxisAngle = function (axis, angle) {
+    return this.quat_fromAxisAngleDegrees(axis, angle);
+};
+
+Array.prototype.quat_fromAxisAngleDegrees = function (axis, angle) {
+    glMatrix.quat.setAxisAngle(this, axis, glMatrix.glMatrix.toRadian(angle));
+    return this;
+};
+
+Array.prototype.quat_fromAxisAngleRadians = function (axis, angle) {
+    glMatrix.quat.setAxisAngle(this, axis, angle);
+    return this;
 };
 
 //New Methods
@@ -638,6 +685,11 @@ Array.prototype.quat_addRotationRadians = function () {
 
 Array.prototype.quat_addRotationQuat = function (rotation, out = glMatrix.quat.create()) {
     rotation.quat_mul(this, out);
+    return out;
+};
+
+Array.prototype.quat_toMatrix = function (out = glMatrix.mat3.create()) {
+    glMatrix.mat3.fromQuat(out, this);
     return out;
 };
 
@@ -748,6 +800,35 @@ Array.prototype.quat2_fromTransformMatrix = function (transformMatrix) {
 
 Array.prototype.quat2_fromMat4 = function (transformMatrix) {
     return this.quat2_fromTransformMatrix(transformMatrix);
+};
+
+//MATRIX 3
+
+//glMatrix Bridge
+
+//New Methods
+
+Array.prototype.mat3_toDegrees = function () {
+    let quat = glMatrix.quat.create();
+    return function (out = glMatrix.vec3.create()) {
+        this.mat3_toQuat(quat);
+        quat.quat_toDegrees(out);
+        return out;
+    };
+}();
+
+Array.prototype.mat3_toRadians = function () {
+    let quat = glMatrix.quat.create();
+    return function (out = glMatrix.vec3.create()) {
+        this.mat3_toQuat(quat);
+        quat.quat_toRadians(out);
+        return out;
+    };
+}();
+
+Array.prototype.mat3_toQuat = function (out = glMatrix.quat.create()) {
+    glMatrix.quat.fromMat3(out, this);
+    return out;
 };
 
 //MATRIX 4
