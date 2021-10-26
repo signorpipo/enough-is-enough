@@ -1,26 +1,14 @@
 WL.registerComponent('pp-set-head-transform', {
-    _myLeftEye: { type: WL.Type.Object },
-    _myRightEye: { type: WL.Type.Object },
-    _myFixForward: { type: WL.Type.Bool, default: false }
+    _myFixForward: { type: WL.Type.Bool, default: true }
 }, {
     init: function () {
-        this._myLeftEyePosition = glMatrix.vec3.create();
-        this._myRightEyePosition = glMatrix.vec3.create();
-        this._myCurrentHeadPosition = glMatrix.vec3.create();
+        this._myHeadPose = new PP.HeadPose(this._myFixForward);
     },
     start: function () {
+        this._myHeadPose.start();
     },
     update: function (dt) {
-        this._myLeftEye.getTranslationWorld(this._myLeftEyePosition);
-        this._myRightEye.getTranslationWorld(this._myRightEyePosition);
-
-        glMatrix.vec3.add(this._myCurrentHeadPosition, this._myLeftEyePosition, this._myRightEyePosition);
-        glMatrix.vec3.scale(this._myCurrentHeadPosition, this._myCurrentHeadPosition, 0.5);
-
-        this.object.setTranslationWorld(this._myCurrentHeadPosition);
-        this.object.rotationWorld = this._myLeftEye.rotationWorld;
-        if (this._myFixForward) {
-            this.object.pp_rotateAxisObject([0, 1, 0], 180);
-        }
+        this._myHeadPose.update(dt);
+        this.object.pp_setTransformLocalQuat(this._myHeadPose.getTransformQuat());
     },
 });

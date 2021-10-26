@@ -1768,7 +1768,7 @@
                     "type": "hand-animator",
                     "hand-animator": {
                         "_myHandPieceMesh": "128",
-                        "_myHandPieceMaterial": "119"
+                        "_myHandPieceMaterial": "107"
                     },
                     "active": true
                 }
@@ -1837,7 +1837,7 @@
                     "type": "hand-animator",
                     "hand-animator": {
                         "_myHandPieceMesh": "128",
-                        "_myHandPieceMaterial": "119",
+                        "_myHandPieceMaterial": "107",
                         "_myHandedness": "right"
                     }
                 }
@@ -5328,6 +5328,38 @@
                 0.0,
                 1.0
             ]
+        },
+        "232": {
+            "name": "Mesh.000",
+            "parent": "85",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "8",
+                        "material": "25"
+                    }
+                }
+            ],
+            "transformation": [
+                0.1,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.1,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.1,
+                0.0,
+                0.0,
+                0.0,
+                0.5,
+                1.0
+            ],
+            "deleted": true
         }
     },
     "meshes": {

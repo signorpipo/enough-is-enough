@@ -1,9 +1,6 @@
-PP.HandPose = class HandPose {
+PP.HeadPose = class HeadPose {
 
-    constructor(handedness, fixForward = true, forceEmulatedVelocities = false) {
-        this._myInputSource = null;
-
-        this._myHandedness = handedness;
+    constructor(fixForward = true, forceEmulatedVelocities = false) {
         this._myFixForward = fixForward;
         this._myForceEmulatedVelocities = forceEmulatedVelocities;
 
@@ -98,8 +95,8 @@ PP.HandPose = class HandPose {
         glMatrix.quat.copy(this._myPrevRotation, this._myRotation);
 
         let xrFrame = Module['webxr_frame'];
-        if (xrFrame && this._myInputSource) {
-            let xrPose = xrFrame.getPose(this._myInputSource.gripSpace, this._myReferenceSpace);
+        if (xrFrame) {
+            let xrPose = xrFrame.getViewerPose(this._myReferenceSpace);
 
             if (xrPose) {
                 this._myPosition[0] = xrPose.transform.position.x;
@@ -164,28 +161,9 @@ PP.HandPose = class HandPose {
 
     _onXRSessionStart(session) {
         session.requestReferenceSpace(WebXR.refSpace).then(function (referenceSpace) { this._myReferenceSpace = referenceSpace; }.bind(this));
-
-        session.addEventListener('inputsourceschange', function (event) {
-            if (event.removed) {
-                for (let item of event.removed) {
-                    if (item == this._myInputSource) {
-                        this._myInputSource = null;
-                    }
-                }
-            }
-
-            if (event.added) {
-                for (let item of event.added) {
-                    if (item.handedness == this._myHandedness) {
-                        this._myInputSource = item;
-                    }
-                }
-            }
-        }.bind(this));
     }
 
     _onXRSessionEnd(session) {
         this._myReferenceSpace = null;
-        this._myInputSource = null;
     }
 };
