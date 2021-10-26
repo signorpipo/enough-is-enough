@@ -231,6 +231,10 @@ Array.prototype.vec3_toDegrees = function (out = glMatrix.vec3.create()) {
     return out;
 };
 
+Array.prototype.vec3_toQuat = function (out) {
+    return this.vec3_degreesToQuat(out);
+};
+
 Array.prototype.vec3_radiansToQuat = function (out = glMatrix.quat.create()) {
     out.quat_fromRadians(this);
     return out;
@@ -462,6 +466,78 @@ Array.prototype.vec3_warn = function (decimalPlaces = 4) {
     this.vec_warn(decimalPlaces);
 };
 
+Array.prototype.vec3_addRotation = function (rotation, out) {
+    return this.vec3_degreesAddRotation(rotation, out);
+};
+
+Array.prototype.vec3_addRotationDegrees = function (rotation, out) {
+    return quat.vec3_degreesAddRotationDegrees(rotation, out);
+};
+
+Array.prototype.vec3_addRotationRadians = function (rotation, out) {
+    return quat.vec3_degreesAddRotationRadians(rotation, out);
+};
+
+Array.prototype.vec3_addRotationQuat = function (rotation, out) {
+    return quat.vec3_degreesAddRotationQuat(rotation, out);
+};
+
+Array.prototype.vec3_degreesAddRotation = function (rotation, out) {
+    return this.vec3_degreesAddRotationDegrees(rotation, out);
+};
+
+Array.prototype.vec3_degreesAddRotationDegrees = function () {
+    let quat = glMatrix.quat.create();
+    return function (rotation, out = glMatrix.vec3.create()) {
+        this.vec3_degreesToQuat(quat);
+        return quat.quat_addRotationDegrees(rotation, quat).quat_toDegrees(out);
+    };
+}();
+
+Array.prototype.vec3_degreesAddRotationRadians = function () {
+    let quat = glMatrix.quat.create();
+    return function (rotation, out = glMatrix.vec3.create()) {
+        this.vec3_degreesToQuat(quat);
+        return quat.quat_addRotationRadians(rotation, quat).quat_toDegrees(out);
+    };
+}();
+
+Array.prototype.vec3_degreesAddRotationQuat = function () {
+    let quat = glMatrix.quat.create();
+    return function (rotation, out = glMatrix.vec3.create()) {
+        this.vec3_degreesToQuat(quat);
+        return quat.quat_addRotationQuat(rotation, quat).quat_toDegrees(out);
+    };
+}();
+
+Array.prototype.vec3_radiansAddRotation = function (rotation, out) {
+    return this.vec3_radiansAddRotationDegrees(rotation, out);
+};
+
+Array.prototype.vec3_radiansAddRotationDegrees = function () {
+    let quat = glMatrix.quat.create();
+    return function (rotation, out = glMatrix.vec3.create()) {
+        this.vec3_radiansToQuat(quat);
+        return quat.quat_addRotationDegrees(rotation, quat).quat_toRadians(out);
+    };
+}();
+
+Array.prototype.vec3_radiansAddRotationRadians = function () {
+    let quat = glMatrix.quat.create();
+    return function (rotation, out = glMatrix.vec3.create()) {
+        this.vec3_radiansToQuat(quat);
+        return quat.quat_addRotationRadians(rotation, quat).quat_toRadians(out);
+    };
+}();
+
+Array.prototype.vec3_radiansAddRotationQuat = function () {
+    let quat = glMatrix.quat.create();
+    return function (rotation, out = glMatrix.vec3.create()) {
+        this.vec3_radiansToQuat(quat);
+        return quat.quat_addRotationQuat(rotation, quat).quat_toRadians(out);
+    };
+}();
+
 //QUAT
 
 //glMatrix Bridge
@@ -488,6 +564,11 @@ Array.prototype.quat_set = function (x, y = null, z = null, w = null) {
 Array.prototype.quat_identity = function () {
     glMatrix.quat.identity(this);
     return this;
+};
+
+Array.prototype.quat_mul = function (rotation, out = glMatrix.quat.create()) {
+    glMatrix.quat.mul(out, this, rotation);
+    return out;
 };
 
 //New Methods
@@ -533,6 +614,31 @@ Array.prototype.quat_toDegrees = function (out = glMatrix.vec3.create()) {
 
 Array.prototype.quat_isNormalized = function () {
     return Math.abs(glMatrix.quat.length(this) - 1) < this._pp_epsilon;
+};
+
+Array.prototype.quat_addRotation = function (rotation, out) {
+    return this.quat_addRotationDegrees(rotation, out);
+};
+
+Array.prototype.quat_addRotationDegrees = function () {
+    let quat = glMatrix.quat.create();
+    return function (rotation, out) {
+        rotation.vec3_degreesToQuat(quat);
+        return this.quat_addRotationQuat(quat, out);
+    };
+}();
+
+Array.prototype.quat_addRotationRadians = function () {
+    let quat = glMatrix.quat.create();
+    return function (rotation, out) {
+        rotation.vec3_radiansToQuat(quat);
+        return this.quat_addRotationQuat(quat, out);
+    };
+}();
+
+Array.prototype.quat_addRotationQuat = function (rotation, out = glMatrix.quat.create()) {
+    rotation.quat_mul(this, out);
+    return out;
 };
 
 //QUAT 2
@@ -783,13 +889,39 @@ Array.prototype.mat4_setPositionRotationDegreesScale = function () {
 Array.prototype.mat4_setPositionRotationRadiansScale = function () {
     let vector = glMatrix.vec3.create();
     return function (position, rotation, scale) {
-        this.mat4_setPositionRotationDegreesScale(position, rotation.vec3_toRadians(vector), scale);
+        this.mat4_setPositionRotationDegreesScale(position, rotation.vec3_toDegrees(vector), scale);
         return this;
     };
 }();
 
 Array.prototype.mat4_setPositionRotationQuatScale = function (position, rotation, scale) {
     glMatrix.mat4.fromRotationTranslationScale(this, rotation, position, scale);
+    return this;
+};
+
+Array.prototype.mat4_setPositionRotation = function (position, rotation) {
+    this.mat4_setPositionRotationDegrees(position, rotation);
+    return this;
+};
+
+Array.prototype.mat4_setPositionRotationDegrees = function () {
+    let quat = glMatrix.quat.create();
+    return function (position, rotation) {
+        this.mat4_setPositionRotationQuat(position, rotation.vec3_degreesToQuat(quat));
+        return this;
+    };
+}();
+
+Array.prototype.mat4_setPositionRotationRadians = function () {
+    let vector = glMatrix.vec3.create();
+    return function (position, rotation) {
+        this.mat4_setPositionRotationDegrees(position, rotation.vec3_toDegrees(vector));
+        return this;
+    };
+}();
+
+Array.prototype.mat4_setPositionRotationQuat = function (position, rotation) {
+    glMatrix.mat4.fromRotationTranslation(this, rotation, position);
     return this;
 };
 
@@ -955,6 +1087,28 @@ function quat2_fromPositionRotationQuat(position, rotation) {
 
 function mat4_create() {
     let out = glMatrix.mat4.create();
+    return out;
+}
+
+function mat4_fromPositionRotation(position, rotation) {
+    return mat4_fromPositionRotationDegrees(position, rotation);
+}
+
+function mat4_fromPositionRotationDegrees(position, rotation) {
+    let out = glMatrix.mat4.create();
+    out.mat4_setPositionRotationDegrees(position, rotation);
+    return out;
+}
+
+function mat4_fromPositionRotationRadians(position, rotation) {
+    let out = glMatrix.mat4.create();
+    out.mat4_setPositionRotationRadians(position, rotation);
+    return out;
+}
+
+function mat4_fromPositionRotationQuat(position, rotation) {
+    let out = glMatrix.mat4.create();
+    out.mat4_setPositionRotationQuat(position, rotation);
     return out;
 }
 

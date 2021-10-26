@@ -54,7 +54,7 @@ PP.HandPose = class HandPose {
     }
 
     getTransformMatrix() {
-        return mat4_fromPositionRotationQuatScale(this._myPosition, this.getRotationQuat(), [1, 1, 1]);
+        return mat4_fromPositionRotationQuat(this._myPosition, this.getRotationQuat());
     }
 
     getTransformQuat() {
