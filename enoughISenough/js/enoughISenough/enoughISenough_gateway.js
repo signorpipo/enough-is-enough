@@ -55,5 +55,5 @@ var Global = {
     myStoryDuration: 0,
     myVentDuration: 0,
     myDebugShortcutsEnabled: false,
-    myDebugShortcutsPress: 1,
+    myDebugShortcutsPress: 2,
 };
