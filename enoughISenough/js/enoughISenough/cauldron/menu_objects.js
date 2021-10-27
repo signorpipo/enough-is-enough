@@ -19,7 +19,7 @@ WL.registerComponent('menu-objects', {
         Global.myGameObjects.set(GameObjectType.FLOPPY_DISK, this._myFloppyDisk);
 
         let cloneParams = new PP.CloneParams();
-        cloneParams.myComponentsToClone.push("mesh");
+        cloneParams.myComponentsToInclude.push("mesh");
         Global.myMeshObjects.set(GameObjectType.START_STORY, this._myStartStory.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.START_ARCADE_HARD, this._myStartArcadeHard.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.START_ARCADE_NORMAL, this._myStartArcadeNormal.pp_clone(cloneParams));

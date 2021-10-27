@@ -5,7 +5,7 @@ WL.registerComponent('mr_NOT_object', {
         Global.myGameObjects.set(GameObjectType.MR_NOT, this._myMrNOT);
 
         let cloneParams = new PP.CloneParams();
-        cloneParams.myComponentsToClone.push("mesh");
+        cloneParams.myComponentsToInclude.push("mesh");
         Global.myMeshObjects.set(GameObjectType.MR_NOT, this._myMrNOT.pp_clone(cloneParams));
     },
     start: function () {

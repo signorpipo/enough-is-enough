@@ -1756,12 +1756,17 @@ if (!PP) {
 
 PP.CloneParams = class CloneParams {
     constructor() {
-        this.myIgnoreNonCloneable = false; // Ignore components that are not clonable
-        this.myIgnoreChildren = false; // Clone only the given object without the children
+        this.myIgnoreNonCloneable = false; // Ignores components that are not clonable
         this.myIgnoreComponents = false; // All components are ignored, cloning only the object hierarchy
+        this.myIgnoreChildren = false; // Clones only the given object without the children
 
-        this.myComponentsToIgnore = []; // Ignore all component types in this list (example: "mesh"), has lower priority over myComponentsToClone
-        this.myComponentsToClone = []; // Clone only the component types in this list (example: "mesh"), has higher priority over myComponentsToIgnore, if empty it's ignored
+        this.myComponentsToIgnore = []; // Ignores all component types in this list (example: "mesh"), has lower priority over myComponentsToInclude
+        this.myComponentsToInclude = []; // Clones only the component types in this list (example: "mesh"), has higher priority over myComponentsToIgnore, if empty it's ignored
+        this.myIgnoreComponentCallback = null; // Signature: callback(component) returns true if the component must be ignored, it is called after the previous filters
+
+        this.myChildrenToIgnore = []; // Ignores all the objects in this list (example: "mesh"), has lower priority over myChildrenToInclude
+        this.myChildrenToInclude = []; // Clones only the objects in this list (example: "mesh"), has higher priority over myChildrenToIgnore, if empty it's ignored
+        this.myIgnoreChildCallback = null; // Signature: callback(object) returns true if the object must be ignored, it is called after the previous filters
 
         this.myDeepClone = false;
 
@@ -1796,7 +1801,20 @@ WL.Object.prototype.pp_clone = function (params = new PP.CloneParams()) {
 
             if (!params.myIgnoreChildren) {
                 for (let child of objectToClone.children) {
-                    objectsToCloneData.push([currentClonedObject, child]);
+                    let cloneChild = false;
+                    if (params.myChildrenToInclude.length > 0) {
+                        cloneChild = params.myChildrenToInclude.find(childToInclude => childToInclude.pp_equals(child)) != null;
+                    } else {
+                        cloneChild = params.myChildrenToIgnore.find(childToIgnore => childToIgnore.pp_equals(child)) == null;
+                    }
+
+                    if (cloneChild && params.myIgnoreChildCallback != null) {
+                        cloneChild = !params.myIgnoreChildCallback(child);
+                    }
+
+                    if (cloneChild) {
+                        objectsToCloneData.push([currentClonedObject, child]);
+                    }
                 }
             }
 
@@ -1814,18 +1832,24 @@ WL.Object.prototype.pp_clone = function (params = new PP.CloneParams()) {
 
             let components = objectToClone.pp_getAllComponents();
             for (let component of components) {
-                let cloneComponent = false;
-                if (params.myComponentsToClone.length > 0) {
-                    cloneComponent = params.myComponentsToClone.indexOf(component.type) != -1;
-                } else {
-                    cloneComponent = params.myComponentsToIgnore.indexOf(component.type) == -1;
-                }
+                if (component.pp_clone != null) {
+                    let cloneComponent = false;
+                    if (params.myComponentsToInclude.length > 0) {
+                        cloneComponent = params.myComponentsToInclude.indexOf(component.type) != -1;
+                    } else {
+                        cloneComponent = params.myComponentsToIgnore.indexOf(component.type) == -1;
+                    }
 
-                if (cloneComponent && component.pp_clone != null) {
-                    //Not managing the fact that inactive components from editor haven't called start yet, but clones do, since there is no way to know
-                    let clonedComponent = currentClonedObject.pp_addComponent(component.type);
-                    clonedComponent.active = component.active;
-                    componentsToCloneData.push([component, clonedComponent]);
+                    if (cloneComponent && params.myIgnoreComponentCallback != null) {
+                        cloneComponent = !params.myIgnoreComponentCallback(component);
+                    }
+
+                    if (cloneComponent) {
+                        //Not managing the fact that inactive components from editor haven't called start yet, but clones do, since there is no way to know
+                        let clonedComponent = currentClonedObject.pp_addComponent(component.type);
+                        clonedComponent.active = component.active;
+                        componentsToCloneData.push([component, clonedComponent]);
+                    }
                 }
             }
         }
@@ -1859,10 +1883,14 @@ WL.Object.prototype.pp_isCloneable = function (params = new PP.CloneParams()) {
         let components = this.pp_getAllComponents();
         for (let component of components) {
             let cloneComponent = false;
-            if (params.myComponentsToClone.length > 0) {
-                cloneComponent = params.myComponentsToClone.indexOf(component.type) != -1;
+            if (params.myComponentsToInclude.length > 0) {
+                cloneComponent = params.myComponentsToInclude.indexOf(component.type) != -1;
             } else {
                 cloneComponent = params.myComponentsToIgnore.indexOf(component.type) == -1;
+            }
+
+            if (cloneComponent && params.myIgnoreComponentCallback != null) {
+                cloneComponent = !params.myIgnoreComponentCallback(component);
             }
 
             if (cloneComponent && component.pp_clone == null) {
@@ -1873,7 +1901,20 @@ WL.Object.prototype.pp_isCloneable = function (params = new PP.CloneParams()) {
 
         if (isCloneable && !params.myIgnoreChildren) {
             for (let child of object.children) {
-                objects.push(child);
+                let cloneChild = false;
+                if (params.myChildrenToInclude.length > 0) {
+                    cloneChild = params.myChildrenToInclude.find(childToInclude => childToInclude.pp_equals(child)) != null;
+                } else {
+                    cloneChild = params.myChildrenToIgnore.find(childToInclude => childToInclude.pp_equals(child)) == null;
+                }
+
+                if (cloneChild && params.myIgnoreChildCallback != null) {
+                    cloneChild = !params.myIgnoreChildCallback(child);
+                }
+
+                if (cloneChild) {
+                    objects.push(child);
+                }
             }
         }
     }

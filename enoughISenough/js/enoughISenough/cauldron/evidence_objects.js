@@ -23,7 +23,7 @@ WL.registerComponent('evidence-objects', {
         Global.myGameObjects.set(GameObjectType.SKATING, this._mySkating);
 
         let cloneParams = new PP.CloneParams();
-        cloneParams.myComponentsToClone.push("mesh");
+        cloneParams.myComponentsToInclude.push("mesh");
         Global.myMeshObjects.set(GameObjectType.STORY_TIMER, this._myStoryTimer.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.DRAWING, this._myDrawing.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.CPLUSPLUS, this._myCPlusPlus.pp_clone(cloneParams));
