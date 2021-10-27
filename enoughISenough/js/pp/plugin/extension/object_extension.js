@@ -1,18 +1,20 @@
 /*
     How to use
 
-    By default the methods work on World space, rotations are in degrees and transforms are matrices (and not quat2)
+    By default the methods work on World space, rotations are in Degrees and transforms are Matrix (and not Quat 2) 
+    For methods that work with rotations, Matrix means Matrix 3 and Quat means Quat
+    For methods that work with transforms, Matrix means Matrix 4 and Quat means Quat 2
 
-    You can usually append at the end of a method a keyword like World/Local(sometimes Object) to specify the space, example:
+    You can add a suffix like World/Local/Object at the end of some methods to specify the space, example:
         - pp_getPositionLocal to get the position in local space (parent space)
         - pp_translateObject to translate in object space
 
-    For rotations u can append Degrees/Radians/Quat/Matrix to use a specific version, example:
+    For rotations u can add a suffix like Degrees/Radians/Quat/Matrix to use a specific version, example:
         - pp_getRotationDegrees
         - pp_setRotationLocalMatrix
         - pp_rotateWorldQuat
         
-    For transform u can append Quat/Matrix to use a specific version, example:
+    For transform u can add a suffix like Quat/Matrix to use a specific version, example:
         - pp_getTransformQuat
         - pp_setTransformWorldMatrix
 
@@ -21,7 +23,10 @@
         - this.object.pp_getPosition(position)
         - the out parameter is always the last one
 
-    List of methods (without extra "append" labels like World or Radians):
+    List of methods:
+        Note:
+            - The suffixes (like World or Radians) are omitted 
+
         - pp_getPosition    / pp_setPosition    / pp_resetPosition
         - pp_getRotation    / pp_setRotation    / pp_resetRotation
         - pp_getScale       / pp_setScale (u can specify a single number instead of a vector to uniform scale easily)   / pp_resetScale 

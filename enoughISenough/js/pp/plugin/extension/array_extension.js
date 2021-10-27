@@ -1,3 +1,118 @@
+/*
+    How to use
+
+    Warning: The extension is a WIP so not all the methods are available for all kinds of vector.
+
+    By default rotations are in Degrees and transforms are Matrix 4 (and not Quat 2)    
+    For methods that work with rotations, Matrix means Matrix 3 and Quat means Quat
+    For methods that work with transforms, Matrix means Matrix 4 and Quat means Quat 2
+    
+    For rotations u can add a suffix like Degrees/Radians/Quat/Matrix to use a specific version, example:
+        - vec3_rotateAroundRadians
+        - vec3_degreesAddRotationDegrees
+        
+    For transform u can add a suffix like Quat/Matrix to use a specific version, example:
+        - vec3_convertPositionToWorldMatrix
+        - vec3_convertDirectionToWorldQuat
+
+    Some vec3 methods let u add a prefix to specify if the vec3 represent a rotation in degrees or radians, where degrees is the default:
+        - vec3_toQuat
+        - vec3_degreesToQuat
+        - vec3_radiansToQuat
+        - vec3_degreesAddRotation
+
+    Rotation operations return a rotation of the same kind of the starting variable:
+        - vec3_degreesAddRotationQuat   -> returns a rotation in degrees
+        - quat_rotationToDegrees        -> returns a rotation in quat
+
+    The methods leave u the choice of forwarding an out parameter or just get the return value, example:
+        - let quat = this.vec3_toQuat()
+        - this.vec3_toQuat(quat)
+        - the out parameter is always the last one
+
+    List of methods:
+        Note:
+            - If a group of methods starts with ○ it means it modifies the variable itself
+            - The suffixes (like Matrix or Radians) or prefixes (like degrees) are omitted 
+
+        CREATION (u can call these functions without any object):
+            - vec3_create
+
+            - quat_create
+
+            - quat2_create
+            - quat2_fromPositionRotation
+
+            - mat4_create
+            - mat4_fromPositionRotation     / mat4_fromPositionRotationScale
+
+        ARRAY:
+            - pp_find       / pp_findAll
+            ○ pp_remove     / pp_removeIndex    / pp_removeAll  / pp_removeEqual    / pp_removeAllEqual
+            ○ pp_copy    
+            - pp_clone      
+
+        GENERIC VECTOR (array with only numbers):
+            - vec_scale
+            - vec_round     / vec_floor         / vec_ceil      / vec_clamp
+            - vec_log       / vec_error         / vec_warn      
+
+        VECTOR 3:
+            ○ vec3_set      / vec3_copy     / vec3_zero
+            - vec3_clone 
+            - vec3_normalize    / vec3_negate
+            - vec3_isNormalized
+            - vec3_length
+            - vec3_add      / vec3_sub          / vec3_mul      / vec3_div      / vec3_scale
+            - vec3_componentAlongAxis           / vec3_removeComponentAlongAxis
+            - vec3_isConcordant
+            - vec3_convertPositionToWorld       / vec3_convertPositionToLocal 
+            - vec3_convertDirectionToWorld      / vec3_convertDirectionToLocal   
+            - vec3_angleBetween
+            - vec3_toRadians        / vec3_toDegrees            / vec3_toQuat       / vec3_toMatrix
+            - vec3_rotate           / vec3_rotateAxis           / vec3_rotateAround / vec3_rotateAroundAxis
+            - vec3_addRotation
+            - vec3_log       / vec3_error         / vec3_warn      
+
+        QUAT:
+            ○ quat_set          / quat_copy     / quat_identity
+            - quat_normalize    / quat_invert
+            - quat_isNormalized
+            - quat_length
+            - quat_mul
+            - quat_getAxis  / quat_getAngle
+            ○ quat_fromRadians      / quat_fromDegrees      / quat_fromAxisAngle
+            - quat_toRadians        / quat_toDegrees        / quat_toMatrix
+            - quat_addRotation      / quat_subRotation
+            - quat_rotationTo
+
+        QUAT 2:
+            ○ quat2_copy        / quat2_identity
+            - quat2_normalize
+            - quat2_getPosition     / quat2_getRotation
+            ○ quat2_setPositionRotation
+            - quat2_getAxes
+            - quat2_toWorld     / quat2_toLocal
+            - quat2_toMatrix
+            ○ quat2_fromMatrix
+
+        MATRIX 3:
+            - mat3_toDegrees    / mat3_toRadians    / mat3_toQuat
+
+        MATRIX 4:
+            ○ mat4_copy         / mat4_identity
+            - mat4_clone
+            - mat4_invert
+            - mat4_getPosition  / mat4_getRotation  / mat4_getScale
+            ○ mat4_setPosition  / mat4_setRotation  / mat4_setScale
+            ○ mat4_setPositionRotation      / mat4_setPositionRotationScale
+            - mat4_getAxes
+            - mat4_toWorld      / mat4_toLocal
+            - mat4_hasUniformScale
+            - mat4_toQuat
+            ○ mat4_fromQuat
+*/
+
 //ARRAY
 
 Array.prototype.pp_find = function (callback) {
@@ -771,6 +886,25 @@ Array.prototype.quat2_getPosition = function (out = glMatrix.vec3.create()) {
     return this;
 };
 
+Array.prototype.quat2_getRotation = function (out) {
+    return this.quat2_getRotationDegrees(out);
+};
+Array.prototype.quat2_getRotationDegrees = function () {
+    let rotationQuat = glMatrix.quat.create();
+    return function (out = glMatrix.vec3.create()) {
+        this.quat2_getRotationQuat(rotationQuat).quat_toDegrees(out);
+        return out;
+    };
+}();
+
+Array.prototype.quat2_getRotationRadians = function () {
+    let rotationQuat = glMatrix.quat.create();
+    return function (out = glMatrix.vec3.create()) {
+        this.quat2_getRotationQuat(rotationQuat).quat_toRadians(out);
+        return out;
+    };
+}();
+
 Array.prototype.quat2_getRotationQuat = function (out = glMatrix.quat.create()) {
     glMatrix.quat.copy(out, this);
     return this;
@@ -1063,15 +1197,6 @@ Array.prototype.mat4_getAxes = function (out = [glMatrix.vec3.create(), glMatrix
 
     return out;
 };
-
-Array.prototype.mat4_toLocal = function () {
-    let invertMatrix = glMatrix.mat4.create();
-    return function (parentTransform, out = glMatrix.mat4.create()) {
-        glMatrix.mat4.invert(invertMatrix, parentTransform);
-        glMatrix.mat4.mul(out, invertMatrix, this);
-        return out;
-    };
-}();
 
 Array.prototype.mat4_toWorld = function () {
     let convertTransform = glMatrix.mat4.create();
