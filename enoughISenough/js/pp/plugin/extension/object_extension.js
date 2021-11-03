@@ -40,7 +40,7 @@
         - pp_rotate         / pp_rotateAxis     / pp_rotateAround    / pp_rotateAroundAxis
         - pp_scaleObject (for now scale only have this variant) (u can specify a single number instead of a vector to uniform scale easily)
 
-        - pp_lookAt (u can avoid to specify up and the method will pickup the object up by default)
+        - pp_lookAt         / pp_lookTo (u can avoid to specify up and the method will pickup the object up by default)
 
         - pp_getParent      / pp_setParent (let u specify if u want to keep the transform or not)
 
@@ -1226,11 +1226,34 @@ WL.Object.prototype.pp_scaleObject = function () {
 }();
 
 //Look At
-WL.Object.prototype.pp_lookAt = function (direction, up) {
-    this.pp_lookAtWorld(direction, up);
+
+WL.Object.prototype.pp_lookAt = function (position, up) {
+    this.pp_lookAtWorld(position, up);
 };
 
 WL.Object.prototype.pp_lookAtWorld = function () {
+    let direction = glMatrix.vec3.create();
+    return function (position, up) {
+        this.pp_getPositionWorld(direction);
+        glMatrix.vec3.sub(direction, position, direction);
+        this.pp_lookToWorld(direction, up);
+    };
+}();
+
+WL.Object.prototype.pp_lookAtLocal = function () {
+    let direction = glMatrix.vec3.create();
+    return function (position, up) {
+        this.pp_getPositionLocal(direction);
+        glMatrix.vec3.sub(direction, position, direction);
+        this.pp_lookToLocal(direction, up);
+    };
+}();
+
+WL.Object.prototype.pp_lookTo = function (direction, up) {
+    this.pp_lookToWorld(direction, up);
+};
+
+WL.Object.prototype.pp_lookToWorld = function () {
     let internalUp = glMatrix.vec3.create();
     let currentPosition = glMatrix.vec3.create();
     let targetPosition = glMatrix.vec3.create();
@@ -1262,7 +1285,7 @@ WL.Object.prototype.pp_lookAtWorld = function () {
     };
 }();
 
-WL.Object.prototype.pp_lookAtLocal = function () {
+WL.Object.prototype.pp_lookToLocal = function () {
     let internalUp = glMatrix.vec3.create();
     let currentPosition = glMatrix.vec3.create();
     let targetPosition = glMatrix.vec3.create();

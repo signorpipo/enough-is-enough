@@ -335,7 +335,7 @@ class MenuItem {
         this._myObject.pp_setPosition(this._myPosition);
         this._myObject.pp_setScale(0);
         this._myObject.pp_translate([0, 0.2, 0]);
-        this._myObject.pp_lookAt(this._myFacing, [0, 1, 0]);
+        this._myObject.pp_lookTo(this._myFacing, [0, 1, 0]);
         this._myObject.pp_setActive(true);
 
         this._myPhysx.kinematic = true;
