@@ -1216,7 +1216,11 @@
                 1.0
             ],
             "components": [
-                null
+                {
+                    "mesh": {
+                        "material": "274"
+                    }
+                }
             ]
         },
         "111": {
@@ -1406,7 +1410,7 @@
             "components": [
                 {
                     "mesh": {
-                        "material": "119"
+                        "material": "281"
                     },
                     "active": true
                 },
@@ -2331,7 +2335,7 @@
                     "type": "mesh",
                     "mesh": {
                         "mesh": "128",
-                        "material": "25"
+                        "material": "284"
                     }
                 },
                 {
@@ -2339,17 +2343,17 @@
                 }
             ],
             "transformation": [
-                -0.9999993,
-                -1.5099571726295839e-7,
-                8.7422719730057e-8,
+                -0.9999992,
+                -1.5099573147381307e-7,
+                8.742272683548436e-8,
                 0.0,
-                -1.5099581673894139e-7,
+                -1.509958451606508e-7,
                 1.0,
-                -1.5099581673894139e-7,
+                -1.5099581673894137e-7,
                 0.0,
-                -8.742269130834758e-8,
-                -1.5099571726295839e-7,
-                -0.9999993,
+                -8.742269841377493e-8,
+                -1.5099570305210364e-7,
+                -0.9999992,
                 0.0,
                 0.0,
                 0.0,
@@ -2365,7 +2369,7 @@
                     "type": "mesh",
                     "mesh": {
                         "mesh": "128",
-                        "material": "25"
+                        "material": "284"
                     }
                 },
                 {
@@ -2374,20 +2378,20 @@
                 }
             ],
             "transformation": [
-                0.000002,
-                -1.0000343,
-                0.0000016,
+                0.0000022,
+                -1.000034,
+                0.0000015,
                 0.0,
-                -1.0000197,
-                -0.000002,
+                -1.0000194,
+                -0.0000021,
                 5.960463909104874e-7,
                 0.0,
-                -5.960391717962921e-7,
-                -0.0000016,
-                -1.0000132,
+                -5.960389444226166e-7,
+                -0.0000015,
+                -1.0000129,
                 0.0,
-                -2.2351741790771489e-8,
-                0.0000041,
+                -2.2351741790771486e-8,
+                0.000004,
                 -1.6630110621917994e-8,
                 1.0
             ]
@@ -3430,7 +3434,7 @@
                 {
                     "type": "mr_NOT_object",
                     "mr_NOT_object": {
-                        "_myMrNOT": "177"
+                        "_myMrNOT": "253"
                     }
                 }
             ]
@@ -3441,7 +3445,7 @@
             "deleted": true
         },
         "177": {
-            "name": "Mr NOT",
+            "name": "mr NOT test",
             "parent": "175",
             "transformation": [
                 1.0,
@@ -3482,6 +3486,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "pp-deactivate-on-first-update"
                 }
             ]
         },
@@ -5360,6 +5367,406 @@
                 1.0
             ],
             "deleted": true
+        },
+        "233": {
+            "name": "Empty.010",
+            "deleted": true
+        },
+        "253": {
+            "link": {
+                "name": "mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "175",
+            "transformation": [
+                1.0000003,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.9999976,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.9999973,
+                0.0,
+                -5.960464477539063e-8,
+                3.0714998,
+                4.7596197,
+                1.0
+            ]
+        },
+        "254": {
+            "link": {
+                "name": "Face<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "270",
+            "transformation": [
+                1.0265299,
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0266335,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0001062,
+                0.0,
+                -1.1920928955078128e-7,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "components": [
+                {
+                    "mesh": {
+                        "material": "278"
+                    }
+                }
+            ]
+        },
+        "255": {
+            "link": {
+                "name": "Eyes<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "270",
+            "transformation": [
+                0.2319836,
+                -0.2319836,
+                0.0,
+                0.0,
+                0.2319836,
+                0.2319836,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.3280743,
+                0.0,
+                -0.1288685,
+                -0.1928114,
+                0.1347575,
+                1.0
+            ],
+            "components": [
+                {
+                    "mesh": {
+                        "material": "279"
+                    }
+                }
+            ]
+        },
+        "256": {
+            "link": {
+                "name": "Eye Details<Eyes<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "255"
+        },
+        "257": {
+            "link": {
+                "name": "Eyebrows<Eye Details<Eyes<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "256",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ]
+        },
+        "258": {
+            "link": {
+                "name": "Eye Bags<Eye Details<Eyes<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "256",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ]
+        },
+        "259": {
+            "link": {
+                "name": "Pupil<Eyes<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "255",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ]
+        },
+        "260": {
+            "link": {
+                "name": "Hairs<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "270",
+            "transformation": [
+                0.9,
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.9,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.8999999,
+                0.0,
+                -0.4215199,
+                3.4247932489961389e-8,
+                0.1457062,
+                1.0
+            ]
+        },
+        "261": {
+            "link": {
+                "name": "Lower Hairs<Hairs<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "260",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "274"
+                    }
+                }
+            ]
+        },
+        "262": {
+            "link": {
+                "name": "Middle Hairs<Hairs<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "260",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "274"
+                    }
+                }
+            ]
+        },
+        "263": {
+            "link": {
+                "name": "Upper Hairs<Hairs<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "260",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "274"
+                    }
+                }
+            ]
+        },
+        "264": {
+            "link": {
+                "name": "Lips<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "270",
+            "transformation": [
+                1.0,
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -1.1920928955078128e-7,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "265": {
+            "link": {
+                "name": "Cheeks<Lips<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "264",
+            "transformation": [
+                0.0167054,
+                0.006022,
+                0.0,
+                0.0,
+                -0.006022,
+                0.0167054,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0267501,
+                0.0,
+                0.08764,
+                -0.3830379,
+                0.149324,
+                1.0
+            ],
+            "components": [
+                {
+                    "mesh": {
+                        "material": "277"
+                    }
+                }
+            ]
+        },
+        "266": {
+            "link": {
+                "name": "Between Lips<Lips<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "264",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ]
+        },
+        "267": {
+            "link": {
+                "name": "Lower Lip<Lips<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "264",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "280"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0000001,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.2732169,
+                -0.1226868,
+                0.1442078,
+                1.0
+            ]
+        },
+        "268": {
+            "link": {
+                "name": "Upper Lip<Lips<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "264",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "274"
+                    }
+                }
+            ]
+        },
+        "269": {
+            "link": {
+                "name": "Chin<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "270",
+            "transformation": [
+                0.0561547,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0561546,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0561547,
+                0.0,
+                0.3903079,
+                3.68108885595575e-8,
+                0.1356054,
+                1.0
+            ],
+            "components": [
+                {
+                    "mesh": {
+                        "material": "277"
+                    }
+                }
+            ]
+        },
+        "270": {
+            "name": "Pivot",
+            "parent": "253",
+            "transformation": [
+                -2.5033875772351168e-7,
+                -2.0999934,
+                0.0,
+                0.0,
+                2.0999994,
+                -2.503394682662474e-7,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                2.0999999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "288": {
+            "name": "Collision 1",
+            "parent": "253",
+            "components": [
+                {
+                    "type": "collision",
+                    "collision": {
+                        "groups": 1,
+                        "collider": "box",
+                        "box": {
+                            "extents": [
+                                1.0,
+                                1.0,
+                                0.3
+                            ]
+                        }
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -5499,6 +5906,84 @@
             "link": {
                 "name": "Hand Piece",
                 "file": "assets\\models\\hand_piece.glb"
+            }
+        },
+        "240": {
+            "link": {
+                "name": "Face.001",
+                "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "241": {
+            "link": {
+                "name": "Eyes.001",
+                "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "242": {
+            "link": {
+                "name": "Eyebrows.001",
+                "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "243": {
+            "link": {
+                "name": "Eye Bags.001",
+                "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "244": {
+            "link": {
+                "name": "Pupil.001",
+                "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "245": {
+            "link": {
+                "name": "Lower Hairs.001",
+                "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "246": {
+            "link": {
+                "name": "Middle Hairs.001",
+                "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "247": {
+            "link": {
+                "name": "Upper Hairs.001",
+                "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "248": {
+            "link": {
+                "name": "Cheeks.001",
+                "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "249": {
+            "link": {
+                "name": "Between Lips.001",
+                "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "250": {
+            "link": {
+                "name": "Lower Lip.001",
+                "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "251": {
+            "link": {
+                "name": "Upper Lip.001",
+                "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "252": {
+            "link": {
+                "name": "Chin.001",
+                "file": "assets\\models\\mr_NOT.fbx"
             }
         }
     },
@@ -5894,6 +6379,434 @@
                 ]
             },
             "pipeline": "194"
+        },
+        "234": {
+            "link": {
+                "name": "Gray",
+                "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "235": {
+            "link": {
+                "name": "White",
+                "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "236": {
+            "link": {
+                "name": "Dark Blue",
+                "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "237": {
+            "link": {
+                "name": "Dark Red",
+                "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "238": {
+            "link": {
+                "name": "Dark Gray",
+                "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "239": {
+            "link": {
+                "name": "Red",
+                "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "271": {
+            "link": {
+                "name": "Red",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "pipeline": "194",
+            "name": "Test"
+        },
+        "272": {
+            "name": "P8 Black",
+            "Phong": {
+                "diffuseColor": [
+                    0.1529411,
+                    0.7882353,
+                    0.5411764,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.0,
+                    0.2352941,
+                    0.1437908,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "273": {
+            "name": "P8 Dark Blue",
+            "Phong": {
+                "diffuseColor": [
+                    0.1286581,
+                    0.1908756,
+                    0.3686274,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.0486582,
+                    0.0645116,
+                    0.1098039,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "274": {
+            "name": "P8 Dark Red",
+            "Phong": {
+                "diffuseColor": [
+                    0.4509803,
+                    0.0990388,
+                    0.2804523,
+                    1.0
+                ],
+                "specularColor": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.1764705,
+                    0.0196078,
+                    0.0980392,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "275": {
+            "name": "P8 Dark Green",
+            "Phong": {
+                "diffuseColor": [
+                    0.1529411,
+                    0.7882353,
+                    0.5411764,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.0,
+                    0.2352941,
+                    0.1437908,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "276": {
+            "name": "P8 Brown",
+            "Phong": {
+                "diffuseColor": [
+                    0.1529411,
+                    0.7882353,
+                    0.5411764,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.0,
+                    0.2352941,
+                    0.1437908,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "277": {
+            "name": "P8 Dark Gray",
+            "Phong": {
+                "diffuseColor": [
+                    0.372549,
+                    0.3411764,
+                    0.3098039,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.1098039,
+                    0.1037754,
+                    0.097747,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "278": {
+            "name": "P8 Gray",
+            "Phong": {
+                "diffuseColor": [
+                    0.7607843,
+                    0.7647058,
+                    0.7803921,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.1803903,
+                    0.1803907,
+                    0.1803921,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "279": {
+            "name": "P8 White",
+            "Phong": {
+                "diffuseColor": [
+                    1.0,
+                    0.945098,
+                    0.9098039,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.3137254,
+                    0.2927569,
+                    0.2792771,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "280": {
+            "name": "P8 Red",
+            "Phong": {
+                "diffuseColor": [
+                    0.7333333,
+                    0.1380392,
+                    0.3177947,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.1647058,
+                    0.0155017,
+                    0.0605555,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "281": {
+            "name": "P8 Orange",
+            "Phong": {
+                "diffuseColor": [
+                    0.690196,
+                    0.4392156,
+                    0.0,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.2352941,
+                    0.1568627,
+                    0.0431372,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "282": {
+            "name": "P8 Yellow",
+            "Phong": {
+                "diffuseColor": [
+                    0.1529411,
+                    0.7882353,
+                    0.5411764,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.0,
+                    0.2352941,
+                    0.1437908,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "283": {
+            "name": "P8 Green",
+            "Phong": {
+                "diffuseColor": [
+                    0.1529411,
+                    0.7882353,
+                    0.5411764,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.0,
+                    0.2352941,
+                    0.1437908,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "284": {
+            "name": "P8 Blue",
+            "Phong": {
+                "diffuseColor": [
+                    0.1607843,
+                    0.6784313,
+                    1.0,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.0196078,
+                    0.117647,
+                    0.1764705,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "285": {
+            "name": "P8 Purple",
+            "Phong": {
+                "diffuseColor": [
+                    0.1529411,
+                    0.7882353,
+                    0.5411764,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.0,
+                    0.2352941,
+                    0.1437908,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "286": {
+            "name": "P8 Pink",
+            "Phong": {
+                "diffuseColor": [
+                    0.1529411,
+                    0.7882353,
+                    0.5411764,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.0,
+                    0.2352941,
+                    0.1437908,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "287": {
+            "name": "P8 Beige",
+            "Phong": {
+                "diffuseColor": [
+                    0.1529411,
+                    0.7882353,
+                    0.5411764,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.0,
+                    0.2352941,
+                    0.1437908,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
         }
     },
     "shaders": {
@@ -6032,7 +6945,8 @@
     "files": [
         "assets/models/quest_controllers_credits_Jezza3D.glb",
         "assets/models/ring.glb",
-        "assets/models/hand_piece.glb"
+        "assets/models/hand_piece.glb",
+        "assets/models/mr_NOT.fbx"
     ],
     "pipelines": {
         "69": {
