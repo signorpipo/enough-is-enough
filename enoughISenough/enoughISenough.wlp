@@ -336,7 +336,7 @@
                 },
                 {
                     "type": "pp-mute-all",
-                    "active": true
+                    "active": false
                 },
                 {
                     "type": "clear-console-on-session",
@@ -5392,8 +5392,8 @@
                 1.0,
                 0.0,
                 -5.960464477539063e-8,
-                23.1780529,
-                11.0099439,
+                3.0,
+                10.0,
                 1.0
             ]
         },
