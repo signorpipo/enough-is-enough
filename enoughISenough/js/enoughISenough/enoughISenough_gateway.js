@@ -19,6 +19,14 @@ WL.registerComponent("enough-IS-enough-gateway", {
     },
     start: function () {
         for (let entry of Global.myMeshObjects.entries()) {
+            PP.MeshUtils.setClonedMaterials(entry[1]);
+        }
+
+        for (let entry of Global.myGameObjects.entries()) {
+            PP.MeshUtils.setClonedMaterials(entry[1]);
+        }
+
+        for (let entry of Global.myMeshObjects.entries()) {
             Global.myObjectPoolMap.addPool(entry[0], entry[1], 5);
         }
 
