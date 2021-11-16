@@ -46,6 +46,8 @@ class TalkState extends PP.State {
         //Setup
         this._mySpawnTime = 1.5;
         this._myHideScale = 0.95;
+
+        this._myMrNOT = Global.myGameObjects.get(GameObjectType.MR_NOT);
     }
 
     update(dt, fsm) {
@@ -65,7 +67,6 @@ class TalkState extends PP.State {
     }
 
     _prepareMrNOTAppear() {
-        this._myMrNOT = Global.myObjectPoolMap.getObject(GameObjectType.MR_NOT);
         this._myMrNOT.pp_setPosition([0, 11, -18]);
         this._myMrNOT.pp_setRotation([40, 0, 0]);
         this._myMrNOT.pp_setScale([5, 5, 1]);
@@ -117,8 +118,7 @@ class TalkState extends PP.State {
 
             if (this._myTimer.isDone()) {
                 this._myTimer.reset();
-                Global.myObjectPoolMap.releaseObject(GameObjectType.MR_NOT, this._myMrNOT);
-                this._myMrNOT = null;
+                this._hideMrNOT();
                 fsm.perform("end");
             }
         }
@@ -129,8 +129,7 @@ class TalkState extends PP.State {
     }
 
     _hideMrNOT() {
-        Global.myObjectPoolMap.releaseObject(GameObjectType.MR_NOT, this._myMrNOT);
-        this._myMrNOT = null;
+        this._myMrNOT.pp_setActive(false);
     }
 
     _hideTalk() {
