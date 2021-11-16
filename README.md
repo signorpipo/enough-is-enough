@@ -1,2 +1,2 @@
 # enoughISenough
-Mr. Not does not want to leave me alone
+mr NOT does not want to leave me alone
