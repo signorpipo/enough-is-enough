@@ -1866,15 +1866,15 @@
                 0.0,
                 0.0,
                 -0.0000011,
-                -9.9999761,
+                -9.999895,
                 0.0,
                 0.0,
-                9.999999,
+                9.9999179,
                 -0.0000011,
                 0.0,
                 0.0,
-                0.0,
-                0.0,
+                -10.0,
+                -6.556510925292969e-7,
                 1.0
             ]
         },
@@ -2344,15 +2344,15 @@
             ],
             "transformation": [
                 -0.9999992,
-                -1.5099573147381307e-7,
-                8.742272683548436e-8,
+                -1.509957314738131e-7,
+                8.742272683548437e-8,
                 0.0,
                 -1.509958451606508e-7,
                 1.0,
-                -1.5099581673894137e-7,
+                -1.5099581673894139e-7,
                 0.0,
-                -8.742269841377493e-8,
-                -1.5099570305210364e-7,
+                -8.742269841377494e-8,
+                -1.5099570305210367e-7,
                 -0.9999992,
                 0.0,
                 0.0,
@@ -2390,7 +2390,7 @@
                 -0.0000015,
                 -1.0000129,
                 0.0,
-                -2.2351741790771486e-8,
+                -2.2351741790771489e-8,
                 0.000004,
                 -1.6630110621917994e-8,
                 1.0
@@ -3062,6 +3062,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -3312,6 +3315,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -3434,7 +3440,8 @@
                 {
                     "type": "mr_NOT_object",
                     "mr_NOT_object": {
-                        "_myMrNOT": "253"
+                        "_myMrNOT": "253",
+                        "_myMrNOTClone": "294"
                     }
                 }
             ]
@@ -4013,6 +4020,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -4138,6 +4148,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -4263,6 +4276,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -4388,6 +4404,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -4513,6 +4532,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -4638,6 +4660,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -4763,6 +4788,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -4888,6 +4916,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -5013,6 +5044,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -5138,6 +5172,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -5391,7 +5428,7 @@
                 0.0,
                 1.0,
                 0.0,
-                -5.960464477539063e-8,
+                -5.960464477539064e-8,
                 3.0,
                 10.0,
                 1.0
@@ -5416,7 +5453,7 @@
                 0.0,
                 1.0001062,
                 0.0,
-                -1.1920928955078128e-7,
+                -1.192092895507813e-7,
                 0.0,
                 0.0,
                 1.0
@@ -5596,7 +5633,7 @@
                 0.0,
                 1.0,
                 0.0,
-                -1.1920928955078128e-7,
+                -1.192092895507813e-7,
                 0.0,
                 0.0,
                 1.0
@@ -5730,7 +5767,7 @@
             "name": "Pivot",
             "parent": "253",
             "transformation": [
-                -2.5033875772351168e-7,
+                -2.503387577235117e-7,
                 -2.0999934,
                 0.0,
                 0.0,
@@ -5766,7 +5803,8 @@
                         }
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "289": {
             "name": "Light",
@@ -5896,6 +5934,475 @@
                 1.538599,
                 1.3278684,
                 1.0
+            ]
+        },
+        "293": {
+            "name": "Empty.011",
+            "parent": "175",
+            "deleted": true
+        },
+        "294": {
+            "link": {
+                "name": "mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "175",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -2.9652993,
+                3.0,
+                10.0,
+                1.0
+            ],
+            "name": "mr NOT clone"
+        },
+        "295": {
+            "name": "Pivot",
+            "parent": "294",
+            "transformation": [
+                -2.503387577235117e-7,
+                -2.0999934,
+                0.0,
+                0.0,
+                2.0999994,
+                -2.503394682662474e-7,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                2.0999999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "296": {
+            "link": {
+                "name": "Face<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "295",
+            "transformation": [
+                1.0265299,
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0266335,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0001062,
+                0.0,
+                -1.192092895507813e-7,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "components": [
+                {
+                    "mesh": {
+                        "material": "278"
+                    }
+                }
+            ]
+        },
+        "297": {
+            "link": {
+                "name": "Eyes<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "295",
+            "transformation": [
+                0.2319836,
+                -0.2319836,
+                0.0,
+                0.0,
+                0.2319836,
+                0.2319836,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.3280743,
+                0.0,
+                -0.1288685,
+                -0.1928114,
+                0.1347575,
+                1.0
+            ],
+            "components": [
+                {
+                    "mesh": {
+                        "material": "279"
+                    }
+                }
+            ]
+        },
+        "298": {
+            "link": {
+                "name": "Eye Details<Eyes<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "297"
+        },
+        "299": {
+            "link": {
+                "name": "Eyebrows<Eye Details<Eyes<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "298",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ]
+        },
+        "300": {
+            "link": {
+                "name": "Eye Bags<Eye Details<Eyes<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "298",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ]
+        },
+        "301": {
+            "link": {
+                "name": "Pupil<Eyes<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "297",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ]
+        },
+        "302": {
+            "link": {
+                "name": "Hairs<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "295",
+            "transformation": [
+                0.9,
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.9,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.8999999,
+                0.0,
+                -0.4215199,
+                3.4247932489961389e-8,
+                0.1457062,
+                1.0
+            ]
+        },
+        "303": {
+            "link": {
+                "name": "Lower Hairs<Hairs<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "302",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "274"
+                    }
+                }
+            ]
+        },
+        "304": {
+            "link": {
+                "name": "Middle Hairs<Hairs<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "302",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "274"
+                    }
+                }
+            ]
+        },
+        "305": {
+            "link": {
+                "name": "Upper Hairs<Hairs<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "302",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "274"
+                    }
+                }
+            ]
+        },
+        "306": {
+            "link": {
+                "name": "Lips<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "295",
+            "transformation": [
+                1.0,
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -1.192092895507813e-7,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "307": {
+            "link": {
+                "name": "Cheeks<Lips<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "306",
+            "transformation": [
+                0.0167054,
+                0.006022,
+                0.0,
+                0.0,
+                -0.006022,
+                0.0167054,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0267501,
+                0.0,
+                0.08764,
+                -0.3830379,
+                0.149324,
+                1.0
+            ],
+            "components": [
+                {
+                    "mesh": {
+                        "material": "277"
+                    }
+                }
+            ]
+        },
+        "308": {
+            "link": {
+                "name": "Between Lips<Lips<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "306",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ]
+        },
+        "309": {
+            "link": {
+                "name": "Lower Lip<Lips<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "306",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "280"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0000001,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.2732169,
+                -0.1226868,
+                0.1442078,
+                1.0
+            ]
+        },
+        "310": {
+            "link": {
+                "name": "Upper Lip<Lips<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "306",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "274"
+                    }
+                }
+            ]
+        },
+        "311": {
+            "link": {
+                "name": "Chin<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "295",
+            "transformation": [
+                0.0561547,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0561546,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0561547,
+                0.0,
+                0.3903079,
+                3.68108885595575e-8,
+                0.1356054,
+                1.0
+            ],
+            "components": [
+                {
+                    "mesh": {
+                        "material": "277"
+                    }
+                }
+            ]
+        },
+        "312": {
+            "name": "Collision 1",
+            "parent": "294",
+            "components": [
+                {
+                    "type": "collision",
+                    "collision": {
+                        "groups": 1,
+                        "collider": "sphere",
+                        "box": {
+                            "extents": [
+                                1.0,
+                                1.0,
+                                0.3
+                            ]
+                        },
+                        "sphere": {
+                            "radius": 1.1
+                        }
+                    }
+                }
+            ]
+        },
+        "313": {
+            "name": "Collision 2",
+            "parent": "294",
+            "components": [
+                {
+                    "type": "collision",
+                    "collision": {
+                        "groups": 1,
+                        "collider": "box",
+                        "box": {
+                            "extents": [
+                                1.0,
+                                1.0,
+                                0.2
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "314": {
+            "name": "Trigger",
+            "parent": "50",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                -0.0099998,
+                0.05,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "collision",
+                    "collision": {
+                        "sphere": {
+                            "radius": 0.0799999
+                        },
+                        "groups": 1
+                    }
+                },
+                {
+                    "type": "pp-grab",
+                    "pp-grab": {
+                        "_myHandedness": "left",
+                        "_myGrabButton": "squeeze",
+                        "_myThrowVelocitySource": "hand",
+                        "_myThrowMaxLinearSpeed": 15.0,
+                        "_myThrowMaxAngularSpeed": 1080.0,
+                        "_myThrowLinearSpeedBoost": 1.75
+                    }
+                }
             ]
         }
     },

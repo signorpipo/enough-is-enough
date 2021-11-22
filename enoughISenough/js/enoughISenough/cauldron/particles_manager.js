@@ -69,7 +69,7 @@ class ExplosionParticles {
 class ExplosionParticle {
     constructor(position, scale, objectType) {
         this._myObjectType = objectType;
-        this._myObject = Global.myObjectPoolMap.getObject(objectType);
+        this._myObject = Global.myMeshObjectPoolMap.getObject(objectType);
         this._myObject.pp_setPosition(position);
         this._myObject.pp_setScale(scale);
         this._myScale = this._myObject.pp_getScale();
@@ -87,7 +87,7 @@ class ExplosionParticle {
             this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
 
             if (this._myTimer.isDone()) {
-                Global.myObjectPoolMap.releaseObject(this._myObjectType, this._myObject);
+                Global.myMeshObjectPoolMap.releaseObject(this._myObjectType, this._myObject);
                 this._myObject = null;
             }
         }

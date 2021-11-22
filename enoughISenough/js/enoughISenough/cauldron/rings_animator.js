@@ -15,6 +15,8 @@ WL.registerComponent("rings-animator", {
         Global.myRingRadius = 0.65;
     },
     start: function () {
+        PP.MeshUtils.setAlpha(this._myRing, 0);
+        PP.MeshUtils.setAlpha(this._mySmallerRing, 0);
         this._myRing.pp_setPosition([0, -1, 0]);
         this._mySmallerRing.pp_setPosition([0, -1, 0]);
 
@@ -31,11 +33,21 @@ WL.registerComponent("rings-animator", {
         this._mySmallerRing.pp_setPosition([0, -this._mySmallerRing.pp_getScale()[1] - 0.001, 0]);
 
         this._myTimer = new PP.Timer(5);
-
-        this._myRingAudio.play();
+        this._myAudioTimer = new PP.Timer(0.05);
     },
     moveUp: function (dt, fsm) {
         this._myTimer.update(dt);
+        this._myAudioTimer.update(dt);
+        if (this._myAudioTimer.isDone()) {
+            this._myAudioTimer.reset();
+
+            this._myRingAudio.play();
+        }
+
+        let alphaInterpolationValue = Math.pp_mapToNewInterval(this._myTimer.getPercentage(), 0, 0.5, 0, 1);
+        let alphaValue = PP.EasingFunction.easeOut(alphaInterpolationValue);
+        PP.MeshUtils.setAlpha(this._myRing, alphaValue);
+        PP.MeshUtils.setAlpha(this._mySmallerRing, alphaValue);
 
         let startPositionRing = -0.2;
         let startPositionSmallerRing = -0.6;

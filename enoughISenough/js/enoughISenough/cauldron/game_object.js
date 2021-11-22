@@ -18,5 +18,6 @@ var GameObjectType = {
     MEDITATION: 15,
     LOL: 16,
     EARRING: 17,
-    SKATING: 18
+    SKATING: 18,
+    MR_NOT_CLONE: 19,
 };

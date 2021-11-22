@@ -132,6 +132,14 @@ Array.prototype.pp_findAll = function (callback) {
     return elementsFound;
 };
 
+Array.prototype.pp_findEqual = function (elementToFind) {
+    return this.pp_find(element => element === elementToFind);
+};
+
+Array.prototype.pp_findAllEqual = function (elementToFind) {
+    return this.pp_findAll(element => element === elementToFind);
+};
+
 Array.prototype.pp_removeIndex = function (index) {
     let elementRemoved = undefined;
 
@@ -170,12 +178,12 @@ Array.prototype.pp_removeAll = function (callback) {
     return elementsRemoved;
 };
 
-Array.prototype.pp_removeEqual = function (elementToFind) {
-    return this.pp_remove(element => element === elementToFind);
+Array.prototype.pp_removeEqual = function (elementToRemove) {
+    return this.pp_remove(element => element === elementToRemove);
 };
 
-Array.prototype.pp_removeAllEqual = function (elementToFind) {
-    return this.pp_removeAll(element => element === elementToFind);
+Array.prototype.pp_removeAllEqual = function (elementToRemove) {
+    return this.pp_removeAll(element => element === elementToRemove);
 };
 
 Array.prototype.pp_clone = function () {

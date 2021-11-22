@@ -120,7 +120,7 @@ Fase 3:
 - 3 - Game Dev  (pupazzetto di ant)
 
 Fase 4:
-- 3 - Kingdom Hearts  (corona)
+- 3 - Kingdom Hearts  (corona) (trovavia)
 
 Mr NOT:
 - Glad to see you again
@@ -176,3 +176,11 @@ EXTRA:
 - evidence bussola che se tenuto in mano mostra da dove arriva mr not
 - rallentare oggetti mentre scompaiono tipo quando cadono per evitare di fermali completamente e invece lasciarli andare troppo lontano mentre esplodono enough is enough
 - dare nomi alle fasi
+- altezza variable (almeno in step, a seconda dell'altezza una volta dentro il gioco, con reset?)
+
+TO DO:
+- mr NOT testa che gira
+- mr NOT pannello nero fix alpha
+- se esci fuori un mr NOT clone arriva e ti not enougha nel mezzo (ascoltare evento di reset della view?)
+- regolare le luci
+- vibrazioni? sfx?

@@ -365,7 +365,7 @@ class MenuItem {
     }
 
     _readyUpdate(dt) {
-        if (this._myObject.pp_getPosition()[1] <= 0.05 || this._myObject.pp_getPosition()[1] > 20 || this._myObject.pp_getPosition().vec3_length() > 50) {
+        if (this._myObject.pp_getPosition()[1] <= -6 || this._myObject.pp_getPosition()[1] > 20 || this._myObject.pp_getPosition().vec3_length() > 50) {
             if (this._myCallbackOnFall && WL.xrSession && this._myThrowTimer.isRunning()) {
                 this._myCallbackOnFall();
             }

@@ -88,6 +88,9 @@ class Evidence {
     }
 
     _startSpawn() {
+        this._myEvidenceComponent = this._myObject.pp_getComponentHierarchy("evidence-component");
+        this._myEvidenceComponent.setCallbackOnHit(this._onHit.bind(this));
+
         this._myObject.pp_setPosition(this._myPosition);
         this._myObject.pp_setScale(0);
         this._myObject.pp_translate([0, 0.2, 0]);
@@ -120,7 +123,7 @@ class Evidence {
     }
 
     _readyUpdate(dt) {
-        if (this._myObject.pp_getPosition()[1] <= 0.05 || this._myObject.pp_getPosition()[1] > 20 || this._myObject.pp_getPosition().vec3_length() > 50) {
+        if (this._myObject.pp_getPosition()[1] <= -6 || this._myObject.pp_getPosition()[1] > 20 || this._myObject.pp_getPosition().vec3_length() > 50) {
             this._myFSM.perform("unspawn");
         }
     }
@@ -166,6 +169,10 @@ class Evidence {
             (this._myFSM.getCurrentState().myID == "spawning")) {
             this._myPhysx.kinematic = false;
         }
+    }
+
+    _onHit() {
+        this._myFSM.perform("unspawn");
     }
 }
 

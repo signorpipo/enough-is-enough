@@ -27,6 +27,7 @@ class ObjectPoolMap {
 
 class ObjectPool {
     constructor(poolObject, initialPoolSize, cloneParams) {
+        this._myCloneParams = cloneParams;
         this._myPrototype = poolObject.pp_clone(cloneParams);
 
         this._myAvailableObjects = [];
@@ -58,7 +59,7 @@ class ObjectPool {
 
     _addToPool(size, log) {
         for (let i = 0; i < size; i++) {
-            this._myAvailableObjects.push(this._myPrototype.pp_clone());
+            this._myAvailableObjects.push(this._myPrototype.pp_clone(this._myCloneParams));
         }
 
         if (log) {

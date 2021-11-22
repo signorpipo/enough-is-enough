@@ -7,7 +7,8 @@ WL.registerComponent("enough-IS-enough-gateway", {
     init: function () {
         Global.myAudioManager = new PP.AudioManager();
         Global.myParticlesManager = new ParticlesManager();
-        Global.myObjectPoolMap = new ObjectPoolMap();
+        Global.myMeshObjectPoolMap = new ObjectPoolMap();
+        Global.myGameObjectPoolMap = new ObjectPoolMap();
         Global.myScene = this.object;
 
         Global.myPlayerRumbleObject = this._myPlayerRumbleObject;
@@ -27,12 +28,18 @@ WL.registerComponent("enough-IS-enough-gateway", {
         }
 
         for (let entry of Global.myMeshObjects.entries()) {
-            Global.myObjectPoolMap.addPool(entry[0], entry[1], 5);
+            Global.myMeshObjectPoolMap.addPool(entry[0], entry[1], 5);
         }
+
+        let cloneParams = new PP.CloneParams();
+        cloneParams.myMesh_MaterialDeepCloneOverride = true;
+        Global.myGameObjectPoolMap.addPool(GameObjectType.MR_NOT_CLONE, Global.myGameObjects.get(GameObjectType.MR_NOT_CLONE), 10, cloneParams);
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float", 0, 0.1, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Int", 0, 1));
         PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Bool", false));
+
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("mr NOT Clone Scale", 0.45, 0.1, 3));
 
         this.enoughISenough.start();
     },
@@ -58,7 +65,8 @@ var Global = {
     myTitlesRumbleObject: null,
     myTitleObject: null,
     mySubtitleObject: null,
-    myObjectPoolMap: null,
+    myMeshObjectPoolMap: null,
+    myGameObjectPoolMap: null,
     myMaterials: null,
     myStoryDuration: 0,
     myVentDuration: 0,
