@@ -44,7 +44,7 @@ class MrNOTClone {
         this._myCollisions = this._myObject.pp_getComponentsHierarchy("collision");
 
         //Setup
-        this._myReachTargetDistance = 0.30;
+        this._myReachTargetDistance = Global.myRingRadius * 2;
     }
 
     update(dt) {
@@ -80,9 +80,9 @@ class MrNOTClone {
         this._myObject.pp_translateObject(this._myTempTranslation);
 
         this._myObject.pp_getPosition(this._myCurrentPosition);
-        let distanceToTarget = this._myTargetPosition.vec3_sub(this._myCurrentPosition).vec3_length();
-        let distanceToTargetFromStart = this._myTargetPosition.vec3_sub(this._myStartPosition).vec3_length();
-        let distanceToCurrentFromStart = this._myStartPosition.vec3_sub(this._myCurrentPosition).vec3_length();
+        let distanceToTarget = this._myTargetPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myCurrentPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
+        let distanceToTargetFromStart = this._myTargetPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myStartPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
+        let distanceToCurrentFromStart = this._myStartPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myCurrentPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
 
         if (distanceToTarget < this._myReachTargetDistance || distanceToTargetFromStart < distanceToCurrentFromStart) {
             if (this._myCallbackOnReach) {
@@ -116,9 +116,12 @@ class MrNOTClone {
                     }
 
                     if (isColliding) {
-                        hit = true;
-                        hittingObject = collidingComponent.object;
-                        break;
+                        let evidenceComponent = collidingComponent.object.pp_getComponent("evidence-component");
+                        if (evidenceComponent.getEvidence().canHit()) {
+                            hit = true;
+                            hittingObject = collidingComponent.object;
+                            break;
+                        }
                     }
                 }
             }

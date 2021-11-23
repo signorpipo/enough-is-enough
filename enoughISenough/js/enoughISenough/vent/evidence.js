@@ -17,6 +17,7 @@ class Evidence {
         this._myObjectType = this._myEvidenceSetup.myObjectType;
         this._myPhysx = this._myObject.pp_getComponentHierarchy("physx");
         this._myGrabbable = this._myObject.pp_getComponentHierarchy("pp-grabbable");
+        this._myGrabbable.registerGrabEventListener(this, this._onGrab.bind(this));
         this._myScale = this._myObject.pp_getScale();
 
         this._myCurrentCardinalPosition = null;
@@ -46,6 +47,8 @@ class Evidence {
         this.init();
 
         this._myPhysx.onCollision(this._onCollision.bind(this));
+        this._myCollisionCount = 0;
+        this._myHasBeenGrabbed = false;
     }
 
     getEvidenceSetup() {
@@ -83,6 +86,11 @@ class Evidence {
         this._disableObject();
     }
 
+    canHit() {
+        let distanceFromCenter = this._myObject.pp_getPosition().vec3_removeComponentAlongAxis([0, 1, 0]).vec3_length();
+        return this._myHasBeenGrabbed && !this._myGrabbable.isGrabbed() && distanceFromCenter > Global.myRingRadius * 1.5/*(this._myGrabbable.isGrabbed() || this._myCollisionCount == 0)*/;
+    }
+
     _reset(fsm, transition) {
         this._disableObject();
     }
@@ -90,6 +98,8 @@ class Evidence {
     _startSpawn() {
         this._myEvidenceComponent = this._myObject.pp_getComponentHierarchy("evidence-component");
         this._myEvidenceComponent.setCallbackOnHit(this._onHit.bind(this));
+        this._myEvidenceComponent.setEvidence(this);
+        this._myHasBeenGrabbed = false;
 
         this._myObject.pp_setPosition(this._myPosition);
         this._myObject.pp_setScale(0);
@@ -164,15 +174,25 @@ class Evidence {
         this._myObject.pp_setActive(false);
     }
 
-    _onCollision() {
+    _onCollision(type) {
         if (!this._myGrabbable.isGrabbed() && this._myPhysx.active && this._myPhysx.kinematic &&
             (this._myFSM.getCurrentState().myID == "spawning")) {
             this._myPhysx.kinematic = false;
+        }
+
+        if (type == WL.CollisionEventType.TouchLost) {
+            this._myCollisionCount -= 1;
+        } else {
+            this._myCollisionCount += 1;
         }
     }
 
     _onHit() {
         this._myFSM.perform("unspawn");
+    }
+
+    _onGrab() {
+        this._myHasBeenGrabbed = true;
     }
 }
 

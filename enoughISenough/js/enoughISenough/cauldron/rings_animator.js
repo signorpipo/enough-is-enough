@@ -72,6 +72,10 @@ WL.registerComponent("rings-animator", {
     skip: function () {
         this._myRing.pp_setPosition([0, this._myRingsHeight, 0]);
         this._mySmallerRing.pp_setPosition([0, this._myRingsHeight, 0]);
+
+        PP.MeshUtils.setAlpha(this._myRing, 1);
+        PP.MeshUtils.setAlpha(this._mySmallerRing, 1);
+
         this._myRingAudio.stop();
 
         this._myFSM.perform("end");
