@@ -42,7 +42,6 @@ class EvidenceManager {
 
     clean() {
         this._myFSM.perform("startClean");
-
     }
 
     hide() {
@@ -123,8 +122,8 @@ class EvidenceManager {
         }
 
         let done = true;
-        for (let item of this._myCurrentMenuItems) {
-            done = done && item.isInactive();
+        for (let item of this._myActiveEvidences) {
+            done = done && item[0].isInactive();
         }
 
         if (done) {
@@ -137,7 +136,7 @@ class EvidenceManager {
 
         let indexList = [];
         for (let i = 0; i < this._myActiveEvidences.length; i++) {
-            if (this._myActiveEvidences[0][i].canUnspawn()) {
+            if (this._myActiveEvidences[i][0].canUnspawn()) {
                 indexList.push(i);
             }
         }
@@ -147,7 +146,10 @@ class EvidenceManager {
             let index = indexList.pp_removeIndex(randomIndex);
 
             let randomTimer = Math.pp_random(0.20, 0.25);
-            this._myUnspawnList.push([this._myActiveEvidences[0][index], new PP.Timer(randomTimer)]);
+            if (this._myUnspawnList.length == 0) {
+                randomTimer += 0.2;
+            }
+            this._myUnspawnList.push([this._myActiveEvidences[index][0], new PP.Timer(randomTimer)]);
         }
     }
 
@@ -166,8 +168,8 @@ class EvidenceManager {
         }
 
         let done = true;
-        for (let item of this._myCurrentMenuItems) {
-            done = done && item.isInactive();
+        for (let item of this._myActiveEvidences) {
+            done = done && item[0].isInactive();
         }
 
         if (done) {

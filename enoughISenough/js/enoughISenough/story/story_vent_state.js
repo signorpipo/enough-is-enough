@@ -33,6 +33,10 @@ class StoryVentState extends PP.State {
 
         this._myEvidenceManager = new EvidenceManager(evidenceSetupList);
         this._myVent = new Vent();
+        this._myVent.onVentLost(this._onVentLost.bind(this));
+        this._myVent.onVentCompleted(this._onVentCompleted.bind(this));
+
+        this._myNotEnough = new NotEnough();
     }
 
     update(dt, fsm) {
@@ -71,18 +75,29 @@ class StoryVentState extends PP.State {
 
     _prepareClean() {
         this._myEvidenceManager.clean();
+        this._myVent.clean();
     }
 
     _updateClean(dt, fsm) {
+        this._myVent.update(dt);
 
+        if (this._myEvidenceManager.isDone() && this._myVent.isDone()) {
+            this._myFSM.perform("end");
+        }
     }
 
     _prepareDefeat() {
         this._myEvidenceManager.explode();
+        this._myVent.stop();
+        this._myNotEnough.start();
     }
 
     _updateDefeat(dt, fsm) {
+        this._myNotEnough.update(dt);
 
+        if (this._myEvidenceManager.isDone() && !this._myNotEnough.isNotEnoughing()) {
+            this._myFSM.perform("end");
+        }
     }
 
     _ventCompleted() {
@@ -115,5 +130,13 @@ class StoryVentState extends PP.State {
         if (!this._myFSM.isInState("done")) {
             this._myFSM.perform("skip");
         }
+    }
+
+    _onVentLost() {
+        this._myFSM.perform("defeat");
+    }
+
+    _onVentCompleted() {
+        this._myFSM.perform("end");
     }
 }

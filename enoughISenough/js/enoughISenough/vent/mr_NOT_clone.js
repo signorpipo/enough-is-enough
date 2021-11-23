@@ -37,6 +37,8 @@ class MrNOTClone {
         this._myFSM.addTransition("init", "move", "start");
         this._myFSM.addTransition("move", "unspawning", "unspawn");
         this._myFSM.addTransition("unspawning", "inactive", "end");
+        this._myFSM.addTransition("move", "inactive", "destroy");
+        this._myFSM.addTransition("unspawning", "inactive", "destroy");
 
         this._myFSM.init("init");
         this._myFSM.perform("start");
@@ -52,7 +54,9 @@ class MrNOTClone {
     }
 
     unspawn() {
-        this._mySpawnTimer.start(PP.myEasyTuneVariables.get("Unspawn Menu Time"));
+        if (this._myFSM.canPerform("unspawn")) {
+            this._mySpawnTimer.start(PP.myEasyTuneVariables.get("Unspawn Menu Time"));
+        }
         this._myFSM.perform("unspawn");
     }
 
@@ -63,6 +67,7 @@ class MrNOTClone {
     destroy() {
         Global.myGameObjectPoolMap.releaseObject(GameObjectType.MR_NOT_CLONE, this._myObject);
         this._myObject = null;
+        this._myFSM.perform("destroy");
     }
 
     _move(dt) {
@@ -85,13 +90,16 @@ class MrNOTClone {
         let distanceToCurrentFromStart = this._myStartPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myCurrentPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
 
         if (distanceToTarget < this._myReachTargetDistance || distanceToTargetFromStart < distanceToCurrentFromStart) {
-            if (this._myCallbackOnReach) {
-                this._myCallbackOnReach(this);
+            if (PP.myEasyTuneVariables.get("Prevent Vent Lost")) {
+                this.unspawn();
+            } else {
+                if (this._myCallbackOnReach) {
+                    this._myCallbackOnReach(this);
+                }
             }
-            this.unspawn();
+        } else {
+            this._checkHit();
         }
-
-        this._checkHit();
     }
 
     _checkHit() {
@@ -128,12 +136,12 @@ class MrNOTClone {
         }
 
         if (hit) {
-            if (this._myCallbackOnHit) {
-                this._myCallbackOnHit(this, hittingObject);
-            }
             let evidence = hittingObject.pp_getComponent("evidence-component");
             evidence.hit(this._myObject);
             this.unspawn();
+            if (this._myCallbackOnHit) {
+                this._myCallbackOnHit(this, hittingObject);
+            }
         }
     }
 
