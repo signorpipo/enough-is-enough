@@ -28,9 +28,8 @@ class VentState extends PP.State {
         this._myFSM.addTransition("second_wait_clean", "done", "skip");
         this._myFSM.addTransition("second_wait_defeat", "done", "skip");
         this._myFSM.addTransition("vent", "done", "skip", this._hideVent.bind(this));
-        this._myFSM.addTransition("vent", "done", "skip", this._hideVent.bind(this));
-        this._myFSM.addTransition("clean", "done", "skip", this._hideEvidences.bind(this));
-        this._myFSM.addTransition("defeat", "done", "skip", this._hideEvidences.bind(this));
+        this._myFSM.addTransition("clean", "done", "skip", this._hideVent.bind(this));
+        this._myFSM.addTransition("defeat", "done", "skip", this._hideVent.bind(this));
 
         this._myFSM.init("init");
 
@@ -50,6 +49,7 @@ class VentState extends PP.State {
 
         this._myFSM.update(dt);
         this._myEvidenceManager.update(dt);
+        this._myVent.update(dt);
 
         if (Global.myDebugShortcutsEnabled) {
             //TEMP REMOVE THIS
@@ -76,7 +76,6 @@ class VentState extends PP.State {
     }
 
     _updateVent(dt, fsm) {
-        this._myVent.update(dt);
     }
 
     _prepareClean() {
@@ -85,8 +84,6 @@ class VentState extends PP.State {
     }
 
     _updateClean(dt, fsm) {
-        this._myVent.update(dt);
-
         if (this._myEvidenceManager.isDone() && this._myVent.isDone()) {
             this._myFSM.perform("end");
         }

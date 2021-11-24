@@ -7,7 +7,7 @@ class Vent {
         this._myOnVentLostCallback = null;
         this._myOnVentCompletedCallback = null;
 
-        this._myIsCleaning = false;
+        this._myIsCleaning = true;
         this._myHitCounter = 0;
 
         //Setup
@@ -52,6 +52,8 @@ class Vent {
     }
 
     stop() {
+        this._myIsCleaning = true;
+
         for (let clone of this._myMrNOTClones) {
             clone.destroy();
         }

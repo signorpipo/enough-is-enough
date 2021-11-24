@@ -177,6 +177,8 @@ EXTRA:
 - rallentare oggetti mentre scompaiono tipo quando cadono per evitare di fermali completamente e invece lasciarli andare troppo lontano mentre esplodono enough is enough
 - dare nomi alle fasi
 - altezza variable (almeno in step, a seconda dell'altezza una volta dentro il gioco, con reset?)
+- aggiungere mr not particles quando not enougha (?)
+
 
 TO DO:
 - rimuovere i debug
