@@ -4,9 +4,9 @@ class MrNOT {
 
         this._myStartPosition = [0, 11, -18];
         this._myRotation = [40, 0, 0];
-        this._myScale = [5, 5, 1];
+        this._myScale = [5, 5, 5];
 
-        this._myTargetPosition = [0, 1.7, 0];
+        this._myTargetPosition = [0, 0, 0];
         this._myDirection = this._myTargetPosition.vec3_sub(this._myStartPosition);
 
         this._myTimeToReachTarget = 10;
@@ -15,7 +15,7 @@ class MrNOT {
         this._myCallbackOnReach = callbackOnReach;
         this._myCallbackOnExplosionDone = callbackOnExplosionDone;
 
-        this._mySpeed = this._myTargetPosition.vec3_sub(this._myStartPosition).vec3_length() / 10;
+        this._mySpeed = this._myTargetPosition.vec3_sub(this._myStartPosition).vec3_length() / 20;
 
         this._myFSM = new PP.FSM();
 
@@ -39,7 +39,7 @@ class MrNOT {
         this._myCollisions = this._myObject.pp_getComponentsHierarchy("collision");
 
         //Setup
-        this._myReachTargetDistance = Global.myRingRadius * 2;
+        this._myReachTargetDistance = 4;
         this._myMinTargetDistance = 10;
     }
 
@@ -140,7 +140,7 @@ class MrNOT {
 
             //spawn particles
 
-            this._myPatience -= 1;
+            this._myPatience -= 0;
             if (this._myPatience < 0) {
                 let distanceToTarget = this._myTargetPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myCurrentPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
                 if (distanceToTarget > this._myMinTargetDistance) {
