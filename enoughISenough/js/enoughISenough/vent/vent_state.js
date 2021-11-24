@@ -1,27 +1,32 @@
-class StoryVentState extends PP.State {
-    constructor(storyIndex, evidenceSetupList) {
+class VentState extends PP.State {
+    constructor(ventSetup, evidenceSetupList) {
         super();
 
         this._myFSM = new PP.FSM();
         //this._myFSM.setDebugLogActive(true, "        Vent");
         this._myFSM.addState("init");
-        this._myFSM.addState("first_wait", new PP.TimerState(0.5, "end"));
+        this._myFSM.addState("first_wait", new PP.TimerState(1.5, "end"));
         this._myFSM.addState("vent", this._updateVent.bind(this));
         this._myFSM.addState("clean", this._updateClean.bind(this));
         this._myFSM.addState("defeat", this._updateDefeat.bind(this));
-        this._myFSM.addState("second_wait", new PP.TimerState(0.5, "end"));
+        this._myFSM.addState("second_wait_clean", new PP.TimerState(0, "end"));
+        this._myFSM.addState("second_wait_defeat", new PP.TimerState(0, "end"));
         this._myFSM.addState("done");
 
         this._myFSM.addTransition("init", "first_wait", "start", this._prepareState.bind(this));
         this._myFSM.addTransition("first_wait", "vent", "end", this._prepareVent.bind(this));
         this._myFSM.addTransition("vent", "clean", "end", this._prepareClean.bind(this));
         this._myFSM.addTransition("vent", "defeat", "defeat", this._prepareDefeat.bind(this));
-        this._myFSM.addTransition("clean", "done", "end", this._ventCompleted.bind(this));
-        this._myFSM.addTransition("defeat", "done", "end", this._ventLost.bind(this));
+        this._myFSM.addTransition("clean", "second_wait_clean", "end");
+        this._myFSM.addTransition("defeat", "second_wait_defeat", "end");
+        this._myFSM.addTransition("second_wait_clean", "done", "end", this._ventCompleted.bind(this));
+        this._myFSM.addTransition("second_wait_defeat", "done", "end", this._ventLost.bind(this));
         this._myFSM.addTransition("done", "first_wait", "start", this._prepareState.bind(this));
 
         this._myFSM.addTransition("init", "done", "skip");
         this._myFSM.addTransition("first_wait", "done", "skip");
+        this._myFSM.addTransition("second_wait_clean", "done", "skip");
+        this._myFSM.addTransition("second_wait_defeat", "done", "skip");
         this._myFSM.addTransition("vent", "done", "skip", this._hideVent.bind(this));
         this._myFSM.addTransition("vent", "done", "skip", this._hideVent.bind(this));
         this._myFSM.addTransition("clean", "done", "skip", this._hideEvidences.bind(this));
@@ -32,7 +37,8 @@ class StoryVentState extends PP.State {
         this._myParentFSM = null;
 
         this._myEvidenceManager = new EvidenceManager(evidenceSetupList);
-        this._myVent = new Vent();
+
+        this._myVent = new Vent(ventSetup);
         this._myVent.onVentLost(this._onVentLost.bind(this));
         this._myVent.onVentCompleted(this._onVentCompleted.bind(this));
 

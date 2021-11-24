@@ -1,5 +1,6 @@
 WL.registerComponent('evidence-objects', {
     _myStoryTimer: { type: WL.Type.Object },
+    _myVentTimer: { type: WL.Type.Object },
     _myDrawing: { type: WL.Type.Object },
     _myCPlusPlus: { type: WL.Type.Object },
     _myPiano: { type: WL.Type.Object },
@@ -12,6 +13,7 @@ WL.registerComponent('evidence-objects', {
 }, {
     init: function () {
         Global.myGameObjects.set(GameObjectType.STORY_TIMER, this._myStoryTimer);
+        Global.myGameObjects.set(GameObjectType.VENT_TIMER, this._myVentTimer);
         Global.myGameObjects.set(GameObjectType.DRAWING, this._myDrawing);
         Global.myGameObjects.set(GameObjectType.CPLUSPLUS, this._myCPlusPlus);
         Global.myGameObjects.set(GameObjectType.PIANO, this._myPiano);
@@ -25,6 +27,7 @@ WL.registerComponent('evidence-objects', {
         let cloneParams = new PP.CloneParams();
         cloneParams.myComponentsToInclude.push("mesh");
         Global.myMeshObjects.set(GameObjectType.STORY_TIMER, this._myStoryTimer.pp_clone(cloneParams));
+        Global.myMeshObjects.set(GameObjectType.VENT_TIMER, this._myVentTimer.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.DRAWING, this._myDrawing.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.CPLUSPLUS, this._myCPlusPlus.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.PIANO, this._myPiano.pp_clone(cloneParams));

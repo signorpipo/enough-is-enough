@@ -9,7 +9,7 @@ class TalkState extends PP.State {
         this._myFSM.addState("mr_not_appear", this._updateMrNOTAppear.bind(this));
         this._myFSM.addState("talk", this._updateTalk.bind(this));
         this._myFSM.addState("mr_not_disappear", this._updateMrNOTDisappear.bind(this));
-        this._myFSM.addState("second_wait", new PP.TimerState(0.5, "end"));
+        this._myFSM.addState("second_wait", new PP.TimerState(0, "end"));
         this._myFSM.addState("done");
 
         if (isDefeat) {

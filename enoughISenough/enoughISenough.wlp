@@ -336,7 +336,7 @@
                 },
                 {
                     "type": "pp-mute-all",
-                    "active": false
+                    "active": true
                 },
                 {
                     "type": "clear-console-on-session",
@@ -2345,14 +2345,14 @@
             "transformation": [
                 -0.9999992,
                 -1.509957314738131e-7,
-                8.742272683548437e-8,
+                8.742272683548438e-8,
                 0.0,
                 -1.509958451606508e-7,
                 1.0,
-                -1.5099581673894139e-7,
+                -1.509958167389414e-7,
                 0.0,
-                -8.742269841377494e-8,
-                -1.5099570305210367e-7,
+                -8.742269841377497e-8,
+                -1.509957030521037e-7,
                 -0.9999992,
                 0.0,
                 0.0,
@@ -3425,7 +3425,8 @@
                         "_myMeditation": "201",
                         "_myLoL": "198",
                         "_myEarring": "222",
-                        "_mySkating": "225"
+                        "_mySkating": "225",
+                        "_myVentTimer": "317"
                     }
                 }
             ]
@@ -4858,7 +4859,7 @@
             ]
         },
         "219": {
-            "name": "Timer",
+            "name": "Story Timer",
             "parent": "174",
             "transformation": [
                 0.1,
@@ -5428,7 +5429,7 @@
                 0.0,
                 1.0,
                 0.0,
-                -5.960464477539064e-8,
+                -5.960464477539065e-8,
                 3.0,
                 10.0,
                 1.0
@@ -6403,6 +6404,233 @@
                         "_myThrowLinearSpeedBoost": 1.75
                     }
                 }
+            ]
+        },
+        "315": {
+            "name": "Story Timer",
+            "parent": "174",
+            "transformation": [
+                0.1,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.1,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.1,
+                0.0,
+                1.2196749,
+                1.0414513,
+                6.4806809,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "8",
+                            "scaling": [
+                                0.1,
+                                0.1,
+                                0.1
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "aabb": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.1
+                            ]
+                        },
+                        "groups": 1,
+                        "box": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.1
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "evidence-component"
+                }
+            ],
+            "deleted": true
+        },
+        "316": {
+            "name": "Mesh",
+            "parent": "315",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "8",
+                        "material": "26"
+                    },
+                    "active": true
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "deleted": true
+        },
+        "317": {
+            "name": "Vent Timer",
+            "parent": "174",
+            "transformation": [
+                0.1,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.1,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.1,
+                0.0,
+                1.2196749,
+                1.0414513,
+                6.4806809,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "8",
+                            "scaling": [
+                                0.1,
+                                0.1,
+                                0.1
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "aabb": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.1
+                            ]
+                        },
+                        "groups": 1,
+                        "box": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.1
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "evidence-component"
+                }
+            ]
+        },
+        "318": {
+            "name": "Mesh",
+            "parent": "317",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "8",
+                        "material": "26"
+                    },
+                    "active": true
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "319": {
+            "name": "Nose",
+            "parent": "318",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "9",
+                        "material": "106"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.8999999,
+                1.0
             ]
         }
     },

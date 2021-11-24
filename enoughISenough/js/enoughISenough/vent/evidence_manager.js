@@ -75,10 +75,12 @@ class EvidenceManager {
         while (cardinalPositions.length > 0) {
             let randomIndex = Math.pp_randomInt(0, cardinalPositions.length - 1);
             let cardinalPosition = cardinalPositions.pp_removeIndex(randomIndex);
-            let time = times.shift();
 
             let evidence = this._getInactiveEvidence(cardinalPosition);
-            this._myToSpawnEvidences.push([evidence, cardinalPosition, new PP.Timer(time)]);
+            if (evidence) {
+                let time = times.shift();
+                this._myToSpawnEvidences.push([evidence, cardinalPosition, new PP.Timer(time)]);
+            }
         }
     }
 

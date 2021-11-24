@@ -179,6 +179,7 @@ EXTRA:
 - altezza variable (almeno in step, a seconda dell'altezza una volta dentro il gioco, con reset?)
 
 TO DO:
+- rimuovere i debug
 - mr NOT testa che gira
 - mr NOT pannello nero fix alpha
 - se esci fuori un mr NOT clone arriva e ti not enougha nel mezzo (ascoltare evento di reset della view?)

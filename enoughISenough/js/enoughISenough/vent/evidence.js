@@ -1,10 +1,11 @@
 class EvidenceSetup {
-    constructor(objectType, randomChance, startSpawnTime = null, endSpawnTime = null, cardinalPositions = null) {
+    constructor(objectType, randomChance, startSpawnTime = null, endSpawnTime = null, cardinalPositions = null, callbackOnUnspawned = null) {
         this.myObjectType = objectType;
         this.myRandomChance = randomChance;
         this.myStartSpawnTime = startSpawnTime;
         this.myEndSpawnTime = endSpawnTime;
         this.myCardinalPositions = cardinalPositions;
+        this.myCallbackOnUnspawned = callbackOnUnspawned;
     }
 }
 
@@ -17,7 +18,7 @@ class Evidence {
         this._myObjectType = this._myEvidenceSetup.myObjectType;
         this._myPhysx = this._myObject.pp_getComponentHierarchy("physx");
         this._myGrabbable = this._myObject.pp_getComponentHierarchy("pp-grabbable");
-        this._myGrabbable.registerGrabEventListener(this, this._onGrab.bind(this));
+        this._myGrabbable.registerThrowEventListener(this, this._onThrow.bind(this));
         this._myScale = this._myObject.pp_getScale();
 
         this._myCurrentCardinalPosition = null;
@@ -26,6 +27,8 @@ class Evidence {
 
         this._myTimer = new PP.Timer(0);
         this._mySpawnTimer = new PP.Timer(0);
+        this._myThrowTimer = new PP.Timer(5, false);
+        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
 
         this._myFSM = new PP.FSM();
         //this._myFSM.setDebugLogActive(true, "                Evidence Item");
@@ -48,7 +51,7 @@ class Evidence {
 
         this._myPhysx.onCollision(this._onCollision.bind(this));
         this._myCollisionCount = 0;
-        this._myHasBeenGrabbed = false;
+        this._myHasBeenThrown = false;
     }
 
     getEvidenceSetup() {
@@ -60,6 +63,13 @@ class Evidence {
     }
 
     update(dt) {
+        if (this._myHasBeenThrown) {
+            this._myThrowTimer.update(dt);
+            if (this._myThrowTimer.isDone()) {
+                this._myHasBeenThrown = false;
+            }
+        }
+
         this._myFSM.update(dt);
     }
 
@@ -88,7 +98,12 @@ class Evidence {
 
     canHit() {
         let distanceFromCenter = this._myObject.pp_getPosition().vec3_removeComponentAlongAxis([0, 1, 0]).vec3_length();
-        return this._myHasBeenGrabbed && !this._myGrabbable.isGrabbed() && distanceFromCenter > Global.myRingRadius * 1.5/*(this._myGrabbable.isGrabbed() || this._myCollisionCount == 0)*/;
+        let isHitState = this._myFSM.isInState("spawning") || this._myFSM.isInState("ready");
+        return isHitState && this._myHasBeenThrown && WL.xrSession && !this._myGrabbable.isGrabbed() && distanceFromCenter > Global.myRingRadius * 1.5/*(this._myGrabbable.isGrabbed() || this._myCollisionCount == 0)*/;
+    }
+
+    hasBeenThrown() {
+        return this._myHasBeenThrown;
     }
 
     _reset(fsm, transition) {
@@ -99,7 +114,7 @@ class Evidence {
         this._myEvidenceComponent = this._myObject.pp_getComponentHierarchy("evidence-component");
         this._myEvidenceComponent.setCallbackOnHit(this._onHit.bind(this));
         this._myEvidenceComponent.setEvidence(this);
-        this._myHasBeenGrabbed = false;
+        this._myHasBeenThrown = false;
 
         this._myObject.pp_setPosition(this._myPosition);
         this._myObject.pp_setScale(0);
@@ -145,6 +160,8 @@ class Evidence {
         if (!this._myGrabbable.isGrabbed()) {
             this._myPhysx.kinematic = false;
         }
+
+        this._myGrabbable.release();
     }
 
     _unspawning(dt) {
@@ -157,6 +174,9 @@ class Evidence {
             Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myScale, this._myObjectType);
             this._myFSM.perform("end");
             this._myCallbackOnUnspawned(this);
+            if (this._myEvidenceSetup.myCallbackOnUnspawned) {
+                this._myEvidenceSetup.myCallbackOnUnspawned(this);
+            }
         }
     }
 
@@ -191,8 +211,13 @@ class Evidence {
         this._myFSM.perform("unspawn");
     }
 
-    _onGrab() {
-        this._myHasBeenGrabbed = true;
+    _onThrow() {
+        this._myHasBeenThrown = true;
+        this._myThrowTimer.start();
+    }
+
+    _onXRSessionEnd() {
+        this._myHasBeenThrown = false;
     }
 }
 

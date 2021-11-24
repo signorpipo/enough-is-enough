@@ -380,6 +380,8 @@ class MenuItem {
         if (!this._myGrabbable.isGrabbed()) {
             this._myPhysx.kinematic = false;
         }
+
+        this._myGrabbable.release();
     }
 
     _unspawning(dt) {

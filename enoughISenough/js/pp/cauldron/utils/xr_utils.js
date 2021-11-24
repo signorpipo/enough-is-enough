@@ -9,4 +9,7 @@ PP.XRUtils = {
 
         return isEmulated;
     },
+    isXRSessionActive: function () {
+        return WL.xrSession != null;
+    }
 };

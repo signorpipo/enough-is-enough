@@ -18,8 +18,8 @@ class MainFSM {
         this._myFSM.addState(MainStates.Intro, new IntroState());
         this._myFSM.addState(MainStates.Menu, new MenuState());
         this._myFSM.addState(MainStates.Story, new StoryState());
-        this._myFSM.addState(MainStates.ArcadeHard, new ArcadeState());
-        this._myFSM.addState(MainStates.ArcadeNormal, new ArcadeState());
+        this._myFSM.addState(MainStates.ArcadeHard, new ArcadeState(true));
+        this._myFSM.addState(MainStates.ArcadeNormal, new ArcadeState(false));
 
         this._myFSM.addTransition(MainStates.Intro, MainStates.Menu, MainTransitions.End);
         this._myFSM.addTransition(MainStates.Intro, MainStates.Menu, MainTransitions.Skip);

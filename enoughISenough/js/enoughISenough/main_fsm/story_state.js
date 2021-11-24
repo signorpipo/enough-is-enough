@@ -6,13 +6,13 @@ class StoryState extends PP.State {
         this._myFSM.setDebugLogActive(true, "    Story");
         this._myFSM.addState("init");
         this._myFSM.addState("first_talk", new TalkState(this._firstTalkSentences(), false));
-        this._myFSM.addState("first_vent", new StoryVentState(0, this._firstEvidenceSetupList()));
+        this._myFSM.addState("first_vent", new VentState(this._firstVentSetup(), this._firstEvidenceSetupList()));
         this._myFSM.addState("first_defeat", new TalkState(this._firstDefeatSentences(), true));
         this._myFSM.addState("second_talk", new TalkState(this._secondTalkSentences(), false));
-        this._myFSM.addState("second_vent", new StoryVentState(1, this._secondEvidenceSetupList()));
+        this._myFSM.addState("second_vent", new VentState(this._firstVentSetup(), this._secondEvidenceSetupList()));
         this._myFSM.addState("second_defeat", new TalkState(this._secondDefeatSentences(), true));
         this._myFSM.addState("third_talk", new TalkState(this._thirdTalkSentences(), false));
-        this._myFSM.addState("third_vent", new StoryVentState(2, this._thirdEvidenceSetupList()));
+        this._myFSM.addState("third_vent", new VentState(this._firstVentSetup(), this._thirdEvidenceSetupList()));
         this._myFSM.addState("third_defeat", new TalkState(this._thirdDefeatSentences(), true));
         this._myFSM.addState("MrNOT_talk", new TalkState(this._mrNOTTalkSentences(), true));
         this._myFSM.addState("MrNOT_vent", new MrNOTVentState());
@@ -59,13 +59,6 @@ class StoryState extends PP.State {
 
     update(dt, fsm) {
         Global.myStoryDuration += dt;
-
-        if (Global.myDebugShortcutsEnabled) {
-            //TEMP REMOVE THIS
-            if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(Global.myDebugShortcutsPress)) {
-                this._myFSM.perform("skip");
-            }
-        }
 
         this._myFSM.update(dt);
     }
@@ -171,6 +164,10 @@ class StoryState extends PP.State {
         return sentences;
     }
 
+    _firstVentSetup() {
+        return 0;
+    }
+
     _firstEvidenceSetupList() {
         let evidenceSetupList = [];
 
@@ -189,6 +186,10 @@ class StoryState extends PP.State {
         return evidenceSetupList;
     }
 
+    _secondVentSetup() {
+        return 0;
+    }
+
     _secondEvidenceSetupList() {
         let evidenceSetupList = [];
 
@@ -205,6 +206,10 @@ class StoryState extends PP.State {
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 2));
 
         return evidenceSetupList;
+    }
+
+    _thirdVentSetup() {
+        return 0;
     }
 
     _thirdEvidenceSetupList() {

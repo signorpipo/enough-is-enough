@@ -40,7 +40,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Bool", false));
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("mr NOT Clone Scale", 0.45, 0.1, 3));
-        PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Prevent Vent Lost", false));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Prevent Vent Lost", true));
 
         this.enoughISenough.start();
     },
@@ -70,6 +70,7 @@ var Global = {
     myGameObjectPoolMap: null,
     myMaterials: null,
     myStoryDuration: 0,
+    myArcadeDuration: 0,
     myVentDuration: 0,
     myDebugShortcutsEnabled: false,
     myDebugShortcutsPress: 2,
