@@ -647,6 +647,9 @@
                 },
                 {
                     "type": "pp-audio-listener"
+                },
+                {
+                    "type": "get-player-transform"
                 }
             ]
         },

@@ -8,13 +8,12 @@ class NotEnough {
     start() {
         this._myTimer.start();
 
-        if (this._myAudioPosition) {
+        if (this._myAudioPosition && false) {
             this._myNotEnoughAudio.setPosition(this._myAudioPosition);
         } else {
-            let position = vec3_create();
-            position[0] = Math.pp_random(5, 10) * Math.pp_randomSign();
-            position[1] = Math.pp_random(5, 10);
-            position[2] = Math.pp_random(5, 10) * Math.pp_randomSign();
+            let position = Global.myPlayerPosition.vec3_clone();
+            position[1] += 0.15;
+            position.vec3_add(Global.myPlayerForward.vec3_scale(0.5), position);
             this._myNotEnoughAudio.setPosition(position);
         }
 
