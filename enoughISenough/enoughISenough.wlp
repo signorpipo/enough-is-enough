@@ -336,7 +336,7 @@
                 },
                 {
                     "type": "pp-mute-all",
-                    "active": true
+                    "active": false
                 },
                 {
                     "type": "clear-console-on-session",
@@ -348,7 +348,7 @@
                 {
                     "type": "enable-debug-shortcuts",
                     "enable-debug-shortcuts": {
-                        "_myShortcutsEnabled": true
+                        "_myShortcutsEnabled": false
                     }
                 }
             ]
@@ -371,7 +371,7 @@
                         "_myShowOnStart": false,
                         "_myEnableChangeVariableShortcut": true
                     },
-                    "active": true
+                    "active": false
                 },
                 {
                     "type": "pp-console-vr",
@@ -384,7 +384,7 @@
                         "_myPulseOnNewMessage": "never",
                         "_myShowVisibilityButton": false
                     },
-                    "active": true
+                    "active": false
                 },
                 {
                     "type": "pp-set-hand-transform",
@@ -2351,7 +2351,7 @@
                 1.0,
                 -1.509958167389414e-7,
                 0.0,
-                -8.742269841377499e-8,
+                -8.7422698413775e-8,
                 -1.509957030521037e-7,
                 -0.9999992,
                 0.0,
@@ -5429,7 +5429,7 @@
                 0.0,
                 1.0,
                 0.0,
-                -5.960464477539064e-8,
+                -5.960464477539065e-8,
                 3.0,
                 10.0,
                 1.0

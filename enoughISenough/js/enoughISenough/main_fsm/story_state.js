@@ -28,7 +28,7 @@ class StoryState extends PP.State {
 
         this._myFSM.addTransition("second_talk", "second_vent", "end");
         this._myFSM.addTransition("second_vent", "second_defeat", "defeat");
-        this._myFSM.addTransition("second_vent", "third_talk", "end");
+        this._myFSM.addTransition("second_vent", "it_will_always_be_not_enough", "end");
 
         this._myFSM.addTransition("third_talk", "third_vent", "end");
         this._myFSM.addTransition("third_vent", "third_defeat", "defeat");
@@ -83,9 +83,8 @@ class StoryState extends PP.State {
     _firstTalkSentences() {
         let sentences = [];
 
-        sentences.push(new Sentence("Glad to see you again"));
-        sentences.push(new Sentence("Maybe we can have a little conversation"));
-        sentences.push(new Sentence("Why don't you show me what you have learned so far?", 2, 1.5));
+        sentences.push(new Sentence("You would like to read the real story,", 1, 0));
+        sentences.push(new Sentence("don't you?", 2, 1.5));
 
         return sentences;
     }
@@ -93,7 +92,7 @@ class StoryState extends PP.State {
     _firstDefeatSentences() {
         let sentences = [];
 
-        sentences.push(new Sentence("Don't even bother", 2, 1.5));
+        sentences.push(new Sentence("Don't be a pussy", 2, 1.5));
 
         return sentences;
     }
@@ -101,9 +100,8 @@ class StoryState extends PP.State {
     _secondTalkSentences() {
         let sentences = [];
 
-        sentences.push(new Sentence("After our last time together", 1, 0));
-        sentences.push(new Sentence("I see you have tried many things"));
-        sentences.push(new Sentence("Were they worth your time?", 2, 1.5));
+        sentences.push(new Sentence("It was so enjoyable"));
+        sentences.push(new Sentence("Why don't we play some more?", 2, 1.5));
 
         return sentences;
     }
@@ -111,7 +109,7 @@ class StoryState extends PP.State {
     _secondDefeatSentences() {
         let sentences = [];
 
-        sentences.push(new Sentence("Stop wasting my time too", 2, 1.5));
+        sentences.push(new Sentence("So boring", 2, 1.5));
 
         return sentences;
     }
@@ -153,13 +151,9 @@ class StoryState extends PP.State {
     _NOTENOUGHTalkSentences() {
         let sentences = [];
 
-        sentences.push(new Sentence("You may think you are stronger now"));
-        sentences.push(new Sentence("You may feel free from judgment itself"));
-        sentences.push(new Sentence("You may fool yourself into believing this..."));
-        sentences.push(new Sentence("But after all has been said and done", 0.75, 0));
-        sentences.push(new Sentence("you KNOW", 0.75, 0));
-        sentences.push(new Sentence("it will always be..."));
-        sentences.push(new Sentence("NOT ENOUGH", 4, 4, true));
+        sentences.push(new Sentence("It was fun to play with you"));
+        sentences.push(new Sentence("See you soon", 1, 0));
+        sentences.push(new Sentence("DUMB BITCH", 4, 4, true));
 
         return sentences;
     }

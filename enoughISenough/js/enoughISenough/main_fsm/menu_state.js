@@ -43,7 +43,7 @@ class MenuState extends PP.State {
         this._myParentFSM = fsm;
 
         let storyStartedOnce = PP.SaveUtils.loadBool("story_started_once");
-        if (storyStartedOnce) {
+        if (storyStartedOnce && false) {
             this._myCurrentMenuItems = [];
             for (let item of this._myMenuItems) {
                 this._myCurrentMenuItems.push(item);
