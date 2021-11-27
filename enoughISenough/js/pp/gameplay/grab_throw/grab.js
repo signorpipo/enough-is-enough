@@ -4,7 +4,7 @@ WL.registerComponent('pp-grab', {
     _myThrowMaxLinearSpeed: { type: WL.Type.Float, default: 15 },
     _myThrowMaxAngularSpeed: { type: WL.Type.Float, default: 1080 }, // degrees
     _mySnapOnPivot: { type: WL.Type.Bool, default: false },
-    _myGrabButton: { type: WL.Type.Enum, values: ['select', 'squeeze'], default: 'squeeze' },
+    _myGrabButton: { type: WL.Type.Enum, values: ['select', 'squeeze', 'both'], default: 'squeeze' },
     _myThrowVelocitySource: { type: WL.Type.Enum, values: ['hand', 'grabbable'], default: 'hand' },
 }, {
     init: function () {
@@ -39,12 +39,19 @@ WL.registerComponent('pp-grab', {
             this._myGamepad = PP.myRightGamepad;
         }
 
-        let buttonType = PP.ButtonType.SQUEEZE;
         if (this._myGrabButton == 0) {
-            buttonType = PP.ButtonType.SELECT;
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this));
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this));
+        } else if (this._myGrabButton == 1) {
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this));
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this));
+        } else {
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this));
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this));
+
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this));
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this));
         }
-        this._myGamepad.registerButtonEventListener(buttonType, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this));
-        this._myGamepad.registerButtonEventListener(buttonType, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this));
 
         this._myCollision = this.object.pp_getComponent('collision');
         this._myHandPose.start();

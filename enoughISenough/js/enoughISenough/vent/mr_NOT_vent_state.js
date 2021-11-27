@@ -38,6 +38,8 @@ class MrNOTVentState extends PP.State {
         this._myEvidenceManager = new EvidenceManager(this._buildEvidenceSetupList());
         this._myNotEnough = new NotEnough();
         this._myMrNOT = new MrNOT(this._onPatienceOver.bind(this), this._onReach.bind(this), this._onExplosionDone.bind(this));
+
+        this._myCleanTimer = new PP.Timer(2);
     }
 
     update(dt, fsm) {
@@ -75,11 +77,18 @@ class MrNOTVentState extends PP.State {
     }
 
     _prepareClean() {
-        this._myEvidenceManager.clean();
+        this._myCleanTimer.start();
     }
 
     _updateClean(dt, fsm) {
-        if (this._myEvidenceManager.isDone() && this._myVent.isDone()) {
+        if (this._myCleanTimer.isRunning()) {
+            this._myCleanTimer.update(dt);
+            if (this._myCleanTimer.isDone()) {
+                this._myEvidenceManager.clean();
+            }
+        }
+
+        if (this._myMrNOT.isDone()) {
             this._myFSM.perform("end");
         }
     }
@@ -157,6 +166,5 @@ class MrNOTVentState extends PP.State {
     }
 
     _onExplosionDone() {
-
     }
 }

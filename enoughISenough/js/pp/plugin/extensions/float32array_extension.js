@@ -63,6 +63,7 @@
             - vec3_normalize    / vec3_negate
             - vec3_isNormalized
             - vec3_length
+            - vec3_distance
             - vec3_add      / vec3_sub          / vec3_mul      / vec3_div      / vec3_scale
             - vec3_componentAlongAxis           / vec3_removeComponentAlongAxis
             - vec3_isConcordant
@@ -132,6 +133,14 @@ Float32Array.prototype.pp_findAll = function (callback) {
     return elementsFound;
 };
 
+Float32Array.prototype.pp_findEqual = function (elementToFind) {
+    return this.pp_find(element => element === elementToFind);
+};
+
+Float32Array.prototype.pp_findAllEqual = function (elementToFind) {
+    return this.pp_findAll(element => element === elementToFind);
+};
+
 Float32Array.prototype.pp_removeIndex = function (index) {
     let elementRemoved = undefined;
 
@@ -170,12 +179,12 @@ Float32Array.prototype.pp_removeAll = function (callback) {
     return elementsRemoved;
 };
 
-Float32Array.prototype.pp_removeEqual = function (elementToFind) {
-    return this.pp_remove(element => element === elementToFind);
+Float32Array.prototype.pp_removeEqual = function (elementToRemove) {
+    return this.pp_remove(element => element === elementToRemove);
 };
 
-Float32Array.prototype.pp_removeAllEqual = function (elementToFind) {
-    return this.pp_removeAll(element => element === elementToFind);
+Float32Array.prototype.pp_removeAllEqual = function (elementToRemove) {
+    return this.pp_removeAll(element => element === elementToRemove);
 };
 
 Float32Array.prototype.pp_clone = function () {
@@ -302,6 +311,10 @@ Float32Array.prototype.vec3_angleBetween = function (vector) {
 
 Float32Array.prototype.vec3_length = function () {
     return glMatrix.vec3.length(this);
+};
+
+Float32Array.prototype.vec3_distance = function (vector) {
+    return glMatrix.vec3.dist(this, vector);
 };
 
 Float32Array.prototype.vec3_add = function (vector, out = glMatrix.vec3.create()) {

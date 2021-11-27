@@ -63,6 +63,7 @@
             - vec3_normalize    / vec3_negate
             - vec3_isNormalized
             - vec3_length
+            - vec3_distance
             - vec3_add      / vec3_sub          / vec3_mul      / vec3_div      / vec3_scale
             - vec3_componentAlongAxis           / vec3_removeComponentAlongAxis
             - vec3_isConcordant
@@ -310,6 +311,10 @@ Array.prototype.vec3_angleBetween = function (vector) {
 
 Array.prototype.vec3_length = function () {
     return glMatrix.vec3.length(this);
+};
+
+Array.prototype.vec3_distance = function (vector) {
+    return glMatrix.vec3.dist(this, vector);
 };
 
 Array.prototype.vec3_add = function (vector, out = glMatrix.vec3.create()) {

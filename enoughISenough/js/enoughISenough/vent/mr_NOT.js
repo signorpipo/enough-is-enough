@@ -27,8 +27,9 @@ class MrNOT {
         this._myFSM.addState("inactive");
 
         this._myFSM.addTransition("init", "move", "start", this._prepareMove.bind(this));
-        this._myFSM.addTransition("move", "explode", "explode");
-        this._myFSM.addTransition("explode", "disappear", "end");
+        this._myFSM.addTransition("move", "explode", "explode", this._prepareExplode.bind(this));
+        this._myFSM.addTransition("explode", "disappear", "end", this._prepareDisappear.bind(this));
+        this._myFSM.addTransition("disappear", "inactive", "end");
         this._myFSM.addTransition("move", "inactive", "hide");
         this._myFSM.addTransition("explode", "inactive", "hide");
         this._myFSM.addTransition("disappear", "inactive", "hide");
@@ -38,9 +39,16 @@ class MrNOT {
 
         this._myCollisions = this._myObject.pp_getComponentsHierarchy("collision");
 
+        this._myExplodeAudio = Global.myAudioManager.createAudioPlayer(SfxID.BLABLA_2);
+
         //Setup
         this._myReachTargetDistance = 4;
-        this._myMinTargetDistance = 10;
+        this._myMinTargetDistance = 15;
+        this._myMinParticleDistance = this._myScale[0] * 0.9;
+        this._myParticlesSize = 0.25;
+        this._myMaxPatience = 5;
+        this._myPatienceRefill = 1;
+
     }
 
     start(dt) {
@@ -48,6 +56,13 @@ class MrNOT {
     }
 
     update(dt) {
+        if (Global.myDebugShortcutsEnabled) {
+            if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(Global.myDebugShortcutsPress)) {
+                this._myCallbackOnPatienceOver();
+                this._myFSM.perform("explode");
+            }
+        }
+
         this._myFSM.update(dt);
     }
 
@@ -77,7 +92,7 @@ class MrNOT {
         this._myCurrentPosition = [];
         this._myObject.pp_getPosition(this._myCurrentPosition);
 
-        this._myPatience = 20;
+        this._myPatience = this._myMaxPatience;
 
         this._myObject.pp_setActive(true);
     }
@@ -138,23 +153,127 @@ class MrNOT {
             let evidence = hittingObject.pp_getComponent("evidence-component");
             evidence.hit(this._myObject);
 
+            let hittingPosition = hittingObject.pp_getPosition();
+            //Global.myParticlesManager.explosion(hittingPosition, [this._myParticlesSize, this._myParticlesSize, this._myParticlesSize], evidence.getEvidence().getEvidenceSetup().myObjectType);
             //spawn particles
 
-            this._myPatience -= 0;
+            this._myPatience -= 1;
             if (this._myPatience < 0) {
                 let distanceToTarget = this._myTargetPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myCurrentPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
                 if (distanceToTarget > this._myMinTargetDistance) {
-                    this._myPatience = 5;
+                    this._myPatience = this._myPatienceRefill;
                 } else {
                     this._myCallbackOnPatienceOver();
+                    this._myFSM.perform("explode");
                 }
             }
         }
     }
 
+    _prepareExplode() {
+        this._mySpawnDelays = [2.5, 2.3, 2.0, 1.5, 1.0, 0.7, 0.6, 0.5, 0.4];
+        this._myExplodeTimer = new PP.Timer(20);
+        this._mySpawnParticlesTimer = new PP.Timer(this._mySpawnDelays[0]);
+
+        this._myMrNotUp = this._myObject.pp_getUp();
+        this._myMrNotRight = this._myObject.pp_getRight();
+        this._myMrNotForward = this._myObject.pp_getForward();
+
+        this._myObject.pp_getPosition(this._myCurrentPosition);
+        this._myParticlesPosition = null;
+        this._myParticlesPosition = this._getNextParticlePosition();
+
+        this._myPossibleGameObjectTypes = [
+            GameObjectType.STORY_TIMER,
+            GameObjectType.ZESTY_MARKET,
+            GameObjectType.DRAWING,
+            GameObjectType.CPLUSPLUS,
+            GameObjectType.PIANO,
+            GameObjectType.FLAG_WAVER,
+            GameObjectType.MEDITATION,
+            GameObjectType.LOL,
+            GameObjectType.EARRING,
+            GameObjectType.SKATING,
+            GameObjectType.STARING_CUBE,
+        ];
+    }
+
     _exploding(dt) {
+        this._myExplodeTimer.update(dt);
+        if (this._myExplodeTimer.isDone()) {
+            this._myFSM.perform("end");
+        }
+
+        this._mySpawnParticlesTimer.update(dt);
+        if (this._mySpawnParticlesTimer.isDone()) {
+            let delay = this._mySpawnDelays[0];
+            if (this._mySpawnDelays.length > 1) {
+                this._mySpawnDelays.shift();
+            }
+            this._mySpawnParticlesTimer.start(delay);
+            let type = Math.pp_randomPick(this._myPossibleGameObjectTypes);
+            Global.myParticlesManager.explosion(this._myParticlesPosition, [this._myParticlesSize, this._myParticlesSize, this._myParticlesSize], type);
+            this._myParticlesPosition = this._getNextParticlePosition();
+            this._myExplodeAudio.play();
+        }
+    }
+
+    _prepareDisappear() {
+        this._myDisappearTimer = new PP.Timer(3);
+        this._myDisappearEndTimer = new PP.Timer(3, false);
     }
 
     _disappear(dt) {
+        if (this._myDisappearTimer.isRunning()) {
+            this._myDisappearTimer.update(dt);
+            if (this._myDisappearTimer.isDone()) {
+                this._myObject.pp_setActive(false);
+                Global.myParticlesManager.explosion(this._myCurrentPosition, [this._myParticlesSize, this._myParticlesSize, this._myParticlesSize], GameObjectType.MR_NOT);
+                this._myDisappearEndTimer.start();
+                this._myExplodeAudio.play();
+            }
+        }
+
+        if (this._myDisappearEndTimer.isRunning()) {
+            this._myDisappearEndTimer.update(dt);
+            if (this._myDisappearEndTimer.isDone()) {
+                this._myObject.pp_setActive(false);
+                this._myFSM.perform("end");
+            }
+        }
+    }
+
+    _getNextParticlePosition() {
+        let attempts = 100;
+        let distance = 0;
+
+        let position = [0, 0, 0];
+
+        while (attempts > 0) {
+            let randomX = Math.pp_random(0, this._myScale[0] * 0.8) * Math.pp_randomSign();
+            let randomY = Math.pp_random(0, this._myScale[1] * 0.8) * Math.pp_randomSign();
+            let randomZ = Math.pp_random(this._myScale[2] * 0.65, this._myScale[2] * 0.7);
+
+            this._myMrNotUp.vec3_scale(randomY, position);
+            this._myMrNotRight.vec3_scale(randomX).vec3_add(position, position);
+            if (position.vec3_length() > this._myScale[0] * 0.8) {
+                position.vec3_normalize(position).vec3_scale(Math.pp_random(this._myScale[0] * 0.75, this._myScale[0] * 0.8));
+            }
+            this._myMrNotForward.vec3_scale(randomZ).vec3_add(position, position);
+            this._myCurrentPosition.vec3_add(position, position);
+
+            if (this._myParticlesPosition == null) {
+                attempts = 0;
+            } else {
+                distance = position.vec3_distance(this._myParticlesPosition);
+                if (distance > this._myMinParticleDistance) {
+                    attempts = 0;
+                } else {
+                    attempts -= 1;
+                }
+            }
+        }
+
+        return position;
     }
 }

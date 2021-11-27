@@ -178,6 +178,8 @@ EXTRA:
 - dare nomi alle fasi
 - altezza variable (almeno in step, a seconda dell'altezza una volta dentro il gioco, con reset?)
 - aggiungere mr not particles quando not enougha (?)
+- vibrazione per ogni colpo finale a mr not?
+
 
 
 TO DO:
@@ -187,3 +189,10 @@ TO DO:
 - se esci fuori un mr NOT clone arriva e ti not enougha nel mezzo (ascoltare evento di reset della view?)
 - regolare le luci
 - vibrazioni? sfx?
+- aumentare particles evidence size quando hittano? o solo durnate mr not? aumentarlo comunque un pochino?
+- all'interno di una explosion particle, avere size leggermente randomizzate
+- randomizzare size particle esplosione mr not?
+- spostare un po' piu avanti esplosione disappear mr not?
+- evidence clean ritardare per mr not boss explosion
+- aggiustare posizione testo
+- migliorare colore testo
