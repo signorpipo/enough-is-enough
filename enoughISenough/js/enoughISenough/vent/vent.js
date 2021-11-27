@@ -1,6 +1,6 @@
 class Vent {
-    constructor() {
-
+    constructor(ventSetup) {
+        this._myVentSetup = ventSetup;
 
         this._myMrNOTClones = [];
 
@@ -17,19 +17,41 @@ class Vent {
 
     start() {
         this._myMrNOTClones = [];
-        this._myTimer = new PP.Timer(1);
+        this._myTimer = new PP.Timer(3);
 
         this._myIsCleaning = false;
         this._myHitCounter = 0;
+
+        this._startAngle = Math.pp_random(160, 200);
+        this._myFirst = true;
+        this._mySignChange = Math.pp_randomInt(1, 3);
+        this._mySign = Math.pp_randomSign();
     }
 
     update(dt) {
         if (!this._myIsCleaning) {
             this._myTimer.update(dt);
             if (this._myTimer.isDone()) {
-                this._myTimer.start(1);
+                if (this._myVentSetup == 1) {
+                    console.log(this._myVentSetup);
+                    this._myTimer.start(Math.pp_random(1, 2.5));
+                } else {
+                    console.log(this._myVentSetup);
+                    this._myTimer.start(Math.pp_random(1.5, 3.5));
+                }
 
-                let angle = Math.pp_random(160, 200);
+                let angle = this._startAngle;
+
+                if (this._myFirst) {
+                    this._myFirst = false;
+                } else {
+                    if (this._myVentSetup == 1) {
+                        angle = this._startAngle + Math.pp_random(20, 75) * this._mySign;
+                    } else {
+                        angle = this._startAngle + Math.pp_random(20, 55) * this._mySign;
+                    }
+                }
+
                 let direction = [0, 0, 1];
                 direction.vec3_rotateAxis([0, 1, 0], angle, direction);
                 direction.vec3_normalize(direction);
@@ -37,6 +59,15 @@ class Vent {
 
                 let mrNOTClone = new MrNOTClone(direction.vec3_add([0, 2.5, 0]), [0, 1.7, 0], this._myTimeToReachTarget, this._mrNOTCloneHitByYou.bind(this), this._mrNOTCloneReachYou.bind(this));
                 this._myMrNOTClones.push(mrNOTClone);
+
+                this._startAngle = angle;
+
+                this._mySignChange--;
+                if (this._mySignChange == 0) {
+                    this._mySignChange = Math.pp_randomInt(1, 3);
+                    this._mySign = Math.pp_randomSign();
+
+                }
             }
         }
 
@@ -78,7 +109,12 @@ class Vent {
     _mrNOTCloneHitByYou() {
         this._myHitCounter++;
 
-        if (this._myHitCounter > 5) {
+        let maxCounter = 15;
+        if (this._myVentSetup == 1) {
+            maxCounter = 25;
+        }
+
+        if (this._myHitCounter > maxCounter) {
             if (this._myOnVentCompletedCallback) {
                 this._myOnVentCompletedCallback();
             }

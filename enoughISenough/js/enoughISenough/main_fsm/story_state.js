@@ -9,10 +9,10 @@ class StoryState extends PP.State {
         this._myFSM.addState("first_vent", new VentState(this._firstVentSetup(), this._firstEvidenceSetupList()));
         this._myFSM.addState("first_defeat", new TalkState(this._firstDefeatSentences(), true));
         this._myFSM.addState("second_talk", new TalkState(this._secondTalkSentences(), false));
-        this._myFSM.addState("second_vent", new VentState(this._firstVentSetup(), this._secondEvidenceSetupList()));
+        this._myFSM.addState("second_vent", new VentState(this._secondVentSetup(), this._secondEvidenceSetupList()));
         this._myFSM.addState("second_defeat", new TalkState(this._secondDefeatSentences(), true));
         this._myFSM.addState("third_talk", new TalkState(this._thirdTalkSentences(), false));
-        this._myFSM.addState("third_vent", new VentState(this._firstVentSetup(), this._thirdEvidenceSetupList()));
+        this._myFSM.addState("third_vent", new VentState(this._thirdVentSetup(), this._thirdEvidenceSetupList()));
         this._myFSM.addState("third_defeat", new TalkState(this._thirdDefeatSentences(), true));
         this._myFSM.addState("MrNOT_talk", new TalkState(this._mrNOTTalkSentences(), true));
         this._myFSM.addState("MrNOT_vent", new MrNOTVentState());
@@ -187,7 +187,7 @@ class StoryState extends PP.State {
     }
 
     _secondVentSetup() {
-        return 0;
+        return 1;
     }
 
     _secondEvidenceSetupList() {
@@ -209,7 +209,7 @@ class StoryState extends PP.State {
     }
 
     _thirdVentSetup() {
-        return 0;
+        return 2;
     }
 
     _thirdEvidenceSetupList() {
