@@ -75,4 +75,7 @@ var Global = {
     myVentDuration: 0,
     myDebugShortcutsEnabled: false,
     myDebugShortcutsPress: 2,
+    myPlayerPosition: null,
+    myPlayerRotation: null,
+    myPlayerForward: null,
 };

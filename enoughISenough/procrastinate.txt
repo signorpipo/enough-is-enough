@@ -196,3 +196,9 @@ TO DO:
 - evidence clean ritardare per mr not boss explosion
 - aggiustare posizione testo
 - migliorare colore testo
+- aggiungere una luce in basso generale per migliorare i cloni?
+- migliorare posizione not enough audio
+
+BUG:
+- lag 
+- a volte le particelle spawnano vicine e non nel punto di impatto
