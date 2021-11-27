@@ -198,6 +198,7 @@ TO DO:
 - migliorare colore testo
 - aggiungere una luce in basso generale per migliorare i cloni?
 - migliorare posizione not enough audio
+- pp set transform as hand?
 
 BUG:
 - lag 
