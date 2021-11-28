@@ -205,7 +205,7 @@ TUNE:
 
 BUG:
 - lag 
-- a volte le particelle spawnano vicine e non nel punto di impatto
+- a volte le particelle spawnano vicine e non nel punto di impatto (forse legato al problema della physx quando grabbo)
 - il trigger delle collissioni non hitta bene
 - gli oggetti flickerano quando ne grabbo uno
 

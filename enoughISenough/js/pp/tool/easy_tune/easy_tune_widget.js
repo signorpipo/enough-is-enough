@@ -87,6 +87,8 @@ PP.EasyTuneWidget = class EasyTuneWidget {
         }
 
         this._updateGamepadWidgetVisibility();
+
+        this._updateActiveVariable();
     }
 
     _initializeWidgets() {
@@ -225,5 +227,15 @@ PP.EasyTuneWidget = class EasyTuneWidget {
     _getVariableIndex(variable) {
         let variableIndex = this._myVariableNames.indexOf(variable.myName);
         return variableIndex;
+    }
+
+    _updateActiveVariable() {
+        this._myEasyTuneVariables.forEach(function (value) {
+            value.myIsActive = false;
+        });
+
+        if (this._myCurrentVariable) {
+            this._myCurrentVariable.myIsActive = true;
+        }
     }
 };

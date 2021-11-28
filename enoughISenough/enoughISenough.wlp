@@ -1223,6 +1223,32 @@
                     "mesh": {
                         "material": "274"
                     }
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "triangleMesh",
+                        "triangleMesh": {
+                            "mesh": "108",
+                            "scaling": [
+                                1.2999999,
+                                0.8,
+                                1.2999999
+                            ]
+                        },
+                        "kinematic": true,
+                        "gravity": false,
+                        "convexMesh": {
+                            "mesh": "108"
+                        },
+                        "box": {
+                            "extents": [
+                                1.2999999,
+                                0.1,
+                                1.2999999
+                            ]
+                        }
+                    }
                 }
             ]
         },
@@ -2014,34 +2040,7 @@
         "139": {
             "name": "PhysX",
             "parent": "110",
-            "components": [
-                {
-                    "type": "physx",
-                    "physx": {
-                        "shape": "triangleMesh",
-                        "triangleMesh": {
-                            "mesh": "108",
-                            "scaling": [
-                                1.2999999,
-                                0.8,
-                                1.2999999
-                            ]
-                        },
-                        "kinematic": true,
-                        "gravity": false,
-                        "convexMesh": {
-                            "mesh": "108"
-                        },
-                        "box": {
-                            "extents": [
-                                1.2999999,
-                                0.1,
-                                1.2999999
-                            ]
-                        }
-                    }
-                }
-            ]
+            "deleted": true
         },
         "140": {
             "name": "Test PhysX",
@@ -2354,7 +2353,7 @@
                 1.0,
                 -1.509958167389414e-7,
                 0.0,
-                -8.742269841377499e-8,
+                -8.7422698413775e-8,
                 -1.509957030521037e-7,
                 -0.9999992,
                 0.0,
@@ -5432,7 +5431,7 @@
                 0.0,
                 1.0,
                 0.0,
-                -5.960464477539064e-8,
+                -5.960464477539065e-8,
                 3.0,
                 10.0,
                 1.0

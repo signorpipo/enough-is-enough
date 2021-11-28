@@ -205,6 +205,11 @@ Array.prototype.pp_copy = function (array) {
 
 // GENERIC VECTOR
 
+Array.prototype.vec_toString = function (decimalPlaces = 4) {
+    let message = this._vec_buildConsoleMessage(decimalPlaces);
+    return message;
+};
+
 Array.prototype.vec_log = function (decimalPlaces = 4) {
     let message = this._vec_buildConsoleMessage(decimalPlaces);
     console.log(message);

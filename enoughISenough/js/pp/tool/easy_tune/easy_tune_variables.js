@@ -28,6 +28,15 @@ PP.EasyTuneVariables = class EasyTuneVariables {
         }
     }
 
+    isActive(variableName) {
+        let variable = this._myMap.get(variableName);
+        if (variable) {
+            return variable.myIsActive;
+        }
+
+        return false;
+    }
+
     getEasyTuneVariable(variableName) {
         return this._myMap.get(variableName);
     }
@@ -52,6 +61,8 @@ PP.EasyTuneVariable = class EasyTuneVariable {
 
         this.myValue = null;
         this.myInitialValue = null;
+
+        this.myIsActive = false;
     }
 
     getValue() {
