@@ -200,6 +200,13 @@ TO DO:
 - migliorare posizione not enough audio
 - pp set transform as hand?
 
+TUNE:
+- altezza da cui partono i cloni, distanza, altezza di arrivo, tempo di arrivo, distanza iniziale (insomma tutto)
+
 BUG:
 - lag 
 - a volte le particelle spawnano vicine e non nel punto di impatto
+- il trigger delle collissioni non hitta bene
+- gli oggetti flickerano quando ne grabbo uno
+
+
