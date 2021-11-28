@@ -34,6 +34,11 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
         this._myScrollThumbstickTimer = 0;
 
         this._myPulseTimer = 0;
+
+        this._myGamepadScrollActive = true;
+        if (this._mySetup.myGamepadScrollOnlyOnHover) {
+            this._myGamepadScrollActive = false;
+        }
     }
 
     start(parentObject, additionalSetup) {
@@ -498,6 +503,9 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
             cursorTarget.addHoverFunction(this._genericHover.bind(this, backgroundMaterial));
             cursorTarget.addUnHoverFunction(this._notifyIconUnHover.bind(this));
         }
+
+        ui.myPointerCursorTargetComponent.addHoverFunction(this._setGamepadScrollActive.bind(this, true));
+        ui.myPointerCursorTargetComponent.addUnHoverFunction(this._setGamepadScrollActive.bind(this, false));
     }
 
     _resetFilters(messageType) {
@@ -667,7 +675,7 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
     }
 
     _updateScrollWithThumbstick(dt) {
-        if (this._myWidgetFrame.myIsWidgetVisible) {
+        if (this._myWidgetFrame.myIsWidgetVisible && this._myGamepadScrollActive) {
             let axes = [0, 0];
             if (this._mySetup.myScrollThumbstickHandedness == PP.ToolHandedness.LEFT) {
                 axes = this._myLeftGamepad.getAxesInfo().myAxes;
@@ -714,6 +722,14 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
 
     _isFloat32Array(item) {
         return item.constructor && item.constructor.name == "Float32Array";
+    }
+
+    _setGamepadScrollActive(active) {
+        this._myGamepadScrollActive = active;
+
+        if (!this._mySetup.myGamepadScrollOnlyOnHover) {
+            this._myGamepadScrollActive = true;
+        }
     }
 };
 

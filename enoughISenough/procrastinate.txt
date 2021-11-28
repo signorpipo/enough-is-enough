@@ -209,4 +209,16 @@ BUG:
 - il trigger delle collissioni non hitta bene
 - gli oggetti flickerano quando ne grabbo uno
 
+Descrizione:
+My dearest puppet,
+did you miss me?
+I did
+
+Why don’t you STAND UP,
+SQUEEZE those buttons,
+and get ready to THROW?
+
+I am here for you,
+don’t make me wait.
+
 

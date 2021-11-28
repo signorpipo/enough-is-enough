@@ -81,7 +81,7 @@ WL.registerComponent('pp-tool-cursor', {
     _pulseOnHover: function (object) {
         let targetComponent = object.getComponent("cursor-target");
 
-        if (targetComponent) {
+        if (targetComponent && !targetComponent.myPreventPulseOnHover) {
             if (this._myHandedness == 0) {
                 if (PP.myLeftGamepad) {
                     PP.myLeftGamepad.pulse(0.4, 0);

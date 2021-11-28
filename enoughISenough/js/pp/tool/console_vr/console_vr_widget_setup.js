@@ -195,5 +195,7 @@ PP.ConsoleVRWidgetSetup = class ConsoleVRWidgetSetup {
         this.myPulseDuration = 0.085;
 
         this.myClearBrowserConsoleWhenClearPressed = true;
+
+        this.myGamepadScrollOnlyOnHover = true;
     }
 };
