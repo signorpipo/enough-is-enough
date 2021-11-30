@@ -2183,7 +2183,7 @@
                 0.0,
                 0.1,
                 0.0,
-                0.0,
+                0.8999999,
                 0.0,
                 0.0,
                 1.0
@@ -2884,19 +2884,19 @@
             "name": "Story",
             "parent": "143",
             "transformation": [
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
-                0.8999999,
+                0.0,
                 0.0,
                 0.0,
                 1.0
@@ -2907,11 +2907,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "8",
+                            "mesh": "342",
                             "scaling": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.0099999,
+                                0.0099999,
+                                0.0099999
                             ]
                         }
                     }
@@ -2933,9 +2933,9 @@
                         "groups": 1,
                         "box": {
                             "extents": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.1099999,
+                                0.0199999,
+                                0.1099999
                             ]
                         }
                     }
@@ -2972,7 +2972,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "163": {
             "name": "Nose",
@@ -3003,7 +3004,8 @@
                 0.0,
                 0.8999999,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "164": {
             "name": "Wondermelon",
@@ -6994,6 +6996,100 @@
             },
             "parent": "332",
             "deleted": true
+        },
+        "343": {
+            "link": {
+                "name": "Story",
+                "file": "assets\\models\\evidences\\story.fbx"
+            },
+            "parent": "161",
+            "name": "Pivot",
+            "transformation": [
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "344": {
+            "link": {
+                "name": "In<Story",
+                "file": "assets\\models\\evidences\\story.fbx"
+            },
+            "parent": "343",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "345": {
+            "link": {
+                "name": "Middle<Story",
+                "file": "assets\\models\\evidences\\story.fbx"
+            },
+            "parent": "343",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -1.1920928955078128e-7,
+                0.9999998,
+                0.0,
+                0.0,
+                -0.9999998,
+                -1.1920928955078128e-7,
+                0.0,
+                0.0,
+                -0.0000152,
+                0.0,
+                1.0
+            ]
+        },
+        "346": {
+            "link": {
+                "name": "Out<Story",
+                "file": "assets\\models\\evidences\\story.fbx"
+            },
+            "parent": "343",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "347": {
+            "link": {
+                "name": "Physx<Story",
+                "file": "assets\\models\\evidences\\story.fbx"
+            },
+            "parent": "343",
+            "deleted": true
         }
     },
     "meshes": {
@@ -7235,6 +7331,30 @@
             "link": {
                 "name": "Ubisoft - Physx",
                 "file": "assets\\models\\evidences\\ubisoft.fbx"
+            }
+        },
+        "339": {
+            "link": {
+                "name": "Story - In",
+                "file": "assets\\models\\evidences\\story.fbx"
+            }
+        },
+        "340": {
+            "link": {
+                "name": "Story - Middle",
+                "file": "assets\\models\\evidences\\story.fbx"
+            }
+        },
+        "341": {
+            "link": {
+                "name": "Story - Out",
+                "file": "assets\\models\\evidences\\story.fbx"
+            }
+        },
+        "342": {
+            "link": {
+                "name": "Story - Physx",
+                "file": "assets\\models\\evidences\\story.fbx"
             }
         }
     },
@@ -8070,6 +8190,18 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\ubisoft.fbx"
             }
+        },
+        "337": {
+            "link": {
+                "name": "Orange",
+                "file": "assets\\models\\evidences\\story.fbx"
+            }
+        },
+        "338": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\story.fbx"
+            }
         }
     },
     "shaders": {
@@ -8210,7 +8342,8 @@
         "assets/models/ring.glb",
         "assets/models/hand_piece.glb",
         "assets/models/mr_NOT.fbx",
-        "assets/models/evidences/ubisoft.fbx"
+        "assets/models/evidences/ubisoft.fbx",
+        "assets/models/evidences/story.fbx"
     ],
     "pipelines": {
         "69": {
