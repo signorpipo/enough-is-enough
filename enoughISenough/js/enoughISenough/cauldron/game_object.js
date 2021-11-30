@@ -20,4 +20,5 @@ var GameObjectType = {
     EARRING: 17,
     SKATING: 18,
     MR_NOT_CLONE: 19,
+    UBISOFT: 20,
 };

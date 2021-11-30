@@ -3428,7 +3428,8 @@
                         "_myLoL": "198",
                         "_myEarring": "222",
                         "_mySkating": "225",
-                        "_myVentTimer": "317"
+                        "_myVentTimer": "317",
+                        "_myUbisoft": "325"
                     }
                 }
             ],
@@ -6859,6 +6860,140 @@
                 1.0
             ],
             "deleted": true
+        },
+        "325": {
+            "name": "Ubisoft",
+            "parent": "174",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -0.3,
+                0.0,
+                0.5,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "331",
+                            "scaling": [
+                                0.0099999,
+                                0.0099999,
+                                0.0099999
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "evidence-component"
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "box": {
+                            "extents": [
+                                0.1099999,
+                                0.0199999,
+                                0.1099999
+                            ]
+                        },
+                        "groups": 1
+                    }
+                }
+            ]
+        },
+        "332": {
+            "link": {
+                "name": "Ubisoft",
+                "file": "assets\\models\\evidences\\ubisoft.fbx"
+            },
+            "parent": "325",
+            "transformation": [
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "name": "Pivot"
+        },
+        "333": {
+            "link": {
+                "name": "In<Ubisoft",
+                "file": "assets\\models\\evidences\\ubisoft.fbx"
+            },
+            "parent": "332",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "334": {
+            "link": {
+                "name": "Middle<Ubisoft",
+                "file": "assets\\models\\evidences\\ubisoft.fbx"
+            },
+            "parent": "332",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "335": {
+            "link": {
+                "name": "Out<Ubisoft",
+                "file": "assets\\models\\evidences\\ubisoft.fbx"
+            },
+            "parent": "332",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "336": {
+            "link": {
+                "name": "Physx<Ubisoft",
+                "file": "assets\\models\\evidences\\ubisoft.fbx"
+            },
+            "parent": "332",
+            "deleted": true
         }
     },
     "meshes": {
@@ -7076,6 +7211,30 @@
             "link": {
                 "name": "Chin.001",
                 "file": "assets\\models\\mr_NOT.fbx"
+            }
+        },
+        "328": {
+            "link": {
+                "name": "Ubisoft - In",
+                "file": "assets\\models\\evidences\\ubisoft.fbx"
+            }
+        },
+        "329": {
+            "link": {
+                "name": "Ubisoft - Middle",
+                "file": "assets\\models\\evidences\\ubisoft.fbx"
+            }
+        },
+        "330": {
+            "link": {
+                "name": "Ubisoft - Out",
+                "file": "assets\\models\\evidences\\ubisoft.fbx"
+            }
+        },
+        "331": {
+            "link": {
+                "name": "Ubisoft - Physx",
+                "file": "assets\\models\\evidences\\ubisoft.fbx"
             }
         }
     },
@@ -7899,6 +8058,18 @@
                 ]
             },
             "pipeline": "194"
+        },
+        "326": {
+            "link": {
+                "name": "Orange",
+                "file": "assets\\models\\evidences\\ubisoft.fbx"
+            }
+        },
+        "327": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\ubisoft.fbx"
+            }
         }
     },
     "shaders": {
@@ -8038,7 +8209,8 @@
         "assets/models/quest_controllers_credits_Jezza3D.glb",
         "assets/models/ring.glb",
         "assets/models/hand_piece.glb",
-        "assets/models/mr_NOT.fbx"
+        "assets/models/mr_NOT.fbx",
+        "assets/models/evidences/ubisoft.fbx"
     ],
     "pipelines": {
         "69": {
