@@ -1,5 +1,6 @@
 WL.registerComponent('menu-objects', {
     _myStartStory: { type: WL.Type.Object },
+    _myStartStoryCompleted: { type: WL.Type.Object },
     _myStartArcadeHard: { type: WL.Type.Object },
     _myStartArcadeNormal: { type: WL.Type.Object },
     _myLeaderboardArcadeHard: { type: WL.Type.Object },
@@ -10,6 +11,7 @@ WL.registerComponent('menu-objects', {
 }, {
     init: function () {
         Global.myGameObjects.set(GameObjectType.START_STORY, this._myStartStory);
+        Global.myGameObjects.set(GameObjectType.START_STORY_COMPLETED, this._myStartStoryCompleted);
         Global.myGameObjects.set(GameObjectType.START_ARCADE_HARD, this._myStartArcadeHard);
         Global.myGameObjects.set(GameObjectType.START_ARCADE_NORMAL, this._myStartArcadeNormal);
         Global.myGameObjects.set(GameObjectType.LEADERBOARD_ARCADE_HARD, this._myLeaderboardArcadeHard);
@@ -21,6 +23,7 @@ WL.registerComponent('menu-objects', {
         let cloneParams = new PP.CloneParams();
         cloneParams.myComponentsToInclude.push("mesh");
         Global.myMeshObjects.set(GameObjectType.START_STORY, this._myStartStory.pp_clone(cloneParams));
+        Global.myMeshObjects.set(GameObjectType.START_STORY_COMPLETED, this._myStartStoryCompleted.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.START_ARCADE_HARD, this._myStartArcadeHard.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.START_ARCADE_NORMAL, this._myStartArcadeNormal.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.LEADERBOARD_ARCADE_HARD, this._myLeaderboardArcadeHard.pp_clone(cloneParams));

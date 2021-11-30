@@ -1885,7 +1885,8 @@
                     "mesh": {
                         "mesh": "7",
                         "material": "133"
-                    }
+                    },
+                    "active": false
                 }
             ],
             "transformation": [
@@ -1895,15 +1896,15 @@
                 0.0,
                 0.0,
                 -0.0000011,
-                -9.999895,
+                -9.9998321,
                 0.0,
                 0.0,
-                9.9999179,
+                9.999855,
                 -0.0000011,
                 0.0,
                 0.0,
                 -10.0,
-                -6.556510925292969e-7,
+                -4.76837158203125e-7,
                 1.0
             ]
         },
@@ -2144,7 +2145,8 @@
                         "_myLeaderboardArcadeNormal": "155",
                         "_myWondermelon": "164",
                         "_myZestyMarket": "170",
-                        "_myFloppyDisk": "167"
+                        "_myFloppyDisk": "167",
+                        "_myStartStoryCompleted": "348"
                     }
                 }
             ],
@@ -7056,12 +7058,12 @@
                 0.0,
                 0.0,
                 0.0,
-                -1.1920928955078128e-7,
+                -1.192092895507813e-7,
                 0.9999998,
                 0.0,
                 0.0,
                 -0.9999998,
-                -1.1920928955078128e-7,
+                -1.192092895507813e-7,
                 0.0,
                 0.0,
                 -0.0000152,
@@ -7090,6 +7092,350 @@
             },
             "parent": "343",
             "deleted": true
+        },
+        "348": {
+            "name": "Story Completed",
+            "parent": "143",
+            "transformation": [
+                1.0000053,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0000053,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                3.5762701600106086e-7,
+                0.0000081,
+                0.5000309,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "342",
+                            "scaling": [
+                                0.0099999,
+                                0.0099999,
+                                0.0099999
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "aabb": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.1
+                            ]
+                        },
+                        "groups": 1,
+                        "box": {
+                            "extents": [
+                                0.1099999,
+                                0.0199999,
+                                0.1099999
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "370": {
+            "link": {
+                "name": "StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "348",
+            "name": "Pivot",
+            "transformation": [
+                -1.1920926112907182e-7,
+                0.0,
+                1.0000054,
+                0.0,
+                0.9999933,
+                -3.5762550965046105e-7,
+                1.1920918296937089e-7,
+                0.0,
+                3.576280960260192e-7,
+                1.0000005,
+                0.0,
+                0.0,
+                -2.719446570154105e-7,
+                0.0000013,
+                0.0000023,
+                1.0
+            ]
+        },
+        "371": {
+            "link": {
+                "name": "In<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "370",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "372": {
+            "link": {
+                "name": "mr NOT<In<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "371"
+        },
+        "373": {
+            "link": {
+                "name": "Chin<mr NOT<In<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "372",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "374": {
+            "link": {
+                "name": "Eyes<mr NOT<In<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "372",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "375": {
+            "link": {
+                "name": "Eye Details<Eyes<mr NOT<In<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "374"
+        },
+        "376": {
+            "link": {
+                "name": "Eye Bags<Eye Details<Eyes<mr NOT<In<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "375",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "377": {
+            "link": {
+                "name": "Eyebrows<Eye Details<Eyes<mr NOT<In<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "375",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "378": {
+            "link": {
+                "name": "Pupil<Eyes<mr NOT<In<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "374",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "379": {
+            "link": {
+                "name": "Hairs<mr NOT<In<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "372"
+        },
+        "380": {
+            "link": {
+                "name": "Lower Hairs<Hairs<mr NOT<In<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "379",
+            "transformation": [
+                0.0761353,
+                0.0069523,
+                0.0000525,
+                0.0,
+                -0.0069523,
+                0.0761353,
+                -0.0000048,
+                0.0,
+                -0.0000528,
+                2.0518656995704988e-8,
+                0.0764521,
+                0.0,
+                0.0429534,
+                0.0091286,
+                0.0041027,
+                1.0
+            ],
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "381": {
+            "link": {
+                "name": "Middle Hairs<Hairs<mr NOT<In<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "379",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "382": {
+            "link": {
+                "name": "Upper Hairs<Hairs<mr NOT<In<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "379",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "383": {
+            "link": {
+                "name": "Lips<mr NOT<In<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "372"
+        },
+        "384": {
+            "link": {
+                "name": "Between Lips<Lips<mr NOT<In<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "383",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "385": {
+            "link": {
+                "name": "Cheeks<Lips<mr NOT<In<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "383",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "386": {
+            "link": {
+                "name": "Lower Lip<Lips<mr NOT<In<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "383",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "387": {
+            "link": {
+                "name": "Upper Lip<Lips<mr NOT<In<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "383",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "388": {
+            "link": {
+                "name": "Middle<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "370",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "389": {
+            "link": {
+                "name": "Out<StoryCompleted",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "parent": "370",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -7355,6 +7701,96 @@
             "link": {
                 "name": "Story - Physx",
                 "file": "assets\\models\\evidences\\story.fbx"
+            }
+        },
+        "355": {
+            "link": {
+                "name": "StoryCompleted - In",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "356": {
+            "link": {
+                "name": "Chin.001",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "357": {
+            "link": {
+                "name": "Eyes.001",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "358": {
+            "link": {
+                "name": "Eye Bags.001",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "359": {
+            "link": {
+                "name": "Eyebrows.001",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "360": {
+            "link": {
+                "name": "Pupil.001",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "361": {
+            "link": {
+                "name": "Lower Hairs.001",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "362": {
+            "link": {
+                "name": "Middle Hairs.001",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "363": {
+            "link": {
+                "name": "Upper Hairs.001",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "364": {
+            "link": {
+                "name": "Between Lips.001",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "365": {
+            "link": {
+                "name": "Cheeks.001",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "366": {
+            "link": {
+                "name": "Lower Lip.001",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "367": {
+            "link": {
+                "name": "Upper Lip.001",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "368": {
+            "link": {
+                "name": "StoryCompleted - Middle",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "369": {
+            "link": {
+                "name": "StoryCompleted - Out",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
             }
         }
     },
@@ -8202,6 +8638,42 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\story.fbx"
             }
+        },
+        "349": {
+            "link": {
+                "name": "Orange",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "350": {
+            "link": {
+                "name": "Dark Gray.001",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "351": {
+            "link": {
+                "name": "White.001",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "352": {
+            "link": {
+                "name": "Dark Blue.001",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "353": {
+            "link": {
+                "name": "Dark Red.001",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "354": {
+            "link": {
+                "name": "Red.001",
+                "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
         }
     },
     "shaders": {
@@ -8343,7 +8815,8 @@
         "assets/models/hand_piece.glb",
         "assets/models/mr_NOT.fbx",
         "assets/models/evidences/ubisoft.fbx",
-        "assets/models/evidences/story.fbx"
+        "assets/models/evidences/story.fbx",
+        "assets/models/evidences/story_completed.fbx"
     ],
     "pipelines": {
         "69": {

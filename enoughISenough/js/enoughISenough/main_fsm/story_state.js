@@ -38,7 +38,7 @@ class StoryState extends PP.State {
         this._myFSM.addTransition("MrNOT_vent", "MrNOT_defeat", "defeat");
         this._myFSM.addTransition("MrNOT_vent", "it_will_always_be_not_enough", "end");
 
-        this._myFSM.addTransition("it_will_always_be_not_enough", "done", "end", this._backToMenu.bind(this));
+        this._myFSM.addTransition("it_will_always_be_not_enough", "done", "end", this._gameCompleted.bind(this));
 
         this._myFSM.addTransition("first_defeat", "done", "end", this._backToMenu.bind(this));
         this._myFSM.addTransition("second_defeat", "done", "end", this._backToMenu.bind(this));
@@ -77,6 +77,11 @@ class StoryState extends PP.State {
     }
 
     _backToMenu(fsm) {
+        this._myParentFSM.perform(MainTransitions.End);
+    }
+
+    _gameCompleted(fsm) {
+        PP.SaveUtils.save("story_completed", true);
         this._myParentFSM.perform(MainTransitions.End);
     }
 

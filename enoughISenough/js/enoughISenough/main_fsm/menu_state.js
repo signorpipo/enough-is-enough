@@ -23,6 +23,8 @@ class MenuState extends PP.State {
         this._myFSM.addTransition("unspawning_reset", "done", "end", this._endReset.bind(this));
 
         this._myMenuItems = [];
+        this._myStartStory = null;
+        this._myStartStoryCompleted = null;
         this._myCurrentMenuItems = [];
 
         this._myMenuTitle = new MenuTitle(Global.myTitlesObject, Global.myTitleObject, Global.mySubtitleObject);
@@ -45,12 +47,20 @@ class MenuState extends PP.State {
         let storyStartedOnce = PP.SaveUtils.loadBool("story_started_once");
         if (storyStartedOnce) {
             this._myCurrentMenuItems = [];
+
+            let storyCompleted = PP.SaveUtils.loadBool("story_completed");
+            if (storyCompleted) {
+                this._myCurrentMenuItems.push(this._myStartStoryCompleted);
+            } else {
+                this._myCurrentMenuItems.push(this._myStartStory);
+            }
+
             for (let item of this._myMenuItems) {
                 this._myCurrentMenuItems.push(item);
             }
         } else {
             this._myCurrentMenuItems = [];
-            this._myCurrentMenuItems.push(this._myMenuItems[0]);
+            this._myCurrentMenuItems.push(this._myStartStory);
         }
 
         let times = [];
@@ -119,6 +129,7 @@ class MenuState extends PP.State {
     _startUnspawningReset(fsm) {
         this._myResetCount = 0;
         PP.SaveUtils.save("story_started_once", false);
+        PP.SaveUtils.save("story_completed", false);
         this._myNotEnough.start();
 
         this._startUnspawning();
@@ -189,7 +200,14 @@ class MenuState extends PP.State {
             let startStory = new MenuItem(Global.myGameObjects.get(GameObjectType.START_STORY), GameObjectType.START_STORY, positions[0], function () {
                 this._myFSM.perform("unspawn_story");
             }.bind(this));
-            this._myMenuItems.push(startStory);
+            this._myStartStory = startStory;
+        }
+
+        {
+            let startStoryCompleted = new MenuItem(Global.myGameObjects.get(GameObjectType.START_STORY_COMPLETED), GameObjectType.START_STORY_COMPLETED, positions[0], function () {
+                this._myFSM.perform("unspawn_story");
+            }.bind(this));
+            this._myStartStoryCompleted = startStoryCompleted;
         }
 
         {

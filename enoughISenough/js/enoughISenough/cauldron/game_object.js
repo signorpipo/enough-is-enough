@@ -21,4 +21,5 @@ var GameObjectType = {
     SKATING: 18,
     MR_NOT_CLONE: 19,
     UBISOFT: 20,
+    START_STORY_COMPLETED: 21,
 };
