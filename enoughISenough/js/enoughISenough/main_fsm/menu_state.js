@@ -8,6 +8,7 @@ class MenuState extends PP.State {
         this._myFSM.setDebugLogActive(true, "    Menu");
         this._myFSM.addState("ready", this._readyUpdate.bind(this));
         this._myFSM.addState("unspawning_reset", this._unspawn.bind(this));
+        this._myFSM.addState("unspawning_restart", this._unspawn.bind(this));
         this._myFSM.addState("unspawning_arcade_hard", this._unspawn.bind(this));
         this._myFSM.addState("unspawning_arcade_normal", this._unspawn.bind(this));
         this._myFSM.addState("unspawning_story", this._unspawn.bind(this));
@@ -17,10 +18,12 @@ class MenuState extends PP.State {
         this._myFSM.addTransition("ready", "unspawning_arcade_normal", "unspawn_arcade_normal", this._startUnspawning.bind(this));
         this._myFSM.addTransition("ready", "unspawning_story", "unspawn_story", this._startUnspawning.bind(this));
         this._myFSM.addTransition("ready", "unspawning_reset", "unspawn_reset", this._startUnspawningReset.bind(this));
+        this._myFSM.addTransition("ready", "unspawning_restart", "unspawn_restart", this._startUnspawningRestart.bind(this));
         this._myFSM.addTransition("unspawning_arcade_hard", "done", "end", this._endArcadeHard.bind(this));
         this._myFSM.addTransition("unspawning_arcade_normal", "done", "end", this._endArcadeNormal.bind(this));
         this._myFSM.addTransition("unspawning_story", "done", "end", this._endStory.bind(this));
         this._myFSM.addTransition("unspawning_reset", "done", "end", this._endReset.bind(this));
+        this._myFSM.addTransition("unspawning_restart", "done", "end", this._endRestart.bind(this));
 
         this._myMenuItems = [];
         this._myStartStory = null;
@@ -100,6 +103,11 @@ class MenuState extends PP.State {
             if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(Global.myDebugShortcutsPress)) {
                 this._myFSM.perform("unspawn_arcade_hard");
             }
+
+            //TEMP REMOVE THIS
+            if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(Global.myDebugShortcutsPress)) {
+                this._myFSM.perform("unspawn_restart");
+            }
         }
     }
 
@@ -124,6 +132,10 @@ class MenuState extends PP.State {
         }
 
         this._myMenuTitle.unspawn(Math.pp_random(0.35, 0.7));
+    }
+
+    _startUnspawningRestart(fsm) {
+        this._startUnspawning();
     }
 
     _startUnspawningReset(fsm) {
@@ -177,6 +189,10 @@ class MenuState extends PP.State {
     }
 
     _endReset(fsm) {
+        this._myParentFSM.perform(MainTransitions.Reset);
+    }
+
+    _endRestart(fsm) {
         this._myParentFSM.perform(MainTransitions.Reset);
     }
 
@@ -309,6 +325,8 @@ class MenuItem {
         this._myFSM.init("init");
 
         this._myPhysx.onCollision(this._onCollision.bind(this));
+
+        this._myParticlesRadius = 0.225;
     }
 
     init(timeBeforeFirstSpawn) {
@@ -409,7 +427,7 @@ class MenuItem {
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
 
         if (this._myTimer.isDone()) {
-            Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myScale, this._myObjectType);
+            Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myParticlesRadius, this._myScale, this._myObjectType);
             this._myFSM.perform("end");
         }
     }

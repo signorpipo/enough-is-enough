@@ -52,6 +52,8 @@ class Evidence {
         this._myPhysx.onCollision(this._onCollision.bind(this));
         this._myCollisionCount = 0;
         this._myHasBeenThrown = false;
+
+        this._myParticlesRadius = 0.225;
     }
 
     getEvidenceSetup() {
@@ -171,7 +173,7 @@ class Evidence {
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
 
         if (this._myTimer.isDone()) {
-            Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myScale, this._myObjectType);
+            Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myParticlesRadius, this._myScale, this._myObjectType);
             this._myFSM.perform("end");
             this._myCallbackOnUnspawned(this);
             if (this._myEvidenceSetup.myCallbackOnUnspawned) {

@@ -11,17 +11,17 @@ class ParticlesManager {
         this._myParticlesList.pp_removeAll(element => element.isDone());
     }
 
-    explosion(position, objectScale, objectType) {
-        let explosionParticles = new ExplosionParticles(position, objectScale, objectType);
+    explosion(position, radius, objectScale, objectType) {
+        let explosionParticles = new ExplosionParticles(position, radius, objectScale, objectType);
         this._myParticlesList.push(explosionParticles);
     }
 }
 
 class ExplosionParticles {
-    constructor(position, objectScale, objectType) {
+    constructor(position, radius, objectScale, objectType) {
         this._myPosition = position.slice(0);
-        this._myScale = objectScale.vec3_length();
-        this._myRadius = this._myScale * 1.25;
+        this._myScale = objectScale[0];
+        this._myRadius = radius;
         this._myObjectType = objectType;
 
         this._myTimer = new PP.Timer(0.5);
@@ -60,7 +60,7 @@ class ExplosionParticles {
 
         let radius = Math.pp_random(this._myRadius * 0.75, this._myRadius * 1.25);
         let position = direction.vec3_scale(radius).vec3_add(this._myPosition);
-        let scale = this._myScale * 0.075;
+        let scale = Math.pp_random(this._myScale * 0.1, this._myScale * 0.25);
 
         return new ExplosionParticle(position, scale, this._myObjectType);
     }

@@ -202,6 +202,7 @@ TO DO:
 
 TUNE:
 - altezza da cui partono i cloni, distanza, altezza di arrivo, tempo di arrivo, distanza iniziale (insomma tutto)
+- diminuire un pochino il tempo che inizia a scrivere il secondo enough del titolo durante la vibrazione per farlo sembrare piu scorrevole, ora parte a scriverlo quando tutto si è già fermato e stacca troppo
 
 BUG:
 - lag 
