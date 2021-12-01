@@ -11,6 +11,7 @@ WL.registerComponent('evidence-objects', {
     _myEarring: { type: WL.Type.Object },
     _mySkating: { type: WL.Type.Object },
     _myUbisoft: { type: WL.Type.Object },
+    _myPsychoterapy: { type: WL.Type.Object },
 }, {
     init: function () {
         Global.myGameObjects.set(GameObjectType.STORY_TIMER, this._myStoryTimer);
@@ -25,6 +26,7 @@ WL.registerComponent('evidence-objects', {
         Global.myGameObjects.set(GameObjectType.EARRING, this._myEarring);
         Global.myGameObjects.set(GameObjectType.SKATING, this._mySkating);
         Global.myGameObjects.set(GameObjectType.UBISOFT, this._myUbisoft);
+        Global.myGameObjects.set(GameObjectType.PSYCHOTHERAPY, this._myPsychoterapy);
 
         let cloneParams = new PP.CloneParams();
         cloneParams.myComponentsToInclude.push("mesh");
@@ -40,6 +42,7 @@ WL.registerComponent('evidence-objects', {
         Global.myMeshObjects.set(GameObjectType.EARRING, this._myEarring.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.SKATING, this._mySkating.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.UBISOFT, this._myUbisoft.pp_clone(cloneParams));
+        Global.myMeshObjects.set(GameObjectType.PSYCHOTHERAPY, this._myPsychoterapy.pp_clone(cloneParams));
     },
     start: function () {
     },

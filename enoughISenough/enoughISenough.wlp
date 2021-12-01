@@ -3433,7 +3433,8 @@
                         "_myEarring": "222",
                         "_mySkating": "225",
                         "_myVentTimer": "317",
-                        "_myUbisoft": "325"
+                        "_myUbisoft": "325",
+                        "_myPsychoterapy": "390"
                     }
                 }
             ],
@@ -7109,7 +7110,7 @@
                 0.0,
                 1.0,
                 0.0,
-                3.5762701600106086e-7,
+                3.576270160010609e-7,
                 0.0000081,
                 0.5000309,
                 1.0
@@ -7163,12 +7164,12 @@
             "parent": "348",
             "name": "Pivot",
             "transformation": [
-                -1.1920926112907182e-7,
+                -1.1920926112907185e-7,
                 0.0,
                 1.0000054,
                 0.0,
                 0.9999933,
-                -3.5762550965046105e-7,
+                -3.576255096504611e-7,
                 1.1920918296937089e-7,
                 0.0,
                 3.576280960260192e-7,
@@ -7436,6 +7437,125 @@
                     }
                 }
             ]
+        },
+        "390": {
+            "name": "Psychotherapy",
+            "parent": "174",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -0.6,
+                0.0,
+                0.5,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "evidence-component"
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "396",
+                            "scaling": [
+                                0.0099999,
+                                0.0099999,
+                                0.0099999
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "box": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.05
+                            ]
+                        },
+                        "groups": 1
+                    }
+                }
+            ]
+        },
+        "397": {
+            "link": {
+                "name": "Psychotherapy",
+                "file": "assets\\models\\evidences\\psychoterapy.fbx"
+            },
+            "parent": "390",
+            "transformation": [
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "398": {
+            "link": {
+                "name": "Staff<Psychotherapy",
+                "file": "assets\\models\\evidences\\psychoterapy.fbx"
+            },
+            "parent": "397",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ]
+        },
+        "399": {
+            "link": {
+                "name": "Wings<Psychotherapy",
+                "file": "assets\\models\\evidences\\psychoterapy.fbx"
+            },
+            "parent": "397",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "284"
+                    }
+                }
+            ]
+        },
+        "400": {
+            "link": {
+                "name": "Physx<Psychotherapy",
+                "file": "assets\\models\\evidences\\psychoterapy.fbx"
+            },
+            "parent": "397",
+            "deleted": true
         }
     },
     "meshes": {
@@ -7791,6 +7911,24 @@
             "link": {
                 "name": "StoryCompleted - Out",
                 "file": "assets\\models\\evidences\\story_completed.fbx"
+            }
+        },
+        "394": {
+            "link": {
+                "name": "Psychotherapy - Staff",
+                "file": "assets\\models\\evidences\\psychoterapy.fbx"
+            }
+        },
+        "395": {
+            "link": {
+                "name": "Psychotherapy - Wings.001",
+                "file": "assets\\models\\evidences\\psychoterapy.fbx"
+            }
+        },
+        "396": {
+            "link": {
+                "name": "Psychotherapy - Physx",
+                "file": "assets\\models\\evidences\\psychoterapy.fbx"
             }
         }
     },
@@ -8674,6 +8812,24 @@
                 "name": "Red.001",
                 "file": "assets\\models\\evidences\\story_completed.fbx"
             }
+        },
+        "391": {
+            "link": {
+                "name": "Dark Blue",
+                "file": "assets\\models\\evidences\\psychoterapy.fbx"
+            }
+        },
+        "392": {
+            "link": {
+                "name": "Blue",
+                "file": "assets\\models\\evidences\\psychoterapy.fbx"
+            }
+        },
+        "393": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\psychoterapy.fbx"
+            }
         }
     },
     "shaders": {
@@ -8816,7 +8972,8 @@
         "assets/models/mr_NOT.fbx",
         "assets/models/evidences/ubisoft.fbx",
         "assets/models/evidences/story.fbx",
-        "assets/models/evidences/story_completed.fbx"
+        "assets/models/evidences/story_completed.fbx",
+        "assets/models/evidences/psychoterapy.fbx"
     ],
     "pipelines": {
         "69": {

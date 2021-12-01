@@ -22,4 +22,5 @@ var GameObjectType = {
     MR_NOT_CLONE: 19,
     UBISOFT: 20,
     START_STORY_COMPLETED: 21,
+    PSYCHOTHERAPY: 22,
 };
