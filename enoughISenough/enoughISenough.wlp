@@ -1795,7 +1795,8 @@
                     "type": "hand-animator",
                     "hand-animator": {
                         "_myHandPieceMesh": "128",
-                        "_myHandPieceMaterial": "107"
+                        "_myHandPieceMaterial": "107",
+                        "_myHandPieceObject": "418"
                     },
                     "active": true
                 }
@@ -1865,7 +1866,8 @@
                     "hand-animator": {
                         "_myHandPieceMesh": "128",
                         "_myHandPieceMaterial": "107",
-                        "_myHandedness": "right"
+                        "_myHandedness": "right",
+                        "_myHandPieceObject": "419"
                     }
                 }
             ]
@@ -2342,14 +2344,14 @@
             ],
             "transformation": [
                 -0.9999992,
-                -1.509957314738131e-7,
-                8.742272683548438e-8,
+                -1.50995788317232e-7,
+                8.742273394091171e-8,
                 0.0,
-                -1.509958451606508e-7,
+                -1.509959020040697e-7,
                 1.0,
                 -1.509958167389414e-7,
                 0.0,
-                -8.7422698413775e-8,
+                -8.742270551920228e-8,
                 -1.509957030521037e-7,
                 -0.9999992,
                 0.0,
@@ -2357,7 +2359,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "149": {
             "name": "Mesh",
@@ -2369,10 +2372,6 @@
                         "mesh": "128",
                         "material": "284"
                     }
-                },
-                {
-                    "type": "pp-deactivate-on-first-update",
-                    "active": true
                 }
             ],
             "transformation": [
@@ -2392,7 +2391,8 @@
                 0.000004,
                 -1.6630110621917994e-8,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "150": {
             "name": "Trigger",
@@ -7647,6 +7647,324 @@
                     }
                 }
             ]
+        },
+        "416": {
+            "link": {
+                "name": "Hand Piece Pivot",
+                "file": "assets\\models\\new_hand_piece.fbx"
+            },
+            "parent": "418",
+            "transformation": [
+                -0.0,
+                -0.0100001,
+                -0.0,
+                0.0,
+                -0.0100001,
+                -0.0,
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.0100004,
+                0.0,
+                -8.568167686462402e-7,
+                0.0000126,
+                0.0,
+                1.0
+            ],
+            "name": "Pivot"
+        },
+        "417": {
+            "link": {
+                "name": "New Hand Piece<Hand Piece Pivot",
+                "file": "assets\\models\\new_hand_piece.fbx"
+            },
+            "parent": "416",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "284",
+                        "mesh": "426"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.9999993,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.9999993,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "418": {
+            "name": "Hand Piece",
+            "parent": "50",
+            "components": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                {
+                    "type": "pp-deactivate-on-first-update",
+                    "active": true
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "419": {
+            "name": "Hand Piece",
+            "parent": "58",
+            "components": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                {
+                    "type": "pp-deactivate-on-first-update",
+                    "active": true
+                }
+            ],
+            "transformation": [
+                0.9999887,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.9999889,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.999996,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "420": {
+            "link": {
+                "name": "Hand Piece Pivot",
+                "file": "assets\\models\\new_hand_piece.fbx"
+            },
+            "parent": "419",
+            "transformation": [
+                -0.0100005,
+                0.0,
+                -0.0,
+                0.0,
+                0.0,
+                0.0100002,
+                -0.0,
+                0.0,
+                0.0,
+                -0.0,
+                -0.0100009,
+                0.0,
+                0.0000016,
+                0.0000091,
+                5.499527446772845e-7,
+                1.0
+            ],
+            "name": "Pivot"
+        },
+        "421": {
+            "link": {
+                "name": "New Hand Piece<Hand Piece Pivot",
+                "file": "assets\\models\\new_hand_piece.fbx"
+            },
+            "parent": "420",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "284",
+                        "mesh": "426"
+                    }
+                }
+            ]
+        },
+        "424": {
+            "link": {
+                "name": "Old Hand Piece",
+                "file": "assets\\models\\old_hand_piece.fbx"
+            },
+            "deleted": true
+        },
+        "427": {
+            "link": {
+                "name": "New Hand Piece Pivot 2",
+                "file": "assets\\models\\new_hand_piece_2.fbx"
+            },
+            "deleted": true
+        },
+        "428": {
+            "link": {
+                "name": "New Hand Piece 2<New Hand Piece Pivot 2",
+                "file": "assets\\models\\new_hand_piece_2.fbx"
+            },
+            "parent": "427",
+            "deleted": true
         }
     },
     "meshes": {
@@ -8038,6 +8356,24 @@
             "link": {
                 "name": "New Smaller Ring",
                 "file": "assets\\models\\new_smaller_ring.fbx"
+            }
+        },
+        "415": {
+            "link": {
+                "name": "New Hand Piece",
+                "file": "assets\\models\\new_hand_piece.fbx"
+            }
+        },
+        "423": {
+            "link": {
+                "name": "Old Hand Piece",
+                "file": "assets\\models\\old_hand_piece.fbx"
+            }
+        },
+        "426": {
+            "link": {
+                "name": "New Hand Piece 2",
+                "file": "assets\\models\\new_hand_piece_2.fbx"
             }
         }
     },
@@ -8963,6 +9299,24 @@
                 "name": "Light Blue",
                 "file": "assets\\models\\new_smaller_ring.fbx"
             }
+        },
+        "414": {
+            "link": {
+                "name": "Material.001",
+                "file": "assets\\models\\new_hand_piece.fbx"
+            }
+        },
+        "422": {
+            "link": {
+                "name": "Material.001",
+                "file": "assets\\models\\old_hand_piece.fbx"
+            }
+        },
+        "425": {
+            "link": {
+                "name": "Material.001",
+                "file": "assets\\models\\new_hand_piece_2.fbx"
+            }
         }
     },
     "shaders": {
@@ -9109,7 +9463,10 @@
         "assets/models/evidences/psychoterapy.fbx",
         "assets/models/new_ring_3.fbx",
         "assets/models/new_ring.fbx",
-        "assets/models/new_smaller_ring.fbx"
+        "assets/models/new_smaller_ring.fbx",
+        "assets/models/new_hand_piece.fbx",
+        "assets/models/old_hand_piece.fbx",
+        "assets/models/new_hand_piece_2.fbx"
     ],
     "pipelines": {
         "69": {

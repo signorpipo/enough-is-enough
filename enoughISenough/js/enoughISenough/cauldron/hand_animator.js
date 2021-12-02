@@ -1,6 +1,5 @@
 WL.registerComponent("hand-animator", {
-    _myHandPieceMesh: { type: WL.Type.Mesh },
-    _myHandPieceMaterial: { type: WL.Type.Material },
+    _myHandPieceObject: { type: WL.Type.Object },
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' }
 }, {
     init: function () {
@@ -9,27 +8,30 @@ WL.registerComponent("hand-animator", {
         this._myHandObject = WL.scene.addObject(this.object);
         this._myHandObject.pp_rotateObject([0, 180, 0]);
 
-        let handPieceBase = WL.scene.addObject(this._myHandObject);
-        let mesh = handPieceBase.pp_addComponent("mesh");
-        mesh.mesh = this._myHandPieceMesh;
-        mesh.material = this._myHandPieceMaterial.clone();
+        let cloneParams = new PP.CloneParams();
+        cloneParams.myIgnoreNonCloneable = true;
+        let handPieceBase = this._myHandPieceObject.pp_clone(cloneParams);
+        handPieceBase.pp_setParent(this._myHandObject);
 
         let xDistance = 0.005;
         let yDistance = 0.005;
         let zDistance = 0.01;
 
-        let leftMultiplier = 1;
-        if (this._myHandedness == PP.HandednessIndex.LEFT) {
-            leftMultiplier = -1;
-            handPieceBase.pp_rotateObject([0, 0, -90]);
+        let leftMultiplier = -1;
+        if (this._myHandedness == PP.HandednessIndex.RIGHT) {
+            leftMultiplier = 1;
         }
 
         let rotations = [[0, 0, 0], [0, 0, -90 * leftMultiplier], [0, 0, 180], [0, 0, 90 * leftMultiplier], [180, 0, -90],
         [180, 0, (leftMultiplier > 0) ? 180 : 0], [180, 0, 90], [180, 0, (leftMultiplier < 0) ? 180 : 0]];
-        let endPositions = [[-xDistance * leftMultiplier, yDistance, -zDistance], [xDistance * leftMultiplier, yDistance, -zDistance], [xDistance * leftMultiplier, -yDistance, -zDistance], [-xDistance * leftMultiplier, -yDistance, -zDistance],
-        [-xDistance * leftMultiplier, yDistance, zDistance], [xDistance * leftMultiplier, yDistance, zDistance], [xDistance * leftMultiplier, -yDistance, zDistance], [-xDistance * leftMultiplier, -yDistance, zDistance]];
+        let endPositions = [[-xDistance * leftMultiplier, yDistance, -zDistance], [xDistance * -leftMultiplier, -yDistance, -zDistance], [xDistance * leftMultiplier, -yDistance, -zDistance], [xDistance * leftMultiplier, yDistance, -zDistance],
+        [xDistance, -yDistance * leftMultiplier, zDistance], [xDistance, yDistance * leftMultiplier, zDistance], [-xDistance, yDistance * leftMultiplier, zDistance], [-xDistance, -yDistance * leftMultiplier, zDistance]];
 
         let elementsToRemove = [7, 5, 4];
+        if (this._myHandedness == PP.HandednessIndex.RIGHT) {
+            elementsToRemove = [7, 6, 5];
+        }
+
         for (let index of elementsToRemove) {
             rotations.pp_removeIndex(index);
             endPositions.pp_removeIndex(index);
@@ -44,7 +46,7 @@ WL.registerComponent("hand-animator", {
             if (i == rotations.length - 1) {
                 piece = handPieceBase;
             } else {
-                piece = handPieceBase.pp_clone();
+                piece = handPieceBase.pp_clone(cloneParams);
             }
 
             piece.pp_rotateObject(rotations[i]);
