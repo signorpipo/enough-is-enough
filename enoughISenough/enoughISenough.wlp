@@ -1201,39 +1201,34 @@
             },
             "parent": "112",
             "transformation": [
-                1.2999999,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.8,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.2999999,
+                1.0,
                 0.0,
-                0.0000081,
+                0.000008,
                 0.0,
                 0.0,
                 1.0
             ],
             "components": [
                 {
-                    "mesh": {
-                        "material": "274"
-                    }
-                },
-                {
                     "type": "physx",
                     "physx": {
                         "shape": "triangleMesh",
                         "triangleMesh": {
-                            "mesh": "108",
+                            "mesh": "402",
                             "scaling": [
-                                1.2999999,
-                                0.8,
-                                1.2999999
+                                0.013,
+                                0.008,
+                                0.013
                             ]
                         },
                         "kinematic": true,
@@ -1438,19 +1433,18 @@
             "name": "Smaller Ring",
             "components": [
                 {
-                    "mesh": {
-                        "material": "281"
-                    },
-                    "active": true
-                },
-                {
                     "type": "physx",
                     "physx": {
                         "kinematic": true,
                         "gravity": false,
                         "shape": "triangleMesh",
                         "triangleMesh": {
-                            "mesh": "109"
+                            "mesh": "410",
+                            "scaling": [
+                                0.0099999,
+                                0.0099999,
+                                0.0099999
+                            ]
                         }
                     }
                 }
@@ -7556,6 +7550,103 @@
             },
             "parent": "397",
             "deleted": true
+        },
+        "403": {
+            "link": {
+                "name": "New Ring 3 Pivot",
+                "file": "assets\\models\\new_ring_3.fbx"
+            },
+            "parent": "110",
+            "transformation": [
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                -0.0000081,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "name": "Pivot"
+        },
+        "404": {
+            "link": {
+                "name": "New Ring 3<New Ring 3 Pivot",
+                "file": "assets\\models\\new_ring_3.fbx"
+            },
+            "parent": "403",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "274",
+                        "mesh": "402"
+                    }
+                }
+            ]
+        },
+        "407": {
+            "link": {
+                "name": "New Ring Pivot",
+                "file": "assets\\models\\new_ring.fbx"
+            },
+            "parent": "110",
+            "deleted": true
+        },
+        "408": {
+            "link": {
+                "name": "New Ring<New Ring Pivot",
+                "file": "assets\\models\\new_ring.fbx"
+            },
+            "parent": "407",
+            "deleted": true
+        },
+        "411": {
+            "link": {
+                "name": "New Smaller Ring Pivot",
+                "file": "assets\\models\\new_smaller_ring.fbx"
+            },
+            "parent": "118",
+            "name": "Pivot",
+            "transformation": [
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "412": {
+            "link": {
+                "name": "New Smaller Ring<New Smaller Ring Pivot",
+                "file": "assets\\models\\new_smaller_ring.fbx"
+            },
+            "parent": "411",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -7929,6 +8020,24 @@
             "link": {
                 "name": "Psychotherapy - Physx",
                 "file": "assets\\models\\evidences\\psychoterapy.fbx"
+            }
+        },
+        "402": {
+            "link": {
+                "name": "New Ring 3",
+                "file": "assets\\models\\new_ring_3.fbx"
+            }
+        },
+        "406": {
+            "link": {
+                "name": "New Ring",
+                "file": "assets\\models\\new_ring.fbx"
+            }
+        },
+        "410": {
+            "link": {
+                "name": "New Smaller Ring",
+                "file": "assets\\models\\new_smaller_ring.fbx"
             }
         }
     },
@@ -8830,6 +8939,30 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\psychoterapy.fbx"
             }
+        },
+        "401": {
+            "link": {
+                "name": "Dark Red",
+                "file": "assets\\models\\new_ring_3.fbx"
+            }
+        },
+        "405": {
+            "link": {
+                "name": "Dark Red",
+                "file": "assets\\models\\new_ring.fbx"
+            }
+        },
+        "409": {
+            "link": {
+                "name": "Dark Red",
+                "file": "assets\\models\\new_smaller_ring.fbx"
+            }
+        },
+        "413": {
+            "link": {
+                "name": "Light Blue",
+                "file": "assets\\models\\new_smaller_ring.fbx"
+            }
         }
     },
     "shaders": {
@@ -8973,7 +9106,10 @@
         "assets/models/evidences/ubisoft.fbx",
         "assets/models/evidences/story.fbx",
         "assets/models/evidences/story_completed.fbx",
-        "assets/models/evidences/psychoterapy.fbx"
+        "assets/models/evidences/psychoterapy.fbx",
+        "assets/models/new_ring_3.fbx",
+        "assets/models/new_ring.fbx",
+        "assets/models/new_smaller_ring.fbx"
     ],
     "pipelines": {
         "69": {
