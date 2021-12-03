@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "317",
+                        "_myStartStory": "161",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -2169,17 +2169,17 @@
             "name": "Start Arcade Hard",
             "parent": "143",
             "transformation": [
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.8999999,
                 0.0,
@@ -2192,11 +2192,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "8",
+                            "mesh": "465",
                             "scaling": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.0099999,
+                                0.0099999,
+                                0.0099999
                             ]
                         }
                     }
@@ -2218,9 +2218,9 @@
                         "groups": 1,
                         "box": {
                             "extents": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.07,
+                                0.09,
+                                0.07
                             ]
                         }
                     }
@@ -2257,7 +2257,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "146": {
             "name": "Position Cube",
@@ -2325,7 +2326,8 @@
                 0.0,
                 0.8999999,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "148": {
             "name": "Mesh",
@@ -2528,11 +2530,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "8",
+                            "mesh": "465",
                             "scaling": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.0099999,
+                                0.0099999,
+                                0.0099999
                             ]
                         }
                     }
@@ -2554,9 +2556,9 @@
                         "groups": 1,
                         "box": {
                             "extents": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.07,
+                                0.09,
+                                0.07
                             ]
                         }
                     }
@@ -2593,7 +2595,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "154": {
             "name": "Nose",
@@ -2624,7 +2627,8 @@
                 0.0,
                 0.8999999,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "155": {
             "name": "Leaderboard Arcade Normal",
@@ -8642,6 +8646,199 @@
                 205.3671875,
                 1.0
             ]
+        },
+        "466": {
+            "link": {
+                "name": "Arcade",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            },
+            "deleted": true
+        },
+        "467": {
+            "link": {
+                "name": "Base<Arcade",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            },
+            "parent": "466",
+            "deleted": true
+        },
+        "468": {
+            "link": {
+                "name": "Sphere<Arcade",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            },
+            "parent": "466",
+            "deleted": true
+        },
+        "469": {
+            "link": {
+                "name": "Stick<Arcade",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            },
+            "parent": "466",
+            "deleted": true
+        },
+        "470": {
+            "link": {
+                "name": "Arcade - Physx<Arcade",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            },
+            "parent": "466",
+            "deleted": true
+        },
+        "471": {
+            "link": {
+                "name": "Arcade",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            },
+            "parent": "144",
+            "transformation": [
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "name": "Pivot"
+        },
+        "472": {
+            "link": {
+                "name": "Base<Arcade",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            },
+            "parent": "471",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "272"
+                    }
+                }
+            ]
+        },
+        "473": {
+            "link": {
+                "name": "Sphere<Arcade",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            },
+            "parent": "471",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "280"
+                    }
+                }
+            ]
+        },
+        "474": {
+            "link": {
+                "name": "Stick<Arcade",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            },
+            "parent": "471",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "278"
+                    }
+                }
+            ]
+        },
+        "475": {
+            "link": {
+                "name": "Arcade",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            },
+            "parent": "152",
+            "transformation": [
+                0.0999999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0999999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0999999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "name": "Pivot"
+        },
+        "476": {
+            "link": {
+                "name": "Base<Arcade",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            },
+            "parent": "475",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "272"
+                    }
+                }
+            ],
+            "transformation": [
+                0.075,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.0,
+                -0.0749999,
+                0.0,
+                0.0,
+                0.0199999,
+                -0.0,
+                0.0,
+                0.0000019,
+                -6.2390899,
+                0.0,
+                1.0
+            ]
+        },
+        "477": {
+            "link": {
+                "name": "Sphere<Arcade",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            },
+            "parent": "475",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "284"
+                    }
+                }
+            ]
+        },
+        "478": {
+            "link": {
+                "name": "Stick<Arcade",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            },
+            "parent": "475",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "278"
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -9069,6 +9266,30 @@
             "link": {
                 "name": "Timer - Physx",
                 "file": "assets\\models\\evidences\\timer.fbx"
+            }
+        },
+        "462": {
+            "link": {
+                "name": "Arcade - Base",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            }
+        },
+        "463": {
+            "link": {
+                "name": "Arcade - Sphere",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            }
+        },
+        "464": {
+            "link": {
+                "name": "Arcade - Stick",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            }
+        },
+        "465": {
+            "link": {
+                "name": "Arcade - Physx",
+                "file": "assets\\models\\evidences\\arcade.fbx"
             }
         }
     },
@@ -9513,9 +9734,9 @@
             "name": "P8 Black",
             "Phong": {
                 "diffuseColor": [
-                    0.1529411,
-                    0.7882353,
-                    0.5411764,
+                    0.0980392,
+                    0.0980382,
+                    0.0980382,
                     1.0
                 ],
                 "specularColor": [
@@ -9525,9 +9746,9 @@
                     1.0
                 ],
                 "ambientColor": [
-                    0.0,
-                    0.2352941,
-                    0.1437908,
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
                     1.0
                 ]
             },
@@ -10068,6 +10289,24 @@
                 ]
             },
             "name": "TimerTextFontMaterial"
+        },
+        "459": {
+            "link": {
+                "name": "Dark Gray",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            }
+        },
+        "460": {
+            "link": {
+                "name": "Red",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            }
+        },
+        "461": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            }
         }
     },
     "shaders": {
@@ -10218,7 +10457,8 @@
         "assets/models/new_hand_piece.fbx",
         "assets/models/old_hand_piece.fbx",
         "assets/models/new_hand_piece_2.fbx",
-        "assets/models/evidences/timer.fbx"
+        "assets/models/evidences/timer.fbx",
+        "assets/models/evidences/arcade.fbx"
     ],
     "pipelines": {
         "69": {
