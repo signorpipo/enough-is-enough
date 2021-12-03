@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "161",
+                        "_myStartStory": "219",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -2634,17 +2634,17 @@
             "name": "Leaderboard Arcade Normal",
             "parent": "143",
             "transformation": [
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.6,
                 0.0,
@@ -2659,8 +2659,8 @@
                         "convexMesh": {
                             "mesh": "8",
                             "scaling": [
-                                0.1,
-                                0.1,
+                                0.09,
+                                0.0099999,
                                 0.1
                             ]
                         }
@@ -2683,9 +2683,9 @@
                         "groups": 1,
                         "box": {
                             "extents": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.0949999,
+                                0.0199999,
+                                0.1049999
                             ]
                         }
                     }
@@ -2722,7 +2722,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "157": {
             "name": "Nose",
@@ -2753,7 +2754,8 @@
                 0.0,
                 0.8999999,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "158": {
             "name": "Leaderboard Arcade Hard",
@@ -4909,11 +4911,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "432",
+                            "mesh": "8",
                             "scaling": [
+                                0.1,
                                 0.0099999,
-                                0.0099999,
-                                0.0099999
+                                0.09
                             ]
                         }
                     }
@@ -4935,9 +4937,9 @@
                         "groups": 1,
                         "box": {
                             "extents": [
-                                0.1,
-                                0.05,
-                                0.05
+                                0.1049999,
+                                0.0199999,
+                                0.0949999
                             ]
                         }
                     }
@@ -7998,7 +8000,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "434": {
             "link": {
@@ -8012,7 +8015,8 @@
                         "material": "275"
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "435": {
             "link": {
@@ -8026,7 +8030,8 @@
                         "material": "283"
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "436": {
             "link": {
@@ -8163,7 +8168,8 @@
                 -31.5485839,
                 205.3671875,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "444": {
             "name": "First Points",
@@ -8196,7 +8202,8 @@
                 0.0002441,
                 205.3671875,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "445": {
             "name": "Minutes",
@@ -8263,7 +8270,8 @@
                 0.0002441,
                 205.3671875,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "447": {
             "name": "Hours",
@@ -8330,7 +8338,8 @@
                 -31.5494384,
                 205.3671875,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "449": {
             "name": "Hours",
@@ -8414,7 +8423,8 @@
                         "_myHours": "452"
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "452": {
             "name": "Hours",
@@ -8447,7 +8457,8 @@
                 -31.548706,
                 205.3671875,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "453": {
             "name": "Text",
@@ -8838,6 +8849,724 @@
                         "material": "278"
                     }
                 }
+            ]
+        },
+        "486": {
+            "link": {
+                "name": "Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "155",
+            "transformation": [
+                0.0120999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0120999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0120999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "name": "Pivot"
+        },
+        "487": {
+            "link": {
+                "name": "Leaderboard - Stick Vertical Left<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "486",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "488": {
+            "link": {
+                "name": "Leaderboard - Stick Vertical Right<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "486",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "489": {
+            "link": {
+                "name": "Leaderboard - Stick Horizontal Up<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "486",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "490": {
+            "link": {
+                "name": "Leaderboard - Stick Horizontal Down<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "486",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "491": {
+            "link": {
+                "name": "Leaderboard - Sphere<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "486",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "284"
+                    }
+                }
+            ]
+        },
+        "492": {
+            "name": "Text Test",
+            "parent": "155",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": "12300 - CARAMBOLA_CICCIO    \n----------------------------------------------\n12300 - CARAMBOLA_CICCIO    \n----------------------------------------------\n12300 - CARAMBOLA_CICCIO    \n----------------------------------------------\n12300 - CARAMBOLA_CICCIO    \n----------------------------------------------\n12300 - CARAMBOLA_CICCIO    \n----------------------------------------------\n12300 - CARAMBOLA_CICCIO    \n----------------------------------------------\n12300 - CARAMBOLA_CICCIO    \n----------------------------------------------\n12300 - CARAMBOLA_CICCIO    \n----------------------------------------------\n12300 - CARAMBOLA_CICCIO    \n----------------------------------------------\n12300 - CARAMBOLA_CICCIO    \n----------------------------------------------\n12300 - CARAMBOLA_CICCIO    \n----------------------------------------------\n12300 - CARAMBOLA_CICCIO    \n----------------------------------------------",
+                        "alignment": "left",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                0.0539999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.0,
+                -0.0539984,
+                0.0,
+                0.0,
+                0.0119993,
+                -0.0,
+                0.0,
+                -0.0513,
+                -5.960464477539063e-7,
+                -0.0659999,
+                1.0
+            ],
+            "deleted": true
+        },
+        "493": {
+            "name": "Text Test",
+            "parent": "155",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": "99:60:60\n\n99:60:60\n\n99:60:60\n\n99:60:60\n\n99:60:60\n\n99:60:60\n\n99:60:60\n\n99:60:60\n\n99:60:60\n\n99:60:60\n\n99:60:60\n\n99:60:60\n",
+                        "alignment": "right",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                0.0539999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.0,
+                -0.0539992,
+                0.0,
+                0.0,
+                0.0119995,
+                -0.0,
+                0.0,
+                0.0526834,
+                -0.0000015,
+                -0.0659999,
+                1.0
+            ],
+            "deleted": true
+        },
+        "494": {
+            "name": "Text Test",
+            "parent": "155",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": "2300 - CARAMBOLA_CICCIO       99:60:60\n\n2300 - CARAMBOLA_CICCIO       99:60:60\n\n2300 - CARAMBOLA_CICCIO       99:60:60\n\n2300 - CARAMBOLA_CICCIO       99:60:60\n\n2300 - CARAMBOLA_CICCIO       99:60:60\n\n2300 - CARAMBOLA_CICCIO       99:60:60\n\n2300 - CARAMBOLA_CICCIO       99:60:60\n\n2300 - CARAMBOLA_CICCIO       99:60:60\n\n2300 - CARAMBOLA_CICCIO       99:60:60\n",
+                        "alignment": "center",
+                        "justification": "middle"
+                    }
+                }
+            ],
+            "transformation": [
+                0.07,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -1.7523061046631484e-7,
+                -0.0699971,
+                0.0,
+                0.0,
+                0.0119983,
+                -3.0036684250944748e-8,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "495": {
+            "name": "Text Test",
+            "parent": "155",
+            "transformation": [
+                0.07,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -3.337855503104947e-8,
+                -0.0699998,
+                0.0,
+                0.0,
+                0.0119993,
+                -0.0,
+                0.0,
+                0.0599999,
+                -0.0000014,
+                -0.0659998,
+                1.0
+            ],
+            "deleted": true
+        },
+        "496": {
+            "link": {
+                "name": "Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "219",
+            "transformation": [
+                -0.0,
+                0.0,
+                -0.0121,
+                0.0,
+                0.0,
+                0.0120999,
+                0.0,
+                0.0,
+                0.0121,
+                0.0,
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "name": "Pivot"
+        },
+        "497": {
+            "link": {
+                "name": "Leaderboard - Stick Vertical Left<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "496",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "498": {
+            "link": {
+                "name": "Leaderboard - Stick Vertical Right<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "496",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "499": {
+            "link": {
+                "name": "Leaderboard - Stick Horizontal Up<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "496",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "500": {
+            "link": {
+                "name": "Leaderboard - Stick Horizontal Down<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "496",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "501": {
+            "link": {
+                "name": "Leaderboard - Sphere<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "496",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "283"
+                    }
+                }
+            ]
+        },
+        "502": {
+            "name": "Text",
+            "parent": "496",
+            "components": [
+                {
+                    "type": "timer",
+                    "timer": {
+                        "_myIsStory": true,
+                        "_mySeconds": "456",
+                        "_myMinutes": "457",
+                        "_myHours": "458"
+                    }
+                }
+            ],
+            "transformation": [
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                100.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "deleted": true
+        },
+        "503": {
+            "name": "Second Points",
+            "parent": "502",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": ":",
+                        "alignment": "center",
+                        "justification": "middle"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0008544,
+                -0.0072021,
+                0.0,
+                0.0,
+                0.000029,
+                99.9999694,
+                0.0,
+                -22.5999755,
+                0.0002441,
+                205.3671875,
+                1.0
+            ],
+            "deleted": true
+        },
+        "504": {
+            "name": "First Points",
+            "parent": "502",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": ":",
+                        "alignment": "center",
+                        "justification": "middle"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0008544,
+                -0.0072021,
+                0.0,
+                0.0,
+                0.000029,
+                99.9999694,
+                0.0,
+                22.6000976,
+                0.0002441,
+                205.3671875,
+                1.0
+            ],
+            "deleted": true
+        },
+        "505": {
+            "name": "Seconds",
+            "parent": "502",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": "00",
+                        "alignment": "left",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0008544,
+                -0.0072021,
+                0.0,
+                0.0,
+                0.000029,
+                99.9999694,
+                0.0,
+                28.5,
+                -31.5485839,
+                205.3671875,
+                1.0
+            ],
+            "deleted": true
+        },
+        "506": {
+            "name": "Minutes",
+            "parent": "502",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": "00",
+                        "alignment": "center",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0008544,
+                -0.0072021,
+                0.0,
+                0.0,
+                0.000029,
+                99.9999694,
+                0.0,
+                0.0,
+                -31.5494384,
+                205.3671875,
+                1.0
+            ],
+            "deleted": true
+        },
+        "507": {
+            "name": "Hours",
+            "parent": "502",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": "00",
+                        "alignment": "right",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0010986,
+                -0.00708,
+                0.0,
+                0.0,
+                0.000708,
+                99.9999694,
+                0.0,
+                -24.2000007,
+                -31.548706,
+                205.3671875,
+                1.0
+            ],
+            "deleted": true
+        },
+        "508": {
+            "name": "Text",
+            "parent": "496",
+            "components": [
+                {
+                    "type": "timer",
+                    "timer": {
+                        "_myIsStory": true,
+                        "_mySeconds": "511",
+                        "_myMinutes": "512",
+                        "_myHours": "513"
+                    }
+                }
+            ],
+            "transformation": [
+                0.0,
+                0.0,
+                0.1,
+                0.0,
+                0.1,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.1,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "509": {
+            "name": "Second Points",
+            "parent": "508",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": ":",
+                        "alignment": "center",
+                        "justification": "middle"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021606,
+                0.0,
+                0.0,
+                0.0021606,
+                300.0,
+                0.0,
+                -22.5999755,
+                0.000244,
+                0.0,
+                1.0
+            ]
+        },
+        "510": {
+            "name": "First Points",
+            "parent": "508",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": ":",
+                        "alignment": "center",
+                        "justification": "middle"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021606,
+                0.0,
+                0.0,
+                0.0021606,
+                300.0,
+                0.0,
+                22.6000976,
+                0.000244,
+                0.0,
+                1.0
+            ]
+        },
+        "511": {
+            "name": "Seconds",
+            "parent": "508",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": "00",
+                        "alignment": "left",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                -0.0,
+                -0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021278,
+                0.0,
+                0.0,
+                0.0021278,
+                300.0,
+                0.0,
+                28.5024032,
+                -10.0,
+                -0.0000762,
+                1.0
+            ]
+        },
+        "512": {
+            "name": "Minutes",
+            "parent": "508",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": "00",
+                        "alignment": "center",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021606,
+                0.0,
+                0.0,
+                0.0021606,
+                300.0,
+                0.0,
+                0.0,
+                -10.0,
+                0.0,
+                1.0
+            ]
+        },
+        "513": {
+            "name": "Hours",
+            "parent": "508",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": "00",
+                        "alignment": "right",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021239,
+                0.0,
+                0.0,
+                0.0021239,
+                300.0,
+                0.0,
+                -24.2000007,
+                -10.0,
+                0.0,
+                1.0
             ]
         }
     },
@@ -9290,6 +10019,36 @@
             "link": {
                 "name": "Arcade - Physx",
                 "file": "assets\\models\\evidences\\arcade.fbx"
+            }
+        },
+        "481": {
+            "link": {
+                "name": "Leaderboard - Stick Vertical Left.001",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            }
+        },
+        "482": {
+            "link": {
+                "name": "Leaderboard - Stick Vertical Right.001",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            }
+        },
+        "483": {
+            "link": {
+                "name": "Leaderboard - Stick Horizontal Up.001",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            }
+        },
+        "484": {
+            "link": {
+                "name": "Leaderboard - Stick Horizontal Down.003",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            }
+        },
+        "485": {
+            "link": {
+                "name": "Arcade - Sphere.001",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
             }
         }
     },
@@ -10094,9 +10853,9 @@
             "name": "P8 Beige",
             "Phong": {
                 "diffuseColor": [
-                    0.1529411,
-                    0.7882353,
-                    0.5411764,
+                    1.0,
+                    0.8,
+                    0.6666666,
                     1.0
                 ],
                 "specularColor": [
@@ -10106,9 +10865,9 @@
                     1.0
                 ],
                 "ambientColor": [
-                    0.0,
-                    0.2352941,
-                    0.1437908,
+                    0.3960784,
+                    0.2618777,
+                    0.1724105,
                     1.0
                 ]
             },
@@ -10248,7 +11007,7 @@
             "DistanceFieldVector": {
                 "outlineRange": [
                     0.5,
-                    0.375
+                    0.5
                 ],
                 "outlineColor": [
                     1.0,
@@ -10260,7 +11019,7 @@
                     1.0,
                     1.0,
                     1.0,
-                    0.0
+                    1.0
                 ]
             },
             "name": "TextFontMaterial"
@@ -10306,6 +11065,18 @@
             "link": {
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\arcade.fbx"
+            }
+        },
+        "479": {
+            "link": {
+                "name": "Dark Red",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            }
+        },
+        "480": {
+            "link": {
+                "name": "Red",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
             }
         }
     },
@@ -10458,7 +11229,8 @@
         "assets/models/old_hand_piece.fbx",
         "assets/models/new_hand_piece_2.fbx",
         "assets/models/evidences/timer.fbx",
-        "assets/models/evidences/arcade.fbx"
+        "assets/models/evidences/arcade.fbx",
+        "assets/models/evidences/leaderboard.fbx"
     ],
     "pipelines": {
         "69": {
