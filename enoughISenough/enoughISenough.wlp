@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "219",
+                        "_myStartStory": "317",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -8085,6 +8085,563 @@
                     }
                 }
             ]
+        },
+        "440": {
+            "name": "Text",
+            "parent": "434",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": "99:99:60"
+                    },
+                    "active": false
+                },
+                {
+                    "type": "pp-easy-transform",
+                    "pp-easy-transform": {
+                        "_myVariableName": "Timer",
+                        "_mySetAsDefault": true,
+                        "_myScaleAsOne": false,
+                        "_myIsLocal": true
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                99.9999618,
+                0.0,
+                0.0,
+                3.4,
+                205.0,
+                1.0
+            ],
+            "deleted": true
+        },
+        "443": {
+            "name": "Seconds",
+            "parent": "451",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": "00",
+                        "alignment": "left",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0008544,
+                -0.0072021,
+                0.0,
+                0.0,
+                0.000029,
+                99.9999694,
+                0.0,
+                28.5,
+                -31.5485839,
+                205.3671875,
+                1.0
+            ]
+        },
+        "444": {
+            "name": "First Points",
+            "parent": "451",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": ":",
+                        "alignment": "center",
+                        "justification": "middle"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0008544,
+                -0.0072021,
+                0.0,
+                0.0,
+                0.000029,
+                99.9999694,
+                0.0,
+                22.6000976,
+                0.0002441,
+                205.3671875,
+                1.0
+            ]
+        },
+        "445": {
+            "name": "Minutes",
+            "parent": "434",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": "10",
+                        "alignment": "left",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0007934,
+                -0.0014648,
+                0.0,
+                0.0,
+                0.0001464,
+                99.9999694,
+                0.0,
+                -16.5,
+                -31.5499992,
+                205.375,
+                1.0
+            ],
+            "deleted": true
+        },
+        "446": {
+            "name": "Second Points",
+            "parent": "451",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": ":",
+                        "alignment": "center",
+                        "justification": "middle"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0008544,
+                -0.0072021,
+                0.0,
+                0.0,
+                0.000029,
+                99.9999694,
+                0.0,
+                -22.5999755,
+                0.0002441,
+                205.3671875,
+                1.0
+            ]
+        },
+        "447": {
+            "name": "Hours",
+            "parent": "434",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": "00",
+                        "alignment": "left",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0007934,
+                -0.0014648,
+                0.0,
+                0.0,
+                0.0001464,
+                99.9999694,
+                0.0,
+                -62.0,
+                -31.5489501,
+                205.375,
+                1.0
+            ],
+            "deleted": true
+        },
+        "448": {
+            "name": "Minutes",
+            "parent": "451",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": "00",
+                        "alignment": "center",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0008544,
+                -0.0072021,
+                0.0,
+                0.0,
+                0.000029,
+                99.9999694,
+                0.0,
+                0.0,
+                -31.5494384,
+                205.3671875,
+                1.0
+            ]
+        },
+        "449": {
+            "name": "Hours",
+            "parent": "451",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": "00",
+                        "alignment": "center",
+                        "justification": "line"
+                    },
+                    "active": false
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0008544,
+                -0.0072021,
+                0.0,
+                0.0,
+                0.000029,
+                99.9999694,
+                0.0,
+                -45.5,
+                -31.5485839,
+                205.3671875,
+                1.0
+            ],
+            "deleted": true
+        },
+        "450": {
+            "name": "Seconds",
+            "parent": "434",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": "00",
+                        "alignment": "left",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0007934,
+                -0.0014648,
+                0.0,
+                0.0,
+                0.0001464,
+                99.9999694,
+                0.0,
+                29.0,
+                -31.5489501,
+                205.375,
+                1.0
+            ],
+            "deleted": true
+        },
+        "451": {
+            "name": "Text",
+            "parent": "434",
+            "components": [
+                {
+                    "type": "timer",
+                    "timer": {
+                        "_myIsStory": true,
+                        "_mySeconds": "443",
+                        "_myMinutes": "448",
+                        "_myHours": "452"
+                    }
+                }
+            ]
+        },
+        "452": {
+            "name": "Hours",
+            "parent": "451",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": "00",
+                        "alignment": "right",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0010986,
+                -0.00708,
+                0.0,
+                0.0,
+                0.000708,
+                99.9999694,
+                0.0,
+                -24.2000007,
+                -31.548706,
+                205.3671875,
+                1.0
+            ]
+        },
+        "453": {
+            "name": "Text",
+            "parent": "438",
+            "components": [
+                {
+                    "type": "timer",
+                    "timer": {
+                        "_myIsStory": true,
+                        "_mySeconds": "456",
+                        "_myMinutes": "457",
+                        "_myHours": "458"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "454": {
+            "name": "Second Points",
+            "parent": "453",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": ":",
+                        "alignment": "center",
+                        "justification": "middle"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0008544,
+                -0.0072021,
+                0.0,
+                0.0,
+                0.000029,
+                99.9999694,
+                0.0,
+                -22.5999755,
+                0.0002441,
+                205.3671875,
+                1.0
+            ]
+        },
+        "455": {
+            "name": "First Points",
+            "parent": "453",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": ":",
+                        "alignment": "center",
+                        "justification": "middle"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0008544,
+                -0.0072021,
+                0.0,
+                0.0,
+                0.000029,
+                99.9999694,
+                0.0,
+                22.6000976,
+                0.0002441,
+                205.3671875,
+                1.0
+            ]
+        },
+        "456": {
+            "name": "Seconds",
+            "parent": "453",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": "00",
+                        "alignment": "left",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0008544,
+                -0.0072021,
+                0.0,
+                0.0,
+                0.000029,
+                99.9999694,
+                0.0,
+                28.5,
+                -31.5485839,
+                205.3671875,
+                1.0
+            ]
+        },
+        "457": {
+            "name": "Minutes",
+            "parent": "453",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": "00",
+                        "alignment": "center",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0008544,
+                -0.0072021,
+                0.0,
+                0.0,
+                0.000029,
+                99.9999694,
+                0.0,
+                0.0,
+                -31.5494384,
+                205.3671875,
+                1.0
+            ]
+        },
+        "458": {
+            "name": "Hours",
+            "parent": "453",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "442",
+                        "text": "00",
+                        "alignment": "right",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1000.0010986,
+                -0.00708,
+                0.0,
+                0.0,
+                0.000708,
+                99.9999694,
+                0.0,
+                -24.2000007,
+                -31.548706,
+                205.3671875,
+                1.0
+            ]
         }
     },
     "meshes": {
@@ -9232,9 +9789,9 @@
                     1.0
                 ],
                 "ambientColor": [
-                    0.0714186,
-                    0.3372548,
-                    0.1343798,
+                    0.0800922,
+                    0.3294117,
+                    0.1391416,
                     1.0
                 ]
             },
@@ -9461,6 +10018,56 @@
                 "name": "Dark Red",
                 "file": "assets\\models\\evidences\\timer.fbx"
             }
+        },
+        "441": {
+            "link": {
+                "name": "DefaultFontMaterial",
+                "file": "default"
+            },
+            "DistanceFieldVector": {
+                "outlineRange": [
+                    0.5,
+                    0.375
+                ],
+                "outlineColor": [
+                    1.0,
+                    0.9999899,
+                    0.9999899,
+                    1.0
+                ],
+                "color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    0.0
+                ]
+            },
+            "name": "TextFontMaterial"
+        },
+        "442": {
+            "link": {
+                "name": "DefaultFontMaterial",
+                "file": "default"
+            },
+            "DistanceFieldVector": {
+                "outlineRange": [
+                    0.5,
+                    0.375
+                ],
+                "outlineColor": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.8235294
+                ],
+                "color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "name": "TimerTextFontMaterial"
         }
     },
     "shaders": {

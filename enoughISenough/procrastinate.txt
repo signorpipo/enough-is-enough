@@ -200,6 +200,7 @@ TO DO:
 - migliorare posizione not enough audio
 - pp set transform as hand?
 - controllare che la luce in piu quando appare mr not non si noti
+- migliorare il modello del timer
 
 TUNE:
 - altezza da cui partono i cloni, distanza, altezza di arrivo, tempo di arrivo, distanza iniziale (insomma tutto)
