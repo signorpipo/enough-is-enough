@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "161",
+                        "_myStartStory": "219",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -4882,17 +4882,17 @@
             "name": "Story Timer",
             "parent": "174",
             "transformation": [
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 1.2,
                 0.0,
@@ -4905,11 +4905,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "8",
+                            "mesh": "432",
                             "scaling": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.0099999,
+                                0.0099999,
+                                0.0099999
                             ]
                         }
                     }
@@ -4932,8 +4932,8 @@
                         "box": {
                             "extents": [
                                 0.1,
-                                0.1,
-                                0.1
+                                0.05,
+                                0.05
                             ]
                         }
                     }
@@ -4973,7 +4973,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "221": {
             "name": "Nose",
@@ -5004,7 +5005,8 @@
                 0.0,
                 0.8999999,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "222": {
             "name": "Earring",
@@ -6548,17 +6550,17 @@
             "name": "Vent Timer",
             "parent": "174",
             "transformation": [
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 -1.2,
                 0.0,
@@ -6571,11 +6573,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "8",
+                            "mesh": "432",
                             "scaling": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.0099999,
+                                0.0099999,
+                                0.0099999
                             ]
                         }
                     }
@@ -6598,8 +6600,8 @@
                         "box": {
                             "extents": [
                                 0.1,
-                                0.1,
-                                0.1
+                                0.05,
+                                0.05
                             ]
                         }
                     }
@@ -6639,7 +6641,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "319": {
             "name": "Nose",
@@ -6670,7 +6673,8 @@
                 0.0,
                 0.8999999,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "320": {
             "name": "Collision 1",
@@ -7965,6 +7969,122 @@
             },
             "parent": "427",
             "deleted": true
+        },
+        "433": {
+            "link": {
+                "name": "Timer",
+                "file": "assets\\models\\evidences\\timer.fbx"
+            },
+            "parent": "219",
+            "name": "Pivot",
+            "transformation": [
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "434": {
+            "link": {
+                "name": "Up<Timer",
+                "file": "assets\\models\\evidences\\timer.fbx"
+            },
+            "parent": "433",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "275"
+                    }
+                }
+            ]
+        },
+        "435": {
+            "link": {
+                "name": "Down<Timer",
+                "file": "assets\\models\\evidences\\timer.fbx"
+            },
+            "parent": "433",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "283"
+                    }
+                }
+            ]
+        },
+        "436": {
+            "link": {
+                "name": "Timer Physx<Timer",
+                "file": "assets\\models\\evidences\\timer.fbx"
+            },
+            "parent": "433",
+            "deleted": true
+        },
+        "437": {
+            "link": {
+                "name": "Timer",
+                "file": "assets\\models\\evidences\\timer.fbx"
+            },
+            "parent": "317",
+            "transformation": [
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "name": "Pivot"
+        },
+        "438": {
+            "link": {
+                "name": "Up<Timer",
+                "file": "assets\\models\\evidences\\timer.fbx"
+            },
+            "parent": "437",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "280"
+                    }
+                }
+            ]
+        },
+        "439": {
+            "link": {
+                "name": "Down<Timer",
+                "file": "assets\\models\\evidences\\timer.fbx"
+            },
+            "parent": "437",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "286"
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -8374,6 +8494,24 @@
             "link": {
                 "name": "New Hand Piece 2",
                 "file": "assets\\models\\new_hand_piece_2.fbx"
+            }
+        },
+        "430": {
+            "link": {
+                "name": "Timer - Up",
+                "file": "assets\\models\\evidences\\timer.fbx"
+            }
+        },
+        "431": {
+            "link": {
+                "name": "Timer - Down",
+                "file": "assets\\models\\evidences\\timer.fbx"
+            }
+        },
+        "432": {
+            "link": {
+                "name": "Timer - Physx",
+                "file": "assets\\models\\evidences\\timer.fbx"
             }
         }
     },
@@ -8890,9 +9028,9 @@
             "name": "P8 Dark Green",
             "Phong": {
                 "diffuseColor": [
-                    0.1529411,
-                    0.7882353,
-                    0.5411764,
+                    0.0,
+                    0.5294117,
+                    0.317647,
                     1.0
                 ],
                 "specularColor": [
@@ -8902,9 +9040,9 @@
                     1.0
                 ],
                 "ambientColor": [
-                    0.0,
-                    0.2352941,
-                    0.1437908,
+                    0.0463667,
+                    0.262745,
+                    0.1761936,
                     1.0
                 ]
             },
@@ -9082,9 +9220,9 @@
             "name": "P8 Green",
             "Phong": {
                 "diffuseColor": [
-                    0.1529411,
-                    0.7882353,
-                    0.5411764,
+                    0.0,
+                    0.8941176,
+                    0.2117647,
                     1.0
                 ],
                 "specularColor": [
@@ -9094,9 +9232,9 @@
                     1.0
                 ],
                 "ambientColor": [
-                    0.0,
-                    0.2352941,
-                    0.1437908,
+                    0.0714186,
+                    0.3372548,
+                    0.1343798,
                     1.0
                 ]
             },
@@ -9154,9 +9292,9 @@
             "name": "P8 Pink",
             "Phong": {
                 "diffuseColor": [
-                    0.1529411,
-                    0.7882353,
-                    0.5411764,
+                    1.0,
+                    0.4666666,
+                    0.6588235,
                     1.0
                 ],
                 "specularColor": [
@@ -9166,9 +9304,9 @@
                     1.0
                 ],
                 "ambientColor": [
-                    0.0,
-                    0.2352941,
-                    0.1437908,
+                    0.3686274,
+                    0.1214302,
+                    0.2104939,
                     1.0
                 ]
             },
@@ -9316,6 +9454,12 @@
             "link": {
                 "name": "Material.001",
                 "file": "assets\\models\\new_hand_piece_2.fbx"
+            }
+        },
+        "429": {
+            "link": {
+                "name": "Dark Red",
+                "file": "assets\\models\\evidences\\timer.fbx"
             }
         }
     },
@@ -9466,7 +9610,8 @@
         "assets/models/new_smaller_ring.fbx",
         "assets/models/new_hand_piece.fbx",
         "assets/models/old_hand_piece.fbx",
-        "assets/models/new_hand_piece_2.fbx"
+        "assets/models/new_hand_piece_2.fbx",
+        "assets/models/evidences/timer.fbx"
     ],
     "pipelines": {
         "69": {
