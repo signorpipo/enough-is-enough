@@ -19,12 +19,24 @@ WL.registerComponent("enough-IS-enough-gateway", {
         this.enoughISenough = new enoughISenough();
     },
     start: function () {
+        {
+            let staringCube = Global.myGameObjects.get(GameObjectType.STARING_CUBE);
+            PP.MeshUtils.setClonedMaterials(staringCube);
+            let cloneParams = new PP.CloneParams();
+            cloneParams.myComponentsToInclude.push("mesh");
+            Global.myMeshObjects.set(GameObjectType.STARING_CUBE, staringCube.pp_clone(cloneParams));
+        }
+
         for (let entry of Global.myMeshObjects.entries()) {
-            PP.MeshUtils.setClonedMaterials(entry[1]);
+            if (entry[0] != GameObjectType.STARING_CUBE) {
+                PP.MeshUtils.setClonedMaterials(entry[1]);
+            }
         }
 
         for (let entry of Global.myGameObjects.entries()) {
-            PP.MeshUtils.setClonedMaterials(entry[1]);
+            if (entry[0] != GameObjectType.STARING_CUBE) {
+                PP.MeshUtils.setClonedMaterials(entry[1]);
+            }
         }
 
         for (let entry of Global.myMeshObjects.entries()) {
@@ -48,6 +60,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         this.enoughISenough.start();
     },
     update: function (dt) {
+        Global.myFirstUpdateDone = true;
         this.enoughISenough.update(dt);
         Global.myParticlesManager.update(dt);
     }
@@ -55,6 +68,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
 var Global = {
     myScene: null,
+    myFirstUpdateDone: false,
     myAudioManager: null,
     myParticlesManager: null,
     myPlayerRumbleObject: null,
