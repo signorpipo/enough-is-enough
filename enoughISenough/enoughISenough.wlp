@@ -3268,17 +3268,17 @@
             "name": "Zesty Market",
             "parent": "143",
             "transformation": [
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 1.2,
                 0.0,
@@ -3293,8 +3293,8 @@
                         "convexMesh": {
                             "mesh": "8",
                             "scaling": [
-                                0.1,
-                                0.1,
+                                0.09,
+                                0.0099999,
                                 0.1
                             ]
                         }
@@ -3317,9 +3317,9 @@
                         "groups": 1,
                         "box": {
                             "extents": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.0949999,
+                                0.0199999,
+                                0.1049999
                             ]
                         }
                     }
@@ -3359,7 +3359,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "172": {
             "name": "Nose",
@@ -3390,7 +3391,8 @@
                 0.0,
                 0.8999999,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "173": {
             "name": "Center",
@@ -10241,6 +10243,181 @@
                 -0.0001144,
                 1.0
             ]
+        },
+        "539": {
+            "link": {
+                "name": "Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "170",
+            "transformation": [
+                0.012,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.012,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.012,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "name": "Pivot"
+        },
+        "540": {
+            "link": {
+                "name": "Leaderboard - Stick Vertical Left<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "539",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "541": {
+            "link": {
+                "name": "Leaderboard - Stick Vertical Right<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "539",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "542": {
+            "link": {
+                "name": "Leaderboard - Stick Horizontal Up<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "539",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "543": {
+            "link": {
+                "name": "Leaderboard - Stick Horizontal Down<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "539",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "544": {
+            "link": {
+                "name": "Leaderboard - Sphere<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "539",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "545": {
+            "name": "Plane",
+            "parent": "170",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "7",
+                        "material": "546"
+                    },
+                    "active": true
+                },
+                {
+                    "type": "zesty-banner",
+                    "zesty-banner": {
+                        "creator": "0x0000000000000000000000000000000000000000",
+                        "format": "tall",
+                        "style": "standard"
+                    }
+                }
+            ],
+            "transformation": [
+                0.054,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.0,
+                -0.072,
+                0.0,
+                0.0,
+                0.0999992,
+                -1.1920841203050259e-8,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "547": {
+            "name": "Plane",
+            "parent": "170",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "7",
+                        "material": "546"
+                    }
+                },
+                {
+                    "type": "zesty-banner",
+                    "zesty-banner": {
+                        "creator": "0x0000000000000000000000000000000000000000",
+                        "format": "tall",
+                        "style": "standard"
+                    }
+                }
+            ],
+            "transformation": [
+                -0.054,
+                -0.0,
+                0.0,
+                0.0,
+                -0.0,
+                2.5749205434522083e-8,
+                -0.0719999,
+                0.0,
+                0.0,
+                -0.0999984,
+                -3.5762230510272278e-8,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
         }
     },
     "meshes": {
@@ -11763,6 +11940,19 @@
                 "name": "Dark Red",
                 "file": "assets\\models\\evidences\\arcade.fbx"
             }
+        },
+        "546": {
+            "name": "Zesty",
+            "Phong": {
+                "specularColor": [
+                    9.999899930335233e-7,
+                    9.99993744699168e-7,
+                    9.999999974752428e-7,
+                    1.0
+                ],
+                "shininess": 1
+            },
+            "pipeline": "79"
         }
     },
     "shaders": {
@@ -11860,7 +12050,8 @@
                 "js/pp/tool/easy_tune",
                 "js/enoughISenough/story",
                 "js/pp/cauldron/fsm/states",
-                "js/enoughISenough/vent"
+                "js/enoughISenough/vent",
+                "js/plugin"
             ]
         },
         "editor": {
