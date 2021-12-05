@@ -9,7 +9,7 @@ class ArcadeState extends PP.State {
         this._myFSM.addState("init");
         this._myFSM.addState("first_wait", new PP.TimerState(1.5, "end"));
         this._myFSM.addState("vent", new VentState(this._buildVentSetup(), this._buildEvidenceSetupList()));
-        this._myFSM.addState("defeat", new ArcadeResultState());
+        this._myFSM.addState("defeat", new ArcadeResultState(isHard));
         this._myFSM.addState("done");
 
         this._myFSM.addTransition("init", "first_wait", "start");
@@ -57,7 +57,7 @@ class ArcadeState extends PP.State {
     _buildEvidenceSetupList() {
         let evidenceSetupList = [];
 
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STORY_TIMER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.VENT_TIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRAWING, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS, 5));

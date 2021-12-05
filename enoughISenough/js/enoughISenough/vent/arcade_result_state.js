@@ -1,5 +1,5 @@
 class ArcadeResultState extends PP.State {
-    constructor() {
+    constructor(isHard) {
         super();
 
         this._myFSM = new PP.FSM();
@@ -31,6 +31,8 @@ class ArcadeResultState extends PP.State {
         let evidenceSetupList = [];
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.VENT_TIMER, 5, null, null, [CardinalPosition.NORTH], this._onTimerUnspawned.bind(this)));
         this._myEvidenceManager = new EvidenceManager(evidenceSetupList);
+
+        this._myIsHard = isHard;
     }
 
     update(dt, fsm) {
@@ -84,6 +86,19 @@ class ArcadeResultState extends PP.State {
 
     _onTimerUnspawned(evidence) {
         if (PP.XRUtils.isXRSessionActive() && evidence.hasBeenThrown()) {
+            let leaderboardID = "enoughISenough";
+            if (this._myIsHard) {
+                leaderboardID = leaderboardID.concat("_hard");
+            } else {
+                leaderboardID = leaderboardID.concat("_normal");
+            }
+
+            let score = Math.floor(Global.myVentDuration * 1000);
+
+            PP.CAUtils.submitScore(leaderboardID, score, function () {
+                console.log(leaderboardID, score, score / 1000);
+            });
+
             this._myFSM.perform("end");
         }
     }
