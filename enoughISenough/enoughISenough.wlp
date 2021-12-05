@@ -6606,11 +6606,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "432",
+                            "mesh": "8",
                             "scaling": [
+                                0.1,
                                 0.0099999,
-                                0.0099999,
-                                0.0099999
+                                0.09
                             ]
                         }
                     }
@@ -6632,9 +6632,9 @@
                         "groups": 1,
                         "box": {
                             "extents": [
-                                0.1,
-                                0.05,
-                                0.05
+                                0.1049999,
+                                0.0199999,
+                                0.0949999
                             ]
                         }
                     }
@@ -8092,7 +8092,8 @@
                 0.0,
                 1.0
             ],
-            "name": "Pivot"
+            "name": "Pivot",
+            "deleted": true
         },
         "438": {
             "link": {
@@ -8106,7 +8107,8 @@
                         "material": "280"
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "439": {
             "link": {
@@ -8120,7 +8122,8 @@
                         "material": "286"
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "440": {
             "name": "Text",
@@ -8518,7 +8521,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "454": {
             "name": "Second Points",
@@ -8551,7 +8555,8 @@
                 0.0002441,
                 205.3671875,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "455": {
             "name": "First Points",
@@ -8584,7 +8589,8 @@
                 0.0002441,
                 205.3671875,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "456": {
             "name": "Seconds",
@@ -8617,7 +8623,8 @@
                 -31.5485839,
                 205.3671875,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "457": {
             "name": "Minutes",
@@ -8650,7 +8657,8 @@
                 -31.5494384,
                 205.3671875,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "458": {
             "name": "Hours",
@@ -8683,7 +8691,8 @@
                 -31.548706,
                 205.3671875,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "466": {
             "link": {
@@ -9949,7 +9958,7 @@
                 0.0,
                 0.0,
                 0.6999884,
-                -8.344513702240876e-8,
+                -8.344513702240877e-8,
                 0.0,
                 0.0,
                 0.0,
@@ -10042,7 +10051,7 @@
             "transformation": [
                 -0.7000011,
                 -6.119605444609988e-8,
-                2.086163775061323e-8,
+                2.0861637750613234e-8,
                 0.0,
                 -2.0861399718796748e-8,
                 2.503368250472704e-7,
@@ -10177,7 +10186,7 @@
                 0.0,
                 0.0,
                 -0.0,
-                2.5033685346897987e-8,
+                2.503368534689799e-8,
                 -0.0699992,
                 0.0,
                 0.0,
@@ -10429,7 +10438,7 @@
                 0.0,
                 0.0,
                 -0.0,
-                2.5749205434522087e-8,
+                2.574920543452209e-8,
                 -0.0719999,
                 0.0,
                 0.0,
@@ -10536,6 +10545,300 @@
                 0.0,
                 0.0,
                 -0.0227103,
+                1.0
+            ]
+        },
+        "560": {
+            "link": {
+                "name": "Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "317",
+            "transformation": [
+                -0.0,
+                0.0,
+                -0.0121,
+                0.0,
+                0.0,
+                0.0120999,
+                0.0,
+                0.0,
+                0.0121,
+                0.0,
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "name": "Pivot"
+        },
+        "561": {
+            "link": {
+                "name": "Leaderboard - Stick Vertical Left<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "560",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "562": {
+            "link": {
+                "name": "Leaderboard - Stick Vertical Right<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "560",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "563": {
+            "link": {
+                "name": "Leaderboard - Stick Horizontal Up<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "560",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "564": {
+            "link": {
+                "name": "Leaderboard - Stick Horizontal Down<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "560",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "565": {
+            "link": {
+                "name": "Leaderboard - Sphere<Leaderboard",
+                "file": "assets\\models\\evidences\\leaderboard.fbx"
+            },
+            "parent": "560",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "286"
+                    }
+                }
+            ]
+        },
+        "566": {
+            "name": "Text",
+            "parent": "560",
+            "components": [
+                {
+                    "type": "timer",
+                    "timer": {
+                        "_myIsStory": true,
+                        "_mySeconds": "511",
+                        "_myMinutes": "512",
+                        "_myHours": "513"
+                    }
+                }
+            ],
+            "transformation": [
+                0.0,
+                0.0,
+                0.1,
+                0.0,
+                0.1,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.1,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "567": {
+            "name": "Second Points",
+            "parent": "566",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": ":",
+                        "alignment": "center",
+                        "justification": "middle"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021606,
+                0.0,
+                0.0,
+                0.0021606,
+                300.0,
+                0.0,
+                -22.5999755,
+                0.000244,
+                0.0,
+                1.0
+            ]
+        },
+        "568": {
+            "name": "First Points",
+            "parent": "566",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": ":",
+                        "alignment": "center",
+                        "justification": "middle"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021606,
+                0.0,
+                0.0,
+                0.0021606,
+                300.0,
+                0.0,
+                22.6000976,
+                0.000244,
+                0.0,
+                1.0
+            ]
+        },
+        "569": {
+            "name": "Seconds",
+            "parent": "566",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": "00",
+                        "alignment": "left",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                -0.0,
+                -0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021278,
+                0.0,
+                0.0,
+                0.0021278,
+                300.0,
+                0.0,
+                28.5024032,
+                -10.0,
+                -0.0000762,
+                1.0
+            ]
+        },
+        "570": {
+            "name": "Minutes",
+            "parent": "566",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": "00",
+                        "alignment": "center",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021606,
+                0.0,
+                0.0,
+                0.0021606,
+                300.0,
+                0.0,
+                0.0,
+                -10.0,
+                0.0,
+                1.0
+            ]
+        },
+        "571": {
+            "name": "Hours",
+            "parent": "566",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": "00",
+                        "alignment": "right",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021239,
+                0.0,
+                0.0,
+                0.0021239,
+                300.0,
+                0.0,
+                -24.2000007,
+                -10.0,
+                0.0,
                 1.0
             ]
         }
