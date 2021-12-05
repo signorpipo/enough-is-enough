@@ -215,6 +215,7 @@ class MenuState extends PP.State {
         {
             let startStory = new MenuItem(Global.myGameObjects.get(GameObjectType.START_STORY), GameObjectType.START_STORY, positions[0], function () {
                 this._myFSM.perform("unspawn_story");
+                this._myResetCount = 0;
             }.bind(this));
             this._myStartStory = startStory;
         }
@@ -222,6 +223,7 @@ class MenuState extends PP.State {
         {
             let startStoryCompleted = new MenuItem(Global.myGameObjects.get(GameObjectType.START_STORY_COMPLETED), GameObjectType.START_STORY_COMPLETED, positions[0], function () {
                 this._myFSM.perform("unspawn_story");
+                this._myResetCount = 0;
             }.bind(this));
             this._myStartStoryCompleted = startStoryCompleted;
         }
@@ -229,6 +231,7 @@ class MenuState extends PP.State {
         {
             let startArcadeHard = new MenuItem(Global.myGameObjects.get(GameObjectType.START_ARCADE_HARD), GameObjectType.START_ARCADE_HARD, positions[2], function () {
                 this._myFSM.perform("unspawn_arcade_hard");
+                this._myResetCount = 0;
             }.bind(this));
             this._myMenuItems.push(startArcadeHard);
         }
@@ -236,6 +239,7 @@ class MenuState extends PP.State {
         {
             let startArcadeNormal = new MenuItem(Global.myGameObjects.get(GameObjectType.START_ARCADE_NORMAL), GameObjectType.START_ARCADE_NORMAL, positions[1], function () {
                 this._myFSM.perform("unspawn_arcade_normal");
+                this._myResetCount = 0;
             }.bind(this));
             this._myMenuItems.push(startArcadeNormal);
         }
@@ -243,6 +247,7 @@ class MenuState extends PP.State {
         {
             let leaderboardArcadeHard = new MenuItem(Global.myGameObjects.get(GameObjectType.LEADERBOARD_ARCADE_HARD), GameObjectType.LEADERBOARD_ARCADE_HARD, positions[4], function () {
                 //get leaderboard object and component and ask for a refresh
+                this._myResetCount = 0;
             }.bind(this));
             this._myMenuItems.push(leaderboardArcadeHard);
         }
@@ -250,6 +255,7 @@ class MenuState extends PP.State {
         {
             let leaderboardArcadeNormal = new MenuItem(Global.myGameObjects.get(GameObjectType.LEADERBOARD_ARCADE_NORMAL), GameObjectType.LEADERBOARD_ARCADE_NORMAL, positions[3], function () {
                 //get leaderboard object and component and ask for a refresh
+                this._myResetCount = 0;
             }.bind(this));
             this._myMenuItems.push(leaderboardArcadeNormal);
         }
@@ -257,6 +263,7 @@ class MenuState extends PP.State {
         {
             let zestyMarket = new MenuItem(Global.myGameObjects.get(GameObjectType.ZESTY_MARKET), GameObjectType.ZESTY_MARKET, positions[6], function () {
                 //get zesty object and component and ask for a refresh if it is possible
+                this._myResetCount = 0;
             }.bind(this));
             this._myMenuItems.push(zestyMarket);
         }
