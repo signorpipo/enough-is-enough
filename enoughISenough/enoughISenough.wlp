@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "219",
+                        "_myStartStory": "161",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -8760,9 +8760,28 @@
             "components": [
                 {
                     "mesh": {
-                        "material": "278"
+                        "material": "278",
+                        "mesh": "515"
                     }
                 }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
             ]
         },
         "475": {
@@ -8846,9 +8865,28 @@
             "components": [
                 {
                     "mesh": {
-                        "material": "278"
+                        "material": "278",
+                        "mesh": "515"
                     }
                 }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
             ]
         },
         "486": {
@@ -9035,12 +9073,12 @@
                 0.0,
                 0.0,
                 0.0,
-                -1.7523061046631484e-7,
+                -1.7523061046631489e-7,
                 -0.0699971,
                 0.0,
                 0.0,
                 0.0119983,
-                -3.0036684250944748e-8,
+                -3.003668425094475e-8,
                 0.0,
                 0.0,
                 0.0,
@@ -9568,6 +9606,13 @@
                 0.0,
                 1.0
             ]
+        },
+        "516": {
+            "link": {
+                "name": "New Stick<Arcade",
+                "file": "assets\\models\\evidences\\arcade.fbx"
+            },
+            "parent": "466"
         }
     },
     "meshes": {
@@ -10049,6 +10094,12 @@
             "link": {
                 "name": "Arcade - Sphere.001",
                 "file": "assets\\models\\evidences\\leaderboard.fbx"
+            }
+        },
+        "515": {
+            "link": {
+                "name": "Arcade - New Stick",
+                "file": "assets\\models\\evidences\\arcade.fbx"
             }
         }
     },
@@ -11077,6 +11128,12 @@
             "link": {
                 "name": "Red",
                 "file": "assets\\models\\evidences\\leaderboard.fbx"
+            }
+        },
+        "514": {
+            "link": {
+                "name": "Dark Red",
+                "file": "assets\\models\\evidences\\arcade.fbx"
             }
         }
     },
