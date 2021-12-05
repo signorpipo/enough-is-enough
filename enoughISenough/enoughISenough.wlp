@@ -3143,17 +3143,17 @@
             "name": "Floppy Disk",
             "parent": "143",
             "transformation": [
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 -0.8999999,
                 0.0,
@@ -3166,11 +3166,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "8",
+                            "mesh": "553",
                             "scaling": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.0149999,
+                                0.0149999,
+                                0.0099999
                             ]
                         }
                     }
@@ -3192,9 +3192,9 @@
                         "groups": 1,
                         "box": {
                             "extents": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.085,
+                                0.0199999,
+                                0.085
                             ]
                         }
                     }
@@ -3231,7 +3231,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "169": {
             "name": "Nose",
@@ -3262,7 +3263,8 @@
                 0.0,
                 0.8999999,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "170": {
             "name": "Zesty Market",
@@ -10418,6 +10420,81 @@
                 0.0,
                 1.0
             ]
+        },
+        "554": {
+            "link": {
+                "name": "Floppy",
+                "file": "assets\\models\\evidences\\floppy.fbx"
+            },
+            "parent": "167",
+            "transformation": [
+                0.0149999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0149999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0149999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "555": {
+            "link": {
+                "name": "Floppy - Base<Floppy",
+                "file": "assets\\models\\evidences\\floppy.fbx"
+            },
+            "parent": "554",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "272"
+                    }
+                }
+            ]
+        },
+        "556": {
+            "link": {
+                "name": "Floppy - Disk<Floppy",
+                "file": "assets\\models\\evidences\\floppy.fbx"
+            },
+            "parent": "554",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "279"
+                    }
+                }
+            ]
+        },
+        "557": {
+            "link": {
+                "name": "Floppy - Data<Floppy",
+                "file": "assets\\models\\evidences\\floppy.fbx"
+            },
+            "parent": "554",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "279"
+                    }
+                }
+            ]
+        },
+        "558": {
+            "link": {
+                "name": "Floppy - Physx<Floppy",
+                "file": "assets\\models\\evidences\\floppy.fbx"
+            },
+            "parent": "554",
+            "deleted": true
         }
     },
     "meshes": {
@@ -10905,6 +10982,30 @@
             "link": {
                 "name": "Arcade - New Stick",
                 "file": "assets\\models\\evidences\\arcade.fbx"
+            }
+        },
+        "550": {
+            "link": {
+                "name": "Floppy - Base",
+                "file": "assets\\models\\evidences\\floppy.fbx"
+            }
+        },
+        "551": {
+            "link": {
+                "name": "Floppy - Disk",
+                "file": "assets\\models\\evidences\\floppy.fbx"
+            }
+        },
+        "552": {
+            "link": {
+                "name": "Floppy - Data",
+                "file": "assets\\models\\evidences\\floppy.fbx"
+            }
+        },
+        "553": {
+            "link": {
+                "name": "Floppy - Physx",
+                "file": "assets\\models\\evidences\\floppy.fbx"
             }
         }
     },
@@ -11953,6 +12054,18 @@
                 "shininess": 1
             },
             "pipeline": "79"
+        },
+        "548": {
+            "link": {
+                "name": "Black",
+                "file": "assets\\models\\evidences\\floppy.fbx"
+            }
+        },
+        "549": {
+            "link": {
+                "name": "White",
+                "file": "assets\\models\\evidences\\floppy.fbx"
+            }
         }
     },
     "shaders": {
@@ -12106,7 +12219,8 @@
         "assets/models/new_hand_piece_2.fbx",
         "assets/models/evidences/timer.fbx",
         "assets/models/evidences/arcade.fbx",
-        "assets/models/evidences/leaderboard.fbx"
+        "assets/models/evidences/leaderboard.fbx",
+        "assets/models/evidences/floppy.fbx"
     ],
     "pipelines": {
         "69": {
