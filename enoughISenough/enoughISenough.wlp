@@ -3015,20 +3015,20 @@
             "name": "Wondermelon",
             "parent": "143",
             "transformation": [
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 -0.6,
-                0.0009246,
+                0.0009245,
                 0.0,
                 1.0
             ],
@@ -3038,11 +3038,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "8",
+                            "mesh": "592",
                             "scaling": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.0099999,
+                                0.0099999,
+                                0.0099999
                             ]
                         }
                     }
@@ -3064,9 +3064,9 @@
                         "groups": 1,
                         "box": {
                             "extents": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.09,
+                                0.05,
+                                0.09
                             ]
                         }
                     }
@@ -3106,7 +3106,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "166": {
             "name": "Nose",
@@ -3137,7 +3138,8 @@
                 0.0,
                 0.8999999,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "167": {
             "name": "Floppy Disk",
@@ -11229,6 +11231,95 @@
                 0.0,
                 1.0
             ]
+        },
+        "593": {
+            "link": {
+                "name": "Wondermelon",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
+            },
+            "parent": "164",
+            "transformation": [
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "594": {
+            "link": {
+                "name": "Wondermelon - First<Wondermelon",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
+            },
+            "parent": "593",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "275"
+                    }
+                }
+            ]
+        },
+        "595": {
+            "link": {
+                "name": "Wondermelon - Second<Wondermelon",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
+            },
+            "parent": "593",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "596": {
+            "link": {
+                "name": "Wondermelon - Third<Wondermelon",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
+            },
+            "parent": "593",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "280"
+                    }
+                }
+            ]
+        },
+        "597": {
+            "link": {
+                "name": "Wondermelon - Fourth<Wondermelon",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
+            },
+            "parent": "593",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "272"
+                    }
+                }
+            ]
+        },
+        "598": {
+            "link": {
+                "name": "Wondermelon - Physx<Wondermelon",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
+            },
+            "parent": "593",
+            "deleted": true
         }
     },
     "meshes": {
@@ -11740,6 +11831,36 @@
             "link": {
                 "name": "Floppy - Physx",
                 "file": "assets\\models\\evidences\\floppy.fbx"
+            }
+        },
+        "588": {
+            "link": {
+                "name": "Icosphere",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
+            }
+        },
+        "589": {
+            "link": {
+                "name": "Icosphere.005",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
+            }
+        },
+        "590": {
+            "link": {
+                "name": "Icosphere.007",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
+            }
+        },
+        "591": {
+            "link": {
+                "name": "Icosphere.009",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
+            }
+        },
+        "592": {
+            "link": {
+                "name": "Wondermelon - Physx",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
             }
         }
     },
@@ -12800,6 +12921,30 @@
                 "name": "White",
                 "file": "assets\\models\\evidences\\floppy.fbx"
             }
+        },
+        "584": {
+            "link": {
+                "name": "Dark Green",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
+            }
+        },
+        "585": {
+            "link": {
+                "name": "Beige",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
+            }
+        },
+        "586": {
+            "link": {
+                "name": "Red",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
+            }
+        },
+        "587": {
+            "link": {
+                "name": "Black",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
+            }
         }
     },
     "shaders": {
@@ -12954,7 +13099,8 @@
         "assets/models/evidences/timer.fbx",
         "assets/models/evidences/arcade.fbx",
         "assets/models/evidences/leaderboard.fbx",
-        "assets/models/evidences/floppy.fbx"
+        "assets/models/evidences/floppy.fbx",
+        "assets/models/evidences/wondermelon.fbx"
     ],
     "pipelines": {
         "69": {
