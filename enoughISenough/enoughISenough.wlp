@@ -10422,14 +10422,6 @@
                         "mesh": "7",
                         "material": "546"
                     }
-                },
-                {
-                    "type": "zesty-banner",
-                    "zesty-banner": {
-                        "creator": "0x0000000000000000000000000000000000000000",
-                        "format": "tall",
-                        "style": "standard"
-                    }
                 }
             ],
             "transformation": [

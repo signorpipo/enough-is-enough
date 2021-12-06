@@ -28,13 +28,13 @@ WL.registerComponent("enough-IS-enough-gateway", {
         }
 
         for (let entry of Global.myMeshObjects.entries()) {
-            if (entry[0] != GameObjectType.STARING_CUBE) {
+            if (entry[0] != GameObjectType.STARING_CUBE && entry[0] != GameObjectType.ZESTY_MARKET) {
                 PP.MeshUtils.setClonedMaterials(entry[1]);
             }
         }
 
         for (let entry of Global.myGameObjects.entries()) {
-            if (entry[0] != GameObjectType.STARING_CUBE) {
+            if (entry[0] != GameObjectType.STARING_CUBE && entry[0] != GameObjectType.ZESTY_MARKET) {
                 PP.MeshUtils.setClonedMaterials(entry[1]);
             }
         }
