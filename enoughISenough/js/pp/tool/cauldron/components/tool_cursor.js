@@ -66,7 +66,7 @@ WL.registerComponent('pp-tool-cursor', {
     _isUsingHand: function () {
         let isUsingHand = false;
 
-        if (WL.xrSession) {
+        if (WL.xrSession && WL.xrSession.inputSources) {
             for (let i = 0; i < WL.xrSession.inputSources.length; i++) {
                 let input = WL.xrSession.inputSources[i];
                 if (input.hand && input.handedness == this._myHandednessString) {

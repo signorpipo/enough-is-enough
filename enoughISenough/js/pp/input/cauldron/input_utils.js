@@ -16,7 +16,7 @@ PP.InputUtils = {
     getInputSource: function (handedness, inputSourceType) {
         let inputSource = null;
 
-        if (WL.xrSession) {
+        if (WL.xrSession && WL.xrSession.inputSources) {
             for (let i = 0; i < WL.xrSession.inputSources.length; i++) {
                 let input = WL.xrSession.inputSources[i];
 

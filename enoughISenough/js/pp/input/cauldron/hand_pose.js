@@ -99,7 +99,11 @@ PP.HandPose = class HandPose {
 
         let xrFrame = Module['webxr_frame'];
         if (xrFrame && this._myInputSource) {
-            let xrPose = xrFrame.getPose(this._myInputSource.gripSpace, this._myReferenceSpace);
+            let xrPose = null;
+            try {
+                xrPose = xrFrame.getPose(this._myInputSource.gripSpace, this._myReferenceSpace);
+            } catch (error) {
+            }
 
             if (xrPose) {
                 this._myPosition[0] = xrPose.transform.position.x;
@@ -137,6 +141,16 @@ PP.HandPose = class HandPose {
                 this._myAngularVelocity[1] = 0;
                 this._myAngularVelocity[2] = 0;
             }
+        } else {
+            //keep previous position and rotation but reset velocity because reasons
+
+            this._myLinearVelocity[0] = 0;
+            this._myLinearVelocity[1] = 0;
+            this._myLinearVelocity[2] = 0;
+
+            this._myAngularVelocity[0] = 0;
+            this._myAngularVelocity[1] = 0;
+            this._myAngularVelocity[2] = 0;
         }
     }
 
