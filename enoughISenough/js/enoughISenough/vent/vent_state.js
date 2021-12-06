@@ -90,6 +90,15 @@ class VentState extends PP.State {
     }
 
     _prepareDefeat() {
+        let zestyObject = Global.myGameObjects.get(GameObjectType.ZESTY_MARKET);
+        let grabbable = zestyObject.pp_getComponentHierarchy("pp-grabbable");
+        if (grabbable.isGrabbed()) {
+            let zestyComponent = zestyObject.pp_getComponentHierarchy("zesty-banner");
+            if (zestyComponent) {
+                zestyComponent.onClick();
+            }
+        }
+
         this._myEvidenceManager.explode();
         this._myVent.stop();
         this._myNotEnough.start();

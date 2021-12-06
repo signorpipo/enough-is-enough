@@ -3,7 +3,13 @@ WL.registerComponent("clear-console-on-session", {
     init: function () {
     },
     start: function () {
-        WL.onXRSessionStart.push(function () { console.clear(); });
+        this._myFirstTime = true;
+        WL.onXRSessionStart.push(function () {
+            if (this._myFirstTime) {
+                this._myFirstTime = false;
+                console.clear();
+            }
+        }.bind(this));
     },
     update: function (dt) {
     }

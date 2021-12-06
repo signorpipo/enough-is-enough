@@ -33,10 +33,8 @@ class Vent {
             this._myTimer.update(dt);
             if (this._myTimer.isDone()) {
                 if (this._myVentSetup == 1) {
-                    console.log(this._myVentSetup);
                     this._myTimer.start(Math.pp_random(1, 2.5));
                 } else {
-                    console.log(this._myVentSetup);
                     this._myTimer.start(Math.pp_random(1.5, 3.5));
                 }
 

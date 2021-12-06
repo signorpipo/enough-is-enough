@@ -262,10 +262,14 @@ class MenuState extends PP.State {
 
         {
             let zestyMarket = new MenuItem(Global.myGameObjects.get(GameObjectType.ZESTY_MARKET), GameObjectType.ZESTY_MARKET, positions[6], function () {
-                //get zesty object and component and ask for a refresh if it is possible
                 this._myResetCount = 0;
+                let zestyComponent = this._myZestyObject.getObject().pp_getComponentHierarchy("zesty-banner");
+                if (zestyComponent) {
+                    zestyComponent.onClick();
+                }
             }.bind(this));
             this._myMenuItems.push(zestyMarket);
+            this._myZestyObject = zestyMarket;
         }
 
         {
@@ -357,6 +361,10 @@ class MenuItem {
         return this._myFSM.canPerform("unspawn");
     }
 
+    getObject() {
+        return this._myObject;
+    }
+
     isInactive() {
         return this._myFSM.isInState("inactive");
     }
@@ -386,6 +394,7 @@ class MenuItem {
         this._myPhysx.angularVelocity = [0, 0, 0];
 
         this._myTimer.start(1);
+        this._myThrowTimer.reset();
     }
 
     _spawning(dt) {
@@ -404,7 +413,6 @@ class MenuItem {
         if (!this._myGrabbable.isGrabbed()) {
             this._myPhysx.kinematic = false;
         }
-        this._myThrowTimer.reset();
     }
 
     _readyUpdate(dt) {

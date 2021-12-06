@@ -20,6 +20,21 @@ WL.CollisionComponent.prototype.pp_clone = function (clone, params) {
     return clone;
 };
 
+WL.TextComponent.prototype.pp_clone = function (clone, params) {
+    if (params.myDeepClone) {
+        clone.material = this.material.clone();
+        clone.text = this.text.slice(0);
+    } else {
+        clone.material = this.material;
+        clone.text = this.text;
+    }
+
+    clone.alignment = this.alignment;
+    clone.justification = this.justification;
+
+    return clone;
+};
+
 //TEMP not complete
 WL.PhysXComponent.prototype.pp_clone = function (clone, params) {
     clone.angularDamping = this.angularDamping;

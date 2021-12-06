@@ -2134,8 +2134,8 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "161",
-                        "_myStartArcadeHard": "144",
+                        "_myStartStory": "219",
+                        "_myStartArcadeHard": "317",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
                         "_myLeaderboardArcadeNormal": "155",
@@ -9692,7 +9692,7 @@
                     "text": {
                         "alignment": "left",
                         "justification": "line",
-                        "text": "",
+                        "text": "1 - Pipo\n\n2 - Srile\n\n3 - Jonathan\n\n4 - Yinch\n\n5 - Wondermelon\n\n6 - Zesty Market\n\n7 - Wonderland\n\n8 - Sorskoot\n\n9 - mr NOT\n",
                         "material": "441"
                     }
                 }
@@ -9725,7 +9725,7 @@
                     "text": {
                         "alignment": "right",
                         "justification": "line",
-                        "text": "",
+                        "text": "00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00",
                         "material": "441"
                     }
                 }
@@ -9791,7 +9791,7 @@
                     "text": {
                         "alignment": "left",
                         "justification": "line",
-                        "text": "",
+                        "text": "1 - Pipo\n\n2 - Srile\n\n3 - Jonathan\n\n4 - Yinch\n\n5 - Wondermelon\n\n6 - Zesty Market\n\n7 - Wonderland\n\n8 - Sorskoot\n\n9 - mr NOT\n",
                         "material": "441"
                     }
                 }
@@ -9824,7 +9824,7 @@
                     "text": {
                         "alignment": "right",
                         "justification": "line",
-                        "text": "",
+                        "text": "00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00",
                         "material": "441"
                     }
                 }
@@ -10120,7 +10120,7 @@
                     "text": {
                         "alignment": "left",
                         "justification": "line",
-                        "text": "",
+                        "text": "1 - Pipo\n\n2 - Srile\n\n3 - Jonathan\n\n4 - Yinch\n\n5 - Wondermelon\n\n6 - Zesty Market\n\n7 - Wonderland\n\n8 - Sorskoot\n\n9 - mr NOT\n",
                         "material": "441"
                     }
                 }
@@ -10153,7 +10153,7 @@
                     "text": {
                         "alignment": "right",
                         "justification": "line",
-                        "text": "",
+                        "text": "00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00",
                         "material": "441"
                     }
                 }
@@ -10219,7 +10219,7 @@
                     "text": {
                         "alignment": "left",
                         "justification": "line",
-                        "text": "",
+                        "text": "1 - Pipo\n\n2 - Srile\n\n3 - Jonathan\n\n4 - Yinch\n\n5 - Wondermelon\n\n6 - Zesty Market\n\n7 - Wonderland\n\n8 - Sorskoot\n\n9 - mr NOT\n",
                         "material": "441"
                     }
                 }
@@ -10252,7 +10252,7 @@
                     "text": {
                         "alignment": "right",
                         "justification": "line",
-                        "text": "",
+                        "text": "00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00",
                         "material": "441"
                     }
                 }
@@ -10812,6 +10812,402 @@
         "571": {
             "name": "Hours",
             "parent": "566",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": "00",
+                        "alignment": "right",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021239,
+                0.0,
+                0.0,
+                0.0021239,
+                300.0,
+                0.0,
+                -24.2000007,
+                -10.0,
+                0.0,
+                1.0
+            ]
+        },
+        "572": {
+            "name": "Text",
+            "parent": "496",
+            "components": [
+                {
+                    "type": "timer",
+                    "timer": {
+                        "_myIsStory": true,
+                        "_mySeconds": "575",
+                        "_myMinutes": "576",
+                        "_myHours": "577"
+                    }
+                }
+            ],
+            "transformation": [
+                0.0,
+                0.0,
+                -0.1000052,
+                0.0,
+                0.1000008,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.1000044,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "573": {
+            "name": "Second Points",
+            "parent": "572",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": ":",
+                        "alignment": "center",
+                        "justification": "middle"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021606,
+                0.0,
+                0.0,
+                0.0021606,
+                300.0,
+                0.0,
+                -22.5999755,
+                0.000244,
+                0.0,
+                1.0
+            ]
+        },
+        "574": {
+            "name": "First Points",
+            "parent": "572",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": ":",
+                        "alignment": "center",
+                        "justification": "middle"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021606,
+                0.0,
+                0.0,
+                0.0021606,
+                300.0,
+                0.0,
+                22.6000976,
+                0.000244,
+                0.0,
+                1.0
+            ]
+        },
+        "575": {
+            "name": "Seconds",
+            "parent": "572",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": "00",
+                        "alignment": "left",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                -0.0,
+                -0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021278,
+                0.0,
+                0.0,
+                0.0021278,
+                300.0,
+                0.0,
+                28.5024032,
+                -10.0,
+                -0.0000762,
+                1.0
+            ]
+        },
+        "576": {
+            "name": "Minutes",
+            "parent": "572",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": "00",
+                        "alignment": "center",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021606,
+                0.0,
+                0.0,
+                0.0021606,
+                300.0,
+                0.0,
+                0.0,
+                -10.0,
+                0.0,
+                1.0
+            ]
+        },
+        "577": {
+            "name": "Hours",
+            "parent": "572",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": "00",
+                        "alignment": "right",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021239,
+                0.0,
+                0.0,
+                0.0021239,
+                300.0,
+                0.0,
+                -24.2000007,
+                -10.0,
+                0.0,
+                1.0
+            ]
+        },
+        "578": {
+            "name": "Text",
+            "parent": "560",
+            "components": [
+                {
+                    "type": "timer",
+                    "timer": {
+                        "_myIsStory": false,
+                        "_mySeconds": "581",
+                        "_myMinutes": "582",
+                        "_myHours": "583"
+                    }
+                }
+            ],
+            "transformation": [
+                0.0,
+                0.0,
+                -0.1000019,
+                0.0,
+                0.1,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.1000019,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "579": {
+            "name": "Second Points",
+            "parent": "578",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": ":",
+                        "alignment": "center",
+                        "justification": "middle"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021606,
+                0.0,
+                0.0,
+                0.0021606,
+                300.0,
+                0.0,
+                -22.5999755,
+                0.000244,
+                0.0,
+                1.0
+            ]
+        },
+        "580": {
+            "name": "First Points",
+            "parent": "578",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": ":",
+                        "alignment": "center",
+                        "justification": "middle"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021606,
+                0.0,
+                0.0,
+                0.0021606,
+                300.0,
+                0.0,
+                22.6000976,
+                0.000244,
+                0.0,
+                1.0
+            ]
+        },
+        "581": {
+            "name": "Seconds",
+            "parent": "578",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": "00",
+                        "alignment": "left",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                -0.0,
+                -0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021278,
+                0.0,
+                0.0,
+                0.0021278,
+                300.0,
+                0.0,
+                28.5024032,
+                -10.0,
+                -0.0000762,
+                1.0
+            ]
+        },
+        "582": {
+            "name": "Minutes",
+            "parent": "578",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": "00",
+                        "alignment": "center",
+                        "justification": "line"
+                    }
+                }
+            ],
+            "transformation": [
+                299.9999694,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                300.0,
+                -0.0021606,
+                0.0,
+                0.0,
+                0.0021606,
+                300.0,
+                0.0,
+                0.0,
+                -10.0,
+                0.0,
+                1.0
+            ]
+        },
+        "583": {
+            "name": "Hours",
+            "parent": "578",
             "components": [
                 {
                     "type": "text",

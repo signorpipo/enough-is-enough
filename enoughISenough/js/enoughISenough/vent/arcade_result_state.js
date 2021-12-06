@@ -95,9 +95,7 @@ class ArcadeResultState extends PP.State {
 
             let score = Math.floor(Global.myVentDuration * 1000);
 
-            PP.CAUtils.submitScore(leaderboardID, score, function () {
-                console.log(leaderboardID, score, score / 1000);
-            });
+            PP.CAUtils.submitScore(leaderboardID, score);
 
             this._myFSM.perform("end");
         }

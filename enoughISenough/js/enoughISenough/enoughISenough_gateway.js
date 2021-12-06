@@ -55,7 +55,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("mr NOT Clone Scale", 0.45, 0.1, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Prevent Vent Lost", false));
 
-        PP.CAUtils.setDummyServer(new PP.CADummyServer());
+        PP.CAUtils.setDummyServer(new EIECADummyServer());
 
         this.enoughISenough.start();
     },

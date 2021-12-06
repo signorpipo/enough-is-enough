@@ -72,5 +72,4 @@ PP.CADummyServer = class CADummyServer {
 
     submitScore(leaderboardID, scoreToSubmit) {
     }
-
 };

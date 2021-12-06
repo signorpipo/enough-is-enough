@@ -13,6 +13,8 @@ WL.registerComponent("display-leaderboard", {
     update: function (dt) {
     },
     onActivate: function () {
+        this._myNamesTextComponent.text = "";
+        this._myScoresTextComponent.text = "";
         PP.CAUtils.getLeaderboard(this._myName, true, this._myIsLocal, 9, this._onLeaderboardRetrieved.bind(this));
     },
     _onLeaderboardRetrieved(leaderboard) {

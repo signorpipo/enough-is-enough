@@ -22,6 +22,7 @@ WL.registerComponent('menu-objects', {
 
         let cloneParams = new PP.CloneParams();
         cloneParams.myComponentsToInclude.push("mesh");
+        cloneParams.myComponentsToInclude.push("text");
         Global.myMeshObjects.set(GameObjectType.START_STORY, this._myStartStory.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.START_STORY_COMPLETED, this._myStartStoryCompleted.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.START_ARCADE_HARD, this._myStartArcadeHard.pp_clone(cloneParams));
