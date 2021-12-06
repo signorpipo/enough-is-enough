@@ -25,4 +25,5 @@ var GameObjectType = {
     PSYCHOTHERAPY: 22,
     VENT_TIMER: 23,
     WONDERLAND: 24,
+    CRYPTO: 25,
 };

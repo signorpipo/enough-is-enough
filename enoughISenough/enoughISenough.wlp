@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "213",
+                        "_myStartStory": "161",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -3443,7 +3443,8 @@
                         "_myVentTimer": "317",
                         "_myUbisoft": "325",
                         "_myPsychoterapy": "390",
-                        "_myWonderland": "611"
+                        "_myWonderland": "611",
+                        "_myCrypto": "638"
                     }
                 }
             ],
@@ -11582,6 +11583,125 @@
                     }
                 }
             ]
+        },
+        "634": {
+            "link": {
+                "name": "Crypto",
+                "file": "assets\\models\\evidences\\crypto.fbx"
+            },
+            "parent": "638",
+            "transformation": [
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "635": {
+            "link": {
+                "name": "Crypto - Up<Crypto",
+                "file": "assets\\models\\evidences\\crypto.fbx"
+            },
+            "parent": "634",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "284"
+                    }
+                }
+            ]
+        },
+        "636": {
+            "link": {
+                "name": "Crypto - Down<Crypto",
+                "file": "assets\\models\\evidences\\crypto.fbx"
+            },
+            "parent": "634",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "284"
+                    }
+                }
+            ]
+        },
+        "637": {
+            "link": {
+                "name": "Crypto - Physx<Crypto",
+                "file": "assets\\models\\evidences\\crypto.fbx"
+            },
+            "parent": "634",
+            "deleted": true
+        },
+        "638": {
+            "name": "Crypto",
+            "parent": "174",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.6,
+                0.0,
+                0.5,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "evidence-component"
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "633",
+                            "scaling": [
+                                0.0099999,
+                                0.0099999,
+                                0.0099999
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "box": {
+                            "extents": [
+                                0.0399999,
+                                0.1,
+                                0.0299999
+                            ]
+                        },
+                        "groups": 1
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -12189,6 +12309,24 @@
             "link": {
                 "name": "C++ - +.002",
                 "file": "assets\\models\\evidences\\c++.fbx"
+            }
+        },
+        "631": {
+            "link": {
+                "name": "Crypto - Up.002",
+                "file": "assets\\models\\evidences\\crypto.fbx"
+            }
+        },
+        "632": {
+            "link": {
+                "name": "Crypto - Down.001",
+                "file": "assets\\models\\evidences\\crypto.fbx"
+            }
+        },
+        "633": {
+            "link": {
+                "name": "Crypto - Physx",
+                "file": "assets\\models\\evidences\\crypto.fbx"
             }
         }
     },
@@ -13309,6 +13447,12 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\c++.fbx"
             }
+        },
+        "630": {
+            "link": {
+                "name": "Dark Blue",
+                "file": "assets\\models\\evidences\\crypto.fbx"
+            }
         }
     },
     "shaders": {
@@ -13466,7 +13610,8 @@
         "assets/models/evidences/floppy.fbx",
         "assets/models/evidences/wondermelon.fbx",
         "assets/models/evidences/wonderland.fbx",
-        "assets/models/evidences/c++.fbx"
+        "assets/models/evidences/c++.fbx",
+        "assets/models/evidences/crypto.fbx"
     ],
     "pipelines": {
         "69": {
