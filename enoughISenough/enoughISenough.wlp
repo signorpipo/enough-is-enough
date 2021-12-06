@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "161",
+                        "_myStartStory": "198",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -4002,17 +4002,17 @@
             "name": "LoL",
             "parent": "174",
             "transformation": [
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
@@ -4025,11 +4025,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "8",
+                            "mesh": "643",
                             "scaling": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.0099999,
+                                0.0099999,
+                                0.0099999
                             ]
                         }
                     }
@@ -4051,9 +4051,9 @@
                         "groups": 1,
                         "box": {
                             "extents": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.0649999,
+                                0.0799999,
+                                0.0399999
                             ]
                         }
                     }
@@ -4093,7 +4093,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "200": {
             "name": "Nose",
@@ -4124,7 +4125,8 @@
                 0.0,
                 0.8999999,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "201": {
             "name": "Meditation",
@@ -11702,6 +11704,67 @@
                     }
                 }
             ]
+        },
+        "644": {
+            "link": {
+                "name": "LoL",
+                "file": "assets\\models\\evidences\\lol.fbx"
+            },
+            "parent": "198",
+            "transformation": [
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "645": {
+            "link": {
+                "name": "LoL - Left<LoL",
+                "file": "assets\\models\\evidences\\lol.fbx"
+            },
+            "parent": "644",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "646": {
+            "link": {
+                "name": "LoL - Right<LoL",
+                "file": "assets\\models\\evidences\\lol.fbx"
+            },
+            "parent": "644",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "647": {
+            "link": {
+                "name": "LoL - Physx<LoL",
+                "file": "assets\\models\\evidences\\lol.fbx"
+            },
+            "parent": "644",
+            "deleted": true
         }
     },
     "meshes": {
@@ -12327,6 +12390,24 @@
             "link": {
                 "name": "Crypto - Physx",
                 "file": "assets\\models\\evidences\\crypto.fbx"
+            }
+        },
+        "641": {
+            "link": {
+                "name": "LoL - Left.001",
+                "file": "assets\\models\\evidences\\lol.fbx"
+            }
+        },
+        "642": {
+            "link": {
+                "name": "LoL - Right.001",
+                "file": "assets\\models\\evidences\\lol.fbx"
+            }
+        },
+        "643": {
+            "link": {
+                "name": "LoL - Physx",
+                "file": "assets\\models\\evidences\\lol.fbx"
             }
         }
     },
@@ -13453,6 +13534,18 @@
                 "name": "Dark Blue",
                 "file": "assets\\models\\evidences\\crypto.fbx"
             }
+        },
+        "639": {
+            "link": {
+                "name": "Dark Blue",
+                "file": "assets\\models\\evidences\\lol.fbx"
+            }
+        },
+        "640": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\lol.fbx"
+            }
         }
     },
     "shaders": {
@@ -13611,7 +13704,8 @@
         "assets/models/evidences/wondermelon.fbx",
         "assets/models/evidences/wonderland.fbx",
         "assets/models/evidences/c++.fbx",
-        "assets/models/evidences/crypto.fbx"
+        "assets/models/evidences/crypto.fbx",
+        "assets/models/evidences/lol.fbx"
     ],
     "pipelines": {
         "69": {
