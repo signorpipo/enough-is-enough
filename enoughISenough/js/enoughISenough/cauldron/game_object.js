@@ -24,4 +24,5 @@ var GameObjectType = {
     START_STORY_COMPLETED: 21,
     PSYCHOTHERAPY: 22,
     VENT_TIMER: 23,
+    WONDERLAND: 24,
 };
