@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "611",
+                        "_myStartStory": "213",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -4662,17 +4662,17 @@
             "name": "CPlusPlus",
             "parent": "174",
             "transformation": [
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 -0.6,
                 0.0,
@@ -4685,11 +4685,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "8",
+                            "mesh": "620",
                             "scaling": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.012,
+                                0.012,
+                                0.012
                             ]
                         }
                     }
@@ -4711,9 +4711,9 @@
                         "groups": 1,
                         "box": {
                             "extents": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.09,
+                                0.0649999,
+                                0.0949999
                             ]
                         }
                     }
@@ -4753,7 +4753,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "215": {
             "name": "Nose",
@@ -4784,7 +4785,8 @@
                 0.0,
                 0.8999999,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "216": {
             "name": "Drawing",
@@ -11454,6 +11456,132 @@
                     }
                 }
             ]
+        },
+        "622": {
+            "link": {
+                "name": "C++",
+                "file": "assets\\models\\evidences\\c++.fbx"
+            },
+            "parent": "213",
+            "transformation": [
+                0.012,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.012,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.012,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "pp-easy-transform",
+                    "pp-easy-transform": {
+                        "_mySetAsDefault": true,
+                        "_myIsLocal": true
+                    }
+                }
+            ]
+        },
+        "623": {
+            "link": {
+                "name": "C++ - Book<C++",
+                "file": "assets\\models\\evidences\\c++.fbx"
+            },
+            "parent": "622",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "279"
+                    }
+                }
+            ]
+        },
+        "624": {
+            "link": {
+                "name": "C++ - Up<C++",
+                "file": "assets\\models\\evidences\\c++.fbx"
+            },
+            "parent": "622",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "278"
+                    }
+                }
+            ]
+        },
+        "625": {
+            "link": {
+                "name": "C++ - C<C++",
+                "file": "assets\\models\\evidences\\c++.fbx"
+            },
+            "parent": "622",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "277"
+                    }
+                }
+            ]
+        },
+        "626": {
+            "link": {
+                "name": "C++ - +<C++",
+                "file": "assets\\models\\evidences\\c++.fbx"
+            },
+            "parent": "622",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "277"
+                    }
+                }
+            ]
+        },
+        "627": {
+            "link": {
+                "name": "C++ - Side<C++",
+                "file": "assets\\models\\evidences\\c++.fbx"
+            },
+            "parent": "622",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "278"
+                    }
+                }
+            ]
+        },
+        "628": {
+            "link": {
+                "name": "C++ - Physx<C++",
+                "file": "assets\\models\\evidences\\c++.fbx"
+            },
+            "parent": "622",
+            "deleted": true
+        },
+        "629": {
+            "link": {
+                "name": "C++ - ++<C++",
+                "file": "assets\\models\\evidences\\c++.fbx"
+            },
+            "parent": "622",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "277"
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -12019,6 +12147,48 @@
             "link": {
                 "name": "Wonderland - Physx",
                 "file": "assets\\models\\evidences\\wonderland.fbx"
+            }
+        },
+        "615": {
+            "link": {
+                "name": "C++ - Book.001",
+                "file": "assets\\models\\evidences\\c++.fbx"
+            }
+        },
+        "616": {
+            "link": {
+                "name": "C++ - Up.002",
+                "file": "assets\\models\\evidences\\c++.fbx"
+            }
+        },
+        "617": {
+            "link": {
+                "name": "C++ - C.001",
+                "file": "assets\\models\\evidences\\c++.fbx"
+            }
+        },
+        "618": {
+            "link": {
+                "name": "C++ - +.001",
+                "file": "assets\\models\\evidences\\c++.fbx"
+            }
+        },
+        "619": {
+            "link": {
+                "name": "C++ - Side.001",
+                "file": "assets\\models\\evidences\\c++.fbx"
+            }
+        },
+        "620": {
+            "link": {
+                "name": "C++ - Physx",
+                "file": "assets\\models\\evidences\\c++.fbx"
+            }
+        },
+        "621": {
+            "link": {
+                "name": "C++ - +.002",
+                "file": "assets\\models\\evidences\\c++.fbx"
             }
         }
     },
@@ -12619,9 +12789,9 @@
                     1.0
                 ],
                 "ambientColor": [
-                    0.1803903,
-                    0.1803907,
-                    0.1803921,
+                    0.28235,
+                    0.2823507,
+                    0.2823529,
                     1.0
                 ]
             },
@@ -13121,6 +13291,24 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\wonderland.fbx"
             }
+        },
+        "612": {
+            "link": {
+                "name": "Dark Blue",
+                "file": "assets\\models\\evidences\\c++.fbx"
+            }
+        },
+        "613": {
+            "link": {
+                "name": "Dark Red",
+                "file": "assets\\models\\evidences\\c++.fbx"
+            }
+        },
+        "614": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\c++.fbx"
+            }
         }
     },
     "shaders": {
@@ -13277,7 +13465,8 @@
         "assets/models/evidences/leaderboard.fbx",
         "assets/models/evidences/floppy.fbx",
         "assets/models/evidences/wondermelon.fbx",
-        "assets/models/evidences/wonderland.fbx"
+        "assets/models/evidences/wonderland.fbx",
+        "assets/models/evidences/c++.fbx"
     ],
     "pipelines": {
         "69": {
