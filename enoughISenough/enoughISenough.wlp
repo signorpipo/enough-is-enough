@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "225",
+                        "_myStartStory": "222",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -5042,17 +5042,17 @@
             "name": "Earring",
             "parent": "174",
             "transformation": [
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.3,
                 0.0,
@@ -5065,11 +5065,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "8",
+                            "mesh": "673",
                             "scaling": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.017,
+                                0.017,
+                                0.017
                             ]
                         }
                     }
@@ -5133,7 +5133,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "224": {
             "name": "Nose",
@@ -5164,7 +5165,8 @@
                 0.0000019,
                 0.9000015,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "225": {
             "name": "Skating",
@@ -11856,7 +11858,92 @@
                 "name": "Skating - Mirror<Skating",
                 "file": "assets\\models\\evidences\\skating.fbx"
             },
-            "parent": "657"
+            "parent": "657",
+            "deleted": true
+        },
+        "674": {
+            "link": {
+                "name": "Earring",
+                "file": "assets\\models\\evidences\\earring.fbx"
+            },
+            "parent": "222",
+            "transformation": [
+                0.017,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.017,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.017,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "pp-easy-transform",
+                    "pp-easy-transform": {
+                        "_mySetAsDefault": true,
+                        "_myIsLocal": true
+                    }
+                }
+            ]
+        },
+        "675": {
+            "link": {
+                "name": "Earring - Face<Earring",
+                "file": "assets\\models\\evidences\\earring.fbx"
+            },
+            "parent": "674",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "285"
+                    }
+                }
+            ]
+        },
+        "676": {
+            "link": {
+                "name": "Earring - Glass<Earring",
+                "file": "assets\\models\\evidences\\earring.fbx"
+            },
+            "parent": "674",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "286"
+                    }
+                }
+            ]
+        },
+        "677": {
+            "link": {
+                "name": "Earring - Cap<Earring",
+                "file": "assets\\models\\evidences\\earring.fbx"
+            },
+            "parent": "674",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "276"
+                    }
+                }
+            ]
+        },
+        "678": {
+            "link": {
+                "name": "Earring - Physx<Earring",
+                "file": "assets\\models\\evidences\\earring.fbx"
+            },
+            "parent": "674",
+            "deleted": true
         }
     },
     "meshes": {
@@ -12542,6 +12629,30 @@
             "link": {
                 "name": "Skating - Wheel Right.001",
                 "file": "assets\\models\\evidences\\skating.fbx"
+            }
+        },
+        "670": {
+            "link": {
+                "name": "Earring - Face.001",
+                "file": "assets\\models\\evidences\\earring.fbx"
+            }
+        },
+        "671": {
+            "link": {
+                "name": "Earring - Glass.001",
+                "file": "assets\\models\\evidences\\earring.fbx"
+            }
+        },
+        "672": {
+            "link": {
+                "name": "Earring - Cap.001",
+                "file": "assets\\models\\evidences\\earring.fbx"
+            }
+        },
+        "673": {
+            "link": {
+                "name": "Earring - Physx",
+                "file": "assets\\models\\evidences\\earring.fbx"
             }
         }
     },
@@ -13698,6 +13809,30 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\skating.fbx"
             }
+        },
+        "666": {
+            "link": {
+                "name": "Purple",
+                "file": "assets\\models\\evidences\\earring.fbx"
+            }
+        },
+        "667": {
+            "link": {
+                "name": "Pink",
+                "file": "assets\\models\\evidences\\earring.fbx"
+            }
+        },
+        "668": {
+            "link": {
+                "name": "Brown",
+                "file": "assets\\models\\evidences\\earring.fbx"
+            }
+        },
+        "669": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\earring.fbx"
+            }
         }
     },
     "shaders": {
@@ -13832,7 +13967,20 @@
             "enable": true
         }
     },
-    "animations": {},
+    "animations": {
+        "679": {
+            "link": {
+                "name": "Earring - Glass|CylinderAction",
+                "file": "assets\\models\\evidences\\earring.fbx"
+            }
+        },
+        "680": {
+            "link": {
+                "name": "Earring - Cap|CylinderAction",
+                "file": "assets\\models\\evidences\\earring.fbx"
+            }
+        }
+    },
     "skins": {},
     "files": [
         "assets/models/quest_controllers_credits_Jezza3D.glb",
@@ -13858,7 +14006,8 @@
         "assets/models/evidences/c++.fbx",
         "assets/models/evidences/crypto.fbx",
         "assets/models/evidences/lol.fbx",
-        "assets/models/evidences/skating.fbx"
+        "assets/models/evidences/skating.fbx",
+        "assets/models/evidences/earring.fbx"
     ],
     "pipelines": {
         "69": {
