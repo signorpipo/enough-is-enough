@@ -31,27 +31,29 @@ PP.EasyObjectTuner = class EasyObjectTuner {
     }
 
     update(dt) {
-        if (this._myUseGrabTarget) {
-            this._myEasyObject = PP.myEasyGrabTarget;
-        }
-
-        if (this._myPrevEasyObject != this._myEasyObject) {
-            this._myPrevEasyObject = this._myEasyObject;
-            if (this._myEasyObject) {
-                let value = this._getObjectValue(this._myEasyObject);
-                PP.myEasyTuneVariables.set(this._myEasyTuneVariableName, value);
-            } else {
-                let value = this._getDefaultValue();
-                PP.myEasyTuneVariables.set(this._myEasyTuneVariableName, value);
+        if (PP.myEasyTuneVariables.isActive(this._myEasyTuneVariableName)) {
+            if (this._myUseGrabTarget) {
+                this._myEasyObject = PP.myEasyGrabTarget;
             }
-        }
 
-        if (this._myEasyObject) {
-            this._updateObjectValue(this._myEasyObject, PP.myEasyTuneVariables.get(this._myEasyTuneVariableName));
+            if (this._myPrevEasyObject != this._myEasyObject) {
+                this._myPrevEasyObject = this._myEasyObject;
+                if (this._myEasyObject) {
+                    let value = this._getObjectValue(this._myEasyObject);
+                    PP.myEasyTuneVariables.set(this._myEasyTuneVariableName, value);
+                } else {
+                    let value = this._getDefaultValue();
+                    PP.myEasyTuneVariables.set(this._myEasyTuneVariableName, value);
+                }
+            }
+
+            if (this._myEasyObject) {
+                this._updateObjectValue(this._myEasyObject, PP.myEasyTuneVariables.get(this._myEasyTuneVariableName));
+            }
         }
     }
 
-    getEasyTuneVariableName() {
-        return this._myEasyTuneVariableName;
+    updateVariableValue(value) {
+        PP.myEasyTuneVariables.set(this._myEasyTuneVariableName, value);
     }
 };

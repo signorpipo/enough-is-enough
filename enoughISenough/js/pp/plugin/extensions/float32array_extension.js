@@ -73,7 +73,10 @@
             - vec3_toRadians        / vec3_toDegrees            / vec3_toQuat       / vec3_toMatrix
             - vec3_rotate           / vec3_rotateAxis           / vec3_rotateAround / vec3_rotateAroundAxis
             - vec3_addRotation
-            - vec3_log       / vec3_error         / vec3_warn      
+            - vec3_log       / vec3_error         / vec3_warn     
+            
+        VECTOR 4:
+            ○ vec4_set
 
         QUAT:
             ○ quat_set          / quat_copy     / quat_identity
@@ -690,6 +693,19 @@ Float32Array.prototype.vec3_radiansToMatrix = function () {
         return quat.quat_toMatrix(out);
     };
 }();
+
+// VECTOR 4
+
+//glMatrix Bridge
+
+Float32Array.prototype.vec4_set = function (x, y = null, z = null, w = null) {
+    if (y == null) {
+        glMatrix.vec4.set(this, x, x, x, x);
+    } else {
+        glMatrix.vec4.set(this, x, y, z, w);
+    }
+    return this;
+};
 
 //QUAT
 
@@ -1308,6 +1324,14 @@ function vec3_create(x = null, y = null, z = null) {
     let out = glMatrix.vec3.create();
     if (x != null) {
         out.vec3_set(x, y, z);
+    }
+    return out;
+}
+
+function vec4_create(x = null, y = null, z = null, w = null) {
+    let out = glMatrix.vec4.create();
+    if (x != null) {
+        out.vec4_set(x, y, z, w);
     }
     return out;
 }

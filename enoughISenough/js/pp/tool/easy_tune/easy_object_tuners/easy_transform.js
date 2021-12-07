@@ -1,18 +1,18 @@
 WL.registerComponent("pp-easy-transform", {
     _myVariableName: { type: WL.Type.String, default: "" },
     _mySetAsDefault: { type: WL.Type.Bool, default: false },
+    _myUseGrabTarget: { type: WL.Type.Bool, default: false },
     _myIsLocal: { type: WL.Type.Bool, default: false },
     _myScaleAsOne: { type: WL.Type.Bool, default: true },
-    _myUseGrabTarget: { type: WL.Type.Bool, default: false }
 }, {
     init: function () {
-        this._myEasyTransform = new PP.EasyTransform(this._myIsLocal, this.object, this._myVariableName, this._mySetAsDefault, this._myUseGrabTarget);
+        this._myEasyObjectTuner = new PP.EasyTransform(this._myIsLocal, this.object, this._myVariableName, this._mySetAsDefault, this._myUseGrabTarget);
     },
     start: function () {
-        this._myEasyTransform.start();
+        this._myEasyObjectTuner.start();
     },
     update: function (dt) {
-        this._myEasyTransform.update(dt);
+        this._myEasyObjectTuner.update(dt);
     }
 });
 
@@ -26,8 +26,8 @@ PP.EasyTransform = class EasyTransform extends PP.EasyObjectTuner {
         return "Transform ";
     }
 
-    _createEasyTuneVariable() {
-        return new PP.EasyTuneEasyTransform(this._myEasyTuneVariableName, this._getDefaultValue(), this._myScaleAsOne);
+    _createEasyTuneVariable(variableName) {
+        return new PP.EasyTuneEasyTransform(variableName, this._getDefaultValue(), this._myScaleAsOne);
     }
 
     _getObjectValue(object) {

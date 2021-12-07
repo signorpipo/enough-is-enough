@@ -721,7 +721,7 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
     }
 
     _isFloat32Array(item) {
-        return item.constructor && item.constructor.name == "Float32Array";
+        return item && item.constructor && item.constructor.name == "Float32Array";
     }
 
     _setGamepadScrollActive(active) {

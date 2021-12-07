@@ -11898,15 +11898,6 @@
                 0.0,
                 0.0,
                 1.0
-            ],
-            "components": [
-                {
-                    "type": "pp-easy-transform",
-                    "pp-easy-transform": {
-                        "_mySetAsDefault": true,
-                        "_myIsLocal": true
-                    }
-                }
             ]
         },
         "675": {
