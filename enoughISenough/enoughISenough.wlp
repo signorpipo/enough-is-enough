@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "222",
+                        "_myStartStory": "201",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -4121,17 +4121,17 @@
             "name": "Meditation",
             "parent": "174",
             "transformation": [
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.3,
                 0.0,
@@ -4144,11 +4144,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "8",
+                            "mesh": "688",
                             "scaling": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.017,
+                                0.017,
+                                0.017
                             ]
                         }
                     }
@@ -4212,7 +4212,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "203": {
             "name": "Nose",
@@ -4243,7 +4244,8 @@
                 0.0,
                 0.8999999,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "204": {
             "name": "Staring Cube",
@@ -11944,6 +11946,97 @@
             },
             "parent": "674",
             "deleted": true
+        },
+        "689": {
+            "link": {
+                "name": "Meditation",
+                "file": "assets\\models\\evidences\\meditation.fbx"
+            },
+            "parent": "201",
+            "transformation": [
+                0.017,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.017,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.017,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "690": {
+            "link": {
+                "name": "Meditation - Leaf<Meditation",
+                "file": "assets\\models\\evidences\\meditation.fbx"
+            },
+            "parent": "689",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "275"
+                    }
+                }
+            ]
+        },
+        "691": {
+            "link": {
+                "name": "Meditaiton - Mirror<Meditation",
+                "file": "assets\\models\\evidences\\meditation.fbx"
+            },
+            "parent": "689",
+            "deleted": true
+        },
+        "692": {
+            "link": {
+                "name": "Meditation - Petal 1<Meditation",
+                "file": "assets\\models\\evidences\\meditation.fbx"
+            },
+            "parent": "689",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "280"
+                    }
+                }
+            ]
+        },
+        "693": {
+            "link": {
+                "name": "Meditation - Flower<Meditation",
+                "file": "assets\\models\\evidences\\meditation.fbx"
+            },
+            "parent": "689",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "286"
+                    }
+                }
+            ]
+        },
+        "694": {
+            "link": {
+                "name": "Meditaiton - Mirror 2<Meditation",
+                "file": "assets\\models\\evidences\\meditation.fbx"
+            },
+            "parent": "689",
+            "deleted": true
+        },
+        "695": {
+            "link": {
+                "name": "Meditation - Physx<Meditation",
+                "file": "assets\\models\\evidences\\meditation.fbx"
+            },
+            "parent": "689",
+            "deleted": true
         }
     },
     "meshes": {
@@ -12653,6 +12746,30 @@
             "link": {
                 "name": "Earring - Physx",
                 "file": "assets\\models\\evidences\\earring.fbx"
+            }
+        },
+        "685": {
+            "link": {
+                "name": "Meditation - Leaf 1.002",
+                "file": "assets\\models\\evidences\\meditation.fbx"
+            }
+        },
+        "686": {
+            "link": {
+                "name": "Meditation - Leaf 1.003",
+                "file": "assets\\models\\evidences\\meditation.fbx"
+            }
+        },
+        "687": {
+            "link": {
+                "name": "Meditation - Flower.001",
+                "file": "assets\\models\\evidences\\meditation.fbx"
+            }
+        },
+        "688": {
+            "link": {
+                "name": "Meditation - Physx",
+                "file": "assets\\models\\evidences\\meditation.fbx"
             }
         }
     },
@@ -13833,6 +13950,30 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\earring.fbx"
             }
+        },
+        "681": {
+            "link": {
+                "name": "Dark Green",
+                "file": "assets\\models\\evidences\\meditation.fbx"
+            }
+        },
+        "682": {
+            "link": {
+                "name": "Red",
+                "file": "assets\\models\\evidences\\meditation.fbx"
+            }
+        },
+        "683": {
+            "link": {
+                "name": "Pink",
+                "file": "assets\\models\\evidences\\meditation.fbx"
+            }
+        },
+        "684": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\meditation.fbx"
+            }
         }
     },
     "shaders": {
@@ -14007,7 +14148,8 @@
         "assets/models/evidences/crypto.fbx",
         "assets/models/evidences/lol.fbx",
         "assets/models/evidences/skating.fbx",
-        "assets/models/evidences/earring.fbx"
+        "assets/models/evidences/earring.fbx",
+        "assets/models/evidences/meditation.fbx"
     ],
     "pipelines": {
         "69": {
