@@ -181,7 +181,7 @@ EXTRA:
 - altezza variable (almeno in step, a seconda dell'altezza una volta dentro il gioco, con reset?)
 - aggiungere mr not particles quando not enougha (?)
 - vibrazione per ogni colpo finale a mr not?
-
+- physx sulla mano per poter spostare gli oggetti?
 
 
 TO DO:
