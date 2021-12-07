@@ -11,5 +11,7 @@ PP.EasyTuneWidgetSetup = class EasyTuneWidgetSetup {
         this.myScrollVariableMinXThreshold = 0.6;
         this.myScrollVariableMaxYThreshold = 0.25;
         this.myScrollVariableButtonType = null;
+
+        this.myRefreshVariablesDelay = 0.25;
     }
 };

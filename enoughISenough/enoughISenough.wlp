@@ -2437,6 +2437,18 @@
                         "_myThrowMaxAngularSpeed": 1080.0,
                         "_myThrowLinearSpeedBoost": 1.75
                     }
+                },
+                {
+                    "type": "pp-easy-grab-target"
+                },
+                {
+                    "type": "pp-easy-transform",
+                    "pp-easy-transform": {
+                        "_myUseGrabTarget": true,
+                        "_myIsLocal": true,
+                        "_mySetAsDefault": true,
+                        "_myVariableName": "Target"
+                    }
                 }
             ]
         },
@@ -14072,7 +14084,10 @@
                 "js/enoughISenough/story",
                 "js/pp/cauldron/fsm/states",
                 "js/enoughISenough/vent",
-                "js/plugin"
+                "js/plugin",
+                "js/pp/tool/easy_tune/widgets",
+                "js/pp/tool/easy_tune/easy_object_tuners",
+                "js/pp/tool/easy_tune/easy_tune_widgets"
             ]
         },
         "editor": {
@@ -14102,7 +14117,7 @@
             },
             "visualizeColliders": false,
             "enableRuntimeGltf": false,
-            "visualizePhysX": false
+            "visualizePhysX": true
         },
         "physx": {
             "enable": true

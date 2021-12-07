@@ -22,6 +22,8 @@ PP.EasyTuneWidget = class EasyTuneWidget {
         this._myScrollVariableTimer = 0;
 
         this._myGamepad = null;
+
+        this._myRefreshVariablesTimer = 0;
     }
 
     setEasyTuneWidgetActiveVariable(variableName) {
@@ -77,6 +79,12 @@ PP.EasyTuneWidget = class EasyTuneWidget {
         }
 
         if (this._myWidgetFrame.myIsWidgetVisible && this._myEasyTuneVariables.size > 0) {
+            this._myRefreshVariablesTimer += dt;
+            if (this._myRefreshVariablesTimer > this._mySetup.myRefreshVariablesDelay) {
+                this._myRefreshVariablesTimer = 0;
+                this._refreshEasyTuneVariables();
+            }
+
             if (this._myCurrentWidget) {
                 this._myCurrentWidget.update(dt);
             }
