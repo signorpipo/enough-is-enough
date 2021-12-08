@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "201",
+                        "_myStartStory": "210",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -4542,17 +4542,17 @@
             "name": "Piano",
             "parent": "174",
             "transformation": [
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.8999999,
                 0.0,
@@ -4565,11 +4565,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "8",
+                            "mesh": "703",
                             "scaling": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.014,
+                                0.014,
+                                0.014
                             ]
                         }
                     }
@@ -4633,7 +4633,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "212": {
             "name": "Nose",
@@ -4664,7 +4665,8 @@
                 0.0,
                 0.8999999,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "213": {
             "name": "CPlusPlus",
@@ -12042,6 +12044,113 @@
             },
             "parent": "689",
             "deleted": true
+        },
+        "704": {
+            "link": {
+                "name": "Piano",
+                "file": "assets\\models\\evidences\\piano.fbx"
+            },
+            "parent": "210",
+            "transformation": [
+                0.0139999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0139999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0139999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "705": {
+            "link": {
+                "name": "Piano - Base<Piano",
+                "file": "assets\\models\\evidences\\piano.fbx"
+            },
+            "parent": "704",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "276"
+                    }
+                }
+            ]
+        },
+        "706": {
+            "link": {
+                "name": "Piano - Back<Piano",
+                "file": "assets\\models\\evidences\\piano.fbx"
+            },
+            "parent": "704",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "276"
+                    }
+                }
+            ]
+        },
+        "707": {
+            "link": {
+                "name": "Piano - Black<Piano",
+                "file": "assets\\models\\evidences\\piano.fbx"
+            },
+            "parent": "704",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "272"
+                    }
+                }
+            ]
+        },
+        "708": {
+            "link": {
+                "name": "Piano - White<Piano",
+                "file": "assets\\models\\evidences\\piano.fbx"
+            },
+            "parent": "704",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "279"
+                    }
+                }
+            ],
+            "transformation": [
+                -0.0089999,
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.007024,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0435464,
+                0.0,
+                2.115184,
+                0.7719676,
+                0.6548639,
+                1.0
+            ]
+        },
+        "709": {
+            "link": {
+                "name": "Piano - Physx<Piano",
+                "file": "assets\\models\\evidences\\piano.fbx"
+            },
+            "parent": "704",
+            "deleted": true
         }
     },
     "meshes": {
@@ -12775,6 +12884,36 @@
             "link": {
                 "name": "Meditation - Physx",
                 "file": "assets\\models\\evidences\\meditation.fbx"
+            }
+        },
+        "699": {
+            "link": {
+                "name": "Piano - Base.001",
+                "file": "assets\\models\\evidences\\piano.fbx"
+            }
+        },
+        "700": {
+            "link": {
+                "name": "Piano - Back.001",
+                "file": "assets\\models\\evidences\\piano.fbx"
+            }
+        },
+        "701": {
+            "link": {
+                "name": "Piano - Black.001",
+                "file": "assets\\models\\evidences\\piano.fbx"
+            }
+        },
+        "702": {
+            "link": {
+                "name": "Piano - White.008",
+                "file": "assets\\models\\evidences\\piano.fbx"
+            }
+        },
+        "703": {
+            "link": {
+                "name": "Piano - Physx",
+                "file": "assets\\models\\evidences\\piano.fbx"
             }
         }
     },
@@ -13979,6 +14118,24 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\meditation.fbx"
             }
+        },
+        "696": {
+            "link": {
+                "name": "Black",
+                "file": "assets\\models\\evidences\\piano.fbx"
+            }
+        },
+        "697": {
+            "link": {
+                "name": "Dark Red",
+                "file": "assets\\models\\evidences\\piano.fbx"
+            }
+        },
+        "698": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\piano.fbx"
+            }
         }
     },
     "shaders": {
@@ -14110,7 +14267,7 @@
             },
             "visualizeColliders": false,
             "enableRuntimeGltf": false,
-            "visualizePhysX": true
+            "visualizePhysX": false
         },
         "physx": {
             "enable": true
@@ -14157,7 +14314,8 @@
         "assets/models/evidences/lol.fbx",
         "assets/models/evidences/skating.fbx",
         "assets/models/evidences/earring.fbx",
-        "assets/models/evidences/meditation.fbx"
+        "assets/models/evidences/meditation.fbx",
+        "assets/models/evidences/piano.fbx"
     ],
     "pipelines": {
         "69": {
