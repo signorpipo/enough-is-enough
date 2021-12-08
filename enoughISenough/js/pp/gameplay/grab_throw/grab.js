@@ -1,6 +1,7 @@
 WL.registerComponent('pp-grab', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
-    _myThrowLinearSpeedBoost: { type: WL.Type.Float, default: 1.75 },
+    _myThrowLinearVelocityMultiplier: { type: WL.Type.Float, default: 1.75 },
+    _myThrowAngularVelocityMultiplier: { type: WL.Type.Float, default: 0.5 },
     _myThrowMaxLinearSpeed: { type: WL.Type.Float, default: 15 },
     _myThrowMaxAngularSpeed: { type: WL.Type.Float, default: 1080 }, // degrees
     _mySnapOnPivot: { type: WL.Type.Bool, default: false },
@@ -25,8 +26,6 @@ WL.registerComponent('pp-grab', {
         this._myThrowLinearSpeedEaseMinThreshold = 0.6;
         this._myThrowLinearSpeedEaseMaxThreshold = 2.5;
 
-        this._myThrowAngularSpeedDampingThreshold = 15;
-        this._myThrowAngularSpeedDamping = 0.1;
         this._myThrowMaxAngularSpeedRadians = Math.pp_toRadians(this._myThrowMaxAngularSpeed);
 
         this._myGrabCallbacks = new Map();
@@ -132,7 +131,7 @@ WL.registerComponent('pp-grab', {
         speedEaseMultiplier = PP.EasingFunction.easeIn(speedEaseMultiplier);
 
         // Add the boost to the speed
-        let extraSpeed = speed * (speedEaseMultiplier * this._myThrowLinearSpeedBoost);
+        let extraSpeed = speed * (speedEaseMultiplier * this._myThrowLinearVelocityMultiplier);
         speed += extraSpeed;
         speed = Math.pp_clamp(speed, 0, this._myThrowMaxLinearSpeed);
 
@@ -154,14 +153,11 @@ WL.registerComponent('pp-grab', {
     },
     _computeReleaseAngularVelocity() {
         let angularVelocity = this._retrieveAngularVelocity();
+
         //speed
         let speed = glMatrix.vec3.length(angularVelocity);
 
-        if (speed > this._myThrowAngularSpeedDampingThreshold) {
-            speed = this._myThrowAngularSpeedDampingThreshold + (speed - this._myThrowAngularSpeedDampingThreshold) * this._myThrowAngularSpeedDamping;
-        }
-
-        speed = Math.pp_clamp(speed, 0, this._myThrowMaxAngularSpeedRadians);
+        speed = Math.pp_clamp(speed * this._myThrowAngularVelocityMultiplier, 0, this._myThrowMaxAngularSpeedRadians);
 
         //direction
         let direction = angularVelocity;

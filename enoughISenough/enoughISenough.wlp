@@ -2435,7 +2435,8 @@
                         "_myThrowVelocitySource": "hand",
                         "_myThrowMaxLinearSpeed": 15.0,
                         "_myThrowMaxAngularSpeed": 1080.0,
-                        "_myThrowLinearSpeedBoost": 1.75
+                        "_myThrowLinearSpeedBoost": 1.75,
+                        "_myThrowAngularVelocityMultiplier": 0.5
                     }
                 },
                 {

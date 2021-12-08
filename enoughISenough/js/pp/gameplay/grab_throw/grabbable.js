@@ -1,4 +1,6 @@
 WL.registerComponent('pp-grabbable', {
+    _myThrowLinearVelocityMultiplier: { type: WL.Type.Float, default: 1 },
+    _myThrowAngularVelocityMultiplier: { type: WL.Type.Float, default: 1 },
 }, {
     init: function () {
         this._myIsGrabbed = false;
@@ -19,7 +21,9 @@ WL.registerComponent('pp-grabbable', {
     grab: function (grabber) {
         this.release();
 
-        this._myPhysx.kinematic = true;
+        if (this._myPhysx) {
+            this._myPhysx.kinematic = true;
+        }
 
         this._myOldParent = this.object.parent;
         this.object.pp_setParent(grabber);
@@ -34,8 +38,10 @@ WL.registerComponent('pp-grabbable', {
 
             this._release();
 
-            this._myPhysx.linearVelocity = linearVelocity;
-            this._myPhysx.angularVelocity = angularVelocity;
+            if (this._myPhysx) {
+                this._myPhysx.linearVelocity = linearVelocity.vec3_scale(this._myThrowLinearVelocityMultiplier);
+                this._myPhysx.angularVelocity = angularVelocity.vec3_scale(this._myThrowAngularVelocityMultiplier);
+            }
 
             this._myThrowCallbacks.forEach(function (value) { value(this, grabber); }.bind(this));
             this._myReleaseCallbacks.forEach(function (value) { value(this, grabber, true); }.bind(this));
@@ -51,16 +57,34 @@ WL.registerComponent('pp-grabbable', {
         }
     },
     getLinearVelocity() {
-        return this._myPhysx.linearVelocity.slice(0);
+        let linearVelocity = vec3_create();
+
+        if (this._myPhysx) {
+            this._myPhysx.linearVelocity.vec3_clone(linearVelocity);
+        }
+
+        return linearVelocity;
     },
     getAngularVelocity() {
         return this.getAngularVelocityDegrees();
     },
     getAngularVelocityDegrees() {
-        return this._myPhysx.angularVelocity.vec3_toDegrees();
+        let angularVelocityDegrees = vec3_create();
+
+        if (this._myPhysx) {
+            this._myPhysx.angularVelocity.vec3_toDegrees(angularVelocityDegrees);
+        }
+
+        return angularVelocityDegrees;
     },
     getAngularVelocityRadians() {
-        return this._myPhysx.angularVelocity.slice(0);
+        let angularVelocityRadians = vec3_create();
+
+        if (this._myPhysx) {
+            this._myPhysx.angularVelocity.vec3_clone(angularVelocityRadians);
+        }
+
+        return angularVelocityRadians;
     },
     isGrabbed() {
         return this._myIsGrabbed;
@@ -89,7 +113,7 @@ WL.registerComponent('pp-grabbable', {
         this._myGrabber = null;
 
         //TEMP u can't set kinematic if physx is inactive because it will crash
-        if (this._myPhysx.active) {
+        if (this._myPhysx && this._myPhysx.active) {
             this._myPhysx.kinematic = false;
         }
     }
