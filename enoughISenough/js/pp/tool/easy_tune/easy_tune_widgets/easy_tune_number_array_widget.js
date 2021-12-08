@@ -116,13 +116,47 @@ PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget {
 
             this._myValueRealValue += amountToAdd;
 
-            if (this._myVariable.myMin != null) {
+            if (this._myVariable.myMin != null && this._myVariable.myMax != null) {
                 this._myValueRealValue = Math.pp_clamp(this._myValueRealValue, this._myVariable.myMin, this._myVariable.myMax);
+            } else if (this._myVariable.myMin != null) {
+                this._myValueRealValue = Math.max(this._myValueRealValue, this._myVariable.myMin);
+            } else if (this._myVariable.myMax != null) {
+                this._myValueRealValue = Math.min(this._myValueRealValue, this._myVariable.myMax);
             }
 
             let decimalPlacesMultiplier = Math.pow(10, this._myVariable.myDecimalPlaces);
-            this._myVariable.myValue[this._myValueEditIndex] = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
-            this._myUI.myValueTextComponents[this._myValueEditIndex].text = this._myVariable.myValue[this._myValueEditIndex].toFixed(this._myVariable.myDecimalPlaces);
+
+            if (this._myVariable.myEditAllValuesTogether) {
+                let newValue = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
+                let difference = newValue - this._myVariable.myValue[this._myValueEditIndex];
+
+                for (let i = 0; i < this._mySetup.myArraySize; i++) {
+                    this._myVariable.myValue[i] = Math.round((this._myVariable.myValue[i] + difference) * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
+
+                    if (this._myVariable.myMin != null && this._myVariable.myMax != null) {
+                        this._myVariable.myValue[i] = Math.pp_clamp(this._myVariable.myValue[i], this._myVariable.myMin, this._myVariable.myMax);
+                    } else if (this._myVariable.myMin != null) {
+                        this._myVariable.myValue[i] = Math.max(this._myVariable.myValue[i], this._myVariable.myMin);
+                    } else if (this._myVariable.myMax != null) {
+                        this._myVariable.myValue[i] = Math.min(this._myVariable.myValue[i], this._myVariable.myMax);
+                    }
+
+                    this._myUI.myValueTextComponents[i].text = this._myVariable.myValue[i].toFixed(this._myVariable.myDecimalPlaces);
+                }
+
+            } else {
+                this._myVariable.myValue[this._myValueEditIndex] = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
+
+                if (this._myVariable.myMin != null && this._myVariable.myMax != null) {
+                    this._myVariable.myValue[this._myValueEditIndex] = Math.pp_clamp(this._myVariable.myValue[this._myValueEditIndex], this._myVariable.myMin, this._myVariable.myMax);
+                } else if (this._myVariable.myMin != null) {
+                    this._myVariable.myValue[this._myValueEditIndex] = Math.max(this._myVariable.myValue[this._myValueEditIndex], this._myVariable.myMin);
+                } else if (this._myVariable.myMax != null) {
+                    this._myVariable.myValue[this._myValueEditIndex] = Math.min(this._myVariable.myValue[this._myValueEditIndex], this._myVariable.myMax);
+                }
+
+                this._myUI.myValueTextComponents[this._myValueEditIndex].text = this._myVariable.myValue[this._myValueEditIndex].toFixed(this._myVariable.myDecimalPlaces);
+            }
         } else {
             this._myValueRealValue = this._myVariable.myValue[this._myValueEditIndex];
         }

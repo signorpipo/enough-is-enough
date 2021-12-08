@@ -2442,12 +2442,13 @@
                     "type": "pp-easy-grab-target"
                 },
                 {
-                    "type": "pp-easy-transform",
-                    "pp-easy-transform": {
+                    "type": "pp-easy-scale",
+                    "pp-easy-scale": {
+                        "_myVariableName": "Target",
+                        "_mySetAsDefault": true,
                         "_myUseGrabTarget": true,
                         "_myIsLocal": true,
-                        "_mySetAsDefault": true,
-                        "_myVariableName": "Target"
+                        "_myScaleAsOne": true
                     }
                 }
             ]

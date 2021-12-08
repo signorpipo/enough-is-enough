@@ -1,4 +1,4 @@
-WL.registerComponent("pp-easy-transform", {
+WL.registerComponent("pp-easy-scale", {
     _myVariableName: { type: WL.Type.String, default: "" },
     _mySetAsDefault: { type: WL.Type.Bool, default: false },
     _myUseGrabTarget: { type: WL.Type.Bool, default: false },
@@ -6,7 +6,7 @@ WL.registerComponent("pp-easy-transform", {
     _myScaleAsOne: { type: WL.Type.Bool, default: true }, // Edit all scale values together
 }, {
     init: function () {
-        this._myEasyObjectTuner = new PP.EasyTransform(this._myIsLocal, this._myScaleAsOne, this.object, this._myVariableName, this._mySetAsDefault, this._myUseGrabTarget);
+        this._myEasyObjectTuner = new PP.EasyScale(this._myIsLocal, this._myScaleAsOne, this.object, this._myVariableName, this._mySetAsDefault, this._myUseGrabTarget);
     },
     start: function () {
         this._myEasyObjectTuner.start();
@@ -16,7 +16,7 @@ WL.registerComponent("pp-easy-transform", {
     }
 });
 
-PP.EasyTransform = class EasyTransform extends PP.EasyObjectTuner {
+PP.EasyScale = class EasyScale extends PP.EasyObjectTuner {
     constructor(isLocal, scaleAsOne, object, variableName, setAsDefault, useGrabTarget) {
         super(object, variableName, setAsDefault, useGrabTarget);
         this._myIsLocal = isLocal;
@@ -24,26 +24,26 @@ PP.EasyTransform = class EasyTransform extends PP.EasyObjectTuner {
     }
 
     _getVariableNamePrefix() {
-        return "Transform ";
+        return "Scale ";
     }
 
     _createEasyTuneVariable(variableName) {
-        return new PP.EasyTuneSimpleTransform(variableName, this._getDefaultValue(), this._myScaleAsOne);
+        return new PP.EasyTuneNumberArray(variableName, this._getDefaultValue(), 1, 3, 0.001, null, this._myScaleAsOne);
     }
 
     _getObjectValue(object) {
-        return this._myIsLocal ? object.pp_getTransformLocal() : object.pp_getTransformWorld();
+        return this._myIsLocal ? object.pp_getScaleLocal() : object.pp_getScaleWorld();
     }
 
     _getDefaultValue() {
-        return mat4_create();
+        return vec3_create(1, 1, 1);
     }
 
     _updateObjectValue(object, value) {
         if (this._myIsLocal) {
-            object.pp_setTransformLocal(value);
+            object.pp_setScaleLocal(value);
         } else {
-            object.pp_setTransformWorld(value);
+            object.pp_setScaleWorld(value);
         }
     }
 };

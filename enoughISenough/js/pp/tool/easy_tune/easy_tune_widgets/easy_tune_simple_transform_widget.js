@@ -164,6 +164,7 @@ PP.EasyTuneSimpleTransformWidget = class EasyTuneSimpleTransformWidget {
                         }
                     } else {
                         this._myVariable.myScale[this._myValueEditIndex] = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
+                        this._myVariable.myScale[this._myValueEditIndex] = Math.max(this._myVariable.myScale[this._myValueEditIndex], 1 / decimalPlacesMultiplier);
                         this._myUI.myScaleTextComponents[this._myValueEditIndex].text = this._myVariable.myScale[this._myValueEditIndex].toFixed(this._myVariable.myDecimalPlaces);
                     }
                     break;

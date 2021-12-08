@@ -82,6 +82,10 @@ PP.EasyTuneVariableArray = class EasyTuneVariableArray extends PP.EasyTuneVariab
         PP.EasyTuneVariableArray.prototype.setValue.call(this, value);
     }
 
+    getValue() {
+        return this.myValue.slice(0);
+    }
+
     setValue(value) {
         this.myValue = value.slice(0);
         this.myInitialValue = this.myValue.slice(0);
@@ -91,12 +95,20 @@ PP.EasyTuneVariableArray = class EasyTuneVariableArray extends PP.EasyTuneVariab
 //NUMBER
 
 PP.EasyTuneNumberArray = class EasyTuneNumberArray extends PP.EasyTuneVariableArray {
-    constructor(name, value, stepPerSecond, decimalPlaces, min = null, max = null) {
+    constructor(name, value, stepPerSecond, decimalPlaces, min = null, max = null, editAllValuesTogether = false) {
         let tempValue = value.slice(0);
 
-        if (min != null) {
+        if (min != null && max != null) {
             for (let i = 0; i < value.length; i++) {
                 tempValue[i] = Math.pp_clamp(tempValue[i], min, max);
+            }
+        } else if (min != null) {
+            for (let i = 0; i < value.length; i++) {
+                tempValue[i] = Math.max(tempValue[i], min);
+            }
+        } else if (max != null) {
+            for (let i = 0; i < value.length; i++) {
+                tempValue[i] = Math.min(tempValue[i], max);
             }
         }
 
@@ -109,6 +121,8 @@ PP.EasyTuneNumberArray = class EasyTuneNumberArray extends PP.EasyTuneVariableAr
 
         this.myMin = min;
         this.myMax = max;
+
+        this.myEditAllValuesTogether = editAllValuesTogether;
     }
 };
 
@@ -166,29 +180,22 @@ PP.EasyTuneBool = class EasyTuneBool extends PP.EasyTuneBoolArray {
     }
 };
 
-PP.EasyTuneBool = class EasyTuneBool extends PP.EasyTuneBoolArray {
-    constructor(name, value) {
-        super(name, [value]);
-    }
-
-    getValue() {
-        return this.myValue[0];
-    }
-
-    setValue(value) {
-        super.setValue([value]);
-    }
-};
-
 //EASY TUNE EASY TRANSFORM
 
 PP.EasyTuneSimpleTransform = class EasyTuneSimpleTransform extends PP.EasyTuneVariable {
     constructor(name, value, scaleAsOne = true, positionStepPerSecond = 1, rotationStepPerSecond = 50, scaleStepPerSecond = 1) {
         super(name, PP.EasyTuneVariableType.EASY_TRANSFORM);
 
+        this.myDecimalPlaces = 3;
+
         this.myPosition = value.mat4_getPosition();
         this.myRotation = value.mat4_getRotationDegrees();
         this.myScale = value.mat4_getScale();
+
+        let decimalPlacesMultiplier = Math.pow(10, this.myDecimalPlaces);
+        for (let i = 0; i < 3; i++) {
+            this.myScale[i] = Math.max(this.myScale[i], 1 / decimalPlacesMultiplier);
+        }
 
         this.myScaleAsOne = scaleAsOne;
 
@@ -204,14 +211,12 @@ PP.EasyTuneSimpleTransform = class EasyTuneSimpleTransform extends PP.EasyTuneVa
         this.myInitialRotationStepPerSecond = this.myRotationStepPerSecond;
         this.myInitialScaleStepPerSecond = this.myScaleStepPerSecond;
 
-        this.myDecimalPlaces = 3;
-
         this.myTransform = mat4_create();
     }
 
     getValue() {
         this.myTransform.mat4_setPositionRotationDegreesScale(this.myPosition, this.myRotation, this.myScale);
-        return this.myTransform;
+        return this.myTransform.slice(0);
     }
 
     setValue(value) {

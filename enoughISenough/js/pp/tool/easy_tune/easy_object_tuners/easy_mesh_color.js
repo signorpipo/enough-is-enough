@@ -46,7 +46,7 @@ PP.EasyMeshColor = class EasyMeshColor extends PP.EasyObjectTuner {
     _getObjectValue(object) {
         let color = null;
 
-        let meshMaterial = object.pp_getComponent("mesh").material;
+        let meshMaterial = this._getMeshMaterial(object);
         if (meshMaterial) {
             color = meshMaterial[this._myColorVariableNames[this._myColorType]].pp_clone();
 
@@ -75,7 +75,7 @@ PP.EasyMeshColor = class EasyMeshColor extends PP.EasyObjectTuner {
             color = PP.ColorUtils.hsvToRgb(PP.ColorUtils.hsvHumanToCode(color));
         }
 
-        let meshMaterial = object.pp_getComponent("mesh").material;
+        let meshMaterial = this._getMeshMaterial(object);
         if (meshMaterial) {
             meshMaterial[this._myColorVariableNames[this._myColorType]] = color;
             if (this._myColorType == 2) {
@@ -98,8 +98,8 @@ PP.EasyMeshColor = class EasyMeshColor extends PP.EasyObjectTuner {
             }
         }
 
-        if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isPressEnd() ||
-            PP.myLeftGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isPressEnd()) {
+        if ((PP.myRightGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isPressStart() && PP.myLeftGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).myIsPressed) ||
+            (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isPressStart() && PP.myRightGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).myIsPressed)) {
 
             let hsvColor = PP.ColorUtils.color1To255(PP.ColorUtils.rgbToHsv(color));
             let rgbColor = PP.ColorUtils.color1To255(color);
@@ -108,11 +108,11 @@ PP.EasyMeshColor = class EasyMeshColor extends PP.EasyObjectTuner {
         }
     }
 
-    _getTextMaterial(object) {
+    _getMeshMaterial(object) {
         let material = null;
-        let text = object.pp_getComponent("text");
-        if (text) {
-            material = text.material;
+        let mesh = object.pp_getComponent("mesh");
+        if (mesh) {
+            material = mesh.material;
         }
 
         return material;
