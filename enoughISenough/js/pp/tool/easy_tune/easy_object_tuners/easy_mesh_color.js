@@ -1,43 +1,73 @@
 WL.registerComponent("pp-easy-mesh-color", {
-    _myColorModel: { type: WL.Type.Enum, values: ['rgb', 'hsv'] },
     _myVariableName: { type: WL.Type.String, default: "" },
+    _myUseGrabTarget: { type: WL.Type.Bool, default: false },
     _mySetAsDefault: { type: WL.Type.Bool, default: false },
+    _myColorModel: { type: WL.Type.Enum, values: ['rgb', 'hsv'] },
     _myColorType: { type: WL.Type.Enum, values: ['color', 'diffuse color', 'diffuse color with ambient shade factor', 'ambient color', 'specular color', 'emissive color', 'fog color'], default: 'color' },
     _myAmbientShadeFactor: { type: WL.Type.Float, default: 0 } // If less than 0 use the same diffuse color but darkened by the factor specified, brightened otherwise
 
 }, {
     init: function () {
+        this._myEasyObjectTuner = new PP.EasyMeshColor(this._myColorModel, this._myColorType, this._myAmbientShadeFactor, this.object, this._myVariableName, this._mySetAsDefault, this._myUseGrabTarget);
+    },
+    start: function () {
+        this._myEasyObjectTuner.start();
+    },
+    update: function (dt) {
+        this._myEasyObjectTuner.update(dt);
+    }
+});
+
+PP.EasyMeshColor = class EasyMeshColor extends PP.EasyObjectTuner {
+    constructor(colorModel, colorType, ambientShadeFactor, object, variableName, setAsDefault, useGrabTarget) {
+        super(object, variableName, setAsDefault, useGrabTarget);
+        this._myColorModel = colorModel;
+        this._myColorType = colorType;
+        this._myAmbientShadeFactor = ambientShadeFactor;
+        this._myColorVariableNames = ['color', 'diffuseColor', 'diffuseColor', 'ambientColor', 'specularColor', 'emissiveColor', 'fogColor'];
+    }
+
+    _getVariableNamePrefix() {
         let nameFirstPart = null;
+
         if (this._myColorModel == 0) {
             nameFirstPart = "Mesh RGB ";
         } else {
             nameFirstPart = "Mesh HSV ";
         }
 
-        if (this._myVariableName == "") {
-            this._myEasyTuneVariableName = nameFirstPart.concat(this.object.objectId);
-        } else {
-            this._myEasyTuneVariableName = nameFirstPart.concat(this._myVariableName);
-        }
-    },
-    start: function () {
-        this._myMeshMaterial = this.object.pp_getComponent("mesh").material;
-        this._myColorVariableNames = ['color', 'diffuseColor', 'diffuseColor', 'ambientColor', 'specularColor', 'emissiveColor', 'fogColor'];
-        let color = this._myMeshMaterial[this._myColorVariableNames[this._myColorType]].pp_clone();
+        return nameFirstPart;
+    }
 
-        if (this._myColorModel == 0) {
-            color = PP.ColorUtils.rgbCodeToHuman(color);
+    _createEasyTuneVariable(variableName) {
+        return new PP.EasyTuneIntArray(variableName, this._getDefaultValue(), 100, 0, 255);
+    }
+
+    _getObjectValue(object) {
+        let color = null;
+
+        let meshMaterial = object.pp_getComponent("mesh").material;
+        if (meshMaterial) {
+            color = meshMaterial[this._myColorVariableNames[this._myColorType]].pp_clone();
+
+            if (this._myColorModel == 0) {
+                color = PP.ColorUtils.rgbCodeToHuman(color);
+            } else {
+                color = PP.ColorUtils.hsvCodeToHuman(PP.ColorUtils.rgbToHsv(color));
+            }
         } else {
-            color = PP.ColorUtils.hsvCodeToHuman(PP.ColorUtils.rgbToHsv(color));
+            color = this._getDefaultValue();
         }
 
-        PP.myEasyTuneVariables.add(new PP.EasyTuneIntArray(this._myEasyTuneVariableName, color, 100, 0, 255));
-        if (this._mySetAsDefault) {
-            PP.setEasyTuneWidgetActiveVariable(this._myEasyTuneVariableName);
-        }
-    },
-    update: function () {
-        let color = PP.myEasyTuneVariables.get(this._myEasyTuneVariableName);
+        return color;
+    }
+
+    _getDefaultValue() {
+        return vec4_create();
+    }
+
+    _updateObjectValue(object, value) {
+        let color = value;
 
         if (this._myColorModel == 0) {
             color = PP.ColorUtils.rgbHumanToCode(color);
@@ -45,35 +75,46 @@ WL.registerComponent("pp-easy-mesh-color", {
             color = PP.ColorUtils.hsvToRgb(PP.ColorUtils.hsvHumanToCode(color));
         }
 
-        this._myMeshMaterial[this._myColorVariableNames[this._myColorType]] = color;
-        if (this._myColorType == 2) {
-            let ambientColor = color.pp_clone();
-            if (this._myAmbientShadeFactor <= 0) {
-                //Darker
-                for (let i = 0; i < 3; ++i) {
-                    ambientColor[i] = ambientColor[i] * (1 + this._myAmbientShadeFactor);
+        let meshMaterial = object.pp_getComponent("mesh").material;
+        if (meshMaterial) {
+            meshMaterial[this._myColorVariableNames[this._myColorType]] = color;
+            if (this._myColorType == 2) {
+                let ambientColor = color.pp_clone();
+                if (this._myAmbientShadeFactor <= 0) {
+                    //Darker
+                    for (let i = 0; i < 3; ++i) {
+                        ambientColor[i] = ambientColor[i] * (1 + this._myAmbientShadeFactor);
+                    }
+                } else {
+                    //Brighter
+                    for (let i = 0; i < 3; ++i) {
+                        ambientColor[i] = ambientColor[i] + (1 - ambientColor[i]) * this._myAmbientShadeFactor;
+                    }
                 }
-            } else {
-                //Brighter
-                for (let i = 0; i < 3; ++i) {
-                    ambientColor[i] = ambientColor[i] + (1 - ambientColor[i]) * this._myAmbientShadeFactor;
-                }
+
+                ambientColor = ambientColor.vec_clamp(0, 1);
+
+                meshMaterial.ambientColor = ambientColor;
             }
-
-            ambientColor = ambientColor.vec_clamp(0, 1);
-
-            this._myMeshMaterial.ambientColor = ambientColor;
         }
 
-        if (PP.myEasyTuneVariables.isActive(this._myEasyTuneVariableName)) {
-            if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isPressEnd() ||
-                PP.myLeftGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isPressEnd()) {
+        if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isPressEnd() ||
+            PP.myLeftGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isPressEnd()) {
 
-                let hsvColor = PP.ColorUtils.color1To255(PP.ColorUtils.rgbToHsv(color));
-                let rgbColor = PP.ColorUtils.color1To255(color);
+            let hsvColor = PP.ColorUtils.color1To255(PP.ColorUtils.rgbToHsv(color));
+            let rgbColor = PP.ColorUtils.color1To255(color);
 
-                console.log("RGB:", rgbColor.vec_toString(0), "- HSV:", hsvColor.vec_toString(0));
-            }
+            console.log("RGB:", rgbColor.vec_toString(0), "- HSV:", hsvColor.vec_toString(0));
         }
     }
-});
+
+    _getTextMaterial(object) {
+        let material = null;
+        let text = object.pp_getComponent("text");
+        if (text) {
+            material = text.material;
+        }
+
+        return material;
+    }
+};

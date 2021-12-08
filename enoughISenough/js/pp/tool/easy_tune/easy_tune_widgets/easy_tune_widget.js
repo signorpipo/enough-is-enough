@@ -242,7 +242,7 @@ PP.EasyTuneWidget = class EasyTuneWidget {
             value.myIsActive = false;
         });
 
-        if (this._myCurrentVariable) {
+        if (this._myWidgetFrame.myIsWidgetVisible && this._myCurrentVariable) {
             this._myCurrentVariable.myIsActive = true;
         }
     }
