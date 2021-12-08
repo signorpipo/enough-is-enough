@@ -1,4 +1,4 @@
-PP.EasyTuneEasyTransformWidgetSetup = class EasyTuneEasyTransformWidgetSetup {
+PP.EasyTuneSimpleTransformWidgetSetup = class EasyTuneSimpleTransformWidgetSetup {
 
     constructor() {
         this._initializeBuildSetup();

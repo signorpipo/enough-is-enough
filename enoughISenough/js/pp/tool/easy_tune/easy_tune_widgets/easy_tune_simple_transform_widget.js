@@ -1,10 +1,10 @@
-PP.EasyTuneEasyTransformWidget = class EasyTuneEasyTransformWidget {
+PP.EasyTuneSimpleTransformWidget = class EasyTuneSimpleTransformWidget {
 
     constructor(gamepad) {
         this._myGamepad = gamepad;
 
-        this._mySetup = new PP.EasyTuneEasyTransformWidgetSetup();
-        this._myUI = new PP.EasyTuneEasyTransformWidgetUI();
+        this._mySetup = new PP.EasyTuneSimpleTransformWidgetSetup();
+        this._myUI = new PP.EasyTuneSimpleTransformWidgetUI();
 
         this._myVariable = null;
 

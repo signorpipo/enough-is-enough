@@ -182,7 +182,7 @@ PP.EasyTuneBool = class EasyTuneBool extends PP.EasyTuneBoolArray {
 
 //EASY TUNE EASY TRANSFORM
 
-PP.EasyTuneEasyTransform = class EasyTuneEasyTransform extends PP.EasyTuneVariable {
+PP.EasyTuneSimpleTransform = class EasyTuneSimpleTransform extends PP.EasyTuneVariable {
     constructor(name, value, scaleAsOne = true, positionStepPerSecond = 1, rotationStepPerSecond = 50, scaleStepPerSecond = 1) {
         super(name, PP.EasyTuneVariableType.EASY_TRANSFORM);
 

@@ -27,7 +27,7 @@ PP.EasyTransform = class EasyTransform extends PP.EasyObjectTuner {
     }
 
     _createEasyTuneVariable(variableName) {
-        return new PP.EasyTuneEasyTransform(variableName, this._getDefaultValue(), this._myScaleAsOne);
+        return new PP.EasyTuneSimpleTransform(variableName, this._getDefaultValue(), this._myScaleAsOne);
     }
 
     _getObjectValue(object) {
