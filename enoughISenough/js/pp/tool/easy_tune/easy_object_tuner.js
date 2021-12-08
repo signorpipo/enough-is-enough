@@ -45,6 +45,8 @@ PP.EasyObjectTuner = class EasyObjectTuner {
                     let value = this._getDefaultValue();
                     PP.myEasyTuneVariables.set(this._myEasyTuneVariableName, value);
                 }
+
+                PP.refreshEasyTuneWidget();
             }
 
             if (this._myEasyObject) {

@@ -26,7 +26,7 @@ PP.EasyTuneWidget = class EasyTuneWidget {
         this._myRefreshVariablesTimer = 0;
     }
 
-    setEasyTuneWidgetActiveVariable(variableName) {
+    setActiveVariable(variableName) {
         if (!this._myIsStarted) {
             this._myStartVariable = variableName;
         } else if (this._myEasyTuneVariables.has(variableName)) {
@@ -35,6 +35,10 @@ PP.EasyTuneWidget = class EasyTuneWidget {
         } else {
             console.log("Can't set easy tune active variable");
         }
+    }
+
+    refresh() {
+        this._refreshEasyTuneVariables();
     }
 
     start(parentObject, additionalSetup, easyTuneVariables) {

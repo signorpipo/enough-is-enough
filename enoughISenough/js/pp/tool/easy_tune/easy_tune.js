@@ -17,7 +17,10 @@ WL.registerComponent('pp-easy-tune', {
 
         this._myWidget = new PP.EasyTuneWidget();
         PP.setEasyTuneWidgetActiveVariable = function (variableName) {
-            this._myWidget.setEasyTuneWidgetActiveVariable(variableName);
+            this._myWidget.setActiveVariable(variableName);
+        }.bind(this);
+        PP.refreshEasyTuneWidget = function () {
+            this._myWidget.refresh();
         }.bind(this);
     },
     start: function () {
@@ -42,4 +45,8 @@ PP.myEasyTuneVariables = null;
 
 PP.setEasyTuneWidgetActiveVariable = function () {
     console.log("setEasyTuneWidgetActiveVariable function not initialized yet");
+};
+
+PP.refreshEasyTuneWidget = function () {
+    console.log("refreshEasyTuneWidgetVariables function not initialized yet");
 };
