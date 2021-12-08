@@ -63,6 +63,18 @@ PP.ButtonInfo = class ButtonInfo {
         this.myPrevFastTouchEndCount = 0;
     }
 
+    getValue() {
+        return this.myValue;
+    }
+
+    isPressed() {
+        return this.myIsPressed;
+    }
+
+    isTouched() {
+        return this.myIsTouched;
+    }
+
     isPressStart(fastPressCount = null) {
         return (this.myIsPressed && !this.myPrevIsPressed) && (fastPressCount == null || this.myFastPressStartCount == fastPressCount);
     }
