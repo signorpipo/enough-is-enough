@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "736",
+                        "_myStartStory": "765",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -3459,7 +3459,8 @@
                         "_myPsychoterapy": "390",
                         "_myWonderland": "611",
                         "_myCrypto": "638",
-                        "_myMrNOTEvidence": "736"
+                        "_myMrNOTEvidence": "736",
+                        "_myHeart": "765"
                     }
                 }
             ],
@@ -12406,15 +12407,15 @@
             "name": "Pivot",
             "parent": "736",
             "transformation": [
-                -1.1920898934647539e-8,
+                -1.192089893464754e-8,
                 -0.1732046,
                 0.0999997,
                 0.0,
                 0.1999984,
-                -1.192083942669342e-8,
+                -1.1920839426693421e-8,
                 -0.0,
                 0.0,
-                1.4901166522918176e-8,
+                1.490116652291818e-8,
                 0.1,
                 0.1732051,
                 0.0,
@@ -12767,6 +12768,130 @@
                 {
                     "mesh": {
                         "material": "277"
+                    }
+                }
+            ]
+        },
+        "760": {
+            "link": {
+                "name": "Heart",
+                "file": "assets\\models\\evidences\\heart.fbx"
+            },
+            "parent": "765",
+            "transformation": [
+                0.014,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.014,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.014,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "761": {
+            "link": {
+                "name": "Heart - Outside<Heart",
+                "file": "assets\\models\\evidences\\heart.fbx"
+            },
+            "parent": "760",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "274"
+                    }
+                }
+            ]
+        },
+        "762": {
+            "link": {
+                "name": "Heart - Inside<Heart",
+                "file": "assets\\models\\evidences\\heart.fbx"
+            },
+            "parent": "760",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "286"
+                    }
+                }
+            ]
+        },
+        "763": {
+            "link": {
+                "name": "Heart - Physx<Heart",
+                "file": "assets\\models\\evidences\\heart.fbx"
+            },
+            "parent": "760",
+            "deleted": true
+        },
+        "764": {
+            "name": "Empty.012",
+            "parent": "174",
+            "deleted": true
+        },
+        "765": {
+            "name": "Heart",
+            "parent": "174",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                1.2,
+                0.0,
+                0.5,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "evidence-component"
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "759",
+                            "scaling": [
+                                0.014,
+                                0.014,
+                                0.014
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "box": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.0299999
+                            ]
+                        },
+                        "groups": 1
                     }
                 }
             ]
@@ -13599,6 +13724,24 @@
             "link": {
                 "name": "mr NOT - Physx",
                 "file": "assets\\models\\mr_NOT_Physx.fbx"
+            }
+        },
+        "757": {
+            "link": {
+                "name": "Heart - Outside",
+                "file": "assets\\models\\evidences\\heart.fbx"
+            }
+        },
+        "758": {
+            "link": {
+                "name": "Heart - Inside.001",
+                "file": "assets\\models\\evidences\\heart.fbx"
+            }
+        },
+        "759": {
+            "link": {
+                "name": "Heart - Physx",
+                "file": "assets\\models\\evidences\\heart.fbx"
             }
         }
     },
@@ -14851,6 +14994,24 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\mr_NOT_Physx.fbx"
             }
+        },
+        "754": {
+            "link": {
+                "name": "Dark Red",
+                "file": "assets\\models\\evidences\\heart.fbx"
+            }
+        },
+        "755": {
+            "link": {
+                "name": "Pink",
+                "file": "assets\\models\\evidences\\heart.fbx"
+            }
+        },
+        "756": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\heart.fbx"
+            }
         }
     },
     "shaders": {
@@ -15032,7 +15193,8 @@
         "assets/models/evidences/meditation.fbx",
         "assets/models/evidences/piano.fbx",
         "assets/models/evidences/flag_waver.fbx",
-        "assets/models/mr_NOT_Physx.fbx"
+        "assets/models/mr_NOT_Physx.fbx",
+        "assets/models/evidences/heart.fbx"
     ],
     "pipelines": {
         "69": {

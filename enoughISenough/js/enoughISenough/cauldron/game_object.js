@@ -27,4 +27,5 @@ var GameObjectType = {
     WONDERLAND: 24,
     CRYPTO: 25,
     MR_NOT_EVIDENCE: 26,
+    HEART: 27,
 };
