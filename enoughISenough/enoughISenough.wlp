@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "207",
+                        "_myStartStory": "736",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -3458,7 +3458,8 @@
                         "_myUbisoft": "325",
                         "_myPsychoterapy": "390",
                         "_myWonderland": "611",
-                        "_myCrypto": "638"
+                        "_myCrypto": "638",
+                        "_myMrNOTEvidence": "736"
                     }
                 }
             ],
@@ -11807,6 +11808,24 @@
                         "material": "285"
                     }
                 }
+            ],
+            "transformation": [
+                -0.034938,
+                0.0,
+                0.0201715,
+                0.0,
+                0.0,
+                0.0130427,
+                0.0,
+                0.0,
+                -0.0123713,
+                0.0,
+                -0.0214277,
+                0.0,
+                -0.8943495,
+                0.0,
+                0.5836527,
+                1.0
             ]
         },
         "659": {
@@ -12284,6 +12303,473 @@
             },
             "parent": "722",
             "deleted": true
+        },
+        "735": {
+            "link": {
+                "name": "mr NOT - Physx",
+                "file": "assets\\models\\mr_NOT_Physx.fbx"
+            },
+            "components": [
+                {
+                    "mesh": {
+                        "material": "26"
+                    }
+                }
+            ],
+            "transformation": [
+                0.0209999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0209999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0209999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "parent": "294",
+            "deleted": true
+        },
+        "736": {
+            "link": {
+                "name": "mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "174",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.8999999,
+                0.0,
+                0.5,
+                1.0
+            ],
+            "name": "mr NOT evidence",
+            "components": [
+                {
+                    "type": "evidence-component"
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "734",
+                            "scaling": [
+                                0.002,
+                                0.002,
+                                0.004
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "sphere": {
+                            "radius": 0.1
+                        },
+                        "groups": 1,
+                        "collider": "box",
+                        "box": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.1
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "737": {
+            "name": "Pivot",
+            "parent": "736",
+            "transformation": [
+                -1.1920898934647539e-8,
+                -0.1732046,
+                0.0999997,
+                0.0,
+                0.1999984,
+                -1.192083942669342e-8,
+                -0.0,
+                0.0,
+                1.4901166522918176e-8,
+                0.1,
+                0.1732051,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                1.0
+            ]
+        },
+        "738": {
+            "link": {
+                "name": "Face<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "737",
+            "transformation": [
+                1.0265299,
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0266335,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0001062,
+                0.0,
+                -1.192092895507813e-7,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "components": [
+                {
+                    "mesh": {
+                        "material": "278"
+                    }
+                }
+            ]
+        },
+        "739": {
+            "link": {
+                "name": "Eyes<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "737",
+            "transformation": [
+                0.2319836,
+                -0.2319836,
+                0.0,
+                0.0,
+                0.2319836,
+                0.2319836,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.3280743,
+                0.0,
+                -0.1288685,
+                -0.1928114,
+                0.1347575,
+                1.0
+            ],
+            "components": [
+                {
+                    "mesh": {
+                        "material": "279"
+                    }
+                }
+            ]
+        },
+        "740": {
+            "link": {
+                "name": "Eye Details<Eyes<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "739"
+        },
+        "741": {
+            "link": {
+                "name": "Eyebrows<Eye Details<Eyes<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "740",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ]
+        },
+        "742": {
+            "link": {
+                "name": "Eye Bags<Eye Details<Eyes<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "740",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ]
+        },
+        "743": {
+            "link": {
+                "name": "Pupil<Eyes<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "739",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ],
+            "transformation": [
+                2.1553242,
+                2.1553244,
+                0.0,
+                0.0,
+                -2.1553244,
+                2.1553242,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                3.0480897,
+                0.0,
+                0.0530969,
+                -0.0620612,
+                0.1453016,
+                1.0
+            ]
+        },
+        "744": {
+            "link": {
+                "name": "Hairs<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "737",
+            "transformation": [
+                0.9,
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.9,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.8999999,
+                0.0,
+                -0.4215199,
+                3.4247932489961389e-8,
+                0.1457062,
+                1.0
+            ]
+        },
+        "745": {
+            "link": {
+                "name": "Lower Hairs<Hairs<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "744",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "274"
+                    }
+                }
+            ]
+        },
+        "746": {
+            "link": {
+                "name": "Middle Hairs<Hairs<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "744",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "274"
+                    }
+                }
+            ]
+        },
+        "747": {
+            "link": {
+                "name": "Upper Hairs<Hairs<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "744",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "274"
+                    }
+                }
+            ]
+        },
+        "748": {
+            "link": {
+                "name": "Lips<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "737",
+            "transformation": [
+                1.0,
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -1.192092895507813e-7,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "749": {
+            "link": {
+                "name": "Cheeks<Lips<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "748",
+            "transformation": [
+                0.0167054,
+                0.006022,
+                0.0,
+                0.0,
+                -0.006022,
+                0.0167054,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0267501,
+                0.0,
+                0.08764,
+                -0.3830379,
+                0.149324,
+                1.0
+            ],
+            "components": [
+                {
+                    "mesh": {
+                        "material": "277"
+                    }
+                }
+            ]
+        },
+        "750": {
+            "link": {
+                "name": "Between Lips<Lips<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "748",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ]
+        },
+        "751": {
+            "link": {
+                "name": "Lower Lip<Lips<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "748",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "280"
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0000001,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.2732169,
+                -0.1226868,
+                0.1442078,
+                1.0
+            ]
+        },
+        "752": {
+            "link": {
+                "name": "Upper Lip<Lips<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "748",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "274"
+                    }
+                }
+            ]
+        },
+        "753": {
+            "link": {
+                "name": "Chin<mr NOT",
+                "file": "assets\\models\\mr_NOT.fbx"
+            },
+            "parent": "737",
+            "transformation": [
+                0.0561547,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0561546,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0561547,
+                0.0,
+                0.3903079,
+                3.68108885595575e-8,
+                0.1356054,
+                1.0
+            ],
+            "components": [
+                {
+                    "mesh": {
+                        "material": "277"
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -13107,6 +13593,12 @@
             "link": {
                 "name": "Flag Waver - Head White.001",
                 "file": "assets\\models\\evidences\\flag_waver.fbx"
+            }
+        },
+        "734": {
+            "link": {
+                "name": "mr NOT - Physx",
+                "file": "assets\\models\\mr_NOT_Physx.fbx"
             }
         }
     },
@@ -14353,6 +14845,12 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\flag_waver.fbx"
             }
+        },
+        "733": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\mr_NOT_Physx.fbx"
+            }
         }
     },
     "shaders": {
@@ -14533,7 +15031,8 @@
         "assets/models/evidences/earring.fbx",
         "assets/models/evidences/meditation.fbx",
         "assets/models/evidences/piano.fbx",
-        "assets/models/evidences/flag_waver.fbx"
+        "assets/models/evidences/flag_waver.fbx",
+        "assets/models/mr_NOT_Physx.fbx"
     ],
     "pipelines": {
         "69": {

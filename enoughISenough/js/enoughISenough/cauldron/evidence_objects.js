@@ -14,6 +14,7 @@ WL.registerComponent('evidence-objects', {
     _myPsychoterapy: { type: WL.Type.Object },
     _myWonderland: { type: WL.Type.Object },
     _myCrypto: { type: WL.Type.Object },
+    _myMrNOTEvidence: { type: WL.Type.Object },
 }, {
     init: function () {
         Global.myGameObjects.set(GameObjectType.STORY_TIMER, this._myStoryTimer);
@@ -31,6 +32,7 @@ WL.registerComponent('evidence-objects', {
         Global.myGameObjects.set(GameObjectType.PSYCHOTHERAPY, this._myPsychoterapy);
         Global.myGameObjects.set(GameObjectType.WONDERLAND, this._myWonderland);
         Global.myGameObjects.set(GameObjectType.CRYPTO, this._myCrypto);
+        Global.myGameObjects.set(GameObjectType.MR_NOT_EVIDENCE, this._myMrNOTEvidence);
 
         let cloneParams = new PP.CloneParams();
         cloneParams.myComponentsToInclude.push("mesh");
@@ -50,6 +52,7 @@ WL.registerComponent('evidence-objects', {
         Global.myMeshObjects.set(GameObjectType.PSYCHOTHERAPY, this._myPsychoterapy.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.WONDERLAND, this._myWonderland.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.CRYPTO, this._myCrypto.pp_clone(cloneParams));
+        Global.myMeshObjects.set(GameObjectType.MR_NOT_EVIDENCE, this._myMrNOTEvidence.pp_clone(cloneParams));
     },
     start: function () {
     },
