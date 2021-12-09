@@ -209,6 +209,7 @@ TUNE:
 - diminuire un pochino il tempo che inizia a scrivere il secondo enough del titolo durante la vibrazione per farlo sembrare piu scorrevole, ora parte a scriverlo quando tutto si è già fermato e stacca troppo
 - create un oggetto palette fatto di icosfere per tunare i colori
 - aggiustare posizione spawn evidence raggio per centrarlo meglio sul ring
+- migliorare explosion particle
 
 BUG:
 - lag 
