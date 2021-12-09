@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "210",
+                        "_myStartStory": "207",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -4414,17 +4414,17 @@
             "name": "Flag Waver",
             "parent": "174",
             "transformation": [
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 -0.3,
                 0.0,
@@ -4437,11 +4437,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "8",
+                            "mesh": "721",
                             "scaling": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.0199999,
+                                0.0199999,
+                                0.0199999
                             ]
                         }
                     }
@@ -4505,7 +4505,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "209": {
             "name": "Nose",
@@ -4536,7 +4537,8 @@
                 0.0,
                 0.8999999,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "210": {
             "name": "Piano",
@@ -12151,6 +12153,137 @@
             },
             "parent": "704",
             "deleted": true
+        },
+        "722": {
+            "link": {
+                "name": "Flag Waver",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            },
+            "parent": "207",
+            "transformation": [
+                0.0199999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0199999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0199999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "723": {
+            "link": {
+                "name": "Flag Waver - Body<Flag Waver",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            },
+            "parent": "722",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "272"
+                    }
+                }
+            ]
+        },
+        "724": {
+            "link": {
+                "name": "Flag Waver - Top Left Leg<Flag Waver",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            },
+            "parent": "722",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "279"
+                    }
+                }
+            ]
+        },
+        "725": {
+            "link": {
+                "name": "Flag Waver - Bottom Right Leg<Flag Waver",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            },
+            "parent": "722",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "279"
+                    }
+                }
+            ]
+        },
+        "726": {
+            "link": {
+                "name": "Flag Waver - Top Right Leg<Flag Waver",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            },
+            "parent": "722",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "280"
+                    }
+                }
+            ]
+        },
+        "727": {
+            "link": {
+                "name": "Flag Waver - Bottom Left Leg<Flag Waver",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            },
+            "parent": "722",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "280"
+                    }
+                }
+            ]
+        },
+        "728": {
+            "link": {
+                "name": "Flag Waver - Head White<Flag Waver",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            },
+            "parent": "722",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "279"
+                    }
+                }
+            ]
+        },
+        "729": {
+            "link": {
+                "name": "Flag Waver - Head Red<Flag Waver",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            },
+            "parent": "722",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "280"
+                    }
+                }
+            ]
+        },
+        "730": {
+            "link": {
+                "name": "Flag Waver - Physx<Flag Waver",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            },
+            "parent": "722",
+            "deleted": true
         }
     },
     "meshes": {
@@ -12914,6 +13047,66 @@
             "link": {
                 "name": "Piano - Physx",
                 "file": "assets\\models\\evidences\\piano.fbx"
+            }
+        },
+        "714": {
+            "link": {
+                "name": "Flag Waver - Body.001",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            }
+        },
+        "715": {
+            "link": {
+                "name": "Cube.003",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            }
+        },
+        "716": {
+            "link": {
+                "name": "Flag Waver - Bottom Right Leg.001",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            }
+        },
+        "717": {
+            "link": {
+                "name": "Flag Waver - Top Right Leg.001",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            }
+        },
+        "718": {
+            "link": {
+                "name": "Flag Waver - Bottom Left Leg.001",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            }
+        },
+        "719": {
+            "link": {
+                "name": "Cube.007",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            }
+        },
+        "720": {
+            "link": {
+                "name": "Flag Waver - Head Red.001",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            }
+        },
+        "721": {
+            "link": {
+                "name": "Flag Waver - Physx",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            }
+        },
+        "731": {
+            "link": {
+                "name": "Flag Waver - Top Left Leg.001",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            }
+        },
+        "732": {
+            "link": {
+                "name": "Flag Waver - Head White.001",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
             }
         }
     },
@@ -14136,6 +14329,30 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\piano.fbx"
             }
+        },
+        "710": {
+            "link": {
+                "name": "Black",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            }
+        },
+        "711": {
+            "link": {
+                "name": "White",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            }
+        },
+        "712": {
+            "link": {
+                "name": "Red",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            }
+        },
+        "713": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\flag_waver.fbx"
+            }
         }
     },
     "shaders": {
@@ -14315,7 +14532,8 @@
         "assets/models/evidences/skating.fbx",
         "assets/models/evidences/earring.fbx",
         "assets/models/evidences/meditation.fbx",
-        "assets/models/evidences/piano.fbx"
+        "assets/models/evidences/piano.fbx",
+        "assets/models/evidences/flag_waver.fbx"
     ],
     "pipelines": {
         "69": {
