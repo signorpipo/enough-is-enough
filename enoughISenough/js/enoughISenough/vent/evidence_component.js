@@ -1,4 +1,5 @@
 WL.registerComponent('evidence-component', {
+    _myHeightDisplacement: { type: WL.Type.Float, default: 0.0 }
 }, {
     init: function () {
         this._myCallbackOnHit = null;
@@ -16,6 +17,9 @@ WL.registerComponent('evidence-component', {
     },
     getEvidence: function () {
         return this._myEvidence;
+    },
+    getHeightDisplacement: function () {
+        return this._myHeightDisplacement;
     },
     hit: function (objectHit) {
         if (this._myCallbackOnHit) {

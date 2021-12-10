@@ -29,4 +29,5 @@ var GameObjectType = {
     MR_NOT_EVIDENCE: 26,
     HEART: 27,
     GAME_DEV: 28,
+    CHENCO: 29,
 };

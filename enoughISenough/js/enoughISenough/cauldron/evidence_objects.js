@@ -17,6 +17,7 @@ WL.registerComponent('evidence-objects', {
     _myMrNOTEvidence: { type: WL.Type.Object },
     _myHeart: { type: WL.Type.Object },
     _myGameDev: { type: WL.Type.Object },
+    _myChenco: { type: WL.Type.Object },
 }, {
     init: function () {
         Global.myGameObjects.set(GameObjectType.STORY_TIMER, this._myStoryTimer);
@@ -37,6 +38,7 @@ WL.registerComponent('evidence-objects', {
         Global.myGameObjects.set(GameObjectType.MR_NOT_EVIDENCE, this._myMrNOTEvidence);
         Global.myGameObjects.set(GameObjectType.HEART, this._myHeart);
         Global.myGameObjects.set(GameObjectType.GAME_DEV, this._myGameDev);
+        Global.myGameObjects.set(GameObjectType.CHENCO, this._myChenco);
 
         let cloneParams = new PP.CloneParams();
         cloneParams.myComponentsToInclude.push("mesh");
@@ -59,6 +61,7 @@ WL.registerComponent('evidence-objects', {
         Global.myMeshObjects.set(GameObjectType.MR_NOT_EVIDENCE, this._myMrNOTEvidence.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.HEART, this._myHeart.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.GAME_DEV, this._myGameDev.pp_clone(cloneParams));
+        Global.myMeshObjects.set(GameObjectType.CHENCO, this._myChenco.pp_clone(cloneParams));
     },
     start: function () {
     },

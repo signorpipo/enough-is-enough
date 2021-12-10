@@ -118,7 +118,13 @@ class Evidence {
         this._myEvidenceComponent.setEvidence(this);
         this._myHasBeenThrown = false;
 
-        this._myObject.pp_setPosition(this._myPosition);
+        let position = this._myPosition.pp_clone();
+        let heightDisplacement = this._myEvidenceComponent.getHeightDisplacement();
+        if (Math.abs(heightDisplacement) > 0.0001) {
+            position.vec3_add([0, heightDisplacement, 0], position);
+        }
+
+        this._myObject.pp_setPosition(position);
         this._myObject.pp_setScale(0);
         this._myObject.pp_translate([0, 0.2, 0]);
         this._myObject.pp_lookTo(this._myFacing, [0, 1, 0]);

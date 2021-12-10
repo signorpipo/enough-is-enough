@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "797",
+                        "_myStartStory": "808",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -3461,7 +3461,8 @@
                         "_myCrypto": "638",
                         "_myMrNOTEvidence": "736",
                         "_myHeart": "765",
-                        "_myGameDev": "797"
+                        "_myGameDev": "797",
+                        "_myChenco": "808"
                     }
                 }
             ],
@@ -13148,6 +13149,128 @@
                     }
                 }
             ]
+        },
+        "804": {
+            "link": {
+                "name": "Chenco",
+                "file": "assets\\models\\evidences\\chenco.fbx"
+            },
+            "parent": "808",
+            "transformation": [
+                0.0199999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0199999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0199999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "805": {
+            "link": {
+                "name": "Chenco - Blades<Chenco",
+                "file": "assets\\models\\evidences\\chenco.fbx"
+            },
+            "parent": "804",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "284"
+                    }
+                }
+            ]
+        },
+        "806": {
+            "link": {
+                "name": "Chenco - Hilt<Chenco",
+                "file": "assets\\models\\evidences\\chenco.fbx"
+            },
+            "parent": "804",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ]
+        },
+        "807": {
+            "link": {
+                "name": "Chenco - Physx<Chenco",
+                "file": "assets\\models\\evidences\\chenco.fbx"
+            },
+            "parent": "804",
+            "deleted": true
+        },
+        "808": {
+            "name": "Chenco",
+            "parent": "174",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "evidence-component",
+                    "evidence-component": {
+                        "_myHeightDisplacement": 0.15
+                    }
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "803",
+                            "scaling": [
+                                0.0199999,
+                                0.0199999,
+                                0.0199999
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "box": {
+                            "extents": [
+                                0.1,
+                                0.5,
+                                0.0599999
+                            ]
+                        },
+                        "groups": 1
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -14061,6 +14184,24 @@
             "link": {
                 "name": "Game Dev - Physx",
                 "file": "assets\\models\\evidences\\game_dev.fbx"
+            }
+        },
+        "801": {
+            "link": {
+                "name": "Plane",
+                "file": "assets\\models\\evidences\\chenco.fbx"
+            }
+        },
+        "802": {
+            "link": {
+                "name": "Plane.001",
+                "file": "assets\\models\\evidences\\chenco.fbx"
+            }
+        },
+        "803": {
+            "link": {
+                "name": "Chenco - Physx",
+                "file": "assets\\models\\evidences\\chenco.fbx"
             }
         }
     },
@@ -15373,6 +15514,24 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\game_dev.fbx"
             }
+        },
+        "798": {
+            "link": {
+                "name": "Blue",
+                "file": "assets\\models\\evidences\\chenco.fbx"
+            }
+        },
+        "799": {
+            "link": {
+                "name": "Black",
+                "file": "assets\\models\\evidences\\chenco.fbx"
+            }
+        },
+        "800": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\chenco.fbx"
+            }
         }
     },
     "shaders": {
@@ -15557,7 +15716,8 @@
         "assets/models/mr_NOT_Physx.fbx",
         "assets/models/evidences/heart.fbx",
         "assets/models/evidences/drawing.fbx",
-        "assets/models/evidences/game_dev.fbx"
+        "assets/models/evidences/game_dev.fbx",
+        "assets/models/evidences/chenco.fbx"
     ],
     "pipelines": {
         "69": {
