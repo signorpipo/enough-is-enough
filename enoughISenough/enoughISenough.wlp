@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "765",
+                        "_myStartStory": "216",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -4806,17 +4806,17 @@
             "name": "Drawing",
             "parent": "174",
             "transformation": [
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 -0.8999999,
                 0.0,
@@ -4829,11 +4829,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "8",
+                            "mesh": "771",
                             "scaling": [
-                                0.1,
-                                0.1,
-                                0.1
+                                0.0099999,
+                                0.0099999,
+                                0.0099999
                             ]
                         }
                     }
@@ -4856,7 +4856,7 @@
                         "box": {
                             "extents": [
                                 0.1,
-                                0.1,
+                                0.0199999,
                                 0.1
                             ]
                         }
@@ -4897,7 +4897,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "218": {
             "name": "Nose",
@@ -4928,7 +4929,8 @@
                 0.0,
                 0.8999999,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "219": {
             "name": "Story Timer",
@@ -12895,6 +12897,67 @@
                     }
                 }
             ]
+        },
+        "772": {
+            "link": {
+                "name": "Drawing",
+                "file": "assets\\models\\evidences\\drawing.fbx"
+            },
+            "parent": "216",
+            "transformation": [
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "773": {
+            "link": {
+                "name": "Drawing - Paper<Drawing",
+                "file": "assets\\models\\evidences\\drawing.fbx"
+            },
+            "parent": "772",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "774": {
+            "link": {
+                "name": "Drawing - Tucia<Drawing",
+                "file": "assets\\models\\evidences\\drawing.fbx"
+            },
+            "parent": "772",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "272"
+                    }
+                }
+            ]
+        },
+        "775": {
+            "link": {
+                "name": "Drawing - Physx<Drawing",
+                "file": "assets\\models\\evidences\\drawing.fbx"
+            },
+            "parent": "772",
+            "deleted": true
         }
     },
     "meshes": {
@@ -13742,6 +13805,24 @@
             "link": {
                 "name": "Heart - Physx",
                 "file": "assets\\models\\evidences\\heart.fbx"
+            }
+        },
+        "769": {
+            "link": {
+                "name": "Drawing - Paper.001",
+                "file": "assets\\models\\evidences\\drawing.fbx"
+            }
+        },
+        "770": {
+            "link": {
+                "name": "Drawing - Tucia.001",
+                "file": "assets\\models\\evidences\\drawing.fbx"
+            }
+        },
+        "771": {
+            "link": {
+                "name": "Drawing - Physx",
+                "file": "assets\\models\\evidences\\drawing.fbx"
             }
         }
     },
@@ -15012,6 +15093,24 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\heart.fbx"
             }
+        },
+        "766": {
+            "link": {
+                "name": "Beige",
+                "file": "assets\\models\\evidences\\drawing.fbx"
+            }
+        },
+        "767": {
+            "link": {
+                "name": "Black",
+                "file": "assets\\models\\evidences\\drawing.fbx"
+            }
+        },
+        "768": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\drawing.fbx"
+            }
         }
     },
     "shaders": {
@@ -15194,7 +15293,8 @@
         "assets/models/evidences/piano.fbx",
         "assets/models/evidences/flag_waver.fbx",
         "assets/models/mr_NOT_Physx.fbx",
-        "assets/models/evidences/heart.fbx"
+        "assets/models/evidences/heart.fbx",
+        "assets/models/evidences/drawing.fbx"
     ],
     "pipelines": {
         "69": {
