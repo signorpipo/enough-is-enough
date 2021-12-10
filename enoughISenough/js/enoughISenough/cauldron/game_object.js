@@ -28,4 +28,5 @@ var GameObjectType = {
     CRYPTO: 25,
     MR_NOT_EVIDENCE: 26,
     HEART: 27,
+    GAME_DEV: 28,
 };

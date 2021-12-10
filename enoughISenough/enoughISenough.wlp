@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "216",
+                        "_myStartStory": "797",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -3460,7 +3460,8 @@
                         "_myWonderland": "611",
                         "_myCrypto": "638",
                         "_myMrNOTEvidence": "736",
-                        "_myHeart": "765"
+                        "_myHeart": "765",
+                        "_myGameDev": "797"
                     }
                 }
             ],
@@ -12958,6 +12959,195 @@
             },
             "parent": "772",
             "deleted": true
+        },
+        "788": {
+            "link": {
+                "name": "Game Dev",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            },
+            "parent": "797",
+            "transformation": [
+                0.012,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.012,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.012,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "789": {
+            "link": {
+                "name": "Game Dev - Body<Game Dev",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            },
+            "parent": "788",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "272"
+                    }
+                }
+            ]
+        },
+        "790": {
+            "link": {
+                "name": "Game Dev - Arm Red<Game Dev",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            },
+            "parent": "788",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "280"
+                    }
+                }
+            ]
+        },
+        "791": {
+            "link": {
+                "name": "Game Dev - Foot Red<Game Dev",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            },
+            "parent": "788",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "280"
+                    }
+                }
+            ]
+        },
+        "792": {
+            "link": {
+                "name": "Game Dev - Hand Red<Game Dev",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            },
+            "parent": "788",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "280"
+                    }
+                }
+            ]
+        },
+        "793": {
+            "link": {
+                "name": "Game Dev - Arm Blue<Game Dev",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            },
+            "parent": "788",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "284"
+                    }
+                }
+            ]
+        },
+        "794": {
+            "link": {
+                "name": "Game Dev - Hand Blue<Game Dev",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            },
+            "parent": "788",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "284"
+                    }
+                }
+            ]
+        },
+        "795": {
+            "link": {
+                "name": "Game Dev - Foot Blue<Game Dev",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            },
+            "parent": "788",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "284"
+                    }
+                }
+            ]
+        },
+        "796": {
+            "link": {
+                "name": "Game Dev - Physx<Game Dev",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            },
+            "parent": "788",
+            "deleted": true
+        },
+        "797": {
+            "name": "Game Dev",
+            "parent": "174",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -1.2,
+                0.0,
+                0.5,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "evidence-component"
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "787",
+                            "scaling": [
+                                0.012,
+                                0.012,
+                                0.012
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "box": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.0599999
+                            ]
+                        },
+                        "groups": 1
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -13823,6 +14013,54 @@
             "link": {
                 "name": "Drawing - Physx",
                 "file": "assets\\models\\evidences\\drawing.fbx"
+            }
+        },
+        "780": {
+            "link": {
+                "name": "Game Dev - Body",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            }
+        },
+        "781": {
+            "link": {
+                "name": "Game Dev - Arm Red.001",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            }
+        },
+        "782": {
+            "link": {
+                "name": "Game Dev - Foot Red",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            }
+        },
+        "783": {
+            "link": {
+                "name": "Game Dev - Hand Red.001",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            }
+        },
+        "784": {
+            "link": {
+                "name": "Game Dev - Arm Blue.001",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            }
+        },
+        "785": {
+            "link": {
+                "name": "Game Dev - Hand Blue.001",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            }
+        },
+        "786": {
+            "link": {
+                "name": "Game Dev - Foot Blue",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            }
+        },
+        "787": {
+            "link": {
+                "name": "Game Dev - Physx",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
             }
         }
     },
@@ -15111,6 +15349,30 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\drawing.fbx"
             }
+        },
+        "776": {
+            "link": {
+                "name": "Black",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            }
+        },
+        "777": {
+            "link": {
+                "name": "Red",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            }
+        },
+        "778": {
+            "link": {
+                "name": "Blue",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            }
+        },
+        "779": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\game_dev.fbx"
+            }
         }
     },
     "shaders": {
@@ -15294,7 +15556,8 @@
         "assets/models/evidences/flag_waver.fbx",
         "assets/models/mr_NOT_Physx.fbx",
         "assets/models/evidences/heart.fbx",
-        "assets/models/evidences/drawing.fbx"
+        "assets/models/evidences/drawing.fbx",
+        "assets/models/evidences/game_dev.fbx"
     ],
     "pipelines": {
         "69": {
