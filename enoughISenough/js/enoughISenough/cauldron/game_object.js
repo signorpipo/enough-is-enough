@@ -30,4 +30,5 @@ var GameObjectType = {
     HEART: 27,
     GAME_DEV: 28,
     CHENCO: 29,
+    MARCO: 30,
 };
