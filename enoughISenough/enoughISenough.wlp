@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "878",
+                        "_myStartStory": "892",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -3474,7 +3474,8 @@
                         "_myMarco": "822",
                         "_myPICO_8": "850",
                         "_mySex": "863",
-                        "_myVR": "878"
+                        "_myVR": "878",
+                        "_myTrophy": "892"
                     }
                 }
             ],
@@ -13925,6 +13926,139 @@
                     }
                 }
             ]
+        },
+        "887": {
+            "link": {
+                "name": "Trophy",
+                "file": "assets\\models\\evidences\\trophy.fbx"
+            },
+            "parent": "892",
+            "transformation": [
+                0.012,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.012,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.012,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "888": {
+            "link": {
+                "name": "Trophy - Body<Trophy",
+                "file": "assets\\models\\evidences\\trophy.fbx"
+            },
+            "parent": "887",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "889": {
+            "link": {
+                "name": "Trophy - Staff<Trophy",
+                "file": "assets\\models\\evidences\\trophy.fbx"
+            },
+            "parent": "887",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "890": {
+            "link": {
+                "name": "Trophy - Base<Trophy",
+                "file": "assets\\models\\evidences\\trophy.fbx"
+            },
+            "parent": "887",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "276"
+                    }
+                }
+            ]
+        },
+        "891": {
+            "link": {
+                "name": "Trophy - Physx<Trophy",
+                "file": "assets\\models\\evidences\\trophy.fbx"
+            },
+            "parent": "887",
+            "deleted": true
+        },
+        "892": {
+            "name": "Trophy",
+            "parent": "174",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -0.8999999,
+                0.0,
+                1.0,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "evidence-component"
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "886",
+                            "scaling": [
+                                0.012,
+                                0.012,
+                                0.012
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "box": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.0599999
+                            ]
+                        },
+                        "groups": 1
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -15006,6 +15140,30 @@
             "link": {
                 "name": "VR - Glasses",
                 "file": "assets\\models\\evidences\\vr.fbx"
+            }
+        },
+        "883": {
+            "link": {
+                "name": "Trophy - Body",
+                "file": "assets\\models\\evidences\\trophy.fbx"
+            }
+        },
+        "884": {
+            "link": {
+                "name": "Trophy - Staff",
+                "file": "assets\\models\\evidences\\trophy.fbx"
+            }
+        },
+        "885": {
+            "link": {
+                "name": "Trophy - Base",
+                "file": "assets\\models\\evidences\\trophy.fbx"
+            }
+        },
+        "886": {
+            "link": {
+                "name": "Trophy - Physx",
+                "file": "assets\\models\\evidences\\trophy.fbx"
             }
         }
     },
@@ -16414,6 +16572,24 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\vr.fbx"
             }
+        },
+        "880": {
+            "link": {
+                "name": "Dark Red",
+                "file": "assets\\models\\evidences\\trophy.fbx"
+            }
+        },
+        "881": {
+            "link": {
+                "name": "Dark Blue",
+                "file": "assets\\models\\evidences\\trophy.fbx"
+            }
+        },
+        "882": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\trophy.fbx"
+            }
         }
     },
     "shaders": {
@@ -16603,7 +16779,8 @@
         "assets/models/evidences/marco.fbx",
         "assets/models/evidences/pico8.fbx",
         "assets/models/evidences/sex.fbx",
-        "assets/models/evidences/vr.fbx"
+        "assets/models/evidences/vr.fbx",
+        "assets/models/evidences/trophy.fbx"
     ],
     "pipelines": {
         "69": {

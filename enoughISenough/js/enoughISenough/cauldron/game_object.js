@@ -34,4 +34,5 @@ var GameObjectType = {
     PICO_8: 31,
     SEX: 32,
     VR: 33,
+    TROPHY: 34,
 };
