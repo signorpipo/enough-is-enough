@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "822",
+                        "_myStartStory": "850",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -3471,7 +3471,8 @@
                         "_myHeart": "765",
                         "_myGameDev": "797",
                         "_myChenco": "808",
-                        "_myMarco": "822"
+                        "_myMarco": "822",
+                        "_myPICO_8": "850"
                     }
                 }
             ],
@@ -13425,6 +13426,237 @@
                 "file": "assets\\models\\evidences\\marco.fbx"
             },
             "deleted": true
+        },
+        "838": {
+            "link": {
+                "name": "PICO-8",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            },
+            "parent": "850",
+            "transformation": [
+                0.012,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.012,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.012,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "839": {
+            "link": {
+                "name": "PICO-8 - Base<PICO-8",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            },
+            "parent": "838",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "277"
+                    }
+                }
+            ]
+        },
+        "840": {
+            "link": {
+                "name": "PICO-8 - Red<PICO-8",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            },
+            "parent": "838",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "280"
+                    }
+                }
+            ]
+        },
+        "841": {
+            "link": {
+                "name": "PICO-8 - Orange<PICO-8",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            },
+            "parent": "838",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "842": {
+            "link": {
+                "name": "PICO-8 - Pink<PICO-8",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            },
+            "parent": "838",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "286"
+                    }
+                }
+            ]
+        },
+        "843": {
+            "link": {
+                "name": "PICO-8 - Blue<PICO-8",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            },
+            "parent": "838",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "284"
+                    }
+                }
+            ]
+        },
+        "844": {
+            "link": {
+                "name": "PICO-8 - Yellow<PICO-8",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            },
+            "parent": "838",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "282"
+                    }
+                }
+            ]
+        },
+        "845": {
+            "link": {
+                "name": "PICO-8 - Beige<PICO-8",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            },
+            "parent": "838",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "846": {
+            "link": {
+                "name": "PICO-8 - Purple<PICO-8",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            },
+            "parent": "838",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "285"
+                    }
+                }
+            ]
+        },
+        "847": {
+            "link": {
+                "name": "PICO-8 - Green<PICO-8",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            },
+            "parent": "838",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "283"
+                    }
+                }
+            ]
+        },
+        "848": {
+            "link": {
+                "name": "PICO-8 - White<PICO-8",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            },
+            "parent": "838",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "279"
+                    }
+                }
+            ]
+        },
+        "849": {
+            "link": {
+                "name": "PICO-8 - Physx<PICO-8",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            },
+            "parent": "838",
+            "deleted": true
+        },
+        "850": {
+            "name": "PICO-8",
+            "parent": "174",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.3,
+                0.0,
+                1.0,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "evidence-component"
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "837",
+                            "scaling": [
+                                0.012,
+                                0.012,
+                                0.012
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "box": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.0599999
+                            ]
+                        },
+                        "groups": 1
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -14380,6 +14612,72 @@
             "link": {
                 "name": "Marco - Physx",
                 "file": "assets\\models\\evidences\\marco.fbx"
+            }
+        },
+        "827": {
+            "link": {
+                "name": "Cube.005",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            }
+        },
+        "828": {
+            "link": {
+                "name": "PICO-8 - Red",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            }
+        },
+        "829": {
+            "link": {
+                "name": "PICO-8 - Orange",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            }
+        },
+        "830": {
+            "link": {
+                "name": "PICO-8 - Pink",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            }
+        },
+        "831": {
+            "link": {
+                "name": "PICO-8 - Blue",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            }
+        },
+        "832": {
+            "link": {
+                "name": "PICO-8 - Yellow",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            }
+        },
+        "833": {
+            "link": {
+                "name": "PICO-8 - Beige",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            }
+        },
+        "834": {
+            "link": {
+                "name": "PICO-8 - Purple",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            }
+        },
+        "835": {
+            "link": {
+                "name": "PICO-8 - Green",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            }
+        },
+        "836": {
+            "link": {
+                "name": "PICO-8 - White",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            }
+        },
+        "837": {
+            "link": {
+                "name": "PICO-8 - Physx",
+                "file": "assets\\models\\evidences\\pico8.fbx"
             }
         }
     },
@@ -15728,6 +16026,24 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\marco.fbx"
             }
+        },
+        "824": {
+            "link": {
+                "name": "Dark Red",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            }
+        },
+        "825": {
+            "link": {
+                "name": "Dark Blue",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            }
+        },
+        "826": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\pico8.fbx"
+            }
         }
     },
     "shaders": {
@@ -15914,7 +16230,8 @@
         "assets/models/evidences/drawing.fbx",
         "assets/models/evidences/game_dev.fbx",
         "assets/models/evidences/chenco.fbx",
-        "assets/models/evidences/marco.fbx"
+        "assets/models/evidences/marco.fbx",
+        "assets/models/evidences/pico8.fbx"
     ],
     "pipelines": {
         "69": {
