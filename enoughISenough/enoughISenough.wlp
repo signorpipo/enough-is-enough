@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "863",
+                        "_myStartStory": "878",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -3473,7 +3473,8 @@
                         "_myChenco": "808",
                         "_myMarco": "822",
                         "_myPICO_8": "850",
-                        "_mySex": "863"
+                        "_mySex": "863",
+                        "_myVR": "878"
                     }
                 }
             ],
@@ -13791,6 +13792,139 @@
                     }
                 }
             ]
+        },
+        "873": {
+            "link": {
+                "name": "VR",
+                "file": "assets\\models\\evidences\\vr.fbx"
+            },
+            "parent": "878",
+            "transformation": [
+                0.0109999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0109999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0109999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "874": {
+            "link": {
+                "name": "VR - Mask<VR",
+                "file": "assets\\models\\evidences\\vr.fbx"
+            },
+            "parent": "873",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "272"
+                    }
+                }
+            ]
+        },
+        "875": {
+            "link": {
+                "name": "VR - Head<VR",
+                "file": "assets\\models\\evidences\\vr.fbx"
+            },
+            "parent": "873",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "277"
+                    }
+                }
+            ]
+        },
+        "876": {
+            "link": {
+                "name": "VR - Glasses<VR",
+                "file": "assets\\models\\evidences\\vr.fbx"
+            },
+            "parent": "873",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "284"
+                    }
+                }
+            ]
+        },
+        "877": {
+            "link": {
+                "name": "VR - Physx<VR",
+                "file": "assets\\models\\evidences\\vr.fbx"
+            },
+            "parent": "873",
+            "deleted": true
+        },
+        "878": {
+            "name": "VR",
+            "parent": "174",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -0.6,
+                0.0,
+                1.0,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "evidence-component"
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "872",
+                            "scaling": [
+                                0.0109999,
+                                0.0109999,
+                                0.0109999
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "box": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.0599999
+                            ]
+                        },
+                        "groups": 1
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -14842,6 +14976,36 @@
             "link": {
                 "name": "Sex - Hat",
                 "file": "assets\\models\\evidences\\sex.fbx"
+            }
+        },
+        "869": {
+            "link": {
+                "name": "VR - Mask.001",
+                "file": "assets\\models\\evidences\\vr.fbx"
+            }
+        },
+        "870": {
+            "link": {
+                "name": "VR - Head",
+                "file": "assets\\models\\evidences\\vr.fbx"
+            }
+        },
+        "871": {
+            "link": {
+                "name": "VR - Glasses.001",
+                "file": "assets\\models\\evidences\\vr.fbx"
+            }
+        },
+        "872": {
+            "link": {
+                "name": "VR - Physx",
+                "file": "assets\\models\\evidences\\vr.fbx"
+            }
+        },
+        "879": {
+            "link": {
+                "name": "VR - Glasses",
+                "file": "assets\\models\\evidences\\vr.fbx"
             }
         }
     },
@@ -16226,6 +16390,30 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\sex.fbx"
             }
+        },
+        "865": {
+            "link": {
+                "name": "Black",
+                "file": "assets\\models\\evidences\\vr.fbx"
+            }
+        },
+        "866": {
+            "link": {
+                "name": "Dark Gray",
+                "file": "assets\\models\\evidences\\vr.fbx"
+            }
+        },
+        "867": {
+            "link": {
+                "name": "Blue",
+                "file": "assets\\models\\evidences\\vr.fbx"
+            }
+        },
+        "868": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\vr.fbx"
+            }
         }
     },
     "shaders": {
@@ -16414,7 +16602,8 @@
         "assets/models/evidences/chenco.fbx",
         "assets/models/evidences/marco.fbx",
         "assets/models/evidences/pico8.fbx",
-        "assets/models/evidences/sex.fbx"
+        "assets/models/evidences/sex.fbx",
+        "assets/models/evidences/vr.fbx"
     ],
     "pipelines": {
         "69": {
