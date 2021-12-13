@@ -32,4 +32,5 @@ var GameObjectType = {
     CHENCO: 29,
     MARCO: 30,
     PICO_8: 31,
+    SEX: 32,
 };

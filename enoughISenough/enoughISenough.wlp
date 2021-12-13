@@ -2134,7 +2134,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "850",
+                        "_myStartStory": "863",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -3472,7 +3472,8 @@
                         "_myGameDev": "797",
                         "_myChenco": "808",
                         "_myMarco": "822",
-                        "_myPICO_8": "850"
+                        "_myPICO_8": "850",
+                        "_mySex": "863"
                     }
                 }
             ],
@@ -13657,6 +13658,139 @@
                     }
                 }
             ]
+        },
+        "858": {
+            "link": {
+                "name": "Sex",
+                "file": "assets\\models\\evidences\\sex.fbx"
+            },
+            "parent": "863",
+            "transformation": [
+                0.013,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.013,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.013,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "859": {
+            "link": {
+                "name": "Sex - Body<Sex",
+                "file": "assets\\models\\evidences\\sex.fbx"
+            },
+            "parent": "858",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "285"
+                    }
+                }
+            ]
+        },
+        "860": {
+            "link": {
+                "name": "Sex - Head<Sex",
+                "file": "assets\\models\\evidences\\sex.fbx"
+            },
+            "parent": "858",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "275"
+                    }
+                }
+            ]
+        },
+        "861": {
+            "link": {
+                "name": "Sex - Hat<Sex",
+                "file": "assets\\models\\evidences\\sex.fbx"
+            },
+            "parent": "858",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "275"
+                    }
+                }
+            ]
+        },
+        "862": {
+            "link": {
+                "name": "Sex - Physx<Sex",
+                "file": "assets\\models\\evidences\\sex.fbx"
+            },
+            "parent": "858",
+            "deleted": true
+        },
+        "863": {
+            "name": "Sex",
+            "parent": "174",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.6,
+                0.0,
+                1.0,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "evidence-component"
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "857",
+                            "scaling": [
+                                0.013,
+                                0.013,
+                                0.013
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "box": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.0599999
+                            ]
+                        },
+                        "groups": 1
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -14678,6 +14812,36 @@
             "link": {
                 "name": "PICO-8 - Physx",
                 "file": "assets\\models\\evidences\\pico8.fbx"
+            }
+        },
+        "854": {
+            "link": {
+                "name": "Sex - Body",
+                "file": "assets\\models\\evidences\\sex.fbx"
+            }
+        },
+        "855": {
+            "link": {
+                "name": "Sex - Head",
+                "file": "assets\\models\\evidences\\sex.fbx"
+            }
+        },
+        "856": {
+            "link": {
+                "name": "Cube.006",
+                "file": "assets\\models\\evidences\\sex.fbx"
+            }
+        },
+        "857": {
+            "link": {
+                "name": "Sex - Physx",
+                "file": "assets\\models\\evidences\\sex.fbx"
+            }
+        },
+        "864": {
+            "link": {
+                "name": "Sex - Hat",
+                "file": "assets\\models\\evidences\\sex.fbx"
             }
         }
     },
@@ -16044,6 +16208,24 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\pico8.fbx"
             }
+        },
+        "851": {
+            "link": {
+                "name": "Dark Blue",
+                "file": "assets\\models\\evidences\\sex.fbx"
+            }
+        },
+        "852": {
+            "link": {
+                "name": "Dark Green",
+                "file": "assets\\models\\evidences\\sex.fbx"
+            }
+        },
+        "853": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\sex.fbx"
+            }
         }
     },
     "shaders": {
@@ -16231,7 +16413,8 @@
         "assets/models/evidences/game_dev.fbx",
         "assets/models/evidences/chenco.fbx",
         "assets/models/evidences/marco.fbx",
-        "assets/models/evidences/pico8.fbx"
+        "assets/models/evidences/pico8.fbx",
+        "assets/models/evidences/sex.fbx"
     ],
     "pipelines": {
         "69": {
