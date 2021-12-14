@@ -36,4 +36,5 @@ var GameObjectType = {
     VR: 33,
     TROPHY: 34,
     FAMILY: 35,
+    MIRROR: 36,
 };

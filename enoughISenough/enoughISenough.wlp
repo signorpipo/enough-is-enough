@@ -2135,7 +2135,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "915",
+                        "_myStartStory": "928",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -3477,7 +3477,8 @@
                         "_mySex": "863",
                         "_myVR": "878",
                         "_myTrophy": "892",
-                        "_myFamily": "915"
+                        "_myFamily": "915",
+                        "_myMirror": "928"
                     }
                 }
             ],
@@ -14264,6 +14265,153 @@
                     }
                 }
             ]
+        },
+        "923": {
+            "link": {
+                "name": "Mirror",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            },
+            "parent": "928",
+            "transformation": [
+                0.013,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0129999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.013,
+                0.0,
+                -0.0000066,
+                0.0000076,
+                0.0000643,
+                1.0
+            ]
+        },
+        "924": {
+            "link": {
+                "name": "Mirror - Border<Mirror",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            },
+            "parent": "923",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ]
+        },
+        "925": {
+            "link": {
+                "name": "Mirror - Staff<Mirror",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            },
+            "parent": "923",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ]
+        },
+        "926": {
+            "link": {
+                "name": "Mirror - Mirror<Mirror",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            },
+            "parent": "923",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "279"
+                    }
+                }
+            ]
+        },
+        "927": {
+            "link": {
+                "name": "Mirror - Physx<Mirror",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            },
+            "parent": "923",
+            "deleted": true
+        },
+        "928": {
+            "name": "Mirror",
+            "parent": "174",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -1.2,
+                0.0,
+                1.0,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "evidence-component"
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "922",
+                            "scaling": [
+                                0.013,
+                                0.013,
+                                0.013
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "box": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.0599999
+                            ]
+                        },
+                        "groups": 1
+                    }
+                }
+            ]
+        },
+        "932": {
+            "link": {
+                "name": "Mirror - mr NOT<Mirror",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            },
+            "parent": "923",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "933"
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -15423,6 +15571,42 @@
             "link": {
                 "name": "Family - Physx",
                 "file": "assets\\models\\evidences\\family.fbx"
+            }
+        },
+        "919": {
+            "link": {
+                "name": "Mirror - Border",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            }
+        },
+        "920": {
+            "link": {
+                "name": "Mirror - Staff",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            }
+        },
+        "921": {
+            "link": {
+                "name": "Mirror - Mirror.001",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            }
+        },
+        "922": {
+            "link": {
+                "name": "Mirror - Physx",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            }
+        },
+        "929": {
+            "link": {
+                "name": "Mirror - Staff.002",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            }
+        },
+        "931": {
+            "link": {
+                "name": "Mirror - mr NOT Up",
+                "file": "assets\\models\\evidences\\mirror.fbx"
             }
         }
     },
@@ -16867,6 +17051,54 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\family.fbx"
             }
+        },
+        "916": {
+            "link": {
+                "name": "Dark Blue",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            }
+        },
+        "917": {
+            "link": {
+                "name": "Gray",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            }
+        },
+        "918": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            }
+        },
+        "930": {
+            "link": {
+                "name": "Dark Gray.001",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            }
+        },
+        "933": {
+            "name": "P8 Dark Gray Mirror",
+            "Phong": {
+                "diffuseColor": [
+                    0.372549,
+                    0.3411764,
+                    0.3098039,
+                    0.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.1098039,
+                    0.1037754,
+                    0.097747,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
         }
     },
     "shaders": {
@@ -17058,7 +17290,8 @@
         "assets/models/evidences/sex.fbx",
         "assets/models/evidences/vr.fbx",
         "assets/models/evidences/trophy.fbx",
-        "assets/models/evidences/family.fbx"
+        "assets/models/evidences/family.fbx",
+        "assets/models/evidences/mirror.fbx"
     ],
     "pipelines": {
         "69": {
