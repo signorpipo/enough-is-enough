@@ -23,6 +23,7 @@ WL.registerComponent('evidence-objects', {
     _mySex: { type: WL.Type.Object },
     _myVR: { type: WL.Type.Object },
     _myTrophy: { type: WL.Type.Object },
+    _myFamily: { type: WL.Type.Object },
 }, {
     init: function () {
         Global.myGameObjects.set(GameObjectType.STORY_TIMER, this._myStoryTimer);
@@ -49,6 +50,7 @@ WL.registerComponent('evidence-objects', {
         Global.myGameObjects.set(GameObjectType.SEX, this._mySex);
         Global.myGameObjects.set(GameObjectType.VR, this._myVR);
         Global.myGameObjects.set(GameObjectType.TROPHY, this._myTrophy);
+        Global.myGameObjects.set(GameObjectType.FAMILY, this._myFamily);
 
         let cloneParams = new PP.CloneParams();
         cloneParams.myComponentsToInclude.push("mesh");
@@ -77,6 +79,7 @@ WL.registerComponent('evidence-objects', {
         Global.myMeshObjects.set(GameObjectType.SEX, this._mySex.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.VR, this._myVR.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.TROPHY, this._myTrophy.pp_clone(cloneParams));
+        Global.myMeshObjects.set(GameObjectType.FAMILY, this._myFamily.pp_clone(cloneParams));
     },
     start: function () {
     },

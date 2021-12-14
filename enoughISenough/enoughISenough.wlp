@@ -500,7 +500,8 @@
                         "_myHandedness": "right",
                         "_myCursorMesh": "9",
                         "_myCursorMaterial": "66",
-                        "_myShowFingerCursor": true
+                        "_myShowFingerCursor": false,
+                        "_myPulseOnHover": false
                     }
                 },
                 {
@@ -2134,7 +2135,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "892",
+                        "_myStartStory": "915",
                         "_myStartArcadeHard": "144",
                         "_myStartArcadeNormal": "152",
                         "_myLeaderboardArcadeHard": "158",
@@ -3475,7 +3476,8 @@
                         "_myPICO_8": "850",
                         "_mySex": "863",
                         "_myVR": "878",
-                        "_myTrophy": "892"
+                        "_myTrophy": "892",
+                        "_myFamily": "915"
                     }
                 }
             ],
@@ -14059,6 +14061,209 @@
                     }
                 }
             ]
+        },
+        "905": {
+            "link": {
+                "name": "Family",
+                "file": "assets\\models\\evidences\\family.fbx"
+            },
+            "parent": "915",
+            "transformation": [
+                0.012,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.012,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.012,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "906": {
+            "link": {
+                "name": "Family - Father Body<Family",
+                "file": "assets\\models\\evidences\\family.fbx"
+            },
+            "parent": "905",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ]
+        },
+        "907": {
+            "link": {
+                "name": "Family - Big Brother Body<Family",
+                "file": "assets\\models\\evidences\\family.fbx"
+            },
+            "parent": "905",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "284"
+                    }
+                }
+            ]
+        },
+        "908": {
+            "link": {
+                "name": "Family - Little Brother Body<Family",
+                "file": "assets\\models\\evidences\\family.fbx"
+            },
+            "parent": "905",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "280"
+                    }
+                }
+            ]
+        },
+        "909": {
+            "link": {
+                "name": "Family - Mother Body<Family",
+                "file": "assets\\models\\evidences\\family.fbx"
+            },
+            "parent": "905",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "274"
+                    }
+                }
+            ]
+        },
+        "910": {
+            "link": {
+                "name": "Family - Father Head<Family",
+                "file": "assets\\models\\evidences\\family.fbx"
+            },
+            "parent": "905",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "911": {
+            "link": {
+                "name": "Family - Mother Head<Family",
+                "file": "assets\\models\\evidences\\family.fbx"
+            },
+            "parent": "905",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "912": {
+            "link": {
+                "name": "Family - Big Brother Head<Family",
+                "file": "assets\\models\\evidences\\family.fbx"
+            },
+            "parent": "905",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "913": {
+            "link": {
+                "name": "Family - Little Brother Head<Family",
+                "file": "assets\\models\\evidences\\family.fbx"
+            },
+            "parent": "905",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "287"
+                    }
+                }
+            ]
+        },
+        "914": {
+            "link": {
+                "name": "Family - Physx<Family",
+                "file": "assets\\models\\evidences\\family.fbx"
+            },
+            "parent": "905",
+            "deleted": true
+        },
+        "915": {
+            "name": "Family",
+            "parent": "174",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.8999999,
+                0.0,
+                1.0,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "evidence-component"
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "904",
+                            "scaling": [
+                                0.012,
+                                0.012,
+                                0.012
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "box": {
+                            "extents": [
+                                0.1,
+                                0.1,
+                                0.0599999
+                            ]
+                        },
+                        "groups": 1
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -15164,6 +15369,60 @@
             "link": {
                 "name": "Trophy - Physx",
                 "file": "assets\\models\\evidences\\trophy.fbx"
+            }
+        },
+        "896": {
+            "link": {
+                "name": "Cylinder",
+                "file": "assets\\models\\evidences\\family.fbx"
+            }
+        },
+        "897": {
+            "link": {
+                "name": "Cylinder.001",
+                "file": "assets\\models\\evidences\\family.fbx"
+            }
+        },
+        "898": {
+            "link": {
+                "name": "Family - Little Brother Body.001",
+                "file": "assets\\models\\evidences\\family.fbx"
+            }
+        },
+        "899": {
+            "link": {
+                "name": "Cylinder.003",
+                "file": "assets\\models\\evidences\\family.fbx"
+            }
+        },
+        "900": {
+            "link": {
+                "name": "Icosphere",
+                "file": "assets\\models\\evidences\\family.fbx"
+            }
+        },
+        "901": {
+            "link": {
+                "name": "Icosphere.001",
+                "file": "assets\\models\\evidences\\family.fbx"
+            }
+        },
+        "902": {
+            "link": {
+                "name": "Icosphere.004",
+                "file": "assets\\models\\evidences\\family.fbx"
+            }
+        },
+        "903": {
+            "link": {
+                "name": "Icosphere.005",
+                "file": "assets\\models\\evidences\\family.fbx"
+            }
+        },
+        "904": {
+            "link": {
+                "name": "Family - Physx",
+                "file": "assets\\models\\evidences\\family.fbx"
             }
         }
     },
@@ -16590,6 +16849,24 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\trophy.fbx"
             }
+        },
+        "893": {
+            "link": {
+                "name": "Dark Red",
+                "file": "assets\\models\\evidences\\family.fbx"
+            }
+        },
+        "894": {
+            "link": {
+                "name": "Dark Blue",
+                "file": "assets\\models\\evidences\\family.fbx"
+            }
+        },
+        "895": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\family.fbx"
+            }
         }
     },
     "shaders": {
@@ -16780,7 +17057,8 @@
         "assets/models/evidences/pico8.fbx",
         "assets/models/evidences/sex.fbx",
         "assets/models/evidences/vr.fbx",
-        "assets/models/evidences/trophy.fbx"
+        "assets/models/evidences/trophy.fbx",
+        "assets/models/evidences/family.fbx"
     ],
     "pipelines": {
         "69": {

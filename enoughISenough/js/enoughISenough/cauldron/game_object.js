@@ -35,4 +35,5 @@ var GameObjectType = {
     SEX: 32,
     VR: 33,
     TROPHY: 34,
+    FAMILY: 35,
 };
