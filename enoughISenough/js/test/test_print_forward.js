@@ -110,9 +110,9 @@ WL.registerComponent('test-print-axes', {
             console.warn(glMatrix.mat4.mul([], parentMatrixWorld, childMatrixWorld).mat4_getScale());
 
             let axes = glMatrix.mat4.mul([], parentMatrixWorld, childMatrixWorld).mat4_getAxes();
-            let angle1 = axes[0].vec3_angleBetween(axes[1]);
-            let angle2 = axes[2].vec3_angleBetween(axes[1]);
-            let angle3 = axes[2].vec3_angleBetween(axes[0]);
+            let angle1 = axes[0].vec3_angle(axes[1]);
+            let angle2 = axes[2].vec3_angle(axes[1]);
+            let angle3 = axes[2].vec3_angle(axes[0]);
             console.warn(angle1 - Math.PI / 2, angle2 - Math.PI / 2, angle3 - Math.PI / 2);
 
 

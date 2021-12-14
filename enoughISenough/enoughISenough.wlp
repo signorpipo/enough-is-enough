@@ -14410,6 +14410,9 @@
                     "mesh": {
                         "material": "933"
                     }
+                },
+                {
+                    "type": "mr_not_mirror"
                 }
             ]
         }

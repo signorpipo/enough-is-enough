@@ -69,7 +69,7 @@
             - vec3_isConcordant
             - vec3_convertPositionToWorld       / vec3_convertPositionToLocal 
             - vec3_convertDirectionToWorld      / vec3_convertDirectionToLocal   
-            - vec3_angleBetween
+            - vec3_angle
             - vec3_toRadians        / vec3_toDegrees            / vec3_toQuat       / vec3_toMatrix
             - vec3_rotate           / vec3_rotateAxis           / vec3_rotateAround / vec3_rotateAroundAxis
             - vec3_addRotation
@@ -313,7 +313,7 @@ Array.prototype.vec3_zero = function () {
     return this;
 };
 
-Array.prototype.vec3_angleBetween = function (vector) {
+Array.prototype.vec3_angle = function (vector) {
     return glMatrix.vec3.angle(this, vector);
 };
 

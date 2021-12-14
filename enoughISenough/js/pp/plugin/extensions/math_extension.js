@@ -27,7 +27,8 @@ Math.pp_roundDecimal = function (number, decimalPlaces) {
 Math.pp_mapToNewInterval = function (value, originIntervalStart, originIntervalEnd, newIntervalStart, newIntervalEnd) {
     let clampedValue = Math.pp_clamp(value, originIntervalStart, originIntervalEnd);
     let newValue = newIntervalStart + ((newIntervalEnd - newIntervalStart) / (originIntervalEnd - originIntervalStart)) * (clampedValue - originIntervalStart);
-    return newValue;
+    let clampedNewValue = Math.pp_clamp(newValue, newIntervalStart, newIntervalEnd);
+    return clampedNewValue;
 };
 
 //Interval is [intervalStart, intervalEnd)
