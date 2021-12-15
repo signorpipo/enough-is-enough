@@ -1,14 +1,14 @@
 //Don't move inside easy_object_tuners folder, otherwise it won't resolve the parent class dependency
 
 PP.EasyObjectTuner = class EasyObjectTuner {
-    constructor(object, variableName, setAsDefault, useGrabTarget) {
+    constructor(object, variableName, setAsDefault, useTuneTarget) {
         this._myObject = object;
-        this._myUseGrabTarget = useGrabTarget;
+        this._myUseTuneTarget = useTuneTarget;
         this._mySetAsDefault = setAsDefault;
 
         this._myEasyObject = this._myObject;
-        if (this._myUseGrabTarget) {
-            this._myEasyObject = PP.myEasyGrabTarget;
+        if (this._myUseTuneTarget) {
+            this._myEasyObject = PP.myEasyTuneTarget;
         }
         this._myPrevEasyObject = null;
 
@@ -32,8 +32,8 @@ PP.EasyObjectTuner = class EasyObjectTuner {
 
     update(dt) {
         if (PP.myEasyTuneVariables.isActive(this._myEasyTuneVariableName)) {
-            if (this._myUseGrabTarget) {
-                this._myEasyObject = PP.myEasyGrabTarget;
+            if (this._myUseTuneTarget) {
+                this._myEasyObject = PP.myEasyTuneTarget;
             }
 
             if (this._myPrevEasyObject != this._myEasyObject) {

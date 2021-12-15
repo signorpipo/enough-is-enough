@@ -2441,16 +2441,14 @@
                     }
                 },
                 {
-                    "type": "pp-easy-grab-target"
-                },
-                {
                     "type": "pp-easy-scale",
                     "pp-easy-scale": {
                         "_myVariableName": "Target",
                         "_mySetAsDefault": true,
                         "_myUseGrabTarget": true,
                         "_myIsLocal": true,
-                        "_myScaleAsOne": true
+                        "_myScaleAsOne": true,
+                        "_myUseTuneTarget": true
                     }
                 },
                 {
@@ -2458,8 +2456,12 @@
                     "pp-easy-transform": {
                         "_myUseGrabTarget": true,
                         "_myIsLocal": true,
-                        "_myVariableName": "Target"
+                        "_myVariableName": "Target",
+                        "_myUseTuneTarget": true
                     }
+                },
+                {
+                    "type": "pp-easy-set-tune-target-grab"
                 }
             ]
         },

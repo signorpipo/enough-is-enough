@@ -1,13 +1,13 @@
 WL.registerComponent("pp-easy-text-color", {
     _myVariableName: { type: WL.Type.String, default: "" },
     _mySetAsDefault: { type: WL.Type.Bool, default: false },
-    _myUseGrabTarget: { type: WL.Type.Bool, default: false },
+    _myUseTuneTarget: { type: WL.Type.Bool, default: false },
     _myColorModel: { type: WL.Type.Enum, values: ['rgb', 'hsv'] },
     _myColorType: { type: WL.Type.Enum, values: ['color', 'outline color'], default: 'color' }
 
 }, {
     init: function () {
-        this._myEasyObjectTuner = new PP.EasyTextColor(this._myColorModel, this._myColorType, this.object, this._myVariableName, this._mySetAsDefault, this._myUseGrabTarget);
+        this._myEasyObjectTuner = new PP.EasyTextColor(this._myColorModel, this._myColorType, this.object, this._myVariableName, this._mySetAsDefault, this._myUseTuneTarget);
     },
     start: function () {
         this._myEasyObjectTuner.start();
@@ -18,8 +18,8 @@ WL.registerComponent("pp-easy-text-color", {
 });
 
 PP.EasyTextColor = class EasyTextColor extends PP.EasyObjectTuner {
-    constructor(colorModel, colorType, object, variableName, setAsDefault, useGrabTarget) {
-        super(object, variableName, setAsDefault, useGrabTarget);
+    constructor(colorModel, colorType, object, variableName, setAsDefault, useTuneTarget) {
+        super(object, variableName, setAsDefault, useTuneTarget);
         this._myColorModel = colorModel;
         this._myColorType = colorType;
         this._myColorVariableNames = ['color', 'outlineColor'];

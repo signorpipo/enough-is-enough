@@ -1,4 +1,4 @@
-WL.registerComponent("pp-easy-grab-target", {
+WL.registerComponent("pp-easy-set-tune-target-grab", {
 }, {
     init: function () {
     },
@@ -10,11 +10,9 @@ WL.registerComponent("pp-easy-grab-target", {
     update: function () {
     },
     _onRelease: function (grabber, grabbable) {
-        PP.myEasyGrabTarget = grabbable.object;
+        PP.myEasyTuneTarget = grabbable.object;
     },
     _onGrab: function (grabber, grabbable) {
-        PP.myEasyGrabTarget = null;
+        PP.myEasyTuneTarget = null;
     }
 });
-
-PP.myEasyGrabTarget = null;

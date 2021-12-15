@@ -43,6 +43,8 @@ WL.registerComponent('pp-easy-tune', {
 
 PP.myEasyTuneVariables = null;
 
+PP.myEasyTuneTarget = null;
+
 PP.setEasyTuneWidgetActiveVariable = function () {
     console.log("setEasyTuneWidgetActiveVariable function not initialized yet");
 };

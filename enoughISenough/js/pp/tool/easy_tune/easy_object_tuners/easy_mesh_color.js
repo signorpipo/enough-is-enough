@@ -1,6 +1,6 @@
 WL.registerComponent("pp-easy-mesh-color", {
     _myVariableName: { type: WL.Type.String, default: "" },
-    _myUseGrabTarget: { type: WL.Type.Bool, default: false },
+    _myUseTuneTarget: { type: WL.Type.Bool, default: false },
     _mySetAsDefault: { type: WL.Type.Bool, default: false },
     _myColorModel: { type: WL.Type.Enum, values: ['rgb', 'hsv'] },
     _myColorType: { type: WL.Type.Enum, values: ['color', 'diffuse color', 'diffuse color with ambient shade factor', 'ambient color', 'specular color', 'emissive color', 'fog color'], default: 'color' },
@@ -8,7 +8,7 @@ WL.registerComponent("pp-easy-mesh-color", {
 
 }, {
     init: function () {
-        this._myEasyObjectTuner = new PP.EasyMeshColor(this._myColorModel, this._myColorType, this._myAmbientShadeFactor, this.object, this._myVariableName, this._mySetAsDefault, this._myUseGrabTarget);
+        this._myEasyObjectTuner = new PP.EasyMeshColor(this._myColorModel, this._myColorType, this._myAmbientShadeFactor, this.object, this._myVariableName, this._mySetAsDefault, this._myUseTuneTarget);
     },
     start: function () {
         this._myEasyObjectTuner.start();
@@ -19,8 +19,8 @@ WL.registerComponent("pp-easy-mesh-color", {
 });
 
 PP.EasyMeshColor = class EasyMeshColor extends PP.EasyObjectTuner {
-    constructor(colorModel, colorType, ambientShadeFactor, object, variableName, setAsDefault, useGrabTarget) {
-        super(object, variableName, setAsDefault, useGrabTarget);
+    constructor(colorModel, colorType, ambientShadeFactor, object, variableName, setAsDefault, useTuneTarget) {
+        super(object, variableName, setAsDefault, useTuneTarget);
         this._myColorModel = colorModel;
         this._myColorType = colorType;
         this._myAmbientShadeFactor = ambientShadeFactor;
