@@ -14391,7 +14391,7 @@
                             "extents": [
                                 0.1,
                                 0.1,
-                                0.0599999
+                                0.15
                             ]
                         },
                         "groups": 1
@@ -14413,6 +14413,34 @@
                 },
                 {
                     "type": "mr_not_mirror"
+                }
+            ]
+        },
+        "938": {
+            "link": {
+                "name": "Mirror - RIng<Mirror",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            },
+            "parent": "923",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
+        },
+        "939": {
+            "link": {
+                "name": "Mirror - Smaller RIngs<Mirror",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            },
+            "parent": "923",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
                 }
             ]
         }
@@ -15609,6 +15637,24 @@
         "931": {
             "link": {
                 "name": "Mirror - mr NOT Up",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            }
+        },
+        "935": {
+            "link": {
+                "name": "Mirror - mr NOT.001",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            }
+        },
+        "936": {
+            "link": {
+                "name": "Mirror - RIng",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            }
+        },
+        "937": {
+            "link": {
+                "name": "Mirror - Smaller RIngs",
                 "file": "assets\\models\\evidences\\mirror.fbx"
             }
         }
@@ -17102,6 +17148,12 @@
                 ]
             },
             "pipeline": "194"
+        },
+        "934": {
+            "link": {
+                "name": "Orange",
+                "file": "assets\\models\\evidences\\mirror.fbx"
+            }
         }
     },
     "shaders": {
