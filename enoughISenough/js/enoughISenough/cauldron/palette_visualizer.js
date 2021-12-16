@@ -1,6 +1,6 @@
 WL.registerComponent("palette-visualizer", {
-    _myPaletteMesh: { type: WL.Type.Mesh },
-    _myPaletteMeshScale: { type: WL.Type.Float, default: 1 },
+    _myPaletteObject: { type: WL.Type.Object },
+    _myPaletteObjectScaleFactor: { type: WL.Type.Float, default: 1 },
     _myOffsetX: { type: WL.Type.Float, default: 0.05 },
     _myOffsetY: { type: WL.Type.Float, default: 0.05 },
     _myCloneMaterial: { type: WL.Type.Bool, default: false },
@@ -34,36 +34,23 @@ WL.registerComponent("palette-visualizer", {
         this._myRows = Math.ceil(this._myMaterials.length / this._myColumns);
     },
     start: function () {
+        let cloneParams = new PP.CloneParams();
+        cloneParams.myComponentsToInclude.push("mesh");
+
         let positions = this._createPositions();
         for (let i = 0; i < this._myMaterials.length; i++) {
-            let newObject = WL.scene.addObject(this.object);
+            let newObject = this._myPaletteObject.pp_clone(cloneParams);
+
+            newObject.pp_setParent(this.object);
             newObject.pp_setPositionLocal(positions[i]);
-            newObject.pp_setScaleLocal(this._myPaletteMeshScale);
+            newObject.pp_scaleObject(this._myPaletteObjectScaleFactor);
+            newObject.pp_resetRotationLocal();
+            newObject.pp_setActive(true);
 
-            let newMesh = newObject.pp_addComponent("mesh");
-            newMesh.mesh = this._myPaletteMesh;
-            newMesh.material = this._myMaterials[i];
-
-            if (this._myCloneMaterial) {
-                newMesh.material = newMesh.material.clone();
-            }
+            PP.MeshUtils.setMaterial(newObject, this._myMaterials[i], this._myCloneMaterial);
         }
     },
     update: function (dt) {
-    },
-    onActivate: function () {
-        if (Global.myFirstUpdateDone) {
-            this._randomMaterial();
-        }
-    },
-    _randomMaterial: function () {
-        let meshes = this.object.pp_getComponentsHierarchy("mesh");
-
-        for (let mesh of meshes) {
-            let randomMaterial = Math.pp_randomPick(this._myMaterials);
-            mesh.material.ambientColor = randomMaterial.ambientColor;
-            mesh.material.diffuseColor = randomMaterial.diffuseColor;
-        }
     },
     _createPositions() {
         let positions = [];

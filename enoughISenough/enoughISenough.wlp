@@ -14727,7 +14727,7 @@
             "deleted": true
         },
         "991": {
-            "name": "Palette Visualizer",
+            "name": "Visualizer",
             "transformation": [
                 1.0,
                 0.0,
@@ -14741,9 +14741,9 @@
                 0.0,
                 1.0,
                 0.0,
-                -0.3597303,
+                -0.246816,
                 1.3839621,
-                -0.5576412,
+                -0.5110303,
                 1.0
             ],
             "components": [
@@ -14769,7 +14769,9 @@
                         "_my15": "286",
                         "_my16": "287",
                         "_myOffsetX": 0.1,
-                        "_myOffsetY": 0.1
+                        "_myOffsetY": 0.1,
+                        "_myPaletteObject": "996",
+                        "_myPaletteObjectScaleFactor": 0.3
                     }
                 },
                 {
@@ -14799,7 +14801,8 @@
                         "groups": 1
                     }
                 }
-            ]
+            ],
+            "parent": "995"
         },
         "994": {
             "link": {
@@ -14825,6 +14828,71 @@
                 1.0
             ],
             "deleted": true
+        },
+        "995": {
+            "name": "Palette Visualizer ",
+            "parent": null,
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "996": {
+            "name": "Palette Mesh",
+            "parent": "995",
+            "transformation": [
+                0.0209999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0209999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0209999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "pp-set-hierarchy-active",
+                    "pp-set-hierarchy-active": {
+                        "_myHierarchyActive": false
+                    }
+                }
+            ]
+        },
+        "997": {
+            "name": "Mesh",
+            "parent": "996",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "993",
+                        "material": "20"
+                    }
+                }
+            ]
         }
     },
     "meshes": {

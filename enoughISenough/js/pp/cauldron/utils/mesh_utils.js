@@ -58,6 +58,17 @@ PP.MeshUtils = {
             }
         }
     },
+    setMaterial: function (object, material, cloneMaterial = false) {
+        let meshComponents = object.pp_getComponentsHierarchy("mesh");
+
+        for (let meshComponent of meshComponents) {
+            if (cloneMaterial) {
+                meshComponent.material = material.clone();
+            } else {
+                meshComponent.material = material;
+            }
+        }
+    },
     setClonedMaterials: function (object) {
         let meshComponents = object.pp_getComponentsHierarchy("mesh");
 
