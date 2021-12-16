@@ -1,4 +1,4 @@
-WL.registerComponent('pp-grab', {
+WL.registerComponent('pp-grabber-hand', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
     _myThrowLinearVelocityMultiplier: { type: WL.Type.Float, default: 1.75 },
     _myThrowAngularVelocityMultiplier: { type: WL.Type.Float, default: 0.5 },

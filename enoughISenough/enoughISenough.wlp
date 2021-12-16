@@ -2429,8 +2429,8 @@
                     }
                 },
                 {
-                    "type": "pp-grab",
-                    "pp-grab": {
+                    "type": "pp-grabber-hand",
+                    "pp-grabber-hand": {
                         "_myHandedness": "right",
                         "_myGrabButton": "squeeze",
                         "_myThrowVelocitySource": "hand",
@@ -6514,8 +6514,8 @@
                     }
                 },
                 {
-                    "type": "pp-grab",
-                    "pp-grab": {
+                    "type": "pp-grabber-hand",
+                    "pp-grabber-hand": {
                         "_myHandedness": "left",
                         "_myGrabButton": "squeeze",
                         "_myThrowVelocitySource": "hand",

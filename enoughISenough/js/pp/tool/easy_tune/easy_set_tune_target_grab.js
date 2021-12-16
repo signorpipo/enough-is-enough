@@ -3,7 +3,7 @@ WL.registerComponent("pp-easy-set-tune-target-grab", {
     init: function () {
     },
     start: function () {
-        let grab = this.object.pp_getComponent("pp-grab");
+        let grab = this.object.pp_getComponent("pp-grabber-hand");
         grab.registerGrabEventListener(this, this._onGrab.bind(this));
         grab.registerThrowEventListener(this, this._onRelease.bind(this));
     },
