@@ -14725,6 +14725,106 @@
                 "file": "assets\\models\\evidences\\kingdom_hearts_physx.fbx"
             },
             "deleted": true
+        },
+        "991": {
+            "name": "Palette Visualizer",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -0.3597303,
+                1.3839621,
+                -0.5576412,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "palette-visualizer",
+                    "palette-visualizer": {
+                        "_myPaletteMesh": "993",
+                        "_myPaletteMeshScale": 0.0074999,
+                        "_my1": "272",
+                        "_my2": "273",
+                        "_my3": "274",
+                        "_my4": "275",
+                        "_my5": "276",
+                        "_my6": "277",
+                        "_my7": "278",
+                        "_my8": "279",
+                        "_my9": "280",
+                        "_my10": "281",
+                        "_my11": "282",
+                        "_my12": "283",
+                        "_my13": "284",
+                        "_my14": "285",
+                        "_my15": "286",
+                        "_my16": "287",
+                        "_myOffsetX": 0.1,
+                        "_myOffsetY": 0.1
+                    }
+                },
+                {
+                    "type": "pp-grabbable",
+                    "pp-grabbable": {
+                        "_myThrowLinearVelocityMultiplier": 0.0,
+                        "_myThrowAngularVelocityMultiplier": 0.0,
+                        "_myKinematicValueOnRelease": "true"
+                    }
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "sphere": {
+                            "radius": 0.05
+                        },
+                        "gravity": false,
+                        "kinematic": true
+                    }
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "sphere": {
+                            "radius": 0.1
+                        },
+                        "groups": 1
+                    }
+                }
+            ]
+        },
+        "994": {
+            "link": {
+                "name": "Trophy - Base",
+                "file": "assets\\models\\extra\\palette_mesh_1.fbx"
+            },
+            "transformation": [
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                1.1437902,
+                0.0,
+                1.0
+            ],
+            "deleted": true
         }
     },
     "meshes": {
@@ -16010,6 +16110,12 @@
             "link": {
                 "name": "Kingdom Hearts - Physx",
                 "file": "assets\\models\\evidences\\kingdom_hearts_physx.fbx"
+            }
+        },
+        "993": {
+            "link": {
+                "name": "Palette_Mesh_1",
+                "file": "assets\\models\\extra\\palette_mesh_1.fbx"
             }
         }
     },
@@ -17916,6 +18022,12 @@
                 ]
             },
             "pipeline": "194"
+        },
+        "992": {
+            "link": {
+                "name": "Dark Blue",
+                "file": "assets\\models\\extra\\palette_mesh_1.fbx"
+            }
         }
     },
     "shaders": {
@@ -18110,7 +18222,8 @@
         "assets/models/evidences/family.fbx",
         "assets/models/evidences/mirror.fbx",
         "assets/models/evidences/kingdom_hearts.fbx",
-        "assets/models/evidences/kingdom_hearts_physx.fbx"
+        "assets/models/evidences/kingdom_hearts_physx.fbx",
+        "assets/models/extra/palette_mesh_1.fbx"
     ],
     "pipelines": {
         "69": {
