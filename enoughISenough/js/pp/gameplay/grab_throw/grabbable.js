@@ -1,6 +1,7 @@
 WL.registerComponent('pp-grabbable', {
     _myThrowLinearVelocityMultiplier: { type: WL.Type.Float, default: 1 },
     _myThrowAngularVelocityMultiplier: { type: WL.Type.Float, default: 1 },
+    _myKinematicValueOnRelease: { type: WL.Type.Enum, values: ['true', 'false', 'keep'], default: 'false' },
 }, {
     init: function () {
         this._myIsGrabbed = false;
@@ -14,11 +15,16 @@ WL.registerComponent('pp-grabbable', {
     start: function () {
         this._myOldParent = this.object.parent;
         this._myPhysx = this.object.pp_getComponent('physx');
+        this._myKinematicValueToKeep = null;
     },
     onDeactivate: function () {
         this.release();
     },
     grab: function (grabber) {
+        if (!this.isGrabbed()) {
+            this._myKinematicValueToKeep = this._myPhysx.kinematic;
+        }
+
         this.release();
 
         if (this._myPhysx) {
@@ -89,6 +95,9 @@ WL.registerComponent('pp-grabbable', {
     isGrabbed() {
         return this._myIsGrabbed;
     },
+    getGrabber() {
+        return this._myGrabber;
+    },
     registerGrabEventListener(id, callback) {
         this._myGrabCallbacks.set(id, callback);
     },
@@ -114,7 +123,19 @@ WL.registerComponent('pp-grabbable', {
 
         //TEMP u can't set kinematic if physx is inactive because it will crash
         if (this._myPhysx && this._myPhysx.active) {
-            this._myPhysx.kinematic = false;
+            if (this._myKinematicValueOnRelease == 0) {
+                this._myPhysx.kinematic = true;
+            } else if (this._myKinematicValueOnRelease == 1) {
+                this._myPhysx.kinematic = false;
+            } else if (this._myKinematicValueToKeep != null) {
+                this._myPhysx.kinematic = this._myKinematicValueToKeep;
+            }
+
+            if (this._myPhysx.kinematic) {
+                this._myPhysx.linearVelocity = [0, 0, 0];
+                this._myPhysx.angularVelocity = [0, 0, 0];
+
+            }
         }
     }
 });

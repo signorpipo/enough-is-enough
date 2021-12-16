@@ -62,6 +62,12 @@ WL.registerComponent('pp-grab', {
             this._updateVelocityHistory();
         }
     },
+    grab: function () {
+        this._grab();
+    },
+    throw: function () {
+        this._throw();
+    },
     registerGrabEventListener(id, callback) {
         this._myGrabCallbacks.set(id, callback);
     },
@@ -74,7 +80,7 @@ WL.registerComponent('pp-grab', {
     unregisterThrowEventListener(id) {
         this._myThrowCallbacks.delete(id);
     },
-    _grab: function (e) {
+    _grab: function () {
         if (!this._myGrabbable) {
             let collidingComps = this._myCollision.queryOverlaps();
             for (let i = 0; i < collidingComps.length; i++) {
@@ -95,7 +101,7 @@ WL.registerComponent('pp-grab', {
             }
         }
     },
-    _throw: function (e) {
+    _throw: function () {
         if (this._myGrabbable) {
             this._myGrabbable.unregisterReleaseEventListener(this);
 
