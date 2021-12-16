@@ -91,7 +91,7 @@ var Global = {
     myVentDuration: 0,
     myDebugShortcutsEnabled: false,
     myDebugShortcutsPress: 2,
-    myPlayerPosition: null,
-    myPlayerRotation: null,
-    myPlayerForward: null,
+    myPlayerPosition: [0, 0, 0],
+    myPlayerRotation: [0, 0, 0],
+    myPlayerForward: [0, 0, 1],
 };

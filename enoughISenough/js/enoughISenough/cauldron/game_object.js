@@ -37,4 +37,5 @@ var GameObjectType = {
     TROPHY: 34,
     FAMILY: 35,
     MIRROR: 36,
+    KINGDOM_HEARTS: 37,
 };
