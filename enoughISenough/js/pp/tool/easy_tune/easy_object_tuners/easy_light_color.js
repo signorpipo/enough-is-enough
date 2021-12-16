@@ -70,12 +70,10 @@ PP.EasyLightColor = class EasyLightColor extends PP.EasyObjectTuner {
 
         let light = object.pp_getComponent("light");
         if (light) {
-            let lightColor = vec4_create();
-            lightColor[0] = color[0];
-            lightColor[1] = color[1];
-            lightColor[2] = color[2];
-            lightColor[3] = light.color[3];
-            light.color = lightColor;
+            light.color[0] = color[0];
+            light.color[1] = color[1];
+            light.color[2] = color[2];
+            light.color[3] = light.color[3];
         }
 
         if ((PP.myRightGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isPressStart() && PP.myLeftGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).myIsPressed) ||
