@@ -50,5 +50,5 @@ PP.setEasyTuneWidgetActiveVariable = function () {
 };
 
 PP.refreshEasyTuneWidget = function () {
-    console.log("refreshEasyTuneWidgetVariables function not initialized yet");
+    console.log("refreshEasyTuneWidget function not initialized yet");
 };

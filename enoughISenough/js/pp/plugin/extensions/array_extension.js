@@ -271,13 +271,26 @@ Array.prototype.vec_ceil = function (out = null) {
 Array.prototype.vec_clamp = function (intervalStart, intervalEnd, out = null) {
     out = this._vec_prepareOut(out);
 
+    let fixedIntervalStart = (intervalStart != null) ? intervalStart : Number.MIN_VALUE;
+    let fixedIntervalEnd = (intervalEnd != null) ? intervalEnd : Number.MAX_VALUE;
+    let min = Math.min(fixedIntervalStart, fixedIntervalEnd);
+    let max = Math.max(fixedIntervalStart, fixedIntervalEnd);
+
     for (let i = 0; i < out.length; i++) {
-        let min = Math.min(intervalStart, intervalEnd);
-        let max = Math.max(intervalStart, intervalEnd);
         out[i] = Math.min(Math.max(out[i], min), max);
     }
 
     return out;
+};
+
+Array.prototype.vec_equals = function (vector) {
+    let equals = this.length == vector.length;
+
+    for (let i = 0; i < this.length && equals; i++) {
+        equals &= Math.abs(this[i] - vector[i]) < this._pp_epsilon;
+    }
+
+    return equals;
 };
 
 // VECTOR 3

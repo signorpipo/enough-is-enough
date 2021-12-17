@@ -3,8 +3,11 @@ if (!PP) {
 }
 
 Math.pp_clamp = function (value, intervalStart, intervalEnd) {
-    let min = Math.min(intervalStart, intervalEnd);
-    let max = Math.max(intervalStart, intervalEnd);
+    let fixedIntervalStart = (intervalStart != null) ? intervalStart : Number.MIN_VALUE;
+    let fixedIntervalEnd = (intervalEnd != null) ? intervalEnd : Number.MAX_VALUE;
+
+    let min = Math.min(fixedIntervalStart, fixedIntervalEnd);
+    let max = Math.max(fixedIntervalStart, fixedIntervalEnd);
     return Math.min(Math.max(value, min), max);
 };
 

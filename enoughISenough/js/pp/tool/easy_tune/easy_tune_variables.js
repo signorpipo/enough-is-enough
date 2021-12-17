@@ -21,10 +21,10 @@ PP.EasyTuneVariables = class EasyTuneVariables {
         return null;
     }
 
-    set(variableName, value) {
+    set(variableName, value, resetInitialValue = false) {
         let variable = this._myMap.get(variableName);
         if (variable) {
-            variable.setValue(value);
+            variable.setValue(value, resetInitialValue);
         }
     }
 
@@ -69,9 +69,18 @@ PP.EasyTuneVariable = class EasyTuneVariable {
         return this.myValue;
     }
 
-    setValue(value) {
+    setValue(value, resetInitialValue = false) {
         this.myValue = value;
-        this.myInitialValue = this.myValue;
+
+        if (resetInitialValue) {
+            this.setInitialValue(value);
+        }
+
+        PP.refreshEasyTuneWidget();
+    }
+
+    setInitialValue(value) {
+        this.myInitialValue = value;
     }
 };
 
@@ -79,16 +88,25 @@ PP.EasyTuneVariableArray = class EasyTuneVariableArray extends PP.EasyTuneVariab
     constructor(name, type, value) {
         super(name, type);
 
-        PP.EasyTuneVariableArray.prototype.setValue.call(this, value);
+        PP.EasyTuneVariableArray.prototype.setValue.call(this, value, true);
     }
 
     getValue() {
         return this.myValue.slice(0);
     }
 
-    setValue(value) {
+    setValue(value, resetInitialValue = false) {
         this.myValue = value.slice(0);
-        this.myInitialValue = this.myValue.slice(0);
+
+        if (resetInitialValue) {
+            PP.EasyTuneVariableArray.prototype.setInitialValue.call(this, value);
+        }
+
+        PP.refreshEasyTuneWidget();
+    }
+
+    setInitialValue(value) {
+        this.myInitialValue = value.slice(0);
     }
 };
 
@@ -96,23 +114,7 @@ PP.EasyTuneVariableArray = class EasyTuneVariableArray extends PP.EasyTuneVariab
 
 PP.EasyTuneNumberArray = class EasyTuneNumberArray extends PP.EasyTuneVariableArray {
     constructor(name, value, stepPerSecond, decimalPlaces, min = null, max = null, editAllValuesTogether = false) {
-        let tempValue = value.slice(0);
-
-        if (min != null && max != null) {
-            for (let i = 0; i < value.length; i++) {
-                tempValue[i] = Math.pp_clamp(tempValue[i], min, max);
-            }
-        } else if (min != null) {
-            for (let i = 0; i < value.length; i++) {
-                tempValue[i] = Math.max(tempValue[i], min);
-            }
-        } else if (max != null) {
-            for (let i = 0; i < value.length; i++) {
-                tempValue[i] = Math.min(tempValue[i], max);
-            }
-        }
-
-        super(name, PP.EasyTuneVariableType.NUMBER, tempValue);
+        super(name, PP.EasyTuneVariableType.NUMBER, value);
 
         this.myDecimalPlaces = decimalPlaces;
         this.myStepPerSecond = stepPerSecond;
@@ -123,6 +125,32 @@ PP.EasyTuneNumberArray = class EasyTuneNumberArray extends PP.EasyTuneVariableAr
         this.myMax = max;
 
         this.myEditAllValuesTogether = editAllValuesTogether;
+
+        this._clampValue(true);
+    }
+
+    setMax(max) {
+        this.myMax = max;
+        this._clampValue(false);
+    }
+
+    setMin(min) {
+        this.myMin = min;
+        this._clampValue(false);
+    }
+
+    _clampValue(resetInitialValue) {
+        let clampedValue = this.myValue.vec_clamp(this.myMin, this.myMax);
+
+        if (!resetInitialValue) {
+            let clampedInitialValue = this.myInitialValue.vec_clamp(this.myMin, this.myMax);
+            let initialValueChanged = !clampedInitialValue.vec_equals(this.myInitialValue);
+            if (initialValueChanged) {
+                PP.EasyTuneVariableArray.prototype.setInitialValue.call(this, clampedInitialValue);
+            }
+        }
+
+        PP.EasyTuneVariableArray.prototype.setValue.call(this, clampedValue, resetInitialValue);
     }
 };
 
@@ -135,7 +163,11 @@ PP.EasyTuneNumber = class EasyTuneNumber extends PP.EasyTuneNumberArray {
         return this.myValue[0];
     }
 
-    setValue(value) {
+    setValue(value, resetInitialValue = false) {
+        super.setValue([value], resetInitialValue);
+    }
+
+    setInitialValue(value) {
         super.setValue([value]);
     }
 };
@@ -175,7 +207,11 @@ PP.EasyTuneBool = class EasyTuneBool extends PP.EasyTuneBoolArray {
         return this.myValue[0];
     }
 
-    setValue(value) {
+    setValue(value, resetInitialValue = false) {
+        super.setValue([value], resetInitialValue);
+    }
+
+    setInitialValue(value) {
         super.setValue([value]);
     }
 };
@@ -219,13 +255,21 @@ PP.EasyTuneSimpleTransform = class EasyTuneSimpleTransform extends PP.EasyTuneVa
         return this.myTransform.slice(0);
     }
 
-    setValue(value) {
+    setValue(value, resetInitialValue = false) {
         this.myPosition = value.mat4_getPosition();
         this.myRotation = value.mat4_getRotationDegrees();
         this.myScale = value.mat4_getScale();
 
-        this.myInitialPosition = this.myPosition.vec3_clone();
-        this.myInitialRotation = this.myRotation.vec3_clone();
-        this.myInitialScale = this.myScale.vec3_clone();
+        if (resetInitialValue) {
+            this.setInitialValue(value);
+        }
+
+        PP.refreshEasyTuneWidget();
+    }
+
+    setInitialValue(value) {
+        this.myInitialPosition = value.mat4_getPosition();
+        this.myInitialRotation = value.mat4_getRotationDegrees();
+        this.myInitialScale = value.mat4_getScale();
     }
 };

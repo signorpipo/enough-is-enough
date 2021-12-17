@@ -40,13 +40,11 @@ PP.EasyObjectTuner = class EasyObjectTuner {
                 this._myPrevEasyObject = this._myEasyObject;
                 if (this._myEasyObject) {
                     let value = this._getObjectValue(this._myEasyObject);
-                    PP.myEasyTuneVariables.set(this._myEasyTuneVariableName, value);
+                    PP.myEasyTuneVariables.set(this._myEasyTuneVariableName, value, true);
                 } else {
                     let value = this._getDefaultValue();
-                    PP.myEasyTuneVariables.set(this._myEasyTuneVariableName, value);
+                    PP.myEasyTuneVariables.set(this._myEasyTuneVariableName, value, true);
                 }
-
-                PP.refreshEasyTuneWidget();
             }
 
             if (this._myEasyObject) {

@@ -24,6 +24,8 @@ PP.EasyTuneWidget = class EasyTuneWidget {
         this._myGamepad = null;
 
         this._myRefreshVariablesTimer = 0;
+
+        this._myDirty = false;
     }
 
     setActiveVariable(variableName) {
@@ -38,7 +40,9 @@ PP.EasyTuneWidget = class EasyTuneWidget {
     }
 
     refresh() {
-        this._refreshEasyTuneVariables();
+        if (this._myWidgetFrame.myIsWidgetVisible) {
+            this._myDirty = true;
+        }
     }
 
     start(parentObject, additionalSetup, easyTuneVariables) {
@@ -78,7 +82,7 @@ PP.EasyTuneWidget = class EasyTuneWidget {
     update(dt) {
         this._myWidgetFrame.update(dt);
 
-        if (this._myEasyTuneVariables.size != this._myEasyTuneLastSize) {
+        if (this._myEasyTuneVariables.size != this._myEasyTuneLastSize || this._myDirty) {
             this._refreshEasyTuneVariables();
         }
 
@@ -159,6 +163,8 @@ PP.EasyTuneWidget = class EasyTuneWidget {
                 this._myCurrentWidget = null;
             }
         }
+
+        this._myDirty = false;
     }
 
     _updateGamepadWidgetVisibility() {
