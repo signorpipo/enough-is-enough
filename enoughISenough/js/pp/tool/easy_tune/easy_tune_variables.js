@@ -73,7 +73,7 @@ PP.EasyTuneVariable = class EasyTuneVariable {
         this.myValue = value;
 
         if (resetInitialValue) {
-            this.setInitialValue(value);
+            PP.EasyTuneVariable.prototype.setInitialValue.call(this, value);
         }
 
         PP.refreshEasyTuneWidget();
@@ -261,7 +261,7 @@ PP.EasyTuneSimpleTransform = class EasyTuneSimpleTransform extends PP.EasyTuneVa
         this.myScale = value.mat4_getScale();
 
         if (resetInitialValue) {
-            this.setInitialValue(value);
+            PP.EasyTuneSimpleTransform.prototype.setInitialValue.call(this, value);
         }
 
         PP.refreshEasyTuneWidget();

@@ -14800,6 +14800,13 @@
                         },
                         "groups": 1
                     }
+                },
+                {
+                    "type": "pp-easy-set-tune-target-child-number",
+                    "pp-easy-set-tune-target-child-number": {
+                        "_myVariableName": "",
+                        "_mySetAsDefault": true
+                    }
                 }
             ],
             "parent": "995"
