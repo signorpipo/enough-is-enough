@@ -14727,7 +14727,7 @@
             "deleted": true
         },
         "991": {
-            "name": "Visualizer",
+            "name": "Visualizer New",
             "transformation": [
                 1.0,
                 0.0,
@@ -14741,9 +14741,9 @@
                 0.0,
                 1.0,
                 0.0,
-                -0.246816,
-                1.3839621,
-                -0.5110303,
+                -0.3,
+                1.3999999,
+                -0.5,
                 1.0
             ],
             "components": [
@@ -14804,8 +14804,14 @@
                 {
                     "type": "pp-easy-set-tune-target-child-number",
                     "pp-easy-set-tune-target-child-number": {
-                        "_myVariableName": "",
+                        "_myVariableName": " New",
                         "_mySetAsDefault": true
+                    }
+                },
+                {
+                    "type": "pp-set-hierarchy-active",
+                    "pp-set-hierarchy-active": {
+                        "_myHierarchyActive": true
                     }
                 }
             ],
@@ -14900,6 +14906,97 @@
                     }
                 }
             ]
+        },
+        "1014": {
+            "name": "Visualizer Original",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.3,
+                1.3999999,
+                -0.5,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "palette-visualizer",
+                    "palette-visualizer": {
+                        "_myPaletteMesh": "993",
+                        "_myPaletteMeshScale": 0.0074999,
+                        "_my1": "998",
+                        "_my2": "999",
+                        "_my3": "1000",
+                        "_my4": "1001",
+                        "_my5": "1002",
+                        "_my6": "1003",
+                        "_my7": "1004",
+                        "_my8": "1005",
+                        "_my9": "1006",
+                        "_my10": "1007",
+                        "_my11": "1008",
+                        "_my12": "1009",
+                        "_my13": "1010",
+                        "_my14": "1011",
+                        "_my15": "1012",
+                        "_my16": "1013",
+                        "_myOffsetX": 0.1,
+                        "_myOffsetY": 0.1,
+                        "_myPaletteObject": "996",
+                        "_myPaletteObjectScaleFactor": 0.3
+                    }
+                },
+                {
+                    "type": "pp-grabbable",
+                    "pp-grabbable": {
+                        "_myThrowLinearVelocityMultiplier": 0.0,
+                        "_myThrowAngularVelocityMultiplier": 0.0,
+                        "_myKinematicValueOnRelease": "true"
+                    }
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "sphere": {
+                            "radius": 0.05
+                        },
+                        "gravity": false,
+                        "kinematic": true
+                    }
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "sphere": {
+                            "radius": 0.1
+                        },
+                        "groups": 1
+                    }
+                },
+                {
+                    "type": "pp-easy-set-tune-target-child-number",
+                    "pp-easy-set-tune-target-child-number": {
+                        "_myVariableName": "Original",
+                        "_mySetAsDefault": true
+                    }
+                },
+                {
+                    "type": "pp-set-hierarchy-active",
+                    "pp-set-hierarchy-active": {
+                        "_myHierarchyActive": true
+                    }
+                }
+            ],
+            "parent": "995"
         }
     },
     "meshes": {
@@ -18103,6 +18200,390 @@
                 "name": "Dark Blue",
                 "file": "assets\\models\\extra\\palette_mesh_1.fbx"
             }
+        },
+        "998": {
+            "name": "P8 Black Original",
+            "Phong": {
+                "diffuseColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "999": {
+            "name": "P8 Dark Blue Original",
+            "Phong": {
+                "diffuseColor": [
+                    0.1137254,
+                    0.1686274,
+                    0.3254902,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.0574855,
+                    0.0852366,
+                    0.1647058,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "1000": {
+            "name": "P8 Dark Red Original",
+            "Phong": {
+                "diffuseColor": [
+                    0.4941176,
+                    0.145098,
+                    0.3254902,
+                    1.0
+                ],
+                "specularColor": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.2470588,
+                    0.0726643,
+                    0.1629391,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "1001": {
+            "name": "P8 Dark Green Original",
+            "Phong": {
+                "diffuseColor": [
+                    0.0,
+                    0.5294117,
+                    0.317647,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.0,
+                    0.2627451,
+                    0.1607381,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "1002": {
+            "name": "P8 Brown Original",
+            "Phong": {
+                "diffuseColor": [
+                    0.6705882,
+                    0.3215686,
+                    0.2117647,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.3333333,
+                    0.1594002,
+                    0.1058823,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "1003": {
+            "name": "P8 Dark Gray Original",
+            "Phong": {
+                "diffuseColor": [
+                    0.372549,
+                    0.3411764,
+                    0.3098039,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.1882352,
+                    0.1721777,
+                    0.1564936,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "1004": {
+            "name": "P8 Gray Original",
+            "Phong": {
+                "diffuseColor": [
+                    0.7607843,
+                    0.7647058,
+                    0.7803921,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.3829296,
+                    0.3848836,
+                    0.3921568,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "1005": {
+            "name": "P8 White Original",
+            "Phong": {
+                "diffuseColor": [
+                    1.0,
+                    0.945098,
+                    0.9098039,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.5019608,
+                    0.4747958,
+                    0.4566859,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "1006": {
+            "name": "P8 Red Original",
+            "Phong": {
+                "diffuseColor": [
+                    1.0,
+                    0.0,
+                    0.3019607,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.5019608,
+                    0.0,
+                    0.1535409,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "1007": {
+            "name": "P8 Orange Original",
+            "Phong": {
+                "diffuseColor": [
+                    1.0,
+                    0.6392157,
+                    0.0,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.5019608,
+                    0.3188927,
+                    0.0,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "1008": {
+            "name": "P8 Yellow Original",
+            "Phong": {
+                "diffuseColor": [
+                    1.0,
+                    0.9254902,
+                    0.1529411,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.5019608,
+                    0.4669451,
+                    0.0767704,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "1009": {
+            "name": "P8 Green Original",
+            "Phong": {
+                "diffuseColor": [
+                    0.0,
+                    0.8941176,
+                    0.2117647,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.0,
+                    0.4470588,
+                    0.1051903,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "1010": {
+            "name": "P8 Blue Original",
+            "Phong": {
+                "diffuseColor": [
+                    0.1607843,
+                    0.6784313,
+                    1.0,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.0807074,
+                    0.3384153,
+                    0.5019608,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "1011": {
+            "name": "P8 Purple Original",
+            "Phong": {
+                "diffuseColor": [
+                    0.5137255,
+                    0.4627451,
+                    0.6117647,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.2577596,
+                    0.2315109,
+                    0.3058823,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "1012": {
+            "name": "P8 Pink Original",
+            "Phong": {
+                "diffuseColor": [
+                    1.0,
+                    0.4666666,
+                    0.6588235,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.5019608,
+                    0.2342483,
+                    0.3287352,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
+        },
+        "1013": {
+            "name": "P8 Beige Original",
+            "Phong": {
+                "diffuseColor": [
+                    1.0,
+                    0.8,
+                    0.6666666,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.5019608,
+                    0.4015686,
+                    0.3346405,
+                    1.0
+                ]
+            },
+            "pipeline": "194"
         }
     },
     "shaders": {
