@@ -1,6 +1,6 @@
 //Overall Deep Clone not implemented
-WL.MeshComponent.prototype.pp_clone = function (clone, params) {
-    if ((params.myDeepClone && params.myMesh_MaterialDeepCloneOverride == null) || params.myMesh_MaterialDeepCloneOverride) {
+WL.MeshComponent.prototype.pp_clone = function (clone, deepCloneParams, extraData) {
+    if (deepCloneParams.shouldDeepCloneComponentVariable("mesh", "material")) {
         clone.material = this.material.clone();
     } else {
         clone.material = this.material;
@@ -12,7 +12,7 @@ WL.MeshComponent.prototype.pp_clone = function (clone, params) {
     return clone;
 };
 
-WL.CollisionComponent.prototype.pp_clone = function (clone, params) {
+WL.CollisionComponent.prototype.pp_clone = function (clone, deepCloneParams, extraData) {
     clone.collider = this.collider;
     clone.extents = this.extents.slice(0);
     clone.group = this.group;
@@ -20,13 +20,17 @@ WL.CollisionComponent.prototype.pp_clone = function (clone, params) {
     return clone;
 };
 
-WL.TextComponent.prototype.pp_clone = function (clone, params) {
-    if (params.myDeepClone) {
-        clone.material = this.material.clone();
+WL.TextComponent.prototype.pp_clone = function (clone, deepCloneParams, extraData) {
+    if (deepCloneParams.shouldDeepCloneComponent("text")) {
         clone.text = this.text.slice(0);
     } else {
-        clone.material = this.material;
         clone.text = this.text;
+    }
+
+    if (deepCloneParams.shouldDeepCloneComponentVariable("text", "material")) {
+        clone.material = this.material.clone();
+    } else {
+        clone.material = this.material;
     }
 
     clone.alignment = this.alignment;
@@ -36,7 +40,7 @@ WL.TextComponent.prototype.pp_clone = function (clone, params) {
 };
 
 //TEMP not complete
-WL.PhysXComponent.prototype.pp_clone = function (clone, params) {
+WL.PhysXComponent.prototype.pp_clone = function (clone, deepCloneParams, extraData) {
     clone.angularDamping = this.angularDamping;
     clone.angularVelocity = this.angularVelocity.slice(0);
 

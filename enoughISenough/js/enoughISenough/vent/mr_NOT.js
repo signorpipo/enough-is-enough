@@ -212,7 +212,7 @@ class MrNOT {
             }
             this._mySpawnParticlesTimer.start(delay);
             let type = Math.pp_randomPick(this._myPossibleGameObjectTypes);
-            Global.myParticlesManager.explosion(this._myParticlesPosition, [this._myParticlesSize, this._myParticlesSize, this._myParticlesSize], type);
+            Global.myParticlesManager.explosion(this._myParticlesPosition, 1, [this._myParticlesSize, this._myParticlesSize, this._myParticlesSize], type);
             this._myParticlesPosition = this._getNextParticlePosition();
             this._myExplodeAudio.play();
         }
@@ -228,7 +228,7 @@ class MrNOT {
             this._myDisappearTimer.update(dt);
             if (this._myDisappearTimer.isDone()) {
                 this._myObject.pp_setActive(false);
-                Global.myParticlesManager.explosion(this._myCurrentPosition, [this._myParticlesSize, this._myParticlesSize, this._myParticlesSize], GameObjectType.MR_NOT);
+                Global.myParticlesManager.explosion(this._myCurrentPosition, 1, [this._myParticlesSize, this._myParticlesSize, this._myParticlesSize], GameObjectType.MR_NOT);
                 this._myDisappearEndTimer.start();
                 this._myExplodeAudio.play();
             }

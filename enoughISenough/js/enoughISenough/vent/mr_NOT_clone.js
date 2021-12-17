@@ -155,7 +155,7 @@ class MrNOTClone {
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
 
         if (this._mySpawnTimer.isDone()) {
-            Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myScale.vec3_scale(PP.myEasyTuneVariables.get("mr NOT Clone Scale")), GameObjectType.MR_NOT_CLONE);
+            Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), 1, this._myScale.vec3_scale(PP.myEasyTuneVariables.get("mr NOT Clone Scale")), GameObjectType.MR_NOT_CLONE);
             this.destroy();
             this._myFSM.perform("end");
         }

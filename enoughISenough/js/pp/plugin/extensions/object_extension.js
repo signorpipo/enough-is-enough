@@ -1791,10 +1791,64 @@ PP.CloneParams = class CloneParams {
         this.myChildrenToInclude = []; // Clones only the objects in this list (example: "mesh"), has higher priority over myChildrenToIgnore, if empty it's ignored
         this.myIgnoreChildCallback = null; // Signature: callback(object) returns true if the object must be ignored, it is called after the previous filters
 
-        this.myDeepClone = false;
+        this.myDeepCloneParams = new PP.DeepCloneParams(); // Used to specify if the object must be deep cloned or not, you can also override the behavior for specific components and variables
 
-        //Components Deep Clone Override
-        this.myMesh_MaterialDeepCloneOverride = null; // null means it does not override, otherwise use false or true
+        this.myExtraData = new Map(); // This map can be filled with whatever extra data the component clone function could need
+    }
+};
+
+PP.DeepCloneParams = class DeepCloneParams {
+    constructor() {
+        this._myDeepCloneObject = false;
+        this._myOverrideDeepCloneComponentMap = new Map();
+        this._myOverrideDeepCloneComponentVariableMap = new Map();
+    }
+
+    // The implementation is component dependant, not every component implements the deep clone
+    deepCloneObject(deepClone) {
+        this._myDeepCloneObject = deepClone;
+    }
+
+    // This value override the deep clone object value
+    // The implementation is component dependant, not every component implements the deep clone
+    deepCloneComponent(componentName, deepClone) {
+        this._myOverrideDeepCloneComponentMap.set(componentName, deepClone);
+    }
+
+    // This value override both the deep clone object value and the deep clone component one
+    // The implementation is component dependant, not every component variable override is taken into consideration
+    deepCloneComponentVariable(componentName, variableName, deepClone) {
+        let componentMap = null;
+
+        if (!this._myOverrideDeepCloneComponentVariableMap.has(componentName)) {
+            this._myOverrideDeepCloneComponentVariableMap.set(componentName, new Map());
+        }
+
+        componentMap = this._myOverrideDeepCloneComponentVariableMap.get(componentName);
+
+        componentMap.set(variableName, deepClone);
+    }
+
+    shouldDeepCloneComponent(componentName) {
+        let overrideValue = this._myOverrideDeepCloneComponentMap.get(componentName);
+
+        if (overrideValue != null) {
+            return overrideValue;
+        }
+
+        return this._myDeepCloneObject;
+    }
+
+    shouldDeepCloneComponentVariable(componentName, variableName) {
+        let componentMap = this._myOverrideDeepCloneComponentVariableMap.get(componentName);
+        if (componentMap != null) {
+            let overrideValue = componentMap.get(variableName);
+            if (overrideValue != null) {
+                return overrideValue;
+            }
+        }
+
+        return this.shouldDeepCloneComponent(componentName);
     }
 };
 
@@ -1883,7 +1937,7 @@ WL.Object.prototype.pp_clone = function (params = new PP.CloneParams()) {
             let componentToClone = cloneData[0];
             let currentClonedComponent = cloneData[1];
 
-            componentToClone.pp_clone(currentClonedComponent, params);
+            componentToClone.pp_clone(currentClonedComponent, params.myDeepCloneParams, params.myExtraData);
         }
     }
 
