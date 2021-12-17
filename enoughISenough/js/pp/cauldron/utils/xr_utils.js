@@ -1,12 +1,6 @@
 PP.XRUtils = {
     isDeviceEmulated: function () {
-        let isEmulated = false;
-
-        if (WL.xrSession) {
-            let symbols = Object.getOwnPropertySymbols(WL.xrSession);
-            isEmulated = symbols.length > 0;
-        }
-
+        let isEmulated = ('CustomWebXRPolyfill' in window);
         return isEmulated;
     },
     isXRSessionActive: function () {
