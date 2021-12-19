@@ -27,7 +27,11 @@ WL.registerComponent("palette-visualizer", {
         this._myMaterials = [];
         for (let i = 1; i < 17; i++) {
             let material = "_my".concat(i);
-            this._myMaterials.push(this[material].clone());
+            if (this._myCloneMaterial) {
+                this._myMaterials.push(this[material].clone());
+            } else {
+                this._myMaterials.push(this[material]);
+            }
         }
 
         this._myColumns = Math.ceil(Math.sqrt(this._myMaterials.length));
@@ -47,7 +51,7 @@ WL.registerComponent("palette-visualizer", {
             newObject.pp_resetRotationLocal();
             newObject.pp_setActive(true);
 
-            PP.MeshUtils.setMaterial(newObject, this._myMaterials[i], this._myCloneMaterial);
+            PP.MeshUtils.setMaterial(newObject, this._myMaterials[i], false);
         }
     },
     update: function (dt) {

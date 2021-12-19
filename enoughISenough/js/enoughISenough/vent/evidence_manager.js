@@ -34,6 +34,15 @@ class EvidenceManager {
 
     update(dt) {
         this._myFSM.update(dt);
+
+        if (Global.myDebugShortcutsEnabled) {
+            //TEMP REMOVE THIS
+            if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(Global.myDebugShortcutsPress)) {
+                for (let evidence of this._myActiveEvidences) {
+                    evidence[0].unspawn();
+                }
+            }
+        }
     }
 
     explode() {

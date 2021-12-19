@@ -90,7 +90,7 @@ PP.EasyTextColor = class EasyTextColor extends PP.EasyObjectTuner {
 
     _getTextMaterial(object) {
         let material = null;
-        let text = object.pp_getComponent("text");
+        let text = object.pp_getComponentHierarchy("text");
         if (text) {
             material = text.material;
         }

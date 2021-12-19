@@ -110,7 +110,7 @@ PP.EasyMeshColor = class EasyMeshColor extends PP.EasyObjectTuner {
 
     _getMeshMaterial(object) {
         let material = null;
-        let mesh = object.pp_getComponent("mesh");
+        let mesh = object.pp_getComponentHierarchy("mesh");
         if (mesh) {
             material = mesh.material;
         }

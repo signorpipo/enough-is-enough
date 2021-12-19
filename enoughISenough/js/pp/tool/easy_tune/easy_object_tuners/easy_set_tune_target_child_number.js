@@ -21,7 +21,7 @@ WL.registerComponent("pp-easy-set-tune-target-child-number", {
             max = 0;
         }
 
-        PP.myEasyTuneVariables.add(new PP.EasyTuneInt(this._myEasyTuneVariableName, 0, 1, min, max));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneInt(this._myEasyTuneVariableName, 0, 10, min, max));
         if (this._mySetAsDefault) {
             PP.setEasyTuneWidgetActiveVariable(this._myEasyTuneVariableName);
         }

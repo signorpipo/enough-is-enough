@@ -2135,9 +2135,9 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myStartStory": "971",
+                        "_myStartStory": "161",
                         "_myStartArcadeHard": "144",
-                        "_myStartArcadeNormal": "152",
+                        "_myStartArcadeNormal": "736",
                         "_myLeaderboardArcadeHard": "158",
                         "_myLeaderboardArcadeNormal": "155",
                         "_myWondermelon": "164",
@@ -2225,6 +2225,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -2461,7 +2464,26 @@
                     }
                 },
                 {
-                    "type": "pp-easy-set-tune-target-grab"
+                    "type": "pp-easy-set-tune-target-grab",
+                    "active": false
+                },
+                {
+                    "type": "pp-easy-mesh-color",
+                    "pp-easy-mesh-color": {
+                        "_myVariableName": "Target",
+                        "_myColorModel": "hsv",
+                        "_myColorType": "diffuse color",
+                        "_myUseTuneTarget": true
+                    }
+                },
+                {
+                    "type": "pp-easy-mesh-color",
+                    "pp-easy-mesh-color": {
+                        "_myVariableName": "Target S",
+                        "_myUseTuneTarget": true,
+                        "_myColorModel": "hsv",
+                        "_myColorType": "specular color"
+                    }
                 }
             ]
         },
@@ -2587,6 +2609,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -2714,6 +2739,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -2841,6 +2869,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -2968,6 +2999,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -3225,6 +3259,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -7230,6 +7267,9 @@
                             ]
                         }
                     }
+                },
+                {
+                    "type": "evidence-component"
                 }
             ]
         },
@@ -14804,7 +14844,7 @@
                 {
                     "type": "pp-easy-set-tune-target-child-number",
                     "pp-easy-set-tune-target-child-number": {
-                        "_myVariableName": " New",
+                        "_myVariableName": "New",
                         "_mySetAsDefault": true
                     }
                 },
@@ -14862,6 +14902,14 @@
                 0.0,
                 0.0,
                 1.0
+            ],
+            "components": [
+                {
+                    "type": "pp-set-hierarchy-active",
+                    "pp-set-hierarchy-active": {
+                        "_myHierarchyActive": false
+                    }
+                }
             ]
         },
         "996": {
@@ -14987,7 +15035,8 @@
                     "pp-easy-set-tune-target-child-number": {
                         "_myVariableName": "Original",
                         "_mySetAsDefault": true
-                    }
+                    },
+                    "active": true
                 },
                 {
                     "type": "pp-set-hierarchy-active",
@@ -15029,12 +15078,12 @@
                 0.0,
                 0.0,
                 0.0,
-                0.1175981,
-                0.1617752,
+                0.2000013,
                 0.0,
                 0.0,
-                -0.1617752,
-                0.1175981,
+                0.0,
+                0.0,
+                0.2000013,
                 0.0,
                 0.0,
                 1.5266389,
@@ -15080,14 +15129,6 @@
                     "mesh": {
                         "mesh": "7",
                         "material": "1016"
-                    }
-                },
-                {
-                    "type": "pp-easy-mesh-color",
-                    "pp-easy-mesh-color": {
-                        "_myColorType": "ambient color",
-                        "_myColorModel": "hsv",
-                        "_myVariableName": "Palette"
                     }
                 }
             ],
@@ -16845,9 +16886,9 @@
                     1.0
                 ],
                 "specularColor": [
-                    9.999999974752428e-7,
-                    9.999899930335233e-7,
-                    9.999899930335233e-7,
+                    0.2117647,
+                    0.2117647,
+                    0.2117647,
                     1.0
                 ],
                 "ambientColor": [
@@ -16855,7 +16896,8 @@
                     9.999899930335233e-7,
                     9.999899930335233e-7,
                     1.0
-                ]
+                ],
+                "ambientFactor": 0.05
             },
             "pipeline": "194"
         },
@@ -16869,17 +16911,18 @@
                     1.0
                 ],
                 "specularColor": [
-                    9.999999974752428e-7,
-                    9.999899930335233e-7,
-                    9.999899930335233e-7,
+                    0.2117647,
+                    0.2117647,
+                    0.2117647,
                     1.0
                 ],
                 "ambientColor": [
-                    0.0486582,
-                    0.0645116,
+                    0.0470588,
+                    0.0627451,
                     0.1098039,
                     1.0
-                ]
+                ],
+                "ambientFactor": 0.05
             },
             "pipeline": "194"
         },
@@ -16893,9 +16936,9 @@
                     1.0
                 ],
                 "specularColor": [
-                    0.0,
-                    0.0,
-                    0.0,
+                    0.2117647,
+                    0.2117647,
+                    0.2117647,
                     1.0
                 ],
                 "ambientColor": [
@@ -16917,9 +16960,9 @@
                     1.0
                 ],
                 "specularColor": [
-                    9.999999974752428e-7,
-                    9.999899930335233e-7,
-                    9.999899930335233e-7,
+                    0.2117647,
+                    0.2117647,
+                    0.2117647,
                     1.0
                 ],
                 "ambientColor": [
@@ -16935,15 +16978,15 @@
             "name": "P8 Brown",
             "Phong": {
                 "diffuseColor": [
-                    0.6705882,
-                    0.3215686,
-                    0.2117647,
+                    0.5882353,
+                    0.2618902,
+                    0.1614763,
                     1.0
                 ],
                 "specularColor": [
-                    9.999999974752428e-7,
-                    9.999899930335233e-7,
-                    9.999899930335233e-7,
+                    0.2117647,
+                    0.2117647,
+                    0.2117647,
                     1.0
                 ],
                 "ambientColor": [
@@ -16965,9 +17008,9 @@
                     1.0
                 ],
                 "specularColor": [
-                    9.999999974752428e-7,
-                    9.999899930335233e-7,
-                    9.999899930335233e-7,
+                    0.2117647,
+                    0.2117647,
+                    0.2117647,
                     1.0
                 ],
                 "ambientColor": [
@@ -16983,15 +17026,15 @@
             "name": "P8 Gray",
             "Phong": {
                 "diffuseColor": [
-                    0.7686197,
-                    0.7686213,
-                    0.7686274,
+                    0.5840061,
+                    0.5924192,
+                    0.6078431,
                     1.0
                 ],
                 "specularColor": [
-                    9.999999974752428e-7,
-                    9.999899930335233e-7,
-                    9.999899930335233e-7,
+                    0.2117647,
+                    0.2117647,
+                    0.2117647,
                     1.0
                 ],
                 "ambientColor": [
@@ -17013,9 +17056,9 @@
                     1.0
                 ],
                 "specularColor": [
-                    9.999999974752428e-7,
-                    9.999899930335233e-7,
-                    9.999899930335233e-7,
+                    0.2117647,
+                    0.2117647,
+                    0.2117647,
                     1.0
                 ],
                 "ambientColor": [
@@ -17031,23 +17074,24 @@
             "name": "P8 Red",
             "Phong": {
                 "diffuseColor": [
-                    0.6588234,
-                    0.1937716,
-                    0.3341991,
+                    0.8627451,
+                    0.1184159,
+                    0.3460932,
                     1.0
                 ],
                 "specularColor": [
-                    9.999999974752428e-7,
-                    9.999899930335233e-7,
-                    9.999899930335233e-7,
+                    0.2117647,
+                    0.2117647,
+                    0.2117647,
                     1.0
                 ],
                 "ambientColor": [
                     0.1647058,
-                    0.0155017,
-                    0.0605555,
+                    0.0156862,
+                    0.0588235,
                     1.0
-                ]
+                ],
+                "ambientFactor": 0.05
             },
             "pipeline": "194"
         },
@@ -17055,15 +17099,15 @@
             "name": "P8 Orange",
             "Phong": {
                 "diffuseColor": [
-                    0.690196,
-                    0.4392156,
+                    0.745098,
+                    0.4733563,
                     0.0,
                     1.0
                 ],
                 "specularColor": [
-                    9.999999974752428e-7,
-                    9.999899930335233e-7,
-                    9.999899930335233e-7,
+                    0.2117647,
+                    0.2117647,
+                    0.2117647,
                     1.0
                 ],
                 "ambientColor": [
@@ -17085,9 +17129,9 @@
                     1.0
                 ],
                 "specularColor": [
-                    9.999999974752428e-7,
-                    9.999899930335233e-7,
-                    9.999899930335233e-7,
+                    0.2117647,
+                    0.2117647,
+                    0.2117647,
                     1.0
                 ],
                 "ambientColor": [
@@ -17109,9 +17153,9 @@
                     1.0
                 ],
                 "specularColor": [
-                    9.999999974752428e-7,
-                    9.999899930335233e-7,
-                    9.999899930335233e-7,
+                    0.2117647,
+                    0.2117647,
+                    0.2117647,
                     1.0
                 ],
                 "ambientColor": [
@@ -17133,9 +17177,9 @@
                     1.0
                 ],
                 "specularColor": [
-                    9.999999974752428e-7,
-                    9.999899930335233e-7,
-                    9.999899930335233e-7,
+                    0.2117647,
+                    0.2117647,
+                    0.2117647,
                     1.0
                 ],
                 "ambientColor": [
@@ -17157,9 +17201,9 @@
                     1.0
                 ],
                 "specularColor": [
-                    9.999999974752428e-7,
-                    9.999899930335233e-7,
-                    9.999899930335233e-7,
+                    0.2117647,
+                    0.2117647,
+                    0.2117647,
                     1.0
                 ],
                 "ambientColor": [
@@ -17181,9 +17225,9 @@
                     1.0
                 ],
                 "specularColor": [
-                    9.999999974752428e-7,
-                    9.999899930335233e-7,
-                    9.999899930335233e-7,
+                    0.2117647,
+                    0.2117647,
+                    0.2117647,
                     1.0
                 ],
                 "ambientColor": [
@@ -17205,9 +17249,9 @@
                     1.0
                 ],
                 "specularColor": [
-                    9.999999974752428e-7,
-                    9.999899930335233e-7,
-                    9.999899930335233e-7,
+                    0.2117647,
+                    0.2117647,
+                    0.2117647,
                     1.0
                 ],
                 "ambientColor": [
@@ -17265,6 +17309,27 @@
             "link": {
                 "name": "Dark Blue.001",
                 "file": "assets\\models\\evidences\\story_completed.fbx"
+            },
+            "Phong": {
+                "specularColor": [
+                    9.999899930335233e-7,
+                    9.999915846492514e-7,
+                    9.999999974752428e-7,
+                    1.0
+                ],
+                "diffuseColor": [
+                    0.8627451,
+                    0.117647,
+                    0.345098,
+                    1.0
+                ],
+                "ambientColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ],
+                "ambientFactor": 0.2
             }
         },
         "353": {
@@ -18715,7 +18780,7 @@
                     1.0
                 ],
                 "diffuseTexture": "1018",
-                "ambientFactor": 0.4
+                "ambientFactor": 0.3
             },
             "pipeline": "79"
         }
