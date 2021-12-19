@@ -206,6 +206,7 @@ TO DO:
 - pp set transform as hand?
 - controllare che la luce in piu quando appare mr not non si noti
 - migliorare il modello del timer
+- aggiungere la fog (nero con valore 64 piu o meno ci siamo) ma a mr not normale no (lui ha le luci personali), facendo dei materiali specifici solo per lui uguali ma senza fog
 
 TUNE:
 - altezza da cui partono i cloni, distanza, altezza di arrivo, tempo di arrivo, distanza iniziale (insomma tutto)

@@ -14997,6 +14997,101 @@
                 }
             ],
             "parent": "995"
+        },
+        "1015": {
+            "name": "P8 palette",
+            "parent": "995",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.3645329,
+                -0.6877231,
+                1.0
+            ],
+            "deleted": true
+        },
+        "1019": {
+            "name": "P8 Palette",
+            "transformation": [
+                0.2,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.1175981,
+                0.1617752,
+                0.0,
+                0.0,
+                -0.1617752,
+                0.1175981,
+                0.0,
+                0.0,
+                1.5266389,
+                -0.7500165,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "pp-grabbable",
+                    "pp-grabbable": {
+                        "_myThrowLinearVelocityMultiplier": 0.0,
+                        "_myThrowAngularVelocityMultiplier": 0.0,
+                        "_myKinematicValueOnRelease": "true"
+                    }
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "sphere": {
+                            "radius": 0.05
+                        },
+                        "gravity": false,
+                        "kinematic": true
+                    }
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "sphere": {
+                            "radius": 0.1
+                        },
+                        "groups": 1
+                    }
+                },
+                {
+                    "type": "pp-set-hierarchy-active",
+                    "pp-set-hierarchy-active": {
+                        "_myHierarchyActive": true
+                    }
+                },
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "7",
+                        "material": "1016"
+                    }
+                },
+                {
+                    "type": "pp-easy-mesh-color",
+                    "pp-easy-mesh-color": {
+                        "_myColorType": "ambient color",
+                        "_myColorModel": "hsv",
+                        "_myVariableName": "Palette"
+                    }
+                }
+            ],
+            "parent": "995"
         }
     },
     "meshes": {
@@ -16298,6 +16393,12 @@
                 "file": "default"
             },
             "name": "DefaultFont"
+        },
+        "1018": {
+            "link": {
+                "name": "P8_palette.png",
+                "file": "assets\\textures\\P8_palette.png"
+            }
         }
     },
     "images": {
@@ -16305,6 +16406,12 @@
             "link": {
                 "name": "DefaultFontImage",
                 "file": "default"
+            }
+        },
+        "1017": {
+            "link": {
+                "name": "P8_palette.png",
+                "file": "assets\\textures\\P8_palette.png"
             }
         }
     },
@@ -18584,6 +18691,33 @@
                 ]
             },
             "pipeline": "194"
+        },
+        "1016": {
+            "name": "P8 Palette",
+            "Phong": {
+                "diffuseColor": [
+                    1.0,
+                    0.9999899,
+                    0.999996,
+                    1.0
+                ],
+                "specularColor": [
+                    9.999899930335233e-7,
+                    9.999911299019005e-7,
+                    9.999999974752428e-7,
+                    1.0
+                ],
+                "shininess": 10,
+                "ambientColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999968142437866e-7,
+                    1.0
+                ],
+                "diffuseTexture": "1018",
+                "ambientFactor": 0.4
+            },
+            "pipeline": "79"
         }
     },
     "shaders": {
@@ -18779,7 +18913,8 @@
         "assets/models/evidences/mirror.fbx",
         "assets/models/evidences/kingdom_hearts.fbx",
         "assets/models/evidences/kingdom_hearts_physx.fbx",
-        "assets/models/extra/palette_mesh_1.fbx"
+        "assets/models/extra/palette_mesh_1.fbx",
+        "assets/textures/P8_palette.png"
     ],
     "pipelines": {
         "69": {
