@@ -15,20 +15,29 @@ WL.registerComponent("rings-animator", {
         Global.myRingRadius = 0.65;
     },
     start: function () {
-        PP.MeshUtils.setAlpha(this._myRing, 0);
-        PP.MeshUtils.setAlpha(this._mySmallerRing, 0);
         this._myRing.pp_setPosition([0, -1, 0]);
         this._mySmallerRing.pp_setPosition([0, -1, 0]);
 
         this._myRingAudio = Global.myAudioManager.createAudioPlayer(SfxID.RING_RISE);
     },
     update: function (dt) {
+        if (!Global.myFirstUpdateDone) {
+            this._myRing.pp_setActive(false);
+            this._mySmallerRing.pp_setActive(false);
+        }
+
         this._myFSM.update(dt);
     },
     begin: function () {
         this._myFSM.init("move up", this.initMoveUp.bind(this));
     },
     initMoveUp: function () {
+        this._myRing.pp_setActive(true);
+        this._mySmallerRing.pp_setActive(true);
+
+        PP.MeshUtils.setAlpha(this._myRing, 0);
+        PP.MeshUtils.setAlpha(this._mySmallerRing, 0);
+
         this._myRing.pp_setPosition([0, -this._myRing.pp_getScale()[1] - 0.001, 0]);
         this._mySmallerRing.pp_setPosition([0, -this._mySmallerRing.pp_getScale()[1] - 0.001, 0]);
 
@@ -70,6 +79,9 @@ WL.registerComponent("rings-animator", {
         return this._myFSM.isInState("done");
     },
     skip: function () {
+        this._myRing.pp_setActive(true);
+        this._mySmallerRing.pp_setActive(true);
+
         this._myRing.pp_setPosition([0, this._myRingsHeight, 0]);
         this._mySmallerRing.pp_setPosition([0, this._myRingsHeight, 0]);
 

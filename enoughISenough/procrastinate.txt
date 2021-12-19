@@ -185,6 +185,7 @@ EXTRA:
 - aggiungere mr not particles quando not enougha (?)
 - vibrazione per ogni colpo finale a mr not?
 - physx sulla mano per poter spostare gli oggetti?
+- qualche oggetto potrebbe avere un po' di alfa= come la spada di halo o il vetro di kh
 
 
 TO DO:

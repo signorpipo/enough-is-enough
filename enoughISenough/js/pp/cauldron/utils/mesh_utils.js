@@ -75,5 +75,15 @@ PP.MeshUtils = {
         for (let meshComponent of meshComponents) {
             meshComponent.material = meshComponent.material.clone();
         }
+    },
+    // alpha between 0 and 1
+    setSpecularColor: function (object, color) {
+        let meshComponents = object.pp_getComponentsHierarchy("mesh");
+
+        for (let meshComponent of meshComponents) {
+            if (meshComponent.material.specularColor != null) {
+                meshComponent.material.specularColor = color;
     }
+        }
+    },
 };

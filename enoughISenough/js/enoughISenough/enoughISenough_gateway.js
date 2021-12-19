@@ -17,8 +17,23 @@ WL.registerComponent("enough-IS-enough-gateway", {
         Global.myRightHandAnimator = this._myRightHandAnimator.pp_getComponent("hand-animator");
 
         this.enoughISenough = new enoughISenough();
+
+        this._myFirstUpdate = true;
     },
     start: function () {
+    },
+    update: function (dt) {
+        if (this._myFirstUpdate) {
+            this._myFirstUpdate = false;
+            this._start();
+        } else {
+            Global.myFirstUpdateDone = true;
+        }
+
+        this.enoughISenough.update(dt);
+        Global.myParticlesManager.update(dt);
+    },
+    _start() {
         {
             let staringCube = Global.myGameObjects.get(GameObjectType.STARING_CUBE);
             PP.MeshUtils.setClonedMaterials(staringCube);
@@ -58,11 +73,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         PP.CAUtils.setDummyServer(new EIECADummyServer());
 
         this.enoughISenough.start();
-    },
-    update: function (dt) {
-        Global.myFirstUpdateDone = true;
-        this.enoughISenough.update(dt);
-        Global.myParticlesManager.update(dt);
+
     }
 });
 
