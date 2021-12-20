@@ -65,6 +65,7 @@ class MrNOTVentState extends PP.State {
     }
 
     _prepareState(fsm, transition) {
+        Global.myLightFadeInTime = 0;
         Global.myVentDuration = 0;
     }
 

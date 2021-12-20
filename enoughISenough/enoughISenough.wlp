@@ -6001,6 +6001,9 @@
                             0.9999899
                         ]
                     }
+                },
+                {
+                    "type": "light-fade-in"
                 }
             ],
             "transformation": [
@@ -6037,6 +6040,9 @@
                         ]
                     },
                     "active": true
+                },
+                {
+                    "type": "light-fade-in"
                 }
             ],
             "transformation": [
@@ -6067,6 +6073,9 @@
                     "light": {
                         "attenuation": 0.0199999
                     }
+                },
+                {
+                    "type": "light-fade-in"
                 }
             ],
             "transformation": [
@@ -6102,6 +6111,9 @@
                             0.3843137
                         ]
                     }
+                },
+                {
+                    "type": "light-fade-in"
                 }
             ],
             "transformation": [
@@ -14966,7 +14978,7 @@
                 {
                     "type": "pp-set-hierarchy-active",
                     "pp-set-hierarchy-active": {
-                        "_myHierarchyActive": true
+                        "_myHierarchyActive": false
                     }
                 }
             ]

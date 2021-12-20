@@ -105,4 +105,6 @@ var Global = {
     myPlayerPosition: [0, 0, 0],
     myPlayerRotation: [0, 0, 0],
     myPlayerForward: [0, 0, 1],
+    myLightFadeInTime: 0,
+    myStartFadeOut: false,
 };

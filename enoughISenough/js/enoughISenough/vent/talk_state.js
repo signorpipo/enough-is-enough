@@ -71,9 +71,12 @@ class TalkState extends PP.State {
         this._myMrNOT.pp_setRotation([40, 0, 0]);
         this._myMrNOT.pp_setScale([5, 5, 5]);
         PP.MeshUtils.setAlpha(this._myMrNOT, 0);
-        this._myMrNOT.pp_setActive(true);
+
+        Global.myLightFadeInTime = this._mySpawnTime * 2 / 3;
 
         this._myTimer.start(this._mySpawnTime);
+
+        this._myMrNOT.pp_setActive(true);
     }
 
     _updateMrNOTAppear(dt, fsm) {
@@ -105,6 +108,8 @@ class TalkState extends PP.State {
 
     _prepareMrNOTDisappear() {
         this._myTimer.start(this._mySpawnTime);
+        Global.myLightFadeInTime = this._mySpawnTime * 2 / 3;
+        Global.myStartFadeOut = true;
     }
 
     _updateMrNOTDisappear(dt, fsm) {
@@ -125,11 +130,13 @@ class TalkState extends PP.State {
     }
 
     _startFight() {
+        Global.myStartFadeOut = false;
         this._myParentFSM.perform("end");
     }
 
     _hideMrNOT() {
         this._myMrNOT.pp_setActive(false);
+        Global.myStartFadeOut = false;
     }
 
     _hideTalk() {
