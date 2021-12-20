@@ -61,7 +61,6 @@ WL.registerComponent("enough-IS-enough-gateway", {
         let cloneParams = new PP.CloneParams();
         cloneParams.myDeepCloneParams.deepCloneComponentVariable("mesh", "material", true);
         Global.myGameObjectPoolMap.addPool(GameObjectType.MR_NOT_CLONE, Global.myGameObjects.get(GameObjectType.MR_NOT_CLONE), 10, cloneParams);
-        Global.myGameObjectPoolMap.addPool(GameObjectType.MR_NOT, Global.myGameObjects.get(GameObjectType.MR_NOT), 10, cloneParams);
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float", 0, 0.1, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Int", 0, 1));

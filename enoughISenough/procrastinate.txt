@@ -186,6 +186,7 @@ EXTRA:
 - vibrazione per ogni colpo finale a mr not?
 - physx sulla mano per poter spostare gli oggetti?
 - qualche oggetto potrebbe avere un po' di alfa= come la spada di halo o il vetro di kh
+- mr not aumenta il fog color cosi che le prime volte si vede meno nella storia e poi sempre di piu?
 
 
 TO DO:

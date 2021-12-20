@@ -360,6 +360,28 @@
                     "enable-debug-shortcuts": {
                         "_myShortcutsEnabled": true
                     }
+                },
+                {
+                    "type": "adjust-materials",
+                    "adjust-materials": {
+                        "_my1": "272",
+                        "_my2": "273",
+                        "_my3": "274",
+                        "_my4": "275",
+                        "_my5": "276",
+                        "_my6": "277",
+                        "_my7": "278",
+                        "_my8": "279",
+                        "_my9": "280",
+                        "_my10": "281",
+                        "_my11": "282",
+                        "_my12": "283",
+                        "_my13": "284",
+                        "_my14": "285",
+                        "_my15": "286",
+                        "_my16": "287",
+                        "_myFogAlpha": 0.5
+                    }
                 }
             ]
         },
@@ -5622,6 +5644,11 @@
                 3.0,
                 10.0,
                 1.0
+            ],
+            "components": [
+                {
+                    "type": "set-fog-color"
+                }
             ]
         },
         "254": {
@@ -5632,7 +5659,7 @@
             "parent": "270",
             "transformation": [
                 1.0265299,
-                -0.0,
+                0.0,
                 0.0,
                 0.0,
                 0.0,
@@ -5643,7 +5670,7 @@
                 0.0,
                 1.0001062,
                 0.0,
-                -1.192092895507813e-7,
+                -1.1920928955078126e-7,
                 0.0,
                 0.0,
                 1.0
@@ -14981,7 +15008,7 @@
         },
         "995": {
             "name": "Palette Visualizer ",
-            "parent": null,
+            "parent": "102",
             "transformation": [
                 1.0,
                 0.0,
@@ -19275,7 +19302,8 @@
             "name": "Phong Alpha",
             "features": {
                 "ALPHA": true,
-                "ALPHA_MASKED": true
+                "ALPHA_MASKED": true,
+                "WITH_FOG": true
             },
             "blending": true,
             "blendSrc": "source alpha",

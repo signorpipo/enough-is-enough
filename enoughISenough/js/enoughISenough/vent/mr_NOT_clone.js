@@ -1,7 +1,7 @@
 class MrNOTClone {
     constructor(position, targetPosition, timeToReachTarget, callbackOnHit, callbackOnReach) {
         this._myObject = Global.myGameObjectPoolMap.getObject(GameObjectType.MR_NOT_CLONE);
-        PP.MeshUtils.setAlpha(this._myObject, 0);
+        PP.MeshUtils.setAlpha(this._myObject, 1);
         this._myObject.pp_setPosition(position);
         this._myFacing = targetPosition.vec3_sub(position);
         this._myObject.pp_lookTo(this._myFacing);
@@ -75,7 +75,7 @@ class MrNOTClone {
     _move(dt) {
         if (this._mySpawnTimer.isRunning()) {
             this._mySpawnTimer.update(dt);
-            PP.MeshUtils.setAlpha(this._myObject, this._mySpawnTimer.getPercentage());
+            //PP.MeshUtils.setAlpha(this._myObject, this._mySpawnTimer.getPercentage());
         }
 
         this._myObject.pp_getPosition(this._myCurrentPosition);
