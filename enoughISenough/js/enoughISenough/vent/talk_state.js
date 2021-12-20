@@ -166,8 +166,8 @@ class Blather {
         this._myBlatherTextComponent.justification = WL.Justification.Line;
         this._myBlatherTextComponent.material = Global.myMaterials.myText.clone();
         this._myBlatherTextComponent.material.outlineRange = [0.5, 0.5];
-        this._myBlatherTextComponent.material.color = [90 / 255, 90 / 255, 100 / 255, 1];
-        this._myBlatherTextComponent.material.outlineColor = [90 / 255, 90 / 255, 100 / 255, 1];
+        //this._myBlatherTextComponent.material.color = [90 / 255, 90 / 255, 100 / 255, 1];
+        //this._myBlatherTextComponent.material.outlineColor = [90 / 255, 90 / 255, 100 / 255, 1];
         this._myBlatherTextObject.pp_setActive(false);
 
         this._myBigBlatherTextObject = WL.scene.addObject(Global.myScene);
