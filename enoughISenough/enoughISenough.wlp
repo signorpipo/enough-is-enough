@@ -16902,8 +16902,8 @@
                 ],
                 "outlineColor": [
                     0.5372549,
-                    0.1568627,
-                    0.3529411,
+                    0.1559092,
+                    0.4340673,
                     1.0
                 ],
                 "color": [
@@ -16926,9 +16926,9 @@
                     0.375
                 ],
                 "outlineColor": [
-                    0.1423452,
-                    0.2110622,
-                    0.4078431,
+                    0.1437908,
+                    0.1979238,
+                    0.4313725,
                     1.0
                 ],
                 "color": [
@@ -19047,6 +19047,81 @@
                 "ambientFactor": 0.3
             },
             "pipeline": "79"
+        },
+        "1024": {
+            "link": {
+                "name": "DefaultFontMaterial",
+                "file": "default"
+            },
+            "DistanceFieldVector": {
+                "outlineRange": [
+                    0.5,
+                    0.375
+                ],
+                "outlineColor": [
+                    0.5372549,
+                    0.1568627,
+                    0.3529411,
+                    1.0
+                ],
+                "color": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            },
+            "name": "TitleFontMaterial Backup"
+        },
+        "1025": {
+            "link": {
+                "name": "DefaultFontMaterial",
+                "file": "default"
+            },
+            "DistanceFieldVector": {
+                "outlineRange": [
+                    0.5,
+                    0.375
+                ],
+                "outlineColor": [
+                    0.1423452,
+                    0.2110622,
+                    0.4078431,
+                    1.0
+                ],
+                "color": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ]
+            },
+            "name": "SubtitleFontMaterial Backup"
+        },
+        "1026": {
+            "link": {
+                "name": "DefaultFontMaterial",
+                "file": "default"
+            },
+            "DistanceFieldVector": {
+                "outlineRange": [
+                    0.5,
+                    0.5
+                ],
+                "outlineColor": [
+                    1.0,
+                    0.9999899,
+                    0.9999899,
+                    0.0
+                ],
+                "color": [
+                    0.3529411,
+                    0.3529411,
+                    0.3921568,
+                    1.0
+                ]
+            },
+            "name": "BlatherMaterial Backup"
         }
     },
     "shaders": {
