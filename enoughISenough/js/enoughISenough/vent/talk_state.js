@@ -178,8 +178,8 @@ class Blather {
         this._myBigBlatherTextComponent.justification = WL.Justification.Line;
         this._myBigBlatherTextComponent.material = Global.myMaterials.myText.clone();
         this._myBigBlatherTextComponent.material.outlineRange = [0.5, 0.5];
-        this._myBigBlatherTextComponent.material.color = [90 / 255, 90 / 255, 100 / 255, 1];
-        this._myBigBlatherTextComponent.material.outlineColor = [90 / 255, 90 / 255, 100 / 255, 1];
+        //this._myBigBlatherTextComponent.material.color = [90 / 255, 90 / 255, 100 / 255, 1];
+        //this._myBigBlatherTextComponent.material.outlineColor = [90 / 255, 90 / 255, 100 / 255, 1];
         this._myBigBlatherTextObject.pp_setActive(false);
 
         this._mySentences = sentences;
