@@ -82,8 +82,8 @@ class TalkState extends PP.State {
     _updateMrNOTAppear(dt, fsm) {
         if (this._myTimer.isRunning()) {
             this._myTimer.update(dt);
-            PP.MeshUtils.setAlpha(this._myMrNOT, this._myTimer.getPercentage());
-            let currentScaleFactor = Math.pp_interpolate(this._myHideScale, 1, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+            PP.MeshUtils.setAlpha(this._myMrNOT, Math.pp_mapToNewInterval(this._myTimer.getPercentage(), 0, 0.7, 0, 1));
+            let currentScaleFactor = Math.pp_interpolate(this._myHideScale, 1, this._myTimer.getPercentage(), PP.EasingFunction.easeOut);
 
             this._myMrNOT.pp_setScale([5, 5, 5]);
             this._myMrNOT.pp_scaleObject(currentScaleFactor);
