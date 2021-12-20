@@ -261,7 +261,7 @@ class MenuState extends PP.State {
         }
 
         {
-            let zestyMarket = new MenuItem(Global.myGameObjects.get(GameObjectType.ZESTY_MARKET), GameObjectType.ZESTY_MARKET, positions[6], function () {
+            let zestyMarket = new MenuItem(Global.myGameObjects.get(GameObjectType.ZESTY_MARKET), GameObjectType.ZESTY_MARKET, positions[5], function () {
                 this._myResetCount = 0;
                 let zestyComponent = this._myZestyObject.getObject().pp_getComponentHierarchy("zesty-banner");
                 if (zestyComponent) {
@@ -273,7 +273,7 @@ class MenuState extends PP.State {
         }
 
         {
-            let floppyDisk = new MenuItem(Global.myGameObjects.get(GameObjectType.FLOPPY_DISK), GameObjectType.FLOPPY_DISK, positions[5], function () {
+            let floppyDisk = new MenuItem(Global.myGameObjects.get(GameObjectType.FLOPPY_DISK), GameObjectType.FLOPPY_DISK, positions[6], function () {
                 this._myResetCount++;
 
                 if (this._myResetCount >= 5) {

@@ -185,7 +185,12 @@
                 {
                     "type": "light",
                     "light": {
-                        "attenuation": 0.1
+                        "attenuation": 0.1,
+                        "color": [
+                            0.3813917,
+                            0.627451,
+                            0.3813917
+                        ]
                     }
                 }
             ],
@@ -215,7 +220,12 @@
                 {
                     "type": "light",
                     "light": {
-                        "attenuation": 0.1
+                        "attenuation": 0.1,
+                        "color": [
+                            0.5201843,
+                            0.3725489,
+                            1.0
+                        ]
                     }
                 }
             ],
@@ -1195,7 +1205,7 @@
             "name": "Lights",
             "parent": "32",
             "transformation": [
-                1.0,
+                1.2,
                 0.0,
                 0.0,
                 0.0,
@@ -1205,12 +1215,21 @@
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                1.2,
                 0.0,
                 0.0,
                 3.0,
                 0.0,
                 1.0
+            ],
+            "components": [
+                {
+                    "type": "pp-easy-transform",
+                    "pp-easy-transform": {
+                        "_myVariableName": "Light",
+                        "_myIsLocal": true
+                    }
+                }
             ]
         },
         "110": {
@@ -1267,8 +1286,9 @@
                 {
                     "type": "set-specular-color",
                     "set-specular-color": {
-                        "_myBrightness": 27
-                    }
+                        "_myBrightness": 54
+                    },
+                    "active": true
                 }
             ]
         },
@@ -1476,8 +1496,9 @@
                 {
                     "type": "set-specular-color",
                     "set-specular-color": {
-                        "_myBrightness": 27
-                    }
+                        "_myBrightness": 64
+                    },
+                    "active": true
                 }
             ]
         },
@@ -15210,6 +15231,140 @@
                 }
             ],
             "parent": "995"
+        },
+        "1020": {
+            "name": "Light 3",
+            "components": [
+                {
+                    "type": "light",
+                    "light": {
+                        "attenuation": 0.1
+                    },
+                    "active": false
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                -1.0,
+                1.0
+            ],
+            "parent": "105",
+            "deleted": true
+        },
+        "1021": {
+            "name": "Light 4",
+            "components": [
+                {
+                    "type": "light",
+                    "light": {
+                        "attenuation": 0.1
+                    },
+                    "active": false
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -1.0,
+                0.0,
+                1.0,
+                1.0
+            ],
+            "parent": "105",
+            "deleted": true
+        },
+        "1022": {
+            "name": "Light 3",
+            "components": [
+                {
+                    "type": "light",
+                    "light": {
+                        "attenuation": 0.1,
+                        "color": [
+                            0.2657439,
+                            0.415811,
+                            0.5019608
+                        ]
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                1.0,
+                0.0,
+                -1.0,
+                1.0
+            ],
+            "parent": "105"
+        },
+        "1023": {
+            "name": "Light 4",
+            "components": [
+                {
+                    "type": "light",
+                    "light": {
+                        "attenuation": 0.1,
+                        "color": [
+                            0.5019608,
+                            0.3514304,
+                            0.3051134
+                        ]
+                    }
+                }
+            ],
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -1.0,
+                0.0,
+                1.0,
+                1.0
+            ],
+            "parent": "105"
         }
     },
     "meshes": {
