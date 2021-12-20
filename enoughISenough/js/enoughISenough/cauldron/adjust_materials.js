@@ -1,5 +1,6 @@
 WL.registerComponent("adjust-materials", {
     _myFogAlpha: { type: WL.Type.Float, default: 0 },
+    _mySpecularMultiplier: { type: WL.Type.Float, default: 1 },
     _my1: { type: WL.Type.Material },
     _my2: { type: WL.Type.Material },
     _my3: { type: WL.Type.Material },
@@ -19,15 +20,25 @@ WL.registerComponent("adjust-materials", {
 }, {
     init: function () {
         this._myMaterials = [];
+        this._mySpecularColors = [];
         for (let i = 1; i < 17; i++) {
             let material = "_my".concat(i);
             this[material].fogColor = [0, 0, 0, this._myFogAlpha];
             this._myMaterials.push(this[material]);
+
+            this._mySpecularColors.push(this[material].specularColor.pp_clone());
+            let specularColor = this[material].specularColor.vec_scale(this._mySpecularMultiplier);
+            specularColor[3] = this[material].specularColor[3];
+
+            this[material].specularColor = specularColor;
         }
     },
     start() {
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Fog Alpha", this._myFogAlpha, 0.1, 3, 0, 1));
         this._myLastFogAlpha = PP.myEasyTuneVariables.get("Fog Alpha");
+
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Specular Multiplier", this._mySpecularMultiplier, 1, 3, 0, 3));
+        this._myLastSpecularMultiplier = PP.myEasyTuneVariables.get("Specular Multiplier");
     },
     update(dt) {
         let fogAlpha = PP.myEasyTuneVariables.get("Fog Alpha");
@@ -35,6 +46,17 @@ WL.registerComponent("adjust-materials", {
             this._myLastFogAlpha = fogAlpha;
             for (let material of this._myMaterials) {
                 material.fogColor = [0, 0, 0, fogAlpha];
+            }
+        }
+
+        let specularMultiplier = PP.myEasyTuneVariables.get("Specular Multiplier");
+        if (specularMultiplier != this._myLastSpecularMultiplier) {
+            this._myLastSpecularMultiplier = specularMultiplier;
+            for (let i = 0; i < this._myMaterials.length; i++) {
+                let specularColor = this._mySpecularColors[i].vec_scale(specularMultiplier);
+                specularColor[3] = this._mySpecularColors[i][3];
+
+                this._myMaterials[i].specularColor = specularColor;
             }
         }
     }

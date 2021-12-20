@@ -380,7 +380,8 @@
                         "_my14": "285",
                         "_my15": "286",
                         "_my16": "287",
-                        "_myFogAlpha": 0.5
+                        "_myFogAlpha": 0.5,
+                        "_mySpecularMultiplier": 2.0
                     }
                 }
             ]
