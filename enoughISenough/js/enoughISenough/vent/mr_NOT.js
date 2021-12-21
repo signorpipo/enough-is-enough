@@ -45,8 +45,9 @@ class MrNOT {
         this._myReachTargetDistance = 4;
         this._myMinTargetDistance = 15;
         this._myMinParticleDistance = this._myScale[0] * 0.9;
-        this._myParticlesSize = 0.25;
-        this._myMaxPatience = 5;
+        this._myParticlesSize = 6.5;
+        this._myParticlesSizeMrNot = 0.9;
+        this._myMaxPatience = 1;
         this._myPatienceRefill = 1;
 
     }
@@ -116,7 +117,7 @@ class MrNOT {
         }
     }
 
-    _checkHit() {
+    _checkHit(avoidCallbacks = false) {
         let hit = false;
         let hittingObject = null;
 
@@ -153,18 +154,20 @@ class MrNOT {
             let evidence = hittingObject.pp_getComponent("evidence-component");
             evidence.hit(this._myObject);
 
-            let hittingPosition = hittingObject.pp_getPosition();
-            //Global.myParticlesManager.explosion(hittingPosition, [this._myParticlesSize, this._myParticlesSize, this._myParticlesSize], evidence.getEvidence().getEvidenceSetup().myObjectType);
-            //spawn particles
+            if (!avoidCallbacks) {
+                let hittingPosition = hittingObject.pp_getPosition();
+                //Global.myParticlesManager.explosion(hittingPosition, [this._myParticlesSize, this._myParticlesSize, this._myParticlesSize], evidence.getEvidence().getEvidenceSetup().myObjectType);
+                //spawn particles
 
-            this._myPatience -= 1;
-            if (this._myPatience < 0) {
-                let distanceToTarget = this._myTargetPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myCurrentPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
-                if (distanceToTarget > this._myMinTargetDistance) {
-                    this._myPatience = this._myPatienceRefill;
-                } else {
-                    this._myCallbackOnPatienceOver();
-                    this._myFSM.perform("explode");
+                this._myPatience -= 1;
+                if (this._myPatience < 0) {
+                    let distanceToTarget = this._myTargetPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myCurrentPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
+                    if (distanceToTarget > this._myMinTargetDistance) {
+                        this._myPatience = this._myPatienceRefill;
+                    } else {
+                        this._myCallbackOnPatienceOver();
+                        this._myFSM.perform("explode");
+                    }
                 }
             }
         }
@@ -184,8 +187,8 @@ class MrNOT {
         this._myParticlesPosition = this._getNextParticlePosition();
 
         this._myPossibleGameObjectTypes = [
-            GameObjectType.STORY_TIMER,
-            GameObjectType.ZESTY_MARKET,
+            //GameObjectType.STORY_TIMER,
+            //GameObjectType.ZESTY_MARKET,
             GameObjectType.DRAWING,
             GameObjectType.CPLUSPLUS,
             GameObjectType.PIANO,
@@ -193,12 +196,14 @@ class MrNOT {
             GameObjectType.MEDITATION,
             GameObjectType.LOL,
             GameObjectType.EARRING,
-            GameObjectType.SKATING,
-            GameObjectType.STARING_CUBE,
+            //GameObjectType.SKATING,
+            //GameObjectType.STARING_CUBE,
         ];
     }
 
     _exploding(dt) {
+        this._checkHit(true);
+
         this._myExplodeTimer.update(dt);
         if (this._myExplodeTimer.isDone()) {
             this._myFSM.perform("end");
@@ -212,7 +217,7 @@ class MrNOT {
             }
             this._mySpawnParticlesTimer.start(delay);
             let type = Math.pp_randomPick(this._myPossibleGameObjectTypes);
-            Global.myParticlesManager.explosion(this._myParticlesPosition, 1, [this._myParticlesSize, this._myParticlesSize, this._myParticlesSize], type);
+            Global.myParticlesManager.explosion(this._myParticlesPosition, 1.25, [this._myParticlesSize, this._myParticlesSize, this._myParticlesSize], type, true);
             this._myParticlesPosition = this._getNextParticlePosition();
             this._myExplodeAudio.play();
         }
@@ -228,7 +233,7 @@ class MrNOT {
             this._myDisappearTimer.update(dt);
             if (this._myDisappearTimer.isDone()) {
                 this._myObject.pp_setActive(false);
-                Global.myParticlesManager.explosion(this._myCurrentPosition, 1, [this._myParticlesSize, this._myParticlesSize, this._myParticlesSize], GameObjectType.MR_NOT);
+                Global.myParticlesManager.explosion(this._myCurrentPosition, 1.6, [this._myParticlesSizeMrNot, this._myParticlesSizeMrNot, this._myParticlesSizeMrNot], GameObjectType.MR_NOT, true);
                 this._myDisappearEndTimer.start();
                 this._myExplodeAudio.play();
             }

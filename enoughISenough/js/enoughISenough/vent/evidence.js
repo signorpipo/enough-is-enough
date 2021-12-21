@@ -135,6 +135,7 @@ class Evidence {
         this._myPhysx.angularVelocity = [0, 0, 0];
 
         this._mySpawnTimer.start(1);
+        this._myHitExplosion = false;
     }
 
     _spawning(dt) {
@@ -179,7 +180,14 @@ class Evidence {
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
 
         if (this._myTimer.isDone()) {
-            Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myParticlesRadius, this._myScale, this._myObjectType);
+            let scaleMultiplier = 1;
+            let radiusMultiplier = 1;
+            if (this._myHitExplosion) {
+                scaleMultiplier = 2;
+                radiusMultiplier = 1.5;
+            }
+
+            Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myParticlesRadius * radiusMultiplier, this._myScale.vec3_scale(scaleMultiplier), this._myObjectType);
             this._myFSM.perform("end");
             this._myCallbackOnUnspawned(this);
             if (this._myEvidenceSetup.myCallbackOnUnspawned) {
@@ -216,6 +224,7 @@ class Evidence {
     }
 
     _onHit() {
+        this._myHitExplosion = true;
         this._myFSM.perform("unspawn");
     }
 

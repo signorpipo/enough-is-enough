@@ -11,18 +11,19 @@ class ParticlesManager {
         this._myParticlesList.pp_removeAll(element => element.isDone());
     }
 
-    explosion(position, radius, objectScale, objectType) {
-        let explosionParticles = new ExplosionParticles(position, radius, objectScale, objectType);
+    explosion(position, radius, objectScale, objectType, noFog = false) {
+        let explosionParticles = new ExplosionParticles(position, radius, objectScale, objectType, noFog);
         this._myParticlesList.push(explosionParticles);
     }
 }
 
 class ExplosionParticles {
-    constructor(position, radius, objectScale, objectType) {
+    constructor(position, radius, objectScale, objectType, noFog) {
         this._myPosition = position.slice(0);
         this._myScale = objectScale[0];
         this._myRadius = radius;
         this._myObjectType = objectType;
+        this._myNoFog = noFog;
 
         this._myTimer = new PP.Timer(0.5);
         this._mySpawnTimer = new PP.Timer(0);
@@ -62,14 +63,19 @@ class ExplosionParticles {
         let position = direction.vec3_scale(radius).vec3_add(this._myPosition);
         let scale = Math.pp_random(this._myScale * 0.1, this._myScale * 0.25);
 
-        return new ExplosionParticle(position, scale, this._myObjectType);
+        return new ExplosionParticle(position, scale, this._myObjectType, this._myNoFog);
     }
 }
 
 class ExplosionParticle {
-    constructor(position, scale, objectType) {
+    constructor(position, scale, objectType, noFog) {
+        this._myNoFog = noFog;
         this._myObjectType = objectType;
-        this._myObject = Global.myMeshObjectPoolMap.getObject(objectType);
+        if (this._myNoFog) {
+            this._myObject = Global.myMeshNoFogObjectPoolMap.getObject(objectType);
+        } else {
+            this._myObject = Global.myMeshObjectPoolMap.getObject(objectType);
+        }
         this._myObject.pp_setPosition(position);
         this._myObject.pp_setScale(scale);
         this._myScale = this._myObject.pp_getScale();
@@ -87,7 +93,11 @@ class ExplosionParticle {
             this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
 
             if (this._myTimer.isDone()) {
-                Global.myMeshObjectPoolMap.releaseObject(this._myObjectType, this._myObject);
+                if (this._myNoFog) {
+                    Global.myMeshNoFogObjectPoolMap.releaseObject(this._myObjectType, this._myObject);
+                } else {
+                    Global.myMeshObjectPoolMap.releaseObject(this._myObjectType, this._myObject);
+                }
                 this._myObject = null;
             }
         }
