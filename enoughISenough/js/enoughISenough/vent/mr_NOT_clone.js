@@ -21,7 +21,7 @@ class MrNOTClone {
         this._myCurrentPosition = [];
         this._myObject.pp_getPosition(this._myCurrentPosition);
 
-        this._mySpeed = this._myTargetPosition.vec3_sub(this._myCurrentPosition).vec3_length() / timeToReachTarget;
+        this._mySpeed = this._myTargetPosition.vec3_sub(this._myCurrentPosition).vec3_length() / this._myTimeToReachTarget;
         this._myTempTranslation = [0, 0, 0];
 
         this._mySpawnTimer = new PP.Timer(0.5);

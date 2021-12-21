@@ -25,7 +25,7 @@ class ExplosionParticles {
         this._myObjectType = objectType;
         this._myNoFog = noFog;
 
-        this._myTimer = new PP.Timer(0.5);
+        this._myTimer = new PP.Timer(PP.myEasyTuneVariables.get("Explosion Particles Duration"));
         this._mySpawnTimer = new PP.Timer(0);
         this._myParticles = [];
     }
@@ -36,10 +36,10 @@ class ExplosionParticles {
 
             this._mySpawnTimer.update(dt);
             if (this._mySpawnTimer.isDone()) {
-                for (let i = 0; i < 2; i++) {
+                for (let i = 0; i < PP.myEasyTuneVariables.get("Explosion Particles Amount"); i++) {
                     this._myParticles.push(this._createParticle());
                 }
-                this._mySpawnTimer.start(0.1);
+                this._mySpawnTimer.start(PP.myEasyTuneVariables.get("Explosion Particles Delay"));
             }
         }
 
@@ -82,7 +82,7 @@ class ExplosionParticle {
         this._myObject.pp_setRotation([Math.pp_random(-180, 180), Math.pp_random(-180, 180), Math.pp_random(-180, 180)]);
         this._myObject.pp_setActive(true);
 
-        this._myTimer = new PP.Timer(0.15);
+        this._myTimer = new PP.Timer(PP.myEasyTuneVariables.get("Explosion Particle Life"));
     }
 
     update(dt) {
