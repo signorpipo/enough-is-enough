@@ -8,16 +8,12 @@ WL.MeshComponent.prototype.pp_clone = function (clone, deepCloneParams, extraDat
 
     clone.mesh = this.mesh;
     clone.skin = this.skin;
-
-    return clone;
 };
 
 WL.CollisionComponent.prototype.pp_clone = function (clone, deepCloneParams, extraData) {
     clone.collider = this.collider;
     clone.extents = this.extents.slice(0);
     clone.group = this.group;
-
-    return clone;
 };
 
 WL.TextComponent.prototype.pp_clone = function (clone, deepCloneParams, extraData) {
@@ -35,8 +31,6 @@ WL.TextComponent.prototype.pp_clone = function (clone, deepCloneParams, extraDat
 
     clone.alignment = this.alignment;
     clone.justification = this.justification;
-
-    return clone;
 };
 
 //TEMP not complete
@@ -58,6 +52,4 @@ WL.PhysXComponent.prototype.pp_clone = function (clone, deepCloneParams, extraDa
     clone.shape = this.shape;
     clone.static = this.static;
     clone.staticFriction = this.staticFriction;
-
-    return clone;
 };

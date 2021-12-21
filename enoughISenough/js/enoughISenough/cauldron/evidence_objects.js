@@ -59,6 +59,7 @@ WL.registerComponent('evidence-objects', {
         let cloneParams = new PP.CloneParams();
         cloneParams.myComponentsToInclude.push("mesh");
         cloneParams.myComponentsToInclude.push("text");
+        cloneParams.myComponentsToInclude.push("text-color-fog");
         Global.myMeshObjects.set(GameObjectType.STORY_TIMER, this._myStoryTimer.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.VENT_TIMER, this._myVentTimer.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.DRAWING, this._myDrawing.pp_clone(cloneParams));

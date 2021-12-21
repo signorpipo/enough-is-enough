@@ -46,9 +46,11 @@ WL.registerComponent("enough-IS-enough-gateway", {
         for (let entry of Global.myMeshObjects.entries()) {
             if (entry[0] != GameObjectType.STARING_CUBE && entry[0] != GameObjectType.ZESTY_MARKET) {
                 PP.MeshUtils.setClonedMaterials(entry[1]);
+                PP.TextUtils.setClonedMaterials(entry[1]);
             }
             let clonedMesh = entry[1].pp_clone();
             PP.MeshUtils.setClonedMaterials(clonedMesh);
+            PP.TextUtils.setClonedMaterials(clonedMesh);
             PP.MeshUtils.setFogColor(clonedMesh, [0, 0, 0, 0]);
             Global.myMeshNoFogObjects.set(entry[0], clonedMesh);
         }
@@ -56,6 +58,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         for (let entry of Global.myGameObjects.entries()) {
             if (entry[0] != GameObjectType.STARING_CUBE && entry[0] != GameObjectType.ZESTY_MARKET) {
                 PP.MeshUtils.setClonedMaterials(entry[1]);
+                PP.TextUtils.setClonedMaterials(entry[1]);
             }
         }
 
@@ -77,7 +80,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Bool", false));
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("mr NOT Clone Scale", 0.35, 0.1, 3));
-        PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Prevent Vent Lost", false));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Prevent Vent Lost", true));
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Explosion Particle Life", 0.15, 0.5, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Explosion Particles Duration", 0.5, 0.5, 3));
