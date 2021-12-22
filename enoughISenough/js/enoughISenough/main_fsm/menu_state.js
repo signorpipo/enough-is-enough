@@ -213,7 +213,7 @@ class MenuState extends PP.State {
         positions.push(initialPosition.vec3_rotateAxis([0, 1, 0], -rotation * 4));
 
         {
-            let startStory = new MenuItem(Global.myGameObjects.get(GameObjectType.START_STORY), GameObjectType.START_STORY, positions[0], function () {
+            let startStory = new MenuItem(Global.myGameObjects.get(GameObjectType.COIN), GameObjectType.COIN, positions[0], function () {
                 this._myFSM.perform("unspawn_story");
                 this._myResetCount = 0;
             }.bind(this));
@@ -221,7 +221,7 @@ class MenuState extends PP.State {
         }
 
         {
-            let startStoryCompleted = new MenuItem(Global.myGameObjects.get(GameObjectType.START_STORY_COMPLETED), GameObjectType.START_STORY_COMPLETED, positions[0], function () {
+            let startStoryCompleted = new MenuItem(Global.myGameObjects.get(GameObjectType.NOT_COIN), GameObjectType.NOT_COIN, positions[0], function () {
                 this._myFSM.perform("unspawn_story");
                 this._myResetCount = 0;
             }.bind(this));
@@ -229,7 +229,7 @@ class MenuState extends PP.State {
         }
 
         {
-            let startArcadeHard = new MenuItem(Global.myGameObjects.get(GameObjectType.START_ARCADE_HARD), GameObjectType.START_ARCADE_HARD, positions[2], function () {
+            let startArcadeHard = new MenuItem(Global.myGameObjects.get(GameObjectType.ARCADE_STICK_HARD), GameObjectType.ARCADE_STICK_HARD, positions[2], function () {
                 this._myFSM.perform("unspawn_arcade_hard");
                 this._myResetCount = 0;
             }.bind(this));
@@ -237,7 +237,7 @@ class MenuState extends PP.State {
         }
 
         {
-            let startArcadeNormal = new MenuItem(Global.myGameObjects.get(GameObjectType.START_ARCADE_NORMAL), GameObjectType.START_ARCADE_NORMAL, positions[1], function () {
+            let startArcadeNormal = new MenuItem(Global.myGameObjects.get(GameObjectType.ARCADE_STICK_NORMAL), GameObjectType.ARCADE_STICK_NORMAL, positions[1], function () {
                 this._myFSM.perform("unspawn_arcade_normal");
                 this._myResetCount = 0;
             }.bind(this));
@@ -245,7 +245,7 @@ class MenuState extends PP.State {
         }
 
         {
-            let leaderboardArcadeHard = new MenuItem(Global.myGameObjects.get(GameObjectType.LEADERBOARD_ARCADE_HARD), GameObjectType.LEADERBOARD_ARCADE_HARD, positions[4], function () {
+            let leaderboardArcadeHard = new MenuItem(Global.myGameObjects.get(GameObjectType.ARCADE_LEADERBOARD_HARD), GameObjectType.ARCADE_LEADERBOARD_HARD, positions[4], function () {
                 //get leaderboard object and component and ask for a refresh
                 this._myResetCount = 0;
             }.bind(this));
@@ -253,7 +253,7 @@ class MenuState extends PP.State {
         }
 
         {
-            let leaderboardArcadeNormal = new MenuItem(Global.myGameObjects.get(GameObjectType.LEADERBOARD_ARCADE_NORMAL), GameObjectType.LEADERBOARD_ARCADE_NORMAL, positions[3], function () {
+            let leaderboardArcadeNormal = new MenuItem(Global.myGameObjects.get(GameObjectType.ARCADE_LEADERBOARD_NORMAL), GameObjectType.ARCADE_LEADERBOARD_NORMAL, positions[3], function () {
                 //get leaderboard object and component and ask for a refresh
                 this._myResetCount = 0;
             }.bind(this));

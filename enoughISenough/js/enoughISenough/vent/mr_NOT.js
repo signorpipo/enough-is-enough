@@ -189,14 +189,14 @@ class MrNOT {
         this._myPossibleGameObjectTypes = [
             //GameObjectType.STORY_TIMER,
             //GameObjectType.ZESTY_MARKET,
-            GameObjectType.DRAWING,
-            GameObjectType.CPLUSPLUS,
+            GameObjectType.TUCIA_DRAWING,
+            GameObjectType.CPLUSPLUS_PRIMER,
             GameObjectType.PIANO,
-            GameObjectType.FLAG_WAVER,
-            GameObjectType.MEDITATION,
+            GameObjectType.MICCO_THE_BEAR,
+            GameObjectType.WATER_LILY,
             GameObjectType.LOL,
-            GameObjectType.EARRING,
-            //GameObjectType.SKATING,
+            GameObjectType.DRINK_ME_EARRING,
+            //GameObjectType.SKATE,
             //GameObjectType.STARING_CUBE,
         ];
     }

@@ -178,15 +178,35 @@ class StoryState extends PP.State {
 
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.STORY_TIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRAWING, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.TUCIA_DRAWING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS_PRIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.PIANO, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FLAG_WAVER, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MEDITATION, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MICCO_THE_BEAR, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WATER_LILY, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.LOL, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EARRING, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.SKATING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRINK_ME_EARRING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.SKATE, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 2));
+
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.COIN, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERMELON, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FLOPPY_DISK, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PIANO, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MR_NOT_EVIDENCE, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.SHATTERED_COIN, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PSI, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERLAND, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ANT_MAIN_CHARACTER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.HEART, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.HALO_SWORD, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FOX, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PICO_8, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EGGPLANT, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.VR, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.TROPHY, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FAMILY, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MIRROR, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WAYFINDER, 5));
 
         return evidenceSetupList;
     }
@@ -200,14 +220,14 @@ class StoryState extends PP.State {
 
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.STORY_TIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRAWING, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.TUCIA_DRAWING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS_PRIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.PIANO, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FLAG_WAVER, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MEDITATION, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MICCO_THE_BEAR, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WATER_LILY, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.LOL, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EARRING, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.SKATING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRINK_ME_EARRING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.SKATE, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 2));
 
         return evidenceSetupList;
@@ -222,14 +242,14 @@ class StoryState extends PP.State {
 
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.STORY_TIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRAWING, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.TUCIA_DRAWING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS_PRIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.PIANO, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FLAG_WAVER, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MEDITATION, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MICCO_THE_BEAR, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WATER_LILY, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.LOL, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EARRING, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.SKATING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRINK_ME_EARRING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.SKATE, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 2));
 
         return evidenceSetupList;

@@ -145,14 +145,14 @@ class MrNOTVentState extends PP.State {
 
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.STORY_TIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRAWING, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.TUCIA_DRAWING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS_PRIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.PIANO, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FLAG_WAVER, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MEDITATION, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MICCO_THE_BEAR, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WATER_LILY, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.LOL, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EARRING, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.SKATING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRINK_ME_EARRING, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.SKATE, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 2));
 
         return evidenceSetupList;
