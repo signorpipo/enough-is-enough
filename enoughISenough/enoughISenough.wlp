@@ -2539,7 +2539,7 @@
                 },
                 {
                     "type": "pp-easy-set-tune-target-grab",
-                    "active": false
+                    "active": true
                 },
                 {
                     "type": "pp-easy-mesh-color",
@@ -19397,7 +19397,8 @@
             "blendSrc": "source alpha",
             "blendDest": "one minus source alpha",
             "depthFunction": "less or equal",
-            "sampleAlphaToCoverage": false
+            "sampleAlphaToCoverage": true,
+            "blendEqAlpha": "max"
         }
     }
 }
