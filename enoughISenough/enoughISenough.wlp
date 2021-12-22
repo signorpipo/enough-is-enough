@@ -680,7 +680,8 @@
                     }
                 },
                 {
-                    "type": "pp-audio-listener"
+                    "type": "pp-audio-listener",
+                    "active": true
                 },
                 {
                     "type": "get-player-transform"
@@ -19397,7 +19398,7 @@
             "blendSrc": "source alpha",
             "blendDest": "one minus source alpha",
             "depthFunction": "less or equal",
-            "sampleAlphaToCoverage": true,
+            "sampleAlphaToCoverage": false,
             "blendEqAlpha": "max"
         }
     }

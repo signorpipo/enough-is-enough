@@ -139,17 +139,19 @@ class HandPiece {
     }
 
     update(dt, interpolateValue) {
-        if (this._myIsActive && this._myScale != 1) {
-            this._myTimer.update(dt);
+        if (this._myIsActive) {
+            if (this._myTimer.isRunning()) {
+                this._myTimer.update(dt);
 
-            this._myScale = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
-            this._myObject.pp_setScale(this._myScale);
+                this._myScale = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
+                this._myObject.pp_setScale(this._myScale);
+
+                this._myAudio.updatePosition(this._myObject.pp_getPosition());
+            }
+
+            glMatrix.vec3.lerp(this._myCurrentPosition, this._myEndPosition, this._myStartPosition, interpolateValue);
+            this._myObject.pp_setPositionLocal(this._myCurrentPosition);
         }
-
-        glMatrix.vec3.lerp(this._myCurrentPosition, this._myEndPosition, this._myStartPosition, interpolateValue);
-        this._myObject.pp_setPositionLocal(this._myCurrentPosition);
-
-        this._myAudio.updatePosition(this._myObject.pp_getPosition());
     }
 
     isDone() {
