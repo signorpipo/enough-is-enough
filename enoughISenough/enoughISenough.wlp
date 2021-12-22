@@ -327,7 +327,7 @@
                 {
                     "type": "enough-IS-enough-gateway",
                     "enough-IS-enough-gateway": {
-                        "_myRingsAnimator": "112",
+                        "_myRingAnimator": "112",
                         "_myLeftHandAnimator": "130",
                         "_myRightHandAnimator": "131",
                         "_myRumbleObject": "136",
@@ -1282,39 +1282,10 @@
             ],
             "components": [
                 {
-                    "type": "physx",
-                    "physx": {
-                        "shape": "triangleMesh",
-                        "triangleMesh": {
-                            "mesh": "402",
-                            "scaling": [
-                                0.013,
-                                0.008,
-                                0.013
-                            ]
-                        },
-                        "kinematic": true,
-                        "gravity": false,
-                        "convexMesh": {
-                            "mesh": "108"
-                        },
-                        "box": {
-                            "extents": [
-                                1.2999999,
-                                0.1,
-                                1.2999999
-                            ]
-                        }
-                    }
-                },
-                {
-                    "type": "set-specular-color",
-                    "set-specular-color": {
-                        "_myBrightness": 54
-                    },
-                    "active": true
+                    "active": false
                 }
-            ]
+            ],
+            "deleted": true
         },
         "111": {
             "link": {
@@ -1348,7 +1319,7 @@
             "deleted": true
         },
         "112": {
-            "name": "Rings",
+            "name": "Ring",
             "parent": "32",
             "transformation": [
                 1.0,
@@ -1370,10 +1341,10 @@
             ],
             "components": [
                 {
-                    "type": "rings-animator",
-                    "rings-animator": {
-                        "_myRing": "110",
-                        "_mySmallerRing": "118"
+                    "type": "ring-animator",
+                    "ring-animator": {
+                        "_myRingOut": "1063",
+                        "_myRingMiddle": "1068"
                     }
                 }
             ]
@@ -1495,36 +1466,12 @@
                 1.0,
                 0.0,
                 0.0,
-                0.0,
+                0.0289741,
                 0.0,
                 1.0
             ],
             "name": "Smaller Ring",
-            "components": [
-                {
-                    "type": "physx",
-                    "physx": {
-                        "kinematic": true,
-                        "gravity": false,
-                        "shape": "triangleMesh",
-                        "triangleMesh": {
-                            "mesh": "410",
-                            "scaling": [
-                                0.0099999,
-                                0.0099999,
-                                0.0099999
-                            ]
-                        }
-                    }
-                },
-                {
-                    "type": "set-specular-color",
-                    "set-specular-color": {
-                        "_myBrightness": 128
-                    },
-                    "active": true
-                }
-            ]
+            "deleted": true
         },
         "120": {
             "link": {
@@ -7617,7 +7564,8 @@
                 0.0,
                 1.0
             ],
-            "name": "Pivot"
+            "name": "Pivot",
+            "deleted": true
         },
         "404": {
             "link": {
@@ -7632,7 +7580,8 @@
                         "mesh": "402"
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "407": {
             "link": {
@@ -7674,7 +7623,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "412": {
             "link": {
@@ -7688,7 +7638,8 @@
                         "material": "281"
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "416": {
             "link": {
@@ -15227,6 +15178,327 @@
                 "file": "assets\\models\\evidences\\frame.fbx"
             },
             "deleted": true
+        },
+        "1063": {
+            "name": "Ring - Out",
+            "parent": "112",
+            "components": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "triangleMesh",
+                        "triangleMesh": {
+                            "mesh": "1065",
+                            "scaling": [
+                                0.013,
+                                0.008,
+                                0.013
+                            ]
+                        },
+                        "kinematic": true,
+                        "gravity": false,
+                        "convexMesh": {
+                            "mesh": "108"
+                        },
+                        "box": {
+                            "extents": [
+                                1.2999999,
+                                0.1,
+                                1.2999999
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "set-specular-color",
+                    "set-specular-color": {
+                        "_myBrightness": 54
+                    },
+                    "active": true
+                }
+            ]
+        },
+        "1066": {
+            "link": {
+                "name": "Ring - Out Pivot 4",
+                "file": "assets\\models\\ring_out.fbx"
+            },
+            "parent": "1063",
+            "transformation": [
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "name": "Pivot"
+        },
+        "1067": {
+            "link": {
+                "name": "Ring - Out 4<Ring - Out Pivot 4",
+                "file": "assets\\models\\ring_out.fbx"
+            },
+            "parent": "1066",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "274"
+                    }
+                }
+            ]
+        },
+        "1068": {
+            "name": "Ring - Middle",
+            "parent": "112",
+            "components": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                {
+                    "type": "physx",
+                    "physx": {
+                        "kinematic": true,
+                        "gravity": false,
+                        "shape": "triangleMesh",
+                        "triangleMesh": {
+                            "mesh": "1070",
+                            "scaling": [
+                                0.0099999,
+                                0.0099999,
+                                0.0099999
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "set-specular-color",
+                    "set-specular-color": {
+                        "_myBrightness": 128
+                    },
+                    "active": true
+                }
+            ]
+        },
+        "1071": {
+            "link": {
+                "name": "Ring - Middle Pivot 2",
+                "file": "assets\\models\\ring_middle.fbx"
+            },
+            "parent": "1068",
+            "name": "Pivot",
+            "transformation": [
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "1072": {
+            "link": {
+                "name": "Ring - Middle 2<Ring - Middle Pivot 2",
+                "file": "assets\\models\\ring_middle.fbx"
+            },
+            "parent": "1071",
+            "name": "Ring - Middle 2",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "281"
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -16638,6 +16910,18 @@
             "link": {
                 "name": "Water Lily - Petal 1.001",
                 "file": "assets\\models\\evidences\\water_lily.fbx"
+            }
+        },
+        "1065": {
+            "link": {
+                "name": "Ring - Out 4",
+                "file": "assets\\models\\ring_out.fbx"
+            }
+        },
+        "1070": {
+            "link": {
+                "name": "Ring - Middle 2",
+                "file": "assets\\models\\ring_middle.fbx"
             }
         }
     },
@@ -19078,6 +19362,18 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\not_coin.fbx"
             }
+        },
+        "1064": {
+            "link": {
+                "name": "Dark Red",
+                "file": "assets\\models\\ring_out.fbx"
+            }
+        },
+        "1069": {
+            "link": {
+                "name": "Orange",
+                "file": "assets\\models\\ring_middle.fbx"
+            }
         }
     },
     "shaders": {
@@ -19274,7 +19570,9 @@
         "assets/models/evidences/wayfinder.fbx",
         "assets/models/evidences/wayfinder_physx.fbx",
         "assets/models/extra/palette_mesh_1.fbx",
-        "assets/textures/P8_palette.png"
+        "assets/textures/P8_palette.png",
+        "assets/models/ring_out.fbx",
+        "assets/models/ring_middle.fbx"
     ],
     "pipelines": {
         "69": {
