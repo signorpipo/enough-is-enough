@@ -162,6 +162,8 @@ class HandPiece {
         this._myIsActive = true;
         this._myObject.pp_setActive(this._myIsActive);
 
+        this._myTimer.reset();
+
         this._myAudio.stop();
 
         this._myScale = 1;

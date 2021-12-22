@@ -7665,7 +7665,8 @@
                 0.0,
                 1.0
             ],
-            "name": "Pivot"
+            "name": "Pivot",
+            "deleted": true
         },
         "417": {
             "link": {
@@ -7698,7 +7699,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "418": {
             "name": "Hand Piece",
@@ -7920,7 +7922,8 @@
                 5.499527446772845e-7,
                 1.0
             ],
-            "name": "Pivot"
+            "name": "Pivot",
+            "deleted": true
         },
         "421": {
             "link": {
@@ -7935,7 +7938,8 @@
                         "mesh": "426"
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "424": {
             "link": {
@@ -15499,6 +15503,86 @@
                     }
                 }
             ]
+        },
+        "1075": {
+            "link": {
+                "name": "Hand Piece Pivot 3",
+                "file": "assets\\models\\hand_piece.fbx"
+            },
+            "parent": "419",
+            "name": "Pivot",
+            "transformation": [
+                -0.0099999,
+                -0.0,
+                0.0,
+                0.0,
+                -0.0,
+                0.0099999,
+                -0.0,
+                0.0,
+                -0.0,
+                -0.0,
+                -0.01,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "1076": {
+            "link": {
+                "name": "Hand Piece 3<Hand Piece Pivot 3",
+                "file": "assets\\models\\hand_piece.fbx"
+            },
+            "parent": "1075",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "284"
+                    }
+                }
+            ]
+        },
+        "1077": {
+            "link": {
+                "name": "Hand Piece Pivot 3",
+                "file": "assets\\models\\hand_piece.fbx"
+            },
+            "parent": "418",
+            "name": "Pivot",
+            "transformation": [
+                -0.0,
+                -0.01,
+                0.0,
+                0.0,
+                -0.01,
+                -0.0,
+                -0.0,
+                0.0,
+                0.0,
+                -0.0,
+                -0.0100001,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "1078": {
+            "link": {
+                "name": "Hand Piece 3<Hand Piece Pivot 3",
+                "file": "assets\\models\\hand_piece.fbx"
+            },
+            "parent": "1077",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "284"
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -16922,6 +17006,12 @@
             "link": {
                 "name": "Ring - Middle 2",
                 "file": "assets\\models\\ring_middle.fbx"
+            }
+        },
+        "1074": {
+            "link": {
+                "name": "Hand Piece 3",
+                "file": "assets\\models\\hand_piece.fbx"
             }
         }
     },
@@ -19374,6 +19464,12 @@
                 "name": "Orange",
                 "file": "assets\\models\\ring_middle.fbx"
             }
+        },
+        "1073": {
+            "link": {
+                "name": "Material.001",
+                "file": "assets\\models\\hand_piece.fbx"
+            }
         }
     },
     "shaders": {
@@ -19572,7 +19668,8 @@
         "assets/models/extra/palette_mesh_1.fbx",
         "assets/textures/P8_palette.png",
         "assets/models/ring_out.fbx",
-        "assets/models/ring_middle.fbx"
+        "assets/models/ring_middle.fbx",
+        "assets/models/hand_piece.fbx"
     ],
     "pipelines": {
         "69": {
