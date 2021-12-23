@@ -2159,7 +2159,7 @@
                         "_myStartArcade": "144",
                         "_myCoin": "201",
                         "_myArcadeStickHard": "213",
-                        "_myArcadeStickNormal": "850",
+                        "_myArcadeStickNormal": "216",
                         "_myArcadLeaderboardeHard": "808",
                         "_myArcadLeaderboardeNormal": "915",
                         "_myWondermelon": "164",
@@ -4119,9 +4119,9 @@
                         "convexMesh": {
                             "mesh": "1240",
                             "scaling": [
-                                0.014,
-                                0.014,
-                                0.014
+                                0.013,
+                                0.013,
+                                0.013
                             ]
                         }
                     }
@@ -11465,17 +11465,17 @@
             },
             "parent": "611",
             "transformation": [
-                0.012,
+                0.013,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.012,
+                0.013,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.012,
+                0.013,
                 0.0,
                 0.0,
                 0.0,
@@ -11568,9 +11568,9 @@
                         "convexMesh": {
                             "mesh": "605",
                             "scaling": [
-                                0.012,
-                                0.012,
-                                0.012
+                                0.013,
+                                0.013,
+                                0.013
                             ]
                         }
                     }
@@ -11834,17 +11834,17 @@
             },
             "parent": "198",
             "transformation": [
-                0.014,
+                0.013,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.014,
+                0.013,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.014,
+                0.013,
                 0.0,
                 0.0,
                 0.0,
@@ -13055,7 +13055,7 @@
                 0.012,
                 0.0,
                 0.0,
-                0.0,
+                -0.013,
                 0.0,
                 1.0
             ]
@@ -21834,6 +21834,12 @@
             "link": {
                 "name": "Black.001",
                 "file": "assets\\models\\evidences\\halo_sword.fbx"
+            }
+        },
+        "1266": {
+            "link": {
+                "name": "Green",
+                "file": "assets\\models\\evidences\\c++_primer.fbx"
             }
         }
     },
