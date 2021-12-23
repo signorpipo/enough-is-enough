@@ -21725,6 +21725,24 @@
                 "name": "Dark Blue.004",
                 "file": "assets\\models\\evidences\\family.fbx"
             }
+        },
+        "1250": {
+            "link": {
+                "name": "Black.002",
+                "file": "assets\\models\\evidences\\piano.fbx"
+            }
+        },
+        "1251": {
+            "link": {
+                "name": "Black.003",
+                "file": "assets\\models\\evidences\\piano.fbx"
+            }
+        },
+        "1252": {
+            "link": {
+                "name": "Dark Red.005",
+                "file": "assets\\models\\evidences\\piano.fbx"
+            }
         }
     },
     "shaders": {
