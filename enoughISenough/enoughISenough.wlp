@@ -2157,15 +2157,15 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myCoin": "161",
-                        "_myArcadeStickHard": "144",
-                        "_myArcadeStickNormal": "152",
-                        "_myArcadLeaderboardeHard": "158",
-                        "_myArcadLeaderboardeNormal": "155",
+                        "_myCoin": "201",
+                        "_myArcadeStickHard": "213",
+                        "_myArcadeStickNormal": "216",
+                        "_myArcadLeaderboardeHard": "808",
+                        "_myArcadLeaderboardeNormal": "915",
                         "_myWondermelon": "164",
-                        "_myZestyMarket": "170",
-                        "_myFloppyDisk": "167",
-                        "_myNotCoin": "348"
+                        "_myZestyMarket": "167",
+                        "_myFloppyDisk": "198",
+                        "_myNotCoin": "210"
                     }
                 }
             ],
@@ -4117,11 +4117,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "643",
+                            "mesh": "1240",
                             "scaling": [
-                                0.0099999,
-                                0.0099999,
-                                0.0099999
+                                0.014,
+                                0.014,
+                                0.014
                             ]
                         }
                     }
@@ -4763,17 +4763,17 @@
             "name": "C++ Primer",
             "parent": "174",
             "transformation": [
-                1.0,
+                0.8999999,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                0.8999999,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                0.8999999,
                 0.0,
                 -0.6,
                 0.0,
@@ -4788,9 +4788,9 @@
                         "convexMesh": {
                             "mesh": "1098",
                             "scaling": [
+                                0.017,
                                 0.012,
-                                0.012,
-                                0.012
+                                0.017
                             ]
                         }
                     }
@@ -4918,9 +4918,9 @@
                         "convexMesh": {
                             "mesh": "771",
                             "scaling": [
-                                0.0099999,
-                                0.0099999,
-                                0.0099999
+                                0.012,
+                                0.012,
+                                0.012
                             ]
                         }
                     }
@@ -11598,21 +11598,21 @@
             },
             "parent": "213",
             "transformation": [
-                0.012,
+                0.0149999,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.012,
+                0.0109999,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.012,
+                0.0149999,
                 0.0,
                 0.0,
                 0.0,
-                0.0,
+                4.76837158203125e-7,
                 1.0
             ]
         },
@@ -11834,17 +11834,17 @@
             },
             "parent": "198",
             "transformation": [
-                0.0099999,
+                0.014,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.0099999,
+                0.014,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.0099999,
+                0.014,
                 0.0,
                 0.0,
                 0.0,
@@ -13042,17 +13042,17 @@
             },
             "parent": "216",
             "transformation": [
-                0.0099999,
+                0.012,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.0099999,
+                0.012,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.0099999,
+                0.012,
                 0.0,
                 0.0,
                 0.0,
@@ -13292,17 +13292,17 @@
             },
             "parent": "808",
             "transformation": [
-                0.0199999,
+                0.0219999,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.0199999,
+                0.0219999,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.0199999,
+                0.0219999,
                 0.0,
                 0.0,
                 0.0,
@@ -13384,9 +13384,9 @@
                         "convexMesh": {
                             "mesh": "803",
                             "scaling": [
-                                0.0199999,
-                                0.0199999,
-                                0.0199999
+                                0.0219999,
+                                0.0219999,
+                                0.0219999
                             ]
                         }
                     }
@@ -14447,7 +14447,7 @@
             "components": [
                 {
                     "mesh": {
-                        "material": "279"
+                        "material": "278"
                     }
                 }
             ]
@@ -18758,6 +18758,18 @@
                 "name": "Ring - Middle 2.001",
                 "file": "assets\\models\\ring_middle.fbx"
             }
+        },
+        "1239": {
+            "link": {
+                "name": "LoL - Right.002",
+                "file": "assets\\models\\evidences\\lol.fbx"
+            }
+        },
+        "1240": {
+            "link": {
+                "name": "LoL - Physx.001",
+                "file": "assets\\models\\evidences\\lol.fbx"
+            }
         }
     },
     "textures": {
@@ -21652,6 +21664,12 @@
             "link": {
                 "name": "Dark Blue.016",
                 "file": "assets\\models\\extra\\palette_mesh_1.fbx"
+            }
+        },
+        "1238": {
+            "link": {
+                "name": "Dark Blue.001",
+                "file": "assets\\models\\evidences\\lol.fbx"
             }
         }
     },
