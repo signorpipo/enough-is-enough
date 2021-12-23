@@ -13071,6 +13071,12 @@
                     "mesh": {
                         "material": "287"
                     }
+                },
+                {
+                    "type": "set-specular-color",
+                    "set-specular-color": {
+                        "_myBrightness": 27
+                    }
                 }
             ]
         },
@@ -21750,6 +21756,12 @@
             "link": {
                 "name": "Dark Red.005",
                 "file": "assets\\models\\evidences\\piano.fbx"
+            }
+        },
+        "1254": {
+            "link": {
+                "name": "Gray",
+                "file": "assets\\models\\evidences\\tucia_drawing.fbx"
             }
         }
     },
