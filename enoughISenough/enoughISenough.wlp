@@ -2165,7 +2165,7 @@
                         "_myWondermelon": "164",
                         "_myZestyMarket": "167",
                         "_myFloppyDisk": "198",
-                        "_myNotCoin": "210"
+                        "_myNotCoin": "611"
                     }
                 }
             ],
@@ -13327,6 +13327,12 @@
                     "mesh": {
                         "material": "284"
                     }
+                },
+                {
+                    "type": "set-specular-color",
+                    "set-specular-color": {
+                        "_myBrightness": 212
+                    }
                 }
             ]
         },
@@ -13377,7 +13383,7 @@
                 {
                     "type": "evidence-component",
                     "evidence-component": {
-                        "_myHeightDisplacement": 0.15
+                        "_myHeightDisplacement": 0.0
                     }
                 },
                 {
@@ -13388,7 +13394,7 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "803",
+                            "mesh": "1265",
                             "scaling": [
                                 0.0219999,
                                 0.0219999,
@@ -13404,8 +13410,8 @@
                         "box": {
                             "extents": [
                                 0.1,
-                                0.5,
-                                0.0599999
+                                0.0599999,
+                                0.3
                             ]
                         },
                         "groups": 1
@@ -18850,6 +18856,24 @@
                 "name": "Shattered Coin - Physx.001",
                 "file": "assets\\models\\evidences\\shattered_coin.fbx"
             }
+        },
+        "1261": {
+            "link": {
+                "name": "Halo Sword - Blades.002",
+                "file": "assets\\models\\evidences\\halo_sword.fbx"
+            }
+        },
+        "1262": {
+            "link": {
+                "name": "Halo Sword - Hilt",
+                "file": "assets\\models\\evidences\\halo_sword.fbx"
+            }
+        },
+        "1265": {
+            "link": {
+                "name": "Halo Sword - Physx.001",
+                "file": "assets\\models\\evidences\\halo_sword.fbx"
+            }
         }
     },
     "textures": {
@@ -21792,6 +21816,24 @@
             "link": {
                 "name": "Orange.001",
                 "file": "assets\\models\\evidences\\shattered_coin.fbx"
+            }
+        },
+        "1260": {
+            "link": {
+                "name": "Dark Red",
+                "file": "assets\\models\\evidences\\halo_sword.fbx"
+            }
+        },
+        "1263": {
+            "link": {
+                "name": "Dark Red.001",
+                "file": "assets\\models\\evidences\\halo_sword.fbx"
+            }
+        },
+        "1264": {
+            "link": {
+                "name": "Black.001",
+                "file": "assets\\models\\evidences\\halo_sword.fbx"
             }
         }
     },
