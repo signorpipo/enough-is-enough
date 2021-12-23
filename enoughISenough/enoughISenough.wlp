@@ -4763,17 +4763,17 @@
             "name": "C++ Primer",
             "parent": "174",
             "transformation": [
-                0.8999999,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.8999999,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.8999999,
+                1.0,
                 0.0,
                 -0.6,
                 0.0,
@@ -4786,11 +4786,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "1098",
+                            "mesh": "620",
                             "scaling": [
-                                0.017,
-                                0.012,
-                                0.017
+                                0.0099999,
+                                0.0099999,
+                                0.0099999
                             ]
                         }
                     }
@@ -8999,20 +8999,20 @@
                 }
             ],
             "transformation": [
-                0.075,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                -0.0,
-                -0.0749999,
+                1.0,
                 0.0,
                 0.0,
-                0.0199999,
-                -0.0,
                 0.0,
-                0.0000019,
-                -6.2390899,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
                 0.0,
                 1.0
             ]
@@ -11598,17 +11598,17 @@
             },
             "parent": "213",
             "transformation": [
-                0.0149999,
+                0.0099999,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.0109999,
+                0.0099999,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.0149999,
+                0.0099999,
                 0.0,
                 0.0,
                 0.0,
@@ -11688,7 +11688,7 @@
         },
         "628": {
             "link": {
-                "name": "C++ Primer - Physx<C++ Primer",
+                "name": "C++ Primer - Physx.001<C++ Primer",
                 "file": "assets\\models\\evidences\\c++_primer.fbx"
             },
             "parent": "622",
@@ -17016,6 +17016,14 @@
                     }
                 }
             ]
+        },
+        "1253": {
+            "link": {
+                "name": "C++ Primer - Physx<C++ Primer",
+                "file": "assets\\models\\evidences\\c++_primer.fbx"
+            },
+            "parent": "622",
+            "deleted": true
         }
     },
     "meshes": {
@@ -18527,7 +18535,7 @@
         },
         "1098": {
             "link": {
-                "name": "C++ Primer - Physx.002",
+                "name": "C++ Primer - Physx.001",
                 "file": "assets\\models\\evidences\\c++_primer.fbx"
             }
         },
