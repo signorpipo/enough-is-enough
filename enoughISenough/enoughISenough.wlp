@@ -2159,7 +2159,7 @@
                         "_myStartArcade": "144",
                         "_myCoin": "201",
                         "_myArcadeStickHard": "213",
-                        "_myArcadeStickNormal": "216",
+                        "_myArcadeStickNormal": "325",
                         "_myArcadLeaderboardeHard": "808",
                         "_myArcadLeaderboardeNormal": "915",
                         "_myWondermelon": "164",
@@ -7266,7 +7266,7 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "331",
+                            "mesh": "1259",
                             "scaling": [
                                 0.0099999,
                                 0.0099999,
@@ -18826,6 +18826,30 @@
                 "name": "Family - Little Brother Head.003",
                 "file": "assets\\models\\evidences\\family.fbx"
             }
+        },
+        "1256": {
+            "link": {
+                "name": "Shattered Coin - In.001",
+                "file": "assets\\models\\evidences\\shattered_coin.fbx"
+            }
+        },
+        "1257": {
+            "link": {
+                "name": "Shattered Coin - Middle.001",
+                "file": "assets\\models\\evidences\\shattered_coin.fbx"
+            }
+        },
+        "1258": {
+            "link": {
+                "name": "Shattered Coin - Out.001",
+                "file": "assets\\models\\evidences\\shattered_coin.fbx"
+            }
+        },
+        "1259": {
+            "link": {
+                "name": "Shattered Coin - Physx.001",
+                "file": "assets\\models\\evidences\\shattered_coin.fbx"
+            }
         }
     },
     "textures": {
@@ -21762,6 +21786,12 @@
             "link": {
                 "name": "Gray",
                 "file": "assets\\models\\evidences\\tucia_drawing.fbx"
+            }
+        },
+        "1255": {
+            "link": {
+                "name": "Orange.001",
+                "file": "assets\\models\\evidences\\shattered_coin.fbx"
             }
         }
     },

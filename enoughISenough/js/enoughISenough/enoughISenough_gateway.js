@@ -63,11 +63,11 @@ WL.registerComponent("enough-IS-enough-gateway", {
         }
 
         for (let entry of Global.myMeshObjects.entries()) {
-            Global.myMeshObjectPoolMap.addPool(entry[0], entry[1], 5);
+            Global.myMeshObjectPoolMap.addPool(entry[0], entry[1], 10);
         }
 
         for (let entry of Global.myMeshNoFogObjects.entries()) {
-            Global.myMeshNoFogObjectPoolMap.addPool(entry[0], entry[1], 5);
+            Global.myMeshNoFogObjectPoolMap.addPool(entry[0], entry[1], 10);
         }
 
         let cloneParams = new PP.CloneParams();
