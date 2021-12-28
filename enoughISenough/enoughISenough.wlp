@@ -4117,7 +4117,7 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "1240",
+                            "mesh": "1271",
                             "scaling": [
                                 0.013,
                                 0.013,
@@ -17036,6 +17036,13 @@
             },
             "parent": "622",
             "deleted": true
+        },
+        "1272": {
+            "link": {
+                "name": "LoL - Physx",
+                "file": "assets\\models\\evidences\\lol_physx.fbx"
+            },
+            "deleted": true
         }
     },
     "meshes": {
@@ -18873,6 +18880,24 @@
             "link": {
                 "name": "Halo Sword - Physx.001",
                 "file": "assets\\models\\evidences\\halo_sword.fbx"
+            }
+        },
+        "1268": {
+            "link": {
+                "name": "LoL - Left",
+                "file": "assets\\models\\evidences\\lol.fbx"
+            }
+        },
+        "1269": {
+            "link": {
+                "name": "LoL - Right",
+                "file": "assets\\models\\evidences\\lol.fbx"
+            }
+        },
+        "1271": {
+            "link": {
+                "name": "LoL - Physx",
+                "file": "assets\\models\\evidences\\lol_physx.fbx"
             }
         }
     },
@@ -21841,6 +21866,18 @@
                 "name": "Green",
                 "file": "assets\\models\\evidences\\c++_primer.fbx"
             }
+        },
+        "1267": {
+            "link": {
+                "name": "Dark Blue",
+                "file": "assets\\models\\evidences\\wonderland.fbx"
+            }
+        },
+        "1270": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\lol_physx.fbx"
+            }
         }
     },
     "shaders": {
@@ -22040,7 +22077,8 @@
         "assets/textures/P8_palette.png",
         "assets/models/ring_out.fbx",
         "assets/models/ring_middle.fbx",
-        "assets/models/hand_piece.fbx"
+        "assets/models/hand_piece.fbx",
+        "assets/models/evidences/lol_physx.fbx"
     ],
     "pipelines": {
         "69": {
