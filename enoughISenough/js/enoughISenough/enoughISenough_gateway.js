@@ -52,6 +52,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
             PP.MeshUtils.setClonedMaterials(clonedMesh);
             PP.TextUtils.setClonedMaterials(clonedMesh);
             PP.MeshUtils.setFogColor(clonedMesh, [0, 0, 0, 0]);
+            clonedMesh.pp_setActive(false);
             Global.myMeshNoFogObjects.set(entry[0], clonedMesh);
         }
 
