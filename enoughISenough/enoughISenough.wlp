@@ -2158,14 +2158,14 @@
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
                         "_myCoin": "201",
-                        "_myArcadeStickHard": "213",
-                        "_myArcadeStickNormal": "216",
+                        "_myArcadeStickHard": "164",
+                        "_myArcadeStickNormal": "167",
                         "_myArcadLeaderboardeHard": "808",
                         "_myArcadLeaderboardeNormal": "915",
-                        "_myWondermelon": "164",
-                        "_myZestyMarket": "167",
+                        "_myWondermelon": "213",
+                        "_myZestyMarket": "325",
                         "_myFloppyDisk": "198",
-                        "_myNotCoin": "611"
+                        "_myNotCoin": "928"
                     }
                 }
             ],
@@ -13394,7 +13394,7 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "1265",
+                            "mesh": "1274",
                             "scaling": [
                                 0.0219999,
                                 0.0219999,
@@ -17043,6 +17043,13 @@
                 "file": "assets\\models\\evidences\\lol_physx.fbx"
             },
             "deleted": true
+        },
+        "1275": {
+            "link": {
+                "name": "Halo Sword - Physx",
+                "file": "assets\\models\\evidences\\halo_sword_physx.fbx"
+            },
+            "deleted": true
         }
     },
     "meshes": {
@@ -18898,6 +18905,12 @@
             "link": {
                 "name": "LoL - Physx",
                 "file": "assets\\models\\evidences\\lol_physx.fbx"
+            }
+        },
+        "1274": {
+            "link": {
+                "name": "Halo Sword - Physx",
+                "file": "assets\\models\\evidences\\halo_sword_physx.fbx"
             }
         }
     },
@@ -21878,6 +21891,12 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\lol_physx.fbx"
             }
+        },
+        "1273": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\halo_sword_physx.fbx"
+            }
         }
     },
     "shaders": {
@@ -22078,7 +22097,8 @@
         "assets/models/ring_out.fbx",
         "assets/models/ring_middle.fbx",
         "assets/models/hand_piece.fbx",
-        "assets/models/evidences/lol_physx.fbx"
+        "assets/models/evidences/lol_physx.fbx",
+        "assets/models/evidences/halo_sword_physx.fbx"
     ],
     "pipelines": {
         "69": {
