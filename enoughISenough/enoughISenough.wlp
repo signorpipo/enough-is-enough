@@ -3127,9 +3127,9 @@
                         "convexMesh": {
                             "mesh": "592",
                             "scaling": [
-                                0.0099999,
-                                0.0099999,
-                                0.0099999
+                                0.012,
+                                0.012,
+                                0.012
                             ]
                         }
                     }
@@ -11376,17 +11376,17 @@
             },
             "parent": "164",
             "transformation": [
-                0.0099999,
+                0.012,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.0099999,
+                0.012,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.0099999,
+                0.012,
                 0.0,
                 0.0,
                 0.0,
@@ -18912,6 +18912,30 @@
                 "name": "Halo Sword - Physx",
                 "file": "assets\\models\\evidences\\halo_sword_physx.fbx"
             }
+        },
+        "1277": {
+            "link": {
+                "name": "Wondermelon - First",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
+            }
+        },
+        "1278": {
+            "link": {
+                "name": "Wondermelon - Second",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
+            }
+        },
+        "1279": {
+            "link": {
+                "name": "Wondermelon - Third",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
+            }
+        },
+        "1280": {
+            "link": {
+                "name": "Wondermelon - Fourth",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
+            }
         }
     },
     "textures": {
@@ -21896,6 +21920,12 @@
             "link": {
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\halo_sword_physx.fbx"
+            }
+        },
+        "1276": {
+            "link": {
+                "name": "Dark Blue",
+                "file": "assets\\models\\evidences\\wondermelon.fbx"
             }
         }
     },
