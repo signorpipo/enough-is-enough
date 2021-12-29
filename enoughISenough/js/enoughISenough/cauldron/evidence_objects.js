@@ -26,6 +26,7 @@ WL.registerComponent('evidence-objects', {
     _myFamily: { type: WL.Type.Object },
     _myMirror: { type: WL.Type.Object },
     _myWayfinder: { type: WL.Type.Object },
+    _myEveryeye: { type: WL.Type.Object },
 }, {
     init: function () {
         Global.myGameObjects.set(GameObjectType.STORY_TIMER, this._myStoryTimer);
@@ -55,6 +56,7 @@ WL.registerComponent('evidence-objects', {
         Global.myGameObjects.set(GameObjectType.FAMILY, this._myFamily);
         Global.myGameObjects.set(GameObjectType.MIRROR, this._myMirror);
         Global.myGameObjects.set(GameObjectType.WAYFINDER, this._myWayfinder);
+        Global.myGameObjects.set(GameObjectType.EVERYEYE, this._myEveryeye);
 
         let cloneParams = new PP.CloneParams();
         cloneParams.myComponentsToInclude.push("mesh");
@@ -87,6 +89,7 @@ WL.registerComponent('evidence-objects', {
         Global.myMeshObjects.set(GameObjectType.FAMILY, this._myFamily.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.MIRROR, this._myMirror.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.WAYFINDER, this._myWayfinder.pp_clone(cloneParams));
+        Global.myMeshObjects.set(GameObjectType.EVERYEYE, this._myEveryeye.pp_clone(cloneParams));
     },
     start: function () {
     },

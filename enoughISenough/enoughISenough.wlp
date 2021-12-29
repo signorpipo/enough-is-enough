@@ -2165,7 +2165,7 @@
                         "_myWondermelon": "213",
                         "_myZestyMarket": "325",
                         "_myFloppyDisk": "198",
-                        "_myNotCoin": "928"
+                        "_myNotCoin": "1292"
                     }
                 }
             ],
@@ -3547,7 +3547,8 @@
                         "_myFamily": "915",
                         "_myMirror": "928",
                         "_myWayfinder": "971",
-                        "_myWaterLily": "201"
+                        "_myWaterLily": "201",
+                        "_myEveryeye": "1292"
                     }
                 }
             ],
@@ -17050,6 +17051,125 @@
                 "file": "assets\\models\\evidences\\halo_sword_physx.fbx"
             },
             "deleted": true
+        },
+        "1288": {
+            "link": {
+                "name": "Everyeye",
+                "file": "assets\\models\\evidences\\everyeye.fbx"
+            },
+            "parent": "1292",
+            "transformation": [
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "1289": {
+            "link": {
+                "name": "Everyeye - Ring<Everyeye",
+                "file": "assets\\models\\evidences\\everyeye.fbx"
+            },
+            "parent": "1288",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ]
+        },
+        "1290": {
+            "link": {
+                "name": "Everyeye - Eye<Everyeye",
+                "file": "assets\\models\\evidences\\everyeye.fbx"
+            },
+            "parent": "1288",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "279"
+                    }
+                }
+            ]
+        },
+        "1291": {
+            "link": {
+                "name": "Everyeye - Physx<Everyeye",
+                "file": "assets\\models\\evidences\\everyeye.fbx"
+            },
+            "parent": "1288",
+            "deleted": true
+        },
+        "1292": {
+            "name": "Everyeye",
+            "parent": "174",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                1.5,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "evidence-component"
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "1287",
+                            "scaling": [
+                                0.0099999,
+                                0.0099999,
+                                0.0099999
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "box": {
+                            "extents": [
+                                0.1,
+                                0.0399999,
+                                0.1
+                            ]
+                        },
+                        "groups": 1
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -18935,6 +19055,24 @@
             "link": {
                 "name": "Wondermelon - Fourth",
                 "file": "assets\\models\\evidences\\wondermelon.fbx"
+            }
+        },
+        "1285": {
+            "link": {
+                "name": "Everyeye - Ring",
+                "file": "assets\\models\\evidences\\everyeye.fbx"
+            }
+        },
+        "1286": {
+            "link": {
+                "name": "Everyeye - Eye",
+                "file": "assets\\models\\evidences\\everyeye.fbx"
+            }
+        },
+        "1287": {
+            "link": {
+                "name": "Everyeye - Physx",
+                "file": "assets\\models\\evidences\\everyeye.fbx"
             }
         }
     },
@@ -21933,6 +22071,24 @@
                 "name": "Dark Blue",
                 "file": "assets\\models\\evidences\\floppy.fbx"
             }
+        },
+        "1282": {
+            "link": {
+                "name": "Dark Blue",
+                "file": "assets\\models\\evidences\\everyeye.fbx"
+            }
+        },
+        "1283": {
+            "link": {
+                "name": "White",
+                "file": "assets\\models\\evidences\\everyeye.fbx"
+            }
+        },
+        "1284": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\everyeye.fbx"
+            }
         }
     },
     "shaders": {
@@ -22134,7 +22290,8 @@
         "assets/models/ring_middle.fbx",
         "assets/models/hand_piece.fbx",
         "assets/models/evidences/lol_physx.fbx",
-        "assets/models/evidences/halo_sword_physx.fbx"
+        "assets/models/evidences/halo_sword_physx.fbx",
+        "assets/models/evidences/everyeye.fbx"
     ],
     "pipelines": {
         "69": {

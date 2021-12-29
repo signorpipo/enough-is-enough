@@ -38,4 +38,5 @@ var GameObjectType = {
     FAMILY: 35,
     MIRROR: 36,
     WAYFINDER: 37,
+    EVERYEYE: 38,
 };
