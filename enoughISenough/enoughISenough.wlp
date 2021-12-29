@@ -2158,14 +2158,14 @@
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
                         "_myCoin": "201",
-                        "_myArcadeStickHard": "736",
-                        "_myArcadeStickNormal": "167",
+                        "_myArcadeStickHard": "207",
+                        "_myArcadeStickNormal": "222",
                         "_myArcadLeaderboardeHard": "808",
-                        "_myArcadLeaderboardeNormal": "915",
+                        "_myArcadLeaderboardeNormal": "1306",
                         "_myWondermelon": "213",
                         "_myZestyMarket": "325",
                         "_myFloppyDisk": "198",
-                        "_myNotCoin": "1306"
+                        "_myNotCoin": "638"
                     }
                 }
             ],
@@ -11717,17 +11717,17 @@
             },
             "parent": "638",
             "transformation": [
-                0.0099999,
+                0.016,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.0099999,
+                0.016,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.0099999,
+                0.016,
                 0.0,
                 0.0,
                 0.0,
@@ -11794,7 +11794,10 @@
             ],
             "components": [
                 {
-                    "type": "evidence-component"
+                    "type": "evidence-component",
+                    "evidence-component": {
+                        "_myHeightDisplacement": 0.05
+                    }
                 },
                 {
                     "type": "pp-grabbable"
@@ -11804,11 +11807,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "1102",
+                            "mesh": "1314",
                             "scaling": [
-                                0.0099999,
-                                0.0099999,
-                                0.0099999
+                                0.016,
+                                0.016,
+                                0.016
                             ]
                         }
                     }
@@ -17304,6 +17307,13 @@
                     }
                 }
             ]
+        },
+        "1315": {
+            "link": {
+                "name": "Ethereum - Physx",
+                "file": "assets\\models\\evidences\\ethereum_physx.fbx"
+            },
+            "deleted": true
         }
     },
     "meshes": {
@@ -19243,6 +19253,24 @@
             "link": {
                 "name": "Aloe Vera - Top.002",
                 "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            }
+        },
+        "1311": {
+            "link": {
+                "name": "Ethereum - Up",
+                "file": "assets\\models\\evidences\\ethereum.fbx"
+            }
+        },
+        "1312": {
+            "link": {
+                "name": "Ethereum - Down",
+                "file": "assets\\models\\evidences\\ethereum.fbx"
+            }
+        },
+        "1314": {
+            "link": {
+                "name": "Ethereum - Physx",
+                "file": "assets\\models\\evidences\\ethereum_physx.fbx"
             }
         }
     },
@@ -22289,6 +22317,18 @@
                 "name": "White",
                 "file": "assets\\models\\evidences\\aloe_vera.fbx"
             }
+        },
+        "1310": {
+            "link": {
+                "name": "Blue",
+                "file": "assets\\models\\evidences\\ethereum.fbx"
+            }
+        },
+        "1313": {
+            "link": {
+                "name": "Dark Blue",
+                "file": "assets\\models\\evidences\\ethereum_physx.fbx"
+            }
         }
     },
     "shaders": {
@@ -22492,7 +22532,8 @@
         "assets/models/evidences/lol_physx.fbx",
         "assets/models/evidences/halo_sword_physx.fbx",
         "assets/models/evidences/everyeye.fbx",
-        "assets/models/evidences/aloe_vera.fbx"
+        "assets/models/evidences/aloe_vera.fbx",
+        "assets/models/evidences/ethereum_physx.fbx"
     ],
     "pipelines": {
         "69": {
