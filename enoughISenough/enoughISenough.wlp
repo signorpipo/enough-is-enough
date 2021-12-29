@@ -2159,13 +2159,13 @@
                         "_myStartArcade": "144",
                         "_myCoin": "201",
                         "_myArcadeStickHard": "207",
-                        "_myArcadeStickNormal": "222",
+                        "_myArcadeStickNormal": "167",
                         "_myArcadLeaderboardeHard": "808",
-                        "_myArcadLeaderboardeNormal": "1306",
+                        "_myArcadLeaderboardeNormal": "638",
                         "_myWondermelon": "213",
                         "_myZestyMarket": "325",
                         "_myFloppyDisk": "198",
-                        "_myNotCoin": "638"
+                        "_myNotCoin": "1306"
                     }
                 }
             ],
@@ -19272,6 +19272,12 @@
                 "name": "Ethereum - Physx",
                 "file": "assets\\models\\evidences\\ethereum_physx.fbx"
             }
+        },
+        "1317": {
+            "link": {
+                "name": "Aloe Vera - Bottom",
+                "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            }
         }
     },
     "textures": {
@@ -22328,6 +22334,12 @@
             "link": {
                 "name": "Dark Blue",
                 "file": "assets\\models\\evidences\\ethereum_physx.fbx"
+            }
+        },
+        "1316": {
+            "link": {
+                "name": "Dark Green.001",
+                "file": "assets\\models\\evidences\\aloe_vera.fbx"
             }
         }
     },
