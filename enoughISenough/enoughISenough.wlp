@@ -2165,7 +2165,7 @@
                         "_myWondermelon": "213",
                         "_myZestyMarket": "325",
                         "_myFloppyDisk": "198",
-                        "_myNotCoin": "1292"
+                        "_myNotCoin": "1306"
                     }
                 }
             ],
@@ -3548,7 +3548,8 @@
                         "_myMirror": "928",
                         "_myWayfinder": "971",
                         "_myWaterLily": "201",
-                        "_myEveryeye": "1292"
+                        "_myEveryeye": "1292",
+                        "_myAloeVera": "1306"
                     }
                 }
             ],
@@ -17170,6 +17171,139 @@
                     }
                 }
             ]
+        },
+        "1301": {
+            "link": {
+                "name": "Aloe Vera",
+                "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            },
+            "parent": "1306",
+            "transformation": [
+                0.0109999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0109999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0109999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "1302": {
+            "link": {
+                "name": "Aloe Vera - Bottom<Aloe Vera",
+                "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            },
+            "parent": "1301",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "275"
+                    }
+                }
+            ]
+        },
+        "1303": {
+            "link": {
+                "name": "Aloe Vera - Middle<Aloe Vera",
+                "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            },
+            "parent": "1301",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "283"
+                    }
+                }
+            ]
+        },
+        "1304": {
+            "link": {
+                "name": "Aloe Vera - Top<Aloe Vera",
+                "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            },
+            "parent": "1301",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "279"
+                    }
+                }
+            ]
+        },
+        "1305": {
+            "link": {
+                "name": "Aloe Vera - Physx<Aloe Vera",
+                "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            },
+            "parent": "1301",
+            "deleted": true
+        },
+        "1306": {
+            "name": "Aloe Vera",
+            "parent": "174",
+            "transformation": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.3,
+                0.0,
+                1.5,
+                1.0
+            ],
+            "components": [
+                {
+                    "type": "evidence-component"
+                },
+                {
+                    "type": "pp-grabbable"
+                },
+                {
+                    "type": "physx",
+                    "physx": {
+                        "shape": "convexMesh",
+                        "convexMesh": {
+                            "mesh": "1300",
+                            "scaling": [
+                                0.0109999,
+                                0.0109999,
+                                0.0109999
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "collision",
+                    "collision": {
+                        "collider": "box",
+                        "box": {
+                            "extents": [
+                                0.1,
+                                0.0399999,
+                                0.1
+                            ]
+                        },
+                        "groups": 1
+                    }
+                }
+            ]
         }
     },
     "meshes": {
@@ -19074,6 +19208,42 @@
                 "name": "Everyeye - Physx",
                 "file": "assets\\models\\evidences\\everyeye.fbx"
             }
+        },
+        "1297": {
+            "link": {
+                "name": "Aloe Vera - Bottom.001",
+                "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            }
+        },
+        "1298": {
+            "link": {
+                "name": "Aloe Vera - Middle",
+                "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            }
+        },
+        "1299": {
+            "link": {
+                "name": "Aloe Vera - Top",
+                "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            }
+        },
+        "1300": {
+            "link": {
+                "name": "Aloe Vera - Physx",
+                "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            }
+        },
+        "1308": {
+            "link": {
+                "name": "Aloe Vera - Bottom.002",
+                "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            }
+        },
+        "1309": {
+            "link": {
+                "name": "Aloe Vera - Top.002",
+                "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            }
         }
     },
     "textures": {
@@ -19798,7 +19968,7 @@
                 "diffuseColor": [
                     0.0,
                     0.8941176,
-                    0.2117647,
+                    0.378685,
                     1.0
                 ],
                 "specularColor": [
@@ -19808,9 +19978,9 @@
                     1.0
                 ],
                 "ambientColor": [
-                    0.0800922,
+                    0.122722,
                     0.3294117,
-                    0.1391416,
+                    0.2005346,
                     1.0
                 ]
             },
@@ -22089,6 +22259,36 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\everyeye.fbx"
             }
+        },
+        "1293": {
+            "link": {
+                "name": "Dark Green",
+                "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            }
+        },
+        "1294": {
+            "link": {
+                "name": "Green",
+                "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            }
+        },
+        "1295": {
+            "link": {
+                "name": "Dark Blue",
+                "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            }
+        },
+        "1296": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            }
+        },
+        "1307": {
+            "link": {
+                "name": "White",
+                "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            }
         }
     },
     "shaders": {
@@ -22291,7 +22491,8 @@
         "assets/models/hand_piece.fbx",
         "assets/models/evidences/lol_physx.fbx",
         "assets/models/evidences/halo_sword_physx.fbx",
-        "assets/models/evidences/everyeye.fbx"
+        "assets/models/evidences/everyeye.fbx",
+        "assets/models/evidences/aloe_vera.fbx"
     ],
     "pipelines": {
         "69": {

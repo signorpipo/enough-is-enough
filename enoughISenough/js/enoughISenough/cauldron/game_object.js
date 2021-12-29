@@ -39,4 +39,5 @@ var GameObjectType = {
     MIRROR: 36,
     WAYFINDER: 37,
     EVERYEYE: 38,
+    ALOE_VERA: 39,
 };
