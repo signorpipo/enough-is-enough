@@ -5994,7 +5994,7 @@
                 {
                     "type": "set-specular-color",
                     "set-specular-color": {
-                        "_myBrightness": 27
+                        "_myBrightness": 74
                     }
                 }
             ],
@@ -16391,7 +16391,7 @@
                 {
                     "type": "set-specular-color",
                     "set-specular-color": {
-                        "_myBrightness": 27
+                        "_myBrightness": 74
                     }
                 }
             ],
@@ -16910,7 +16910,7 @@
                 {
                     "type": "set-specular-color",
                     "set-specular-color": {
-                        "_myBrightness": 27
+                        "_myBrightness": 74
                     }
                 }
             ],
