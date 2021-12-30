@@ -229,7 +229,7 @@ class MenuState extends PP.State {
         }
 
         {
-            let startArcadeHard = new MenuItem(Global.myGameObjects.get(GameObjectType.ARCADE_STICK_HARD), GameObjectType.ARCADE_STICK_HARD, positions[2], function () {
+            let startArcadeHard = new MenuItem(Global.myGameObjects.get(GameObjectType.ARCADE_STICK_DISPUTE), GameObjectType.ARCADE_STICK_DISPUTE, positions[2], function () {
                 this._myFSM.perform("unspawn_arcade_hard");
                 this._myResetCount = 0;
             }.bind(this));
@@ -237,7 +237,7 @@ class MenuState extends PP.State {
         }
 
         {
-            let startArcadeNormal = new MenuItem(Global.myGameObjects.get(GameObjectType.ARCADE_STICK_NORMAL), GameObjectType.ARCADE_STICK_NORMAL, positions[1], function () {
+            let startArcadeNormal = new MenuItem(Global.myGameObjects.get(GameObjectType.ARCADE_STICK_CHAT), GameObjectType.ARCADE_STICK_CHAT, positions[1], function () {
                 this._myFSM.perform("unspawn_arcade_normal");
                 this._myResetCount = 0;
             }.bind(this));
@@ -245,7 +245,7 @@ class MenuState extends PP.State {
         }
 
         {
-            let leaderboardArcadeHard = new MenuItem(Global.myGameObjects.get(GameObjectType.ARCADE_LEADERBOARD_HARD), GameObjectType.ARCADE_LEADERBOARD_HARD, positions[4], function () {
+            let leaderboardArcadeHard = new MenuItem(Global.myGameObjects.get(GameObjectType.ARCADE_LEADERBOARD_DISPUTE), GameObjectType.ARCADE_LEADERBOARD_DISPUTE, positions[4], function () {
                 //get leaderboard object and component and ask for a refresh
                 this._myResetCount = 0;
             }.bind(this));
@@ -253,7 +253,7 @@ class MenuState extends PP.State {
         }
 
         {
-            let leaderboardArcadeNormal = new MenuItem(Global.myGameObjects.get(GameObjectType.ARCADE_LEADERBOARD_NORMAL), GameObjectType.ARCADE_LEADERBOARD_NORMAL, positions[3], function () {
+            let leaderboardArcadeNormal = new MenuItem(Global.myGameObjects.get(GameObjectType.ARCADE_LEADERBOARD_CHAT), GameObjectType.ARCADE_LEADERBOARD_CHAT, positions[3], function () {
                 //get leaderboard object and component and ask for a refresh
                 this._myResetCount = 0;
             }.bind(this));

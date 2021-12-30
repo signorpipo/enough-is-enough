@@ -2157,15 +2157,19 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myCoin": "201",
-                        "_myArcadeStickHard": "207",
-                        "_myArcadeStickNormal": "167",
-                        "_myArcadLeaderboardeHard": "808",
-                        "_myArcadLeaderboardeNormal": "638",
-                        "_myWondermelon": "1306",
-                        "_myZestyMarket": "325",
-                        "_myFloppyDisk": "198",
-                        "_myNotCoin": "213"
+                        "_myCoin": "161",
+                        "_myArcadeStickHard": "144",
+                        "_myArcadeStickNormal": "152",
+                        "_myArcadLeaderboardeHard": "158",
+                        "_myArcadLeaderboardeNormal": "155",
+                        "_myWondermelon": "164",
+                        "_myZestyMarket": "170",
+                        "_myFloppyDisk": "167",
+                        "_myNotCoin": "348",
+                        "_myArcadeStickDispute": "144",
+                        "_myArcadeStickChat": "152",
+                        "_myArcadLeaderboardeDispute": "158",
+                        "_myArcadLeaderboardeChat": "155"
                     }
                 }
             ],
@@ -2189,7 +2193,7 @@
             ]
         },
         "144": {
-            "name": "Arcade Stick Hard",
+            "name": "Arcade Stick Dispute",
             "parent": "143",
             "transformation": [
                 1.0,
@@ -2215,11 +2219,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "1089",
+                            "mesh": "1325",
                             "scaling": [
-                                0.0099999,
-                                0.0099999,
-                                0.0099999
+                                0.0089999,
+                                0.0089999,
+                                0.0089999
                             ]
                         }
                     }
@@ -2250,6 +2254,9 @@
                 },
                 {
                     "type": "evidence-component"
+                },
+                {
+                    "type": "text-color-fog"
                 }
             ]
         },
@@ -2573,20 +2580,20 @@
             "deleted": true
         },
         "152": {
-            "name": "Arcade Stick Normal",
+            "name": "Arcade Stick Chat",
             "parent": "143",
             "transformation": [
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.1,
+                1.0,
                 0.0,
                 0.3,
                 0.0,
@@ -2599,11 +2606,11 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "1089",
+                            "mesh": "1325",
                             "scaling": [
-                                0.0099999,
-                                0.0099999,
-                                0.0099999
+                                0.0089999,
+                                0.0089999,
+                                0.0089999
                             ]
                         }
                     }
@@ -2634,6 +2641,9 @@
                 },
                 {
                     "type": "evidence-component"
+                },
+                {
+                    "type": "text-color-fog"
                 }
             ]
         },
@@ -2703,7 +2713,7 @@
             "deleted": true
         },
         "155": {
-            "name": "Leaderboard Arcade Normal",
+            "name": "Leaderboard Arcade Chat",
             "parent": "143",
             "transformation": [
                 1.0,
@@ -2836,7 +2846,7 @@
             "deleted": true
         },
         "158": {
-            "name": "Leaderboard Arcade Hard",
+            "name": "Leaderboard Arcade Dispute",
             "parent": "143",
             "transformation": [
                 1.0,
@@ -2995,7 +3005,7 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "1083",
+                            "mesh": "1028",
                             "scaling": [
                                 0.0099999,
                                 0.0099999,
@@ -8898,7 +8908,8 @@
                 0.0,
                 1.0
             ],
-            "name": "Pivot"
+            "name": "Pivot",
+            "deleted": true
         },
         "472": {
             "link": {
@@ -8912,7 +8923,8 @@
                         "material": "272"
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "473": {
             "link": {
@@ -8926,7 +8938,8 @@
                         "material": "280"
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "474": {
             "link": {
@@ -8959,7 +8972,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "475": {
             "link": {
@@ -8985,7 +8999,8 @@
                 0.0,
                 1.0
             ],
-            "name": "Pivot"
+            "name": "Pivot",
+            "deleted": true
         },
         "476": {
             "link": {
@@ -9017,7 +9032,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "477": {
             "link": {
@@ -9031,7 +9047,8 @@
                         "material": "284"
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "478": {
             "link": {
@@ -9064,7 +9081,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "486": {
             "link": {
@@ -17314,6 +17332,210 @@
                 "file": "assets\\models\\evidences\\ethereum_physx.fbx"
             },
             "deleted": true
+        },
+        "1326": {
+            "link": {
+                "name": "Arcade Stick F",
+                "file": "assets\\models\\evidences\\arcade_stick_f.fbx"
+            },
+            "parent": "144",
+            "transformation": [
+                0.0089999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0089999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0089999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "1327": {
+            "link": {
+                "name": "Arcade Stick - Stick<Arcade Stick F",
+                "file": "assets\\models\\evidences\\arcade_stick_f.fbx"
+            },
+            "parent": "1326",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "274"
+                    }
+                }
+            ]
+        },
+        "1328": {
+            "link": {
+                "name": "Arcade Stick - Base<Arcade Stick F",
+                "file": "assets\\models\\evidences\\arcade_stick_f.fbx"
+            },
+            "parent": "1326",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "272"
+                    }
+                }
+            ]
+        },
+        "1329": {
+            "link": {
+                "name": "Arcade Stick - Sphere<Arcade Stick F",
+                "file": "assets\\models\\evidences\\arcade_stick_f.fbx"
+            },
+            "parent": "1326",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "280"
+                    }
+                }
+            ]
+        },
+        "1330": {
+            "link": {
+                "name": "Arcade Stick - Physx<Arcade Stick F",
+                "file": "assets\\models\\evidences\\arcade_stick_f.fbx"
+            },
+            "parent": "1326",
+            "deleted": true
+        },
+        "1331": {
+            "link": {
+                "name": "Arcade Stick F",
+                "file": "assets\\models\\evidences\\arcade_stick_f.fbx"
+            },
+            "parent": "152",
+            "transformation": [
+                0.0089999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0089999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0089999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "1332": {
+            "link": {
+                "name": "Arcade Stick - Stick<Arcade Stick F",
+                "file": "assets\\models\\evidences\\arcade_stick_f.fbx"
+            },
+            "parent": "1331",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "273"
+                    }
+                }
+            ]
+        },
+        "1333": {
+            "link": {
+                "name": "Arcade Stick - Base<Arcade Stick F",
+                "file": "assets\\models\\evidences\\arcade_stick_f.fbx"
+            },
+            "parent": "1331",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "272"
+                    }
+                }
+            ]
+        },
+        "1334": {
+            "link": {
+                "name": "Arcade Stick - Sphere<Arcade Stick F",
+                "file": "assets\\models\\evidences\\arcade_stick_f.fbx"
+            },
+            "parent": "1331",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "284"
+                    }
+                }
+            ]
+        },
+        "1335": {
+            "name": "Dispute",
+            "parent": "144",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": "DISPUTE"
+                    }
+                }
+            ],
+            "transformation": [
+                -0.1360002,
+                -1.188947340580171e-8,
+                3.8504794019900149e-8,
+                0.0,
+                -3.850415097872428e-8,
+                -4.0530602518629168e-7,
+                -0.1359981,
+                0.0,
+                1.1889405904241812e-8,
+                -0.1359981,
+                4.134122661980655e-7,
+                0.0,
+                0.0000058,
+                -0.068,
+                0.0000267,
+                1.0
+            ]
+        },
+        "1336": {
+            "name": "Chat",
+            "parent": "152",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "material": "441",
+                        "text": "CHAT"
+                    }
+                }
+            ],
+            "transformation": [
+                -0.136,
+                -1.188944320773544e-8,
+                3.850477270361807e-8,
+                0.0,
+                -3.850413321515589e-8,
+                -4.053054283303936e-7,
+                -0.1359979,
+                0.0,
+                1.1889377482532382e-8,
+                -0.1359979,
+                4.1341166934216746e-7,
+                0.0,
+                0.0,
+                -0.0680001,
+                0.0000266,
+                1.0
+            ]
         }
     },
     "meshes": {
@@ -19277,6 +19499,30 @@
             "link": {
                 "name": "Aloe Vera - Bottom",
                 "file": "assets\\models\\evidences\\aloe_vera.fbx"
+            }
+        },
+        "1322": {
+            "link": {
+                "name": "Arcade Stick - Stick",
+                "file": "assets\\models\\evidences\\arcade_stick_f.fbx"
+            }
+        },
+        "1323": {
+            "link": {
+                "name": "Arcade Stick - Base",
+                "file": "assets\\models\\evidences\\arcade_stick_f.fbx"
+            }
+        },
+        "1324": {
+            "link": {
+                "name": "Arcade Stick - Sphere.002",
+                "file": "assets\\models\\evidences\\arcade_stick_f.fbx"
+            }
+        },
+        "1325": {
+            "link": {
+                "name": "Arcade Stick - Physx",
+                "file": "assets\\models\\evidences\\arcade_stick_f.fbx"
             }
         }
     },
@@ -22341,6 +22587,30 @@
                 "name": "Dark Green.001",
                 "file": "assets\\models\\evidences\\aloe_vera.fbx"
             }
+        },
+        "1318": {
+            "link": {
+                "name": "Dark Red",
+                "file": "assets\\models\\evidences\\arcade_stick_f.fbx"
+            }
+        },
+        "1319": {
+            "link": {
+                "name": "Dark Blue",
+                "file": "assets\\models\\evidences\\arcade_stick_f.fbx"
+            }
+        },
+        "1320": {
+            "link": {
+                "name": "Red",
+                "file": "assets\\models\\evidences\\arcade_stick_f.fbx"
+            }
+        },
+        "1321": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\arcade_stick_f.fbx"
+            }
         }
     },
     "shaders": {
@@ -22545,7 +22815,8 @@
         "assets/models/evidences/halo_sword_physx.fbx",
         "assets/models/evidences/everyeye.fbx",
         "assets/models/evidences/aloe_vera.fbx",
-        "assets/models/evidences/ethereum_physx.fbx"
+        "assets/models/evidences/ethereum_physx.fbx",
+        "assets/models/evidences/arcade_stick_f.fbx"
     ],
     "pipelines": {
         "69": {
