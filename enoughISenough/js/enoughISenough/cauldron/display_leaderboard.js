@@ -15,7 +15,7 @@ WL.registerComponent("display-leaderboard", {
     onActivate: function () {
         this._myNamesTextComponent.text = "";
         this._myScoresTextComponent.text = "";
-        PP.CAUtils.getLeaderboard(this._myName, true, this._myIsLocal, 9, this._onLeaderboardRetrieved.bind(this));
+        PP.CAUtils.getLeaderboard(this._myName, true, this._myIsLocal, 10, this._onLeaderboardRetrieved.bind(this));
     },
     _onLeaderboardRetrieved(leaderboard) {
         let namesText = "";

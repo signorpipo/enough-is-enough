@@ -15,7 +15,8 @@ class EIECADummyServer {
             { rank: 6, displayName: "Zesty Market", score: 0 },
             { rank: 7, displayName: "Sorskoot", score: 0 },
             { rank: 8, displayName: "Wonderland", score: 0 },
-            { rank: 9, displayName: "mr NOT", score: 0 }
+            { rank: 9, displayName: "Spray Space", score: 0 },
+            { rank: 10, displayName: "mr NOT", score: 0 }
         ];
 
         while (leaderboard.length > scoresAmount) {
