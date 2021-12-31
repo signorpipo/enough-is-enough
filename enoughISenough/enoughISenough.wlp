@@ -1245,15 +1245,6 @@
                 3.0,
                 0.0,
                 1.0
-            ],
-            "components": [
-                {
-                    "type": "pp-easy-transform",
-                    "pp-easy-transform": {
-                        "_myVariableName": "Light",
-                        "_myIsLocal": true
-                    }
-                }
             ]
         },
         "110": {
@@ -2166,7 +2157,7 @@
                         "_myZestyMarket": "170",
                         "_myFloppyDisk": "167",
                         "_myNotCoin": "348",
-                        "_myArcadeStickDispute": "144",
+                        "_myArcadeStickDispute": "213",
                         "_myArcadeStickChat": "152",
                         "_myArcadLeaderboardeDispute": "158",
                         "_myArcadLeaderboardeChat": "155"
@@ -4833,6 +4824,9 @@
                 },
                 {
                     "type": "evidence-component"
+                },
+                {
+                    "type": "text-color-fog"
                 }
             ]
         },
@@ -10300,13 +10294,6 @@
                         "text": "01 - Pipo\n\n02 - Srile\n\n03 - Jonathan\n\n04 - Yinch\n\n05 - Wondermelon\n\n06 - Zesty Market\n\n07 - Wonderland\n\n08 - Sorskoot\n\n09 - Spray Space\n\n10 - mr NOT",
                         "material": "441"
                     }
-                },
-                {
-                    "type": "pp-easy-transform",
-                    "pp-easy-transform": {
-                        "_myIsLocal": true,
-                        "_myVariableName": "Names"
-                    }
                 }
             ],
             "transformation": [
@@ -10339,13 +10326,6 @@
                         "justification": "line",
                         "text": "00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00\n\n00:00:00",
                         "material": "441"
-                    }
-                },
-                {
-                    "type": "pp-easy-transform",
-                    "pp-easy-transform": {
-                        "_myVariableName": "Score",
-                        "_myIsLocal": true
                     }
                 }
             ],
@@ -11720,7 +11700,26 @@
                         "material": "277"
                     }
                 }
-            ]
+            ],
+            "transformation": [
+                0.001,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.001,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.001,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "deleted": true
         },
         "626": {
             "link": {
@@ -11734,7 +11733,26 @@
                         "material": "277"
                     }
                 }
-            ]
+            ],
+            "transformation": [
+                0.001,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.001,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.001,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "deleted": true
         },
         "627": {
             "link": {
@@ -11770,7 +11788,26 @@
                         "material": "277"
                     }
                 }
-            ]
+            ],
+            "transformation": [
+                0.001,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.001,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.001,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "deleted": true
         },
         "634": {
             "link": {
@@ -17954,6 +17991,51 @@
                     }
                 }
             ]
+        },
+        "1366": {
+            "name": "C++",
+            "parent": "622",
+            "components": [
+                {
+                    "type": "text",
+                    "text": {
+                        "text": "C++",
+                        "material": "1367"
+                    }
+                },
+                {
+                    "type": "pp-easy-transform",
+                    "pp-easy-transform": {
+                        "_myIsLocal": true,
+                        "_myVariableName": "c++"
+                    }
+                },
+                {
+                    "type": "pp-easy-text-color",
+                    "pp-easy-text-color": {
+                        "_myColorModel": "hsv",
+                        "_myColorType": "color"
+                    }
+                }
+            ],
+            "transformation": [
+                99.9992523,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.0000119,
+                -99.998825,
+                0.0,
+                0.0,
+                99.998825,
+                -0.0000119,
+                0.0,
+                0.0999999,
+                6.75,
+                -3.0,
+                1.0
+            ]
         }
     },
     "meshes": {
@@ -23071,6 +23153,31 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\frame_f.fbx"
             }
+        },
+        "1367": {
+            "link": {
+                "name": "DefaultFontMaterial",
+                "file": "default"
+            },
+            "DistanceFieldVector": {
+                "outlineRange": [
+                    0.5,
+                    0.5
+                ],
+                "outlineColor": [
+                    0.1642445,
+                    0.2435334,
+                    0.4705882,
+                    1.0
+                ],
+                "color": [
+                    0.1642445,
+                    0.2435334,
+                    0.4705882,
+                    1.0
+                ]
+            },
+            "name": "CFontMaterial"
         }
     },
     "shaders": {
