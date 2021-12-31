@@ -16,7 +16,7 @@ WL.registerComponent("mr_not_mirror", {
             playerForward = playerForward.vec3_negate();
         }
 
-        let angle = Math.pp_toDegrees(forward.vec3_angle(playerForward));
+        let angle = Math.pp_toDegrees(forward.vec3_angleRadians(playerForward));
 
         let angleFactor = Math.pp_mapToNewInterval(angle, 10, 45, 0.9, 0);
 

@@ -199,7 +199,7 @@ Array.prototype.pp_copy = function (array) {
         this.pop();
     }
 
-    for (let i = 0; i < array.size; i++) {
+    for (let i = 0; i < array.length; i++) {
         this[i] = array[i];
     }
 
@@ -327,6 +327,14 @@ Array.prototype.vec3_zero = function () {
 };
 
 Array.prototype.vec3_angle = function (vector) {
+    return this.vec3_angleDegrees(vector);
+};
+
+Array.prototype.vec3_angleDegrees = function (vector) {
+    return this.vec3_angleRadians(vector) * (180 / Math.PI);
+};
+
+Array.prototype.vec3_angleRadians = function (vector) {
     return glMatrix.vec3.angle(this, vector);
 };
 
@@ -368,7 +376,33 @@ Array.prototype.vec3_negate = function (out = glMatrix.vec3.create()) {
     return out;
 };
 
+Array.prototype.vec3_cross = function (vector, out = glMatrix.vec3.create()) {
+    glMatrix.vec3.cross(out, this, vector);
+    return out;
+};
+
 //New Methods
+
+Array.prototype.vec3_angleSigned = function (vector, axis) {
+    return this.vec3_angleSignedDegrees(vector, axis);
+};
+
+Array.prototype.vec3_angleSignedDegrees = function (vector, axis) {
+    return this.vec3_angleSignedRadians(vector, axis) * (180 / Math.PI);
+};
+
+Array.prototype.vec3_angleSignedRadians = function () {
+    let crossAxis = glMatrix.vec3.create();
+    return function (vector, axis) {
+        this.vec3_cross(vector, crossAxis);
+        let angle = this.vec3_angleRadians(vector);
+        if (!this.crossAxis.vec3_isConcordant(axis)) {
+            angle = -angle;
+        }
+
+        return angle;
+    };
+}();
 
 Array.prototype.vec3_toRadians = function (out = glMatrix.vec3.create()) {
     glMatrix.vec3.set(out, glMatrix.glMatrix.toRadian(this[0]), glMatrix.glMatrix.toRadian(this[1]), glMatrix.glMatrix.toRadian(this[2]));

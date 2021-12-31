@@ -4826,7 +4826,10 @@
                     "type": "evidence-component"
                 },
                 {
-                    "type": "text-color-fog"
+                    "type": "text-color-fog",
+                    "text-color-fog": {
+                        "_myShadeFactorMaxAngle": 180.0
+                    }
                 }
             ]
         },
@@ -17601,7 +17604,7 @@
             ],
             "transformation": [
                 -0.136,
-                -1.1889443207735441e-8,
+                -1.188944320773544e-8,
                 3.850477270361807e-8,
                 0.0,
                 -3.8504133215155898e-8,
@@ -18001,20 +18004,6 @@
                     "text": {
                         "text": "C++",
                         "material": "1367"
-                    }
-                },
-                {
-                    "type": "pp-easy-transform",
-                    "pp-easy-transform": {
-                        "_myIsLocal": true,
-                        "_myVariableName": "c++"
-                    }
-                },
-                {
-                    "type": "pp-easy-text-color",
-                    "pp-easy-text-color": {
-                        "_myColorModel": "hsv",
-                        "_myColorType": "color"
                     }
                 }
             ],
@@ -23279,7 +23268,8 @@
                 "js/plugin",
                 "js/pp/tool/easy_tune/widgets",
                 "js/pp/tool/easy_tune/easy_object_tuners",
-                "js/pp/tool/easy_tune/easy_tune_widgets"
+                "js/pp/tool/easy_tune/easy_tune_widgets",
+                "js/pp/debug/components"
             ]
         },
         "editor": {
