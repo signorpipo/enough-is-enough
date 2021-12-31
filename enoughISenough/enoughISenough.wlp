@@ -2148,7 +2148,7 @@
                     "menu-objects": {
                         "_myStartChallenge": "144",
                         "_myStartArcade": "144",
-                        "_myCoin": "317",
+                        "_myCoin": "161",
                         "_myArcadeStickHard": "144",
                         "_myArcadeStickNormal": "152",
                         "_myArcadLeaderboardeHard": "158",
@@ -2157,7 +2157,7 @@
                         "_myZestyMarket": "170",
                         "_myFloppyDisk": "167",
                         "_myNotCoin": "348",
-                        "_myArcadeStickDispute": "213",
+                        "_myArcadeStickDispute": "144",
                         "_myArcadeStickChat": "152",
                         "_myArcadLeaderboardeDispute": "158",
                         "_myArcadLeaderboardeChat": "155"
@@ -3256,7 +3256,7 @@
                     "physx": {
                         "shape": "convexMesh",
                         "convexMesh": {
-                            "mesh": "553",
+                            "mesh": "1373",
                             "scaling": [
                                 0.016,
                                 0.016,
@@ -10646,7 +10646,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "555": {
             "link": {
@@ -10660,7 +10661,8 @@
                         "material": "272"
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "556": {
             "link": {
@@ -10674,7 +10676,8 @@
                         "material": "279"
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "557": {
             "link": {
@@ -10688,7 +10691,8 @@
                         "material": "279"
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "558": {
             "link": {
@@ -18025,6 +18029,67 @@
                 -3.0,
                 1.0
             ]
+        },
+        "1374": {
+            "link": {
+                "name": "Floppy F",
+                "file": "assets\\models\\evidences\\floppy_f.fbx"
+            },
+            "parent": "167",
+            "transformation": [
+                0.0179999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0179999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0179999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
+        },
+        "1375": {
+            "link": {
+                "name": "Floppy F - Base<Floppy F",
+                "file": "assets\\models\\evidences\\floppy_f.fbx"
+            },
+            "parent": "1374",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "272"
+                    }
+                }
+            ]
+        },
+        "1376": {
+            "link": {
+                "name": "Floppy F - Data<Floppy F",
+                "file": "assets\\models\\evidences\\floppy_f.fbx"
+            },
+            "parent": "1374",
+            "components": [
+                {
+                    "mesh": {
+                        "material": "279"
+                    }
+                }
+            ]
+        },
+        "1377": {
+            "link": {
+                "name": "Floppy F - Physx<Floppy F",
+                "file": "assets\\models\\evidences\\floppy_f.fbx"
+            },
+            "parent": "1374",
+            "deleted": true
         }
     },
     "meshes": {
@@ -20036,6 +20101,24 @@
             "link": {
                 "name": "Frame F - Physx",
                 "file": "assets\\models\\evidences\\frame_f.fbx"
+            }
+        },
+        "1371": {
+            "link": {
+                "name": "Floppy F - Base",
+                "file": "assets\\models\\evidences\\floppy_f.fbx"
+            }
+        },
+        "1372": {
+            "link": {
+                "name": "Floppy F - Data",
+                "file": "assets\\models\\evidences\\floppy_f.fbx"
+            }
+        },
+        "1373": {
+            "link": {
+                "name": "Floppy F - Physx",
+                "file": "assets\\models\\evidences\\floppy_f.fbx"
             }
         }
     },
@@ -23167,6 +23250,24 @@
                 ]
             },
             "name": "CFontMaterial"
+        },
+        "1368": {
+            "link": {
+                "name": "Black",
+                "file": "assets\\models\\evidences\\floppy_f.fbx"
+            }
+        },
+        "1369": {
+            "link": {
+                "name": "White",
+                "file": "assets\\models\\evidences\\floppy_f.fbx"
+            }
+        },
+        "1370": {
+            "link": {
+                "name": "DefaultMaterial",
+                "file": "assets\\models\\evidences\\floppy_f.fbx"
+            }
         }
     },
     "shaders": {
@@ -23374,7 +23475,8 @@
         "assets/models/evidences/aloe_vera.fbx",
         "assets/models/evidences/ethereum_physx.fbx",
         "assets/models/evidences/arcade_stick_f.fbx",
-        "assets/models/evidences/frame_f.fbx"
+        "assets/models/evidences/frame_f.fbx",
+        "assets/models/evidences/floppy_f.fbx"
     ],
     "pipelines": {
         "69": {
