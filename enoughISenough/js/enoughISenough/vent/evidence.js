@@ -136,6 +136,7 @@ class Evidence {
 
         this._mySpawnTimer.start(1);
         this._myHitExplosion = false;
+        this._myHitFloor = false;
     }
 
     _spawning(dt) {
@@ -158,11 +159,16 @@ class Evidence {
 
     _readyUpdate(dt) {
         if (this._myObject.pp_getPosition()[1] <= -6 || this._myObject.pp_getPosition()[1] > 20 || this._myObject.pp_getPosition().vec3_length() > 50) {
+            this._myHitFloor = true;
             this._myFSM.perform("unspawn");
         }
     }
 
     _startUnspawn() {
+        if (this._myHasBeenThrown && (this._myHitFloor || this._myHitExplosion)) {
+            Global.myStatistics.myEvidencesThrown += 1;
+        }
+
         this._myTimer.start(PP.myEasyTuneVariables.get("Unspawn Menu Time"));
         this._myPhysx.kinematic = true;
 

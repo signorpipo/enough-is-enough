@@ -1,15 +1,15 @@
 class ArcadeState extends PP.State {
-    constructor(isHard) {
+    constructor(isDispute) {
         super();
 
-        this._myIsHard = isHard;
+        this._myIsDispute = isDispute;
 
         this._myFSM = new PP.FSM();
         this._myFSM.setDebugLogActive(true, "    Arcade");
         this._myFSM.addState("init");
         this._myFSM.addState("first_wait", new PP.TimerState(1.5, "end"));
         this._myFSM.addState("vent", new VentState(this._buildVentSetup(), this._buildEvidenceSetupList()));
-        this._myFSM.addState("defeat", new ArcadeResultState(isHard));
+        this._myFSM.addState("defeat", new ArcadeResultState(isDispute));
         this._myFSM.addState("done");
 
         this._myFSM.addTransition("init", "first_wait", "start");
@@ -25,6 +25,11 @@ class ArcadeState extends PP.State {
 
     update(dt, fsm) {
         Global.myArcadeDuration += dt;
+        if (this._myIsDispute) {
+            Global.myStatistics.myDisputePlayTime += dt;
+        } else {
+            Global.myStatistics.myChatPlayTime += dt;
+        }
 
         this._myFSM.update(dt);
     }
@@ -36,6 +41,12 @@ class ArcadeState extends PP.State {
         this._myParentFSM = fsm;
         this._myFSM.perform("start");
         Global.myArcadeDuration = 0;
+
+        if (this._myIsDispute) {
+            Global.myStatistics.myDisputePlayCount += 1;
+        } else {
+            Global.myStatistics.myChatPlayCount += 1;
+        }
     }
 
     end(fsm, transitionID) {
@@ -46,7 +57,7 @@ class ArcadeState extends PP.State {
     }
 
     _buildVentSetup() {
-        if (this._myIsHard) {
+        if (this._myIsDispute) {
             return 0;
         }
 

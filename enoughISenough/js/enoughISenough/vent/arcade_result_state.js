@@ -1,5 +1,5 @@
 class ArcadeResultState extends PP.State {
-    constructor(isHard) {
+    constructor(isDispute) {
         super();
 
         this._myFSM = new PP.FSM();
@@ -32,7 +32,7 @@ class ArcadeResultState extends PP.State {
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.VENT_TIMER, 5, null, null, [CardinalPosition.NORTH], this._onTimerUnspawned.bind(this)));
         this._myEvidenceManager = new EvidenceManager(evidenceSetupList);
 
-        this._myIsHard = isHard;
+        this._myIsDispute = isDispute;
     }
 
     update(dt, fsm) {
@@ -76,6 +76,27 @@ class ArcadeResultState extends PP.State {
     start(fsm, transition) {
         this._myParentFSM = fsm;
         this._myFSM.perform("start");
+
+        if (this._myIsDispute) {
+            if (Global.myStatistics.myDisputeBestTime < 0 || Global.myVentDuration < Global.myStatistics.myDisputeBestTime) {
+                Global.myStatistics.myDisputeBestTime = Global.myVentDuration;
+            }
+        } else {
+            if (Global.myStatistics.myChatBestTime < 0 || Global.myVentDuration < Global.myStatistics.myChatBestTime) {
+                Global.myStatistics.myChatBestTime = Global.myVentDuration;
+            }
+        }
+
+        let leaderboardID = "enoughISenough";
+        if (this._myIsDispute) {
+            leaderboardID = leaderboardID.concat("_dispute");
+        } else {
+            leaderboardID = leaderboardID.concat("_chat");
+        }
+
+        let score = Math.floor(Global.myVentDuration * 1000);
+
+        PP.CAUtils.submitScore(leaderboardID, score);
     }
 
     end(fsm, transitionID) {
@@ -86,17 +107,6 @@ class ArcadeResultState extends PP.State {
 
     _onTimerUnspawned(evidence) {
         if (PP.XRUtils.isXRSessionActive() && evidence.hasBeenThrown()) {
-            let leaderboardID = "enoughISenough";
-            if (this._myIsHard) {
-                leaderboardID = leaderboardID.concat("_hard");
-            } else {
-                leaderboardID = leaderboardID.concat("_normal");
-            }
-
-            let score = Math.floor(Global.myVentDuration * 1000);
-
-            PP.CAUtils.submitScore(leaderboardID, score);
-
             this._myFSM.perform("end");
         }
     }

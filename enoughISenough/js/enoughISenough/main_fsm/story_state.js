@@ -59,6 +59,7 @@ class StoryState extends PP.State {
 
     update(dt, fsm) {
         Global.myStoryDuration += dt;
+        Global.myStatistics.myStoryPlayTime += dt;
 
         this._myFSM.update(dt);
     }
@@ -70,6 +71,8 @@ class StoryState extends PP.State {
         this._myParentFSM = fsm;
         this._myFSM.perform("start");
         Global.myStoryDuration = 0;
+        this._myStoryStartedFromBegin = true;
+        Global.myStatistics.myStoryPlayCount += 1;
     }
 
     end(fsm, transitionID) {
@@ -81,8 +84,15 @@ class StoryState extends PP.State {
     }
 
     _gameCompleted(fsm) {
+        if (this._myStoryStartedFromBegin) {
+            if (Global.myStatistics.myStoryBestTime < 0 || Global.myStoryDuration < Global.myStatistics.myStoryBestTime) {
+                Global.myStatistics.myStoryBestTime = Global.myStoryDuration;
+            }
+        }
+
         PP.SaveUtils.save("story_completed", true);
         this._myParentFSM.perform(MainTransitions.End);
+        Global.myStatistics.myStoryCompletedCount += 1;
     }
 
     _firstTalkSentences() {

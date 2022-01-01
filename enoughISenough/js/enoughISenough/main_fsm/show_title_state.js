@@ -26,7 +26,7 @@ class ShowTitleState extends PP.State {
         this._myTitlesObjectPosition = [-10, 133, -164];
         this._myTitlesObject.pp_setPosition(this._myTitlesObjectPosition);
 
-        this._myTitle.pp_setPosition([-104, 153, -196]);
+        this._myTitle.pp_setPosition([-97, 153, -196]);
         this._myTitle.pp_setScale(550);
         this._myTitle.pp_setRotation([40, 0, 0]);
 
@@ -89,7 +89,7 @@ class ShowTitleState extends PP.State {
 
         this._myCharTimer = new PP.Timer(Math.pp_random(this._myCharMinTime, this._myCharMaxTime));
         this._myWaitTimer = new PP.Timer(1);
-        this._myChars = "MR NOT";
+        this._myChars = "mr NOT";
         this._myCurrChar = 0;
     }
 
@@ -193,7 +193,7 @@ class ShowTitleState extends PP.State {
 
         this._myNotEnough.stop();
 
-        this._myTitleTextComponent.text = "MR NOT";
+        this._myTitleTextComponent.text = "mr NOT";
         this._mySubtitleTextComponent.text = "enough IS enough";
     }
 }

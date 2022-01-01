@@ -5,6 +5,8 @@ WL.registerComponent("enough-IS-enough-gateway", {
     _myRightHandAnimator: { type: WL.Type.Object },
 }, {
     init: function () {
+        //PP.SaveUtils.clear();
+
         Global.myAudioManager = new PP.AudioManager();
         Global.myParticlesManager = new ParticlesManager();
         Global.myMeshObjectPoolMap = new ObjectPoolMap();
@@ -127,4 +129,5 @@ var Global = {
     myPlayerForward: [0, 0, 1],
     myLightFadeInTime: 0,
     myStartFadeOut: false,
+    myStatistics: null,
 };

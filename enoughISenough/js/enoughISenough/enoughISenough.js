@@ -4,12 +4,21 @@ class enoughISenough {
     }
 
     start() {
+        this._myStatisticsManager = new StatisticsManager();
+        this._myStatisticsManager.start();
+
         this._myMainFSM = new MainFSM();
         this._myMainFSM.init();
     }
 
     update(dt) {
         this._myMainFSM.update(dt);
+
+        if (PP.XRUtils.isXRSessionActive()) {
+            Global.myStatistics.myTotalPlayTime += dt;
+        }
+
+        this._myStatisticsManager.update(dt);
     }
 
     prepareSFXSetups() {

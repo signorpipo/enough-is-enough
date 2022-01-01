@@ -145,6 +145,8 @@ class MrNOTClone {
             if (this._myCallbackOnHit) {
                 this._myCallbackOnHit(this, hittingObject);
             }
+
+            Global.myStatistics.myMrNOTCloneDismissed += 1;
         }
     }
 

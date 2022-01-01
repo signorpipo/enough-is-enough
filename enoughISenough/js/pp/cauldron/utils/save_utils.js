@@ -11,19 +11,25 @@ PP.SaveUtils = {
     clear: function () {
         return localStorage.clear();
     },
-    loadString: function (id) {
-        return localStorage.getItem(id);
+    loadString: function (id, defaultValue = null) {
+        let item = localStorage.getItem(id);
+
+        if (item == null) {
+            item = defaultValue;
+        }
+
+        return item;
     },
-    loadNumber: function (id) {
+    loadNumber: function (id, defaultValue = null) {
         let item = PP.SaveUtils.loadString(id);
 
         if (item != null) {
             return Number(item);
         }
 
-        return null;
+        return defaultValue;
     },
-    loadBool: function (id) {
+    loadBool: function (id, defaultValue = null) {
         let item = PP.SaveUtils.loadString(id);
 
         if (item == "true") {
@@ -32,6 +38,6 @@ PP.SaveUtils = {
             return false;
         }
 
-        return null;
+        return defaultValue;
     }
 };
