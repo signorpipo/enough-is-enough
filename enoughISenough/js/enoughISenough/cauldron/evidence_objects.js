@@ -1,5 +1,5 @@
 WL.registerComponent('evidence-objects', {
-    _myStoryTimer: { type: WL.Type.Object },
+    _myTrialTimer: { type: WL.Type.Object },
     _myVentTimer: { type: WL.Type.Object },
     _myTuciaDrawing: { type: WL.Type.Object },
     _myCPlusPlusPrimer: { type: WL.Type.Object },
@@ -30,7 +30,7 @@ WL.registerComponent('evidence-objects', {
     _myAloeVera: { type: WL.Type.Object },
 }, {
     init: function () {
-        Global.myGameObjects.set(GameObjectType.STORY_TIMER, this._myStoryTimer);
+        Global.myGameObjects.set(GameObjectType.TRIAL_TIMER, this._myTrialTimer);
         Global.myGameObjects.set(GameObjectType.VENT_TIMER, this._myVentTimer);
         Global.myGameObjects.set(GameObjectType.TUCIA_DRAWING, this._myTuciaDrawing);
         Global.myGameObjects.set(GameObjectType.CPLUSPLUS_PRIMER, this._myCPlusPlusPrimer);
@@ -64,7 +64,7 @@ WL.registerComponent('evidence-objects', {
         cloneParams.myComponentsToInclude.push("mesh");
         cloneParams.myComponentsToInclude.push("text");
         cloneParams.myComponentsToInclude.push("text-color-fog");
-        Global.myMeshObjects.set(GameObjectType.STORY_TIMER, this._myStoryTimer.pp_clone(cloneParams));
+        Global.myMeshObjects.set(GameObjectType.TRIAL_TIMER, this._myTrialTimer.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.VENT_TIMER, this._myVentTimer.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.TUCIA_DRAWING, this._myTuciaDrawing.pp_clone(cloneParams));
         Global.myMeshObjects.set(GameObjectType.CPLUSPLUS_PRIMER, this._myCPlusPlusPrimer.pp_clone(cloneParams));

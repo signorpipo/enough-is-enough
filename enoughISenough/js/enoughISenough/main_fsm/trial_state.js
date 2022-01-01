@@ -1,9 +1,9 @@
-class StoryState extends PP.State {
+class TrialState extends PP.State {
     constructor() {
         super();
 
         this._myFSM = new PP.FSM();
-        this._myFSM.setDebugLogActive(true, "    Story");
+        this._myFSM.setDebugLogActive(true, "    Trial");
         this._myFSM.addState("init");
         this._myFSM.addState("first_talk", new TalkState(this._firstTalkSentences(), false));
         this._myFSM.addState("first_vent", new VentState(this._firstVentSetup(), this._firstEvidenceSetupList()));
@@ -58,8 +58,8 @@ class StoryState extends PP.State {
     }
 
     update(dt, fsm) {
-        Global.myStoryDuration += dt;
-        Global.myStatistics.myStoryPlayTime += dt;
+        Global.myTrialDuration += dt;
+        Global.myStatistics.myTrialPlayTime += dt;
 
         this._myFSM.update(dt);
     }
@@ -70,13 +70,13 @@ class StoryState extends PP.State {
     start(fsm, transitionID) {
         this._myParentFSM = fsm;
         this._myFSM.perform("start");
-        Global.myStoryDuration = 0;
-        this._myStoryStartedFromBegin = true;
-        Global.myStatistics.myStoryPlayCount += 1;
+        Global.myTrialDuration = 0;
+        this._myTrialStartedFromBegin = true;
+        Global.myStatistics.myTrialPlayCount += 1;
     }
 
     end(fsm, transitionID) {
-        PP.SaveUtils.save("story_started_once", true);
+        PP.SaveUtils.save("trial_started_once", true);
     }
 
     _backToMenu(fsm) {
@@ -84,15 +84,15 @@ class StoryState extends PP.State {
     }
 
     _gameCompleted(fsm) {
-        if (this._myStoryStartedFromBegin) {
-            if (Global.myStatistics.myStoryBestTime < 0 || Global.myStoryDuration < Global.myStatistics.myStoryBestTime) {
-                Global.myStatistics.myStoryBestTime = Global.myStoryDuration;
+        if (this._myTrialStartedFromBegin) {
+            if (Global.myStatistics.myTrialBestTime < 0 || Global.myTrialDuration < Global.myStatistics.myTrialBestTime) {
+                Global.myStatistics.myTrialBestTime = Global.myTrialDuration;
             }
         }
 
-        PP.SaveUtils.save("story_completed", true);
+        PP.SaveUtils.save("trial_completed", true);
         this._myParentFSM.perform(MainTransitions.End);
-        Global.myStatistics.myStoryCompletedCount += 1;
+        Global.myStatistics.myTrialCompletedCount += 1;
     }
 
     _firstTalkSentences() {
@@ -186,7 +186,7 @@ class StoryState extends PP.State {
     _firstEvidenceSetupList() {
         let evidenceSetupList = [];
 
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STORY_TIMER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.TRIAL_TIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.TUCIA_DRAWING, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS_PRIMER, 5));
@@ -228,7 +228,7 @@ class StoryState extends PP.State {
     _secondEvidenceSetupList() {
         let evidenceSetupList = [];
 
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STORY_TIMER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.TRIAL_TIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.TUCIA_DRAWING, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS_PRIMER, 5));
@@ -250,7 +250,7 @@ class StoryState extends PP.State {
     _thirdEvidenceSetupList() {
         let evidenceSetupList = [];
 
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STORY_TIMER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.TRIAL_TIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.TUCIA_DRAWING, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS_PRIMER, 5));

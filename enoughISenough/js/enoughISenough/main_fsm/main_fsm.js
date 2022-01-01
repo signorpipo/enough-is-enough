@@ -17,19 +17,19 @@ class MainFSM {
     _buildFSM() {
         this._myFSM.addState(MainStates.Intro, new IntroState());
         this._myFSM.addState(MainStates.Menu, new MenuState());
-        this._myFSM.addState(MainStates.Story, new StoryState());
+        this._myFSM.addState(MainStates.Trial, new TrialState());
         this._myFSM.addState(MainStates.ArcadeHard, new ArcadeState(true));
         this._myFSM.addState(MainStates.ArcadeNormal, new ArcadeState(false));
 
         this._myFSM.addTransition(MainStates.Intro, MainStates.Menu, MainTransitions.End);
         this._myFSM.addTransition(MainStates.Intro, MainStates.Menu, MainTransitions.Skip);
 
-        this._myFSM.addTransition(MainStates.Menu, MainStates.Story, MainTransitions.StartStory);
+        this._myFSM.addTransition(MainStates.Menu, MainStates.Trial, MainTransitions.StartTrial);
         this._myFSM.addTransition(MainStates.Menu, MainStates.ArcadeHard, MainTransitions.StartArcadeHard);
         this._myFSM.addTransition(MainStates.Menu, MainStates.ArcadeNormal, MainTransitions.StartArcadeNormal);
         this._myFSM.addTransition(MainStates.Menu, MainStates.Menu, MainTransitions.Reset);
 
-        this._myFSM.addTransition(MainStates.Story, MainStates.Menu, MainTransitions.End);
+        this._myFSM.addTransition(MainStates.Trial, MainStates.Menu, MainTransitions.End);
         this._myFSM.addTransition(MainStates.ArcadeHard, MainStates.Menu, MainTransitions.End);
         this._myFSM.addTransition(MainStates.ArcadeNormal, MainStates.Menu, MainTransitions.End);
     }
@@ -38,7 +38,7 @@ class MainFSM {
 var MainStates = {
     Intro: "Intro",
     Menu: "Menu",
-    Story: "Story",
+    Trial: "Trial",
     ArcadeHard: "ArcadeHard",
     ArcadeNormal: "ArcadeNormal",
 };
@@ -46,7 +46,7 @@ var MainStates = {
 var MainTransitions = {
     End: "End",
     Skip: "Skip",
-    StartStory: "StartStory",
+    StartTrial: "StartTrial",
     StartArcadeHard: "StartArcadeHard",
     StartArcadeNormal: "StartArcadeNormal",
     Reset: "Reset"

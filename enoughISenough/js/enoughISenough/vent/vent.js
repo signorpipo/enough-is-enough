@@ -34,8 +34,10 @@ class Vent {
             if (this._myTimer.isDone()) {
                 if (this._myVentSetup == 1) {
                     this._myTimer.start(Math.pp_random(1, 2.5));
+                    this._myTimer.start(499);
                 } else {
                     this._myTimer.start(Math.pp_random(1.5, 3.5));
+                    this._myTimer.start(7);
                 }
 
                 let angle = this._startAngle;
@@ -49,6 +51,9 @@ class Vent {
                         angle = this._startAngle + Math.pp_random(20, 55) * this._mySign;
                     }
                 }
+
+                angle = Math.pp_random(160, 200);
+                angle = 180;
 
                 let direction = [0, 0, 1];
                 direction.vec3_rotateAxis([0, 1, 0], angle, direction);

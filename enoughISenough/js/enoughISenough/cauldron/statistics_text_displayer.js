@@ -16,10 +16,10 @@ WL.registerComponent("statistics-text-displayer", {
     _updateStatistics() {
         let text = "";
         text = text.concat("Total Play Time: ", this._convertTimeToString(Global.myStatistics.myTotalPlayTime), "\n\n");
-        text = text.concat("Trial Play Time: ", this._convertTimeToString(Global.myStatistics.myStoryPlayTime), "\n");
-        text = text.concat("Trial Best Time: ", this._convertTimeToString(Global.myStatistics.myStoryBestTime), "\n");
-        text = text.concat("Trial Play Count: ", Global.myStatistics.myStoryPlayCount, "\n");
-        text = text.concat("Trial Completed Count: ", Global.myStatistics.myStoryCompletedCount, "\n\n");
+        text = text.concat("Trial Play Time: ", this._convertTimeToString(Global.myStatistics.myTrialPlayTime), "\n");
+        text = text.concat("Trial Best Time: ", this._convertTimeToString(Global.myStatistics.myTrialBestTime), "\n");
+        text = text.concat("Trial Play Count: ", Global.myStatistics.myTrialPlayCount, "\n");
+        text = text.concat("Trial Completed Count: ", Global.myStatistics.myTrialCompletedCount, "\n\n");
         text = text.concat("Chat Play Time: ", this._convertTimeToString(Global.myStatistics.myChatPlayTime), "\n");
         text = text.concat("Chat Best Time: ", this._convertTimeToString(Global.myStatistics.myChatBestTime), "\n");
         text = text.concat("Chat Play Count: ", Global.myStatistics.myChatPlayCount, "\n\n");

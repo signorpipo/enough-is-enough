@@ -11,23 +11,23 @@ class MenuState extends PP.State {
         this._myFSM.addState("unspawning_restart", this._unspawn.bind(this));
         this._myFSM.addState("unspawning_arcade_hard", this._unspawn.bind(this));
         this._myFSM.addState("unspawning_arcade_normal", this._unspawn.bind(this));
-        this._myFSM.addState("unspawning_story", this._unspawn.bind(this));
+        this._myFSM.addState("unspawning_trial", this._unspawn.bind(this));
         this._myFSM.addState("done");
 
         this._myFSM.addTransition("ready", "unspawning_arcade_hard", "unspawn_arcade_hard", this._startUnspawning.bind(this));
         this._myFSM.addTransition("ready", "unspawning_arcade_normal", "unspawn_arcade_normal", this._startUnspawning.bind(this));
-        this._myFSM.addTransition("ready", "unspawning_story", "unspawn_story", this._startUnspawning.bind(this));
+        this._myFSM.addTransition("ready", "unspawning_trial", "unspawn_trial", this._startUnspawning.bind(this));
         this._myFSM.addTransition("ready", "unspawning_reset", "unspawn_reset", this._startUnspawningReset.bind(this));
         this._myFSM.addTransition("ready", "unspawning_restart", "unspawn_restart", this._startUnspawningRestart.bind(this));
         this._myFSM.addTransition("unspawning_arcade_hard", "done", "end", this._endArcadeHard.bind(this));
         this._myFSM.addTransition("unspawning_arcade_normal", "done", "end", this._endArcadeNormal.bind(this));
-        this._myFSM.addTransition("unspawning_story", "done", "end", this._endStory.bind(this));
+        this._myFSM.addTransition("unspawning_trial", "done", "end", this._endTrial.bind(this));
         this._myFSM.addTransition("unspawning_reset", "done", "end", this._endReset.bind(this));
         this._myFSM.addTransition("unspawning_restart", "done", "end", this._endRestart.bind(this));
 
         this._myMenuItems = [];
-        this._myStartStory = null;
-        this._myStartStoryCompleted = null;
+        this._myStartTrial = null;
+        this._myStartTrialCompleted = null;
         this._myCurrentMenuItems = [];
 
         this._myMenuTitle = new MenuTitle(Global.myTitlesObject, Global.myTitleObject, Global.mySubtitleObject);
@@ -47,15 +47,15 @@ class MenuState extends PP.State {
     start(fsm, transitionID) {
         this._myParentFSM = fsm;
 
-        let storyStartedOnce = PP.SaveUtils.loadBool("story_started_once");
-        if (storyStartedOnce) {
+        let trialStartedOnce = PP.SaveUtils.loadBool("trial_started_once");
+        if (trialStartedOnce) {
             this._myCurrentMenuItems = [];
 
-            let storyCompleted = PP.SaveUtils.loadBool("story_completed");
-            if (storyCompleted) {
-                this._myCurrentMenuItems.push(this._myStartStoryCompleted);
+            let trialCompleted = PP.SaveUtils.loadBool("trial_completed");
+            if (trialCompleted) {
+                this._myCurrentMenuItems.push(this._myStartTrialCompleted);
             } else {
-                this._myCurrentMenuItems.push(this._myStartStory);
+                this._myCurrentMenuItems.push(this._myStartTrial);
             }
 
             for (let item of this._myMenuItems) {
@@ -63,7 +63,7 @@ class MenuState extends PP.State {
             }
         } else {
             this._myCurrentMenuItems = [];
-            this._myCurrentMenuItems.push(this._myStartStory);
+            this._myCurrentMenuItems.push(this._myStartTrial);
         }
 
         let times = [];
@@ -96,7 +96,7 @@ class MenuState extends PP.State {
         if (Global.myDebugShortcutsEnabled) {
             //TEMP REMOVE THIS
             if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(Global.myDebugShortcutsPress)) {
-                this._myFSM.perform("unspawn_story");
+                this._myFSM.perform("unspawn_trial");
             }
 
             //TEMP REMOVE THIS
@@ -140,8 +140,8 @@ class MenuState extends PP.State {
 
     _startUnspawningReset(fsm) {
         this._myResetCount = 0;
-        PP.SaveUtils.save("story_started_once", false);
-        PP.SaveUtils.save("story_completed", false);
+        PP.SaveUtils.save("trial_started_once", false);
+        PP.SaveUtils.save("trial_completed", false);
         this._myNotEnough.start();
 
         this._startUnspawning();
@@ -184,8 +184,8 @@ class MenuState extends PP.State {
         this._myParentFSM.perform(MainTransitions.StartArcadeNormal);
     }
 
-    _endStory(fsm) {
-        this._myParentFSM.performDelayed(MainTransitions.StartStory);
+    _endTrial(fsm) {
+        this._myParentFSM.performDelayed(MainTransitions.StartTrial);
     }
 
     _endReset(fsm) {
@@ -213,19 +213,19 @@ class MenuState extends PP.State {
         positions.push(initialPosition.vec3_rotateAxis([0, 1, 0], -rotation * 4));
 
         {
-            let startStory = new MenuItem(Global.myGameObjects.get(GameObjectType.COIN), GameObjectType.COIN, positions[0], function () {
-                this._myFSM.perform("unspawn_story");
+            let startTrial = new MenuItem(Global.myGameObjects.get(GameObjectType.COIN), GameObjectType.COIN, positions[0], function () {
+                this._myFSM.perform("unspawn_trial");
                 this._myResetCount = 0;
             }.bind(this));
-            this._myStartStory = startStory;
+            this._myStartTrial = startTrial;
         }
 
         {
-            let startStoryCompleted = new MenuItem(Global.myGameObjects.get(GameObjectType.NOT_COIN), GameObjectType.NOT_COIN, positions[0], function () {
-                this._myFSM.perform("unspawn_story");
+            let startTrialCompleted = new MenuItem(Global.myGameObjects.get(GameObjectType.NOT_COIN), GameObjectType.NOT_COIN, positions[0], function () {
+                this._myFSM.perform("unspawn_trial");
                 this._myResetCount = 0;
             }.bind(this));
-            this._myStartStoryCompleted = startStoryCompleted;
+            this._myStartTrialCompleted = startTrialCompleted;
         }
 
         {

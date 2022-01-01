@@ -1,5 +1,5 @@
 WL.registerComponent("timer", {
-    _myIsStory: { type: WL.Type.Bool, default: false },
+    _myIsTrial: { type: WL.Type.Bool, default: false },
     _mySeconds: { type: WL.Type.Object },
     _myMinutes: { type: WL.Type.Object },
     _myHours: { type: WL.Type.Object },
@@ -13,8 +13,8 @@ WL.registerComponent("timer", {
     },
     update: function (dt) {
         let time = Global.myVentDuration;
-        if (this._myIsStory) {
-            time = Global.myStoryDuration;
+        if (this._myIsTrial) {
+            time = Global.myTrialDuration;
         }
 
         time = Math.floor(time);

@@ -187,7 +187,7 @@ class MrNOT {
         this._myParticlesPosition = this._getNextParticlePosition();
 
         this._myPossibleGameObjectTypes = [
-            //GameObjectType.STORY_TIMER,
+            //GameObjectType.TRIAL_TIMER,
             //GameObjectType.ZESTY_MARKET,
             GameObjectType.TUCIA_DRAWING,
             GameObjectType.CPLUSPLUS_PRIMER,

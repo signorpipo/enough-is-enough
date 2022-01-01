@@ -9,7 +9,7 @@ var GameObjectType = {
     WONDERMELON: 6,
     ZESTY_MARKET: 7,
     FLOPPY_DISK: 8,
-    STORY_TIMER: 9,
+    TRIAL_TIMER: 9,
     TUCIA_DRAWING: 10,
     CPLUSPLUS_PRIMER: 11,
     PIANO: 12,

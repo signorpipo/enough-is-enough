@@ -3551,7 +3551,8 @@
                         "_myWayfinder": "971",
                         "_myWaterLily": "201",
                         "_myEveryeye": "1292",
-                        "_myAloeVera": "1306"
+                        "_myAloeVera": "1306",
+                        "_myTrialTimer": "219"
                     }
                 }
             ],
@@ -5030,7 +5031,7 @@
             "deleted": true
         },
         "219": {
-            "name": "Story Timer",
+            "name": "Trial Timer",
             "parent": "174",
             "transformation": [
                 1.0,
@@ -9625,7 +9626,8 @@
                         "_myIsStory": true,
                         "_mySeconds": "511",
                         "_myMinutes": "512",
-                        "_myHours": "513"
+                        "_myHours": "513",
+                        "_myIsTrial": true
                     }
                 }
             ],
@@ -11035,7 +11037,8 @@
                         "_myIsStory": true,
                         "_mySeconds": "575",
                         "_myMinutes": "576",
-                        "_myHours": "577"
+                        "_myHours": "577",
+                        "_myIsTrial": true
                     }
                 }
             ],
@@ -17609,7 +17612,7 @@
             ],
             "transformation": [
                 -0.136,
-                -1.188944320773544e-8,
+                -1.1889443207735441e-8,
                 3.850477270361807e-8,
                 0.0,
                 -3.8504133215155898e-8,

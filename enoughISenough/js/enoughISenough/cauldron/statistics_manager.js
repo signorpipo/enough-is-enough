@@ -29,10 +29,10 @@ class Statistics {
 
     constructor() {
         this.myTotalPlayTime = 0;
-        this.myStoryPlayTime = 0;
-        this.myStoryPlayCount = 0;
-        this.myStoryCompletedCount = 0;
-        this.myStoryBestTime = 0;
+        this.myTrialPlayTime = 0;
+        this.myTrialPlayCount = 0;
+        this.myTrialCompletedCount = 0;
+        this.myTrialBestTime = 0;
         this.myChatPlayTime = 0;
         this.myChatPlayCount = 0;
         this.myChatBestTime = 0;
@@ -46,10 +46,10 @@ class Statistics {
     load() {
         this.myTotalPlayTime = PP.SaveUtils.loadNumber("total_play_time", 0);
 
-        this.myStoryPlayTime = PP.SaveUtils.loadNumber("story_play_time", 0);
-        this.myStoryPlayCount = PP.SaveUtils.loadNumber("story_play_count", 0);
-        this.myStoryCompletedCount = PP.SaveUtils.loadNumber("story_completed_count", 0);
-        this.myStoryBestTime = PP.SaveUtils.loadNumber("story_best_time", -1);
+        this.myTrialPlayTime = PP.SaveUtils.loadNumber("trial_play_time", 0);
+        this.myTrialPlayCount = PP.SaveUtils.loadNumber("trial_play_count", 0);
+        this.myTrialCompletedCount = PP.SaveUtils.loadNumber("trial_completed_count", 0);
+        this.myTrialBestTime = PP.SaveUtils.loadNumber("trial_best_time", -1);
 
         this.myChatPlayTime = PP.SaveUtils.loadNumber("chat_play_time", 0);
         this.myChatPlayCount = PP.SaveUtils.loadNumber("chat_play_count", 0);
@@ -64,16 +64,16 @@ class Statistics {
     }
 
     save() {
-        if (this.myTotalPlayTime < this.myStoryPlayTime + this.myChatPlayTime + this.myDisputePlayTime) {
-            this.myTotalPlayTime = this.myStoryPlayTime + this.myChatPlayTime + this.myDisputePlayTime;
+        if (this.myTotalPlayTime < this.myTrialPlayTime + this.myChatPlayTime + this.myDisputePlayTime) {
+            this.myTotalPlayTime = this.myTrialPlayTime + this.myChatPlayTime + this.myDisputePlayTime;
         }
 
         PP.SaveUtils.save("total_play_time", this.myTotalPlayTime);
 
-        PP.SaveUtils.save("story_play_time", this.myStoryPlayTime);
-        PP.SaveUtils.save("story_play_count", this.myStoryPlayCount);
-        PP.SaveUtils.save("story_completed_count", this.myStoryCompletedCount);
-        PP.SaveUtils.save("story_best_time", this.myStoryBestTime);
+        PP.SaveUtils.save("trial_play_time", this.myTrialPlayTime);
+        PP.SaveUtils.save("trial_play_count", this.myTrialPlayCount);
+        PP.SaveUtils.save("trial_completed_count", this.myTrialCompletedCount);
+        PP.SaveUtils.save("trial_best_time", this.myTrialBestTime);
 
         PP.SaveUtils.save("chat_play_time", this.myChatPlayTime);
         PP.SaveUtils.save("chat_play_count", this.myChatPlayCount);

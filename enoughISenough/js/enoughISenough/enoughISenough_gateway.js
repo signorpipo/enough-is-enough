@@ -119,7 +119,7 @@ var Global = {
     myMeshNoFogObjectPoolMap: null,
     myGameObjectPoolMap: null,
     myMaterials: null,
-    myStoryDuration: 0,
+    myTrialDuration: 0,
     myArcadeDuration: 0,
     myVentDuration: 0,
     myDebugShortcutsEnabled: false,
