@@ -196,7 +196,6 @@ class MrNOT {
             GameObjectType.WATER_LILY,
             GameObjectType.LOL,
             GameObjectType.DRINK_ME_EARRING,
-            //GameObjectType.SKATE,
             //GameObjectType.STARING_CUBE,
         ];
     }
