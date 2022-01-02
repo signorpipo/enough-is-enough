@@ -142,6 +142,7 @@ class MenuState extends PP.State {
         this._myResetCount = 0;
         PP.SaveUtils.save("trial_started_once", false);
         PP.SaveUtils.save("trial_completed", false);
+        PP.SaveUtils.save("trial_level", 1);
         this._myNotEnough.start();
 
         this._startUnspawning();

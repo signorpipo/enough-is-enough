@@ -20,7 +20,9 @@ class TrialState extends PP.State {
         this._myFSM.addState("it_will_always_be_not_enough", new TalkState(this._NOTENOUGHTalkSentences(), true));
         this._myFSM.addState("done");
 
-        this._myFSM.addTransition("init", "first_talk", "start");
+        this._myFSM.addTransition("init", "first_talk", "start_1");
+        this._myFSM.addTransition("init", "second_talk", "start_2");
+        this._myFSM.addTransition("init", "third_talk", "start_3");
 
         this._myFSM.addTransition("first_talk", "first_vent", "end");
         this._myFSM.addTransition("first_vent", "first_defeat", "defeat");
@@ -40,16 +42,18 @@ class TrialState extends PP.State {
 
         this._myFSM.addTransition("it_will_always_be_not_enough", "done", "end", this._gameCompleted.bind(this));
 
-        this._myFSM.addTransition("first_defeat", "done", "end", this._backToMenu.bind(this));
-        this._myFSM.addTransition("second_defeat", "done", "end", this._backToMenu.bind(this));
-        this._myFSM.addTransition("third_defeat", "done", "end", this._backToMenu.bind(this));
-        this._myFSM.addTransition("MrNOT_defeat", "done", "end", this._backToMenu.bind(this));
+        this._myFSM.addTransition("first_defeat", "done", "end", this._backToMenu.bind(this, 1));
+        this._myFSM.addTransition("second_defeat", "done", "end", this._backToMenu.bind(this, 2));
+        this._myFSM.addTransition("third_defeat", "done", "end", this._backToMenu.bind(this, 3));
+        this._myFSM.addTransition("MrNOT_defeat", "done", "end", this._backToMenu.bind(this, 3));
 
-        this._myFSM.addTransition("done", "first_talk", "start");
+        this._myFSM.addTransition("done", "first_talk", "start_1");
+        this._myFSM.addTransition("done", "second_talk", "start_2");
+        this._myFSM.addTransition("done", "third_talk", "start_3");
 
         let states = this._myFSM.getStates();
         for (let state of states) {
-            this._myFSM.addTransition(state.myID, "done", "skip", this._backToMenu.bind(this));
+            this._myFSM.addTransition(state.myID, "done", "skip", this._backToMenu.bind(this, 1));
         }
 
         this._myFSM.init("init");
@@ -69,18 +73,25 @@ class TrialState extends PP.State {
 
     start(fsm, transitionID) {
         this._myParentFSM = fsm;
-        this._myFSM.perform("start");
         Global.myTrialDuration = 0;
         this._myTrialStartedFromBegin = true;
         Global.myStatistics.myTrialPlayCount += 1;
+
+        let trialLevel = PP.SaveUtils.loadNumber("trial_level", 1);
+        let transition = "start_".concat(trialLevel);
+        console.error(transition);
+
+        this._myFSM.perform(transition);
+
     }
 
     end(fsm, transitionID) {
         PP.SaveUtils.save("trial_started_once", true);
     }
 
-    _backToMenu(fsm) {
+    _backToMenu(trialLevel, fsm) {
         this._myParentFSM.perform(MainTransitions.End);
+        PP.SaveUtils.save("trial_level", trialLevel);
     }
 
     _gameCompleted(fsm) {
@@ -90,6 +101,7 @@ class TrialState extends PP.State {
             }
         }
 
+        PP.SaveUtils.save("trial_level", 1);
         PP.SaveUtils.save("trial_completed", true);
         this._myParentFSM.perform(MainTransitions.End);
         Global.myStatistics.myTrialCompletedCount += 1;
