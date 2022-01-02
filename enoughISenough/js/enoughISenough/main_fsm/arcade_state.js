@@ -68,7 +68,7 @@ class ArcadeState extends PP.State {
     _buildEvidenceSetupList() {
         let evidenceSetupList = [];
 
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.TRIAL_TIMER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.VENT_TIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.TUCIA_DRAWING, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS_PRIMER, 5));
@@ -77,11 +77,9 @@ class ArcadeState extends PP.State {
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.WATER_LILY, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.LOL, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRINK_ME_EARRING, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 2));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 1));
 
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.COIN, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERMELON, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FLOPPY_DISK, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.PIANO, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.MR_NOT_EVIDENCE, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.SHATTERED_COIN, 5));
@@ -98,6 +96,9 @@ class ArcadeState extends PP.State {
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.FAMILY, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.MIRROR, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.WAYFINDER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ETHEREUM, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EVERYEYE, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ALOE_VERA, 5));
 
         return evidenceSetupList;
     }

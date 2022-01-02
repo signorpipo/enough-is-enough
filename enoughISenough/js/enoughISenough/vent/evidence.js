@@ -101,7 +101,7 @@ class Evidence {
     canHit() {
         let distanceFromCenter = this._myObject.pp_getPosition().vec3_removeComponentAlongAxis([0, 1, 0]).vec3_length();
         let isHitState = this._myFSM.isInState("spawning") || this._myFSM.isInState("ready");
-        return isHitState && this._myHasBeenThrown && WL.xrSession && !this._myGrabbable.isGrabbed() && distanceFromCenter > Global.myRingRadius * 1.5/*(this._myGrabbable.isGrabbed() || this._myCollisionCount == 0)*/;
+        return isHitState && /*this._myHasBeenThrown &&*/ WL.xrSession && /*!this._myGrabbable.isGrabbed() &&*/ distanceFromCenter > Global.myRingRadius * 1.5/*(this._myGrabbable.isGrabbed() || this._myCollisionCount == 0)*/;
     }
 
     hasBeenThrown() {
@@ -165,7 +165,7 @@ class Evidence {
     }
 
     _startUnspawn() {
-        if (this._myHasBeenThrown && (this._myHitFloor || this._myHitExplosion)) {
+        if (this._myHitFloor || this._myHitExplosion) {
             Global.myStatistics.myEvidencesThrown += 1;
         }
 
