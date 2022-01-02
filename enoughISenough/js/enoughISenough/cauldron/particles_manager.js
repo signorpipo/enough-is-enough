@@ -15,6 +15,11 @@ class ParticlesManager {
         let explosionParticles = new ExplosionParticles(position, radius, objectScale, objectType, noFog);
         this._myParticlesList.push(explosionParticles);
     }
+
+    fireworks(position, radius, objectScale) {
+        let explosionParticles = new FireworkParticles(position, radius, objectScale);
+        this._myParticlesList.push(explosionParticles);
+    }
 }
 
 class ExplosionParticles {
@@ -64,6 +69,62 @@ class ExplosionParticles {
         let scale = Math.pp_random(this._myScale * 0.1, this._myScale * 0.25);
 
         return new ExplosionParticle(position, scale, this._myObjectType, this._myNoFog);
+    }
+}
+
+class FireworkParticles {
+    constructor(position, radius, objectScale) {
+        this._myPosition = position.slice(0);
+        this._myScale = objectScale[0];
+        this._myRadius = radius;
+
+        this._myTimer = new PP.Timer(5);
+        this._mySpawnTimer = new PP.Timer(0);
+        this._myParticles = [];
+    }
+
+    update(dt) {
+        if (this._myTimer.isRunning()) {
+            this._myTimer.update(dt);
+
+            this._mySpawnTimer.update(dt);
+            if (this._mySpawnTimer.isDone()) {
+                for (let i = 0; i < 5; i++) {
+                    this._myParticles.push(this._createParticle());
+                }
+                this._mySpawnTimer.start(PP.myEasyTuneVariables.get("Explosion Particles Delay"));
+            }
+        }
+
+        for (let particle of this._myParticles) {
+            particle.update(dt);
+        }
+
+        this._myParticles.pp_removeAll(element => element.isDone());
+
+    }
+
+    isDone() {
+        return this._myTimer.isDone() && this._myParticles.length == 0;
+    }
+
+    _createParticle() {
+        let direction = [0, 0, 1];
+        direction = direction.vec3_rotate([Math.pp_random(-180, 180), Math.pp_random(-180, 180), Math.pp_random(-180, 180)]);
+
+        let radius = Math.pp_random(this._myRadius * 0.2, this._myRadius);
+        let position = direction.vec3_scale(radius).vec3_add(this._myPosition);
+        let scale = Math.pp_random(this._myScale * 0.1, this._myScale * 0.25);
+
+        let random = 0;
+        while (random == 0) {
+            random = Math.pp_randomInt(1, 39);
+            if (random == 18 || random == 19 || random == 18) {
+                random = 0;
+            }
+        }
+
+        return new ExplosionParticle(position, scale, random, true);
     }
 }
 
