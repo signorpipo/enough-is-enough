@@ -16,7 +16,9 @@ class ShowTitleState extends PP.State {
         this._myTitleTextComponent.justification = WL.Justification.Line;
         this._myTitleTextComponent.material = Global.myMaterials.myTitle.clone();
         this._myTitleTextComponent.text = " ";
+        //this._myTitle.addComponent('pp-easy-transform');
 
+        //this._mySubtitle.addComponent('pp-easy-transform');
         this._mySubtitleTextComponent = this._mySubtitle.addComponent('text');
         this._mySubtitleTextComponent.alignment = WL.Alignment.Left;
         this._mySubtitleTextComponent.justification = WL.Justification.Line;
@@ -26,12 +28,12 @@ class ShowTitleState extends PP.State {
         this._myTitlesObjectPosition = [-10, 133, -164];
         this._myTitlesObject.pp_setPosition(this._myTitlesObjectPosition);
 
-        this._myTitle.pp_setPosition([-97, 153, -196]);
+        this._myTitle.pp_setPosition([-107, 153, -196]);
         this._myTitle.pp_setScale(550);
         this._myTitle.pp_setRotation([40, 0, 0]);
 
-        this._mySubtitle.pp_setPosition([-138, 77, -148]);
-        this._mySubtitle.pp_setScale(290);
+        this._mySubtitle.pp_setPosition([-116, 81.5, -148]);
+        this._mySubtitle.pp_setScale(240);
         this._mySubtitle.pp_setRotation([40, 0, 0]);
 
         this._myTitle.pp_setParent(this._myTitlesRumbleObject);
