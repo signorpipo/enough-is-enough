@@ -178,7 +178,7 @@ class ShowTitleState extends PP.State {
         this._myCharMinTime = 0.15;
         this._myCharMaxTime = 0.15;
 
-        this._myCharTimer = new PP.Timer(Math.pp_random(this._myCharMinTime, this._myCharMaxTime));
+        this._myCharTimer = new PP.Timer(0);
         this._myChars = "enough";
         this._myCurrChar = 0;
 
