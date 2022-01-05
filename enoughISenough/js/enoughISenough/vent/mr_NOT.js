@@ -9,13 +9,13 @@ class MrNOT {
         this._myTargetPosition = [0, 0, 0];
         this._myDirection = this._myTargetPosition.vec3_sub(this._myStartPosition);
 
-        this._myTimeToReachTarget = 10;
+        this._myTimeToReachTarget = 20;
 
         this._myCallbackOnPatienceOver = callbackOnPatienceOver;
         this._myCallbackOnReach = callbackOnReach;
         this._myCallbackOnExplosionDone = callbackOnExplosionDone;
 
-        this._mySpeed = this._myTargetPosition.vec3_sub(this._myStartPosition).vec3_length() / 20;
+        this._mySpeed = this._myTargetPosition.vec3_sub(this._myStartPosition).vec3_length() / this._myTimeToReachTarget;
 
         this._myFSM = new PP.FSM();
 
@@ -41,10 +41,12 @@ class MrNOT {
 
         this._myExplodeAudio = Global.myAudioManager.createAudioPlayer(SfxID.BLABLA_2);
 
+        this._myRumbleScreen = new RumbleScreen();
+
         //Setup
         this._myReachTargetDistance = 4;
-        this._myMinTargetDistance = 15;
-        this._myMinParticleDistance = this._myScale[0] * 0.75;
+        this._myMinTargetDistance = 10;
+        this._myMinParticleDistance = this._myScale[0] * 0.55;
         this._myParticlesSize = 6.5;
         this._myParticlesSizeMrNot = 0.9;
         this._myMaxPatience = 1;
@@ -65,6 +67,8 @@ class MrNOT {
         }
 
         this._myFSM.update(dt);
+
+        this._myRumbleScreen.update(dt);
     }
 
     isDone() {
@@ -72,6 +76,7 @@ class MrNOT {
     }
 
     hide() {
+        this._myRumbleScreen.stop();
         this._myObject.pp_setActive(false);
         this._myFSM.perform("hide");
     }
@@ -114,6 +119,14 @@ class MrNOT {
             }
         } else {
             this._checkHit();
+
+            /*
+            let distanceToTarget = this._myTargetPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myCurrentPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
+            if (distanceToTarget < this._myMinTargetDistance) {
+                this._myCallbackOnPatienceOver();
+                this._myFSM.perform("explode");
+            }
+            */
         }
     }
 
@@ -196,6 +209,24 @@ class MrNOT {
             GameObjectType.WATER_LILY,
             GameObjectType.LOL,
             GameObjectType.DRINK_ME_EARRING,
+            GameObjectType.WONDERMELON,
+            GameObjectType.SHATTERED_COIN,
+            GameObjectType.PSI,
+            GameObjectType.WONDERLAND,
+            GameObjectType.ANT_MAIN_CHARACTER,
+            GameObjectType.HEART,
+            GameObjectType.HALO_SWORD,
+            GameObjectType.FOX,
+            GameObjectType.PICO_8,
+            GameObjectType.EGGPLANT,
+            GameObjectType.VR,
+            GameObjectType.TROPHY,
+            GameObjectType.FAMILY,
+            GameObjectType.MIRROR,
+            GameObjectType.WAYFINDER,
+            GameObjectType.ETHEREUM,
+            GameObjectType.EVERYEYE,
+            GameObjectType.ALOE_VERA,
             //GameObjectType.STARING_CUBE,
         ];
     }
@@ -222,6 +253,8 @@ class MrNOT {
 
             this._myParticlesPosition = this._getNextParticlePosition();
             this._myExplodeAudio.play();
+
+            this._myRumbleScreen.start(Math.pp_random(0.4, 0.6), 1);
         }
     }
 
@@ -233,6 +266,11 @@ class MrNOT {
 
         if (justRandom) {
             gamepad = (Math.pp_random() < 0.5) ? PP.myLeftGamepad : PP.myRightGamepad;
+            if (gamepad == PP.myLeftGamepad && !PP.myRightGamepad.isPulsing()) {
+                gamepad = PP.myRightGamepad;
+            } else if (gamepad == PP.myRightGamepad && !PP.myLeftGamepad.isPulsing()) {
+                gamepad = PP.myLeftGamepad;
+            }
         }
 
         gamepad.pulse(Math.pp_random(0.4, 0.8), Math.pp_random(0.4, 0.6));
@@ -252,6 +290,7 @@ class MrNOT {
                 this._myDisappearEndTimer.start();
                 this._myExplodeAudio.play();
 
+                this._myRumbleScreen.start(Math.pp_random(0.4, 0.6), 1);
                 PP.myRightGamepad.pulse(0.6, 0.5);
                 PP.myLeftGamepad.pulse(0.6, 0.5);
             }
@@ -261,6 +300,7 @@ class MrNOT {
             this._myDisappearEndTimer.update(dt);
             if (this._myDisappearEndTimer.isDone()) {
                 this._myObject.pp_setActive(false);
+                this._myRumbleScreen.stop();
                 this._myFSM.perform("end");
             }
         }
@@ -273,19 +313,18 @@ class MrNOT {
         let position = [0, 0, 0];
 
         while (attempts > 0) {
-            let randomX = Math.pp_random(0, this._myScale[0] * 0.8) * Math.pp_randomSign();
-            let randomY = Math.pp_random(0, this._myScale[1] * 0.8) * Math.pp_randomSign();
+            let randomX = Math.pp_random(0, this._myScale[0] * 0.6) * Math.pp_randomSign();
+            let randomY = Math.pp_random(0, this._myScale[1] * 0.6) * Math.pp_randomSign();
             let randomZ = Math.pp_random(this._myScale[2] * 0.65, this._myScale[2] * 0.7);
 
             this._myMrNotUp.vec3_scale(randomY, position);
             this._myMrNotRight.vec3_scale(randomX).vec3_add(position, position);
-            if (position.vec3_length() > this._myScale[0] * 0.8) {
-                position.vec3_normalize(position).vec3_scale(Math.pp_random(this._myScale[0] * 0.75, this._myScale[0] * 0.8));
+            if (position.vec3_length() > this._myScale[0] * 0.65) {
+                position.vec3_normalize(position).vec3_scale(Math.pp_random(this._myScale[0] * 0.6, this._myScale[0] * 0.65));
             }
             this._myMrNotForward.vec3_scale(randomZ).vec3_add(position, position);
 
-            this._myMrNotUp.vec3_scale(Math.pp_random(0.75, 1)).vec3_add(position, position);
-            console.error(this._myScale[1].toFixed());
+            this._myMrNotUp.vec3_scale(Math.pp_random(1.25, 1.5)).vec3_add(position, position);
             this._myCurrentPosition.vec3_add(position, position);
 
             if (this._myParticlesPosition == null) {
@@ -299,13 +338,38 @@ class MrNOT {
                     attempts = 0;
                 } else {
                     attempts -= 1;
-                    if (attempts == 0) {
-                        console.error("attempts");
-                    }
                 }
             }
         }
 
         return position;
+    }
+}
+
+class RumbleScreen {
+    constructor() {
+        this._myTimer = new PP.Timer(0, false);
+    }
+
+    start(duration, intensity) {
+        this._myTimer.start(duration);
+        this._myIntensity = intensity;
+    }
+
+    update(dt) {
+        if (this._myTimer.isRunning()) {
+            this._myTimer.update(dt);
+
+            let rumbleValue = 0.04 * this._myIntensity;
+            Global.myPlayerRumbleObject.pp_setPositionLocal([Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue)]);
+
+            if (this._myTimer.isDone()) {
+                this.stop();
+            }
+        }
+    }
+
+    stop() {
+        Global.myPlayerRumbleObject.pp_resetPositionLocal();
     }
 }

@@ -80,7 +80,6 @@ class ArcadeState extends PP.State {
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 1));
 
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERMELON, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PIANO, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.MR_NOT_EVIDENCE, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.SHATTERED_COIN, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.PSI, 5));

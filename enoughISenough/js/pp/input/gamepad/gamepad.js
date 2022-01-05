@@ -150,12 +150,21 @@ PP.AxesInfo = class AxesInfo {
     }
 };
 
-PP.PulseData = class PulseData {
+PP.PulseInfo = class PulseInfo {
     constructor() {
         this.myIntensity = 0.0;
         this.myDuration = 0.0;
 
         this.myIsPulsing = false;
+    }
+
+    clone() {
+        let value = new PulseInfo();
+        value.myIntensity = this.myIntensity;
+        value.myDuration = this.myDuration;
+        value.myIsPulsing = this.myIsPulsing;
+
+        return value;
     }
 };
 
@@ -201,7 +210,7 @@ PP.Gamepad = class Gamepad {
             this._myAxesCallbacks[PP.AxesEvent[eventKey]] = new Map(); //keys = object, item = callback
         }
 
-        this._myPulseData = new PP.PulseData();
+        this._myPulseInfo = new PP.PulseInfo();
 
         //Setup
         this._myFastPressMaxDelay = 0.3;
@@ -280,13 +289,21 @@ PP.Gamepad = class Gamepad {
      * @param {number} duration specified in seconds, 0 means 1 frame
      */
     pulse(intensity, duration = 0) {
-        this._myPulseData.myIntensity = Math.min(Math.max(intensity, 0), 1); //clamp 
-        this._myPulseData.myDuration = Math.max(duration, 0);
+        this._myPulseInfo.myIntensity = Math.min(Math.max(intensity, 0), 1); //clamp 
+        this._myPulseInfo.myDuration = Math.max(duration, 0);
     }
 
     stopPulse() {
-        this._myPulseData.myIntensity = 0;
-        this._myPulseData.myDuration = 0;
+        this._myPulseInfo.myIntensity = 0;
+        this._myPulseInfo.myDuration = 0;
+    }
+
+    isPulsing() {
+        return this._myPulseInfo.myIsPulsing;
+    }
+
+    getPulseInfo() {
+        return this._myPulseInfo.clone();
     }
 
     start() {
@@ -591,19 +608,19 @@ PP.Gamepad = class Gamepad {
     _updatePulse(dt) {
         let hapticActuator = this._getHapticActuator();
         if (hapticActuator) {
-            if (this._myPulseData.myIntensity > 0) {
-                hapticActuator.pulse(this._myPulseData.myIntensity, 1000); //duration is managed by this class
-                this._myPulseData.myIsPulsing = true;
-            } else if (this._myPulseData.myIsPulsing) {
+            if (this._myPulseInfo.myIntensity > 0) {
+                hapticActuator.pulse(this._myPulseInfo.myIntensity, 1000); //duration is managed by this class
+                this._myPulseInfo.myIsPulsing = true;
+            } else if (this._myPulseInfo.myIsPulsing) {
                 hapticActuator.reset();
-                this._myPulseData.myIsPulsing = false;
+                this._myPulseInfo.myIsPulsing = false;
             }
         }
 
-        this._myPulseData.myDuration -= dt;
-        if (this._myPulseData.myDuration <= 0) {
-            this._myPulseData.myIntensity = 0;
-            this._myPulseData.myDuration = 0;
+        this._myPulseInfo.myDuration -= dt;
+        if (this._myPulseInfo.myDuration <= 0) {
+            this._myPulseInfo.myIntensity = 0;
+            this._myPulseInfo.myDuration = 0;
         }
     }
 
