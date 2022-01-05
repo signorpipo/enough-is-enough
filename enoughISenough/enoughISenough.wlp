@@ -1814,6 +1814,13 @@
                         "_myHandPieceObject": "418"
                     },
                     "active": true
+                },
+                {
+                    "type": "color-on-select",
+                    "color-on-select": {
+                        "_myPhysxMaterial": "281",
+                        "_myIdleMaterial": "284"
+                    }
                 }
             ]
         },
@@ -1883,6 +1890,14 @@
                         "_myHandPieceMaterial": "107",
                         "_myHandedness": "right",
                         "_myHandPieceObject": "419"
+                    }
+                },
+                {
+                    "type": "color-on-select",
+                    "color-on-select": {
+                        "_myHandedness": "right",
+                        "_myPhysxMaterial": "281",
+                        "_myIdleMaterial": "284"
                     }
                 }
             ]
@@ -17612,7 +17627,7 @@
             ],
             "transformation": [
                 -0.136,
-                -1.188944320773544e-8,
+                -1.1889443207735441e-8,
                 3.850477270361807e-8,
                 0.0,
                 -3.8504133215155898e-8,
@@ -18247,11 +18262,11 @@
                 -9.059800731847645e-8,
                 0.0,
                 0.0,
-                -8.992189037826393e-8,
+                -8.992189037826394e-8,
                 0.5955256,
                 -0.0731213,
                 0.0,
-                1.1041059622129979e-8,
+                1.104105962212998e-8,
                 -0.0731217,
                 -0.595529,
                 0.0,
