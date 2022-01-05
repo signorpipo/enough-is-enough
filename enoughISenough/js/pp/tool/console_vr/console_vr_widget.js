@@ -25,8 +25,6 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
             this._myTypeFilters[PP.ConsoleVRWidget.MessageType[key]] = false;
         }
 
-        this._myNotifyIconActive = false;
-
         this._myScrollUp = false;
         this._myScrollDown = false;
         this._myScrollOffset = 0;
@@ -620,7 +618,7 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
     }
 
     _setNotifyIconActive(active) {
-        this._myUI.myNotifyIconPanel.pp_setActiveHierarchy(active);
+        this._myUI.myNotifyIconPanel.pp_setActiveHierarchy(active && this._myWidgetFrame.myIsWidgetVisible);
     }
 
     _notifyIconUnHover() {

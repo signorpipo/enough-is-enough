@@ -9,6 +9,10 @@ class MrNOT {
         this._myTargetPosition = [0, 0, 0];
         this._myDirection = this._myTargetPosition.vec3_sub(this._myStartPosition);
 
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Time To Reach Target", 30, 10, 3));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Max Patience", 15, 10));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Reach Distance", 5, 10, 3));
+
         this._myTimeToReachTarget = 20;
 
         this._myCallbackOnPatienceOver = callbackOnPatienceOver;
@@ -44,17 +48,21 @@ class MrNOT {
         this._myRumbleScreen = new RumbleScreen();
 
         //Setup
-        this._myReachTargetDistance = 4;
+        this._myReachTargetDistance = 5;
         this._myMinTargetDistance = 10;
         this._myMinParticleDistance = this._myScale[0] * 0.55;
         this._myParticlesSize = 6.5;
         this._myParticlesSizeMrNot = 0.9;
         this._myMaxPatience = 1;
-        this._myPatienceRefill = 1;
+        this._myPatienceRefill = 5;
 
     }
 
     start(dt) {
+        this._mySpeed = this._myTargetPosition.vec3_sub(this._myStartPosition).vec3_length() / PP.myEasyTuneVariables.get("Time To Reach Target");
+        this._myReachTargetDistance = PP.myEasyTuneVariables.get("Reach Distance");
+        this._myMaxPatience = PP.myEasyTuneVariables.get("Max Patience");
+
         this._myFSM.perform("start");
     }
 
@@ -173,14 +181,16 @@ class MrNOT {
                 //spawn particles
 
                 this._myPatience -= 1;
+
+                let distanceToTarget = this._myTargetPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myCurrentPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
+
+                if (distanceToTarget > this._myMinTargetDistance) {
+                    this._myPatience = Math.max(this._myPatience, this._myPatienceRefill);
+                }
+
                 if (this._myPatience <= 0) {
-                    let distanceToTarget = this._myTargetPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myCurrentPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
-                    if (distanceToTarget > this._myMinTargetDistance || false) {
-                        this._myPatience = this._myPatienceRefill;
-                    } else {
-                        this._myCallbackOnPatienceOver();
-                        this._myFSM.perform("explode");
-                    }
+                    this._myCallbackOnPatienceOver();
+                    this._myFSM.perform("explode");
                 }
             }
         }
