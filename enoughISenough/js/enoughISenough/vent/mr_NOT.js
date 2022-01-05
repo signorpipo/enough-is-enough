@@ -44,7 +44,7 @@ class MrNOT {
         //Setup
         this._myReachTargetDistance = 4;
         this._myMinTargetDistance = 15;
-        this._myMinParticleDistance = this._myScale[0] * 0.9;
+        this._myMinParticleDistance = this._myScale[0] * 0.75;
         this._myParticlesSize = 6.5;
         this._myParticlesSizeMrNot = 0.9;
         this._myMaxPatience = 1;
@@ -160,9 +160,9 @@ class MrNOT {
                 //spawn particles
 
                 this._myPatience -= 1;
-                if (this._myPatience < 0) {
+                if (this._myPatience <= 0) {
                     let distanceToTarget = this._myTargetPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myCurrentPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
-                    if (distanceToTarget > this._myMinTargetDistance) {
+                    if (distanceToTarget > this._myMinTargetDistance || false) {
                         this._myPatience = this._myPatienceRefill;
                     } else {
                         this._myCallbackOnPatienceOver();
@@ -174,7 +174,7 @@ class MrNOT {
     }
 
     _prepareExplode() {
-        this._mySpawnDelays = [2.5, 2.3, 2.0, 1.5, 1.0, 0.7, 0.6, 0.5, 0.4];
+        this._mySpawnDelays = [2.5, 2.3, 2.0, 1.5, 1.0, 0.7, 0.6, 0.5, 0.4, 0.3];
         this._myExplodeTimer = new PP.Timer(20);
         this._mySpawnParticlesTimer = new PP.Timer(this._mySpawnDelays[0]);
 
@@ -217,9 +217,25 @@ class MrNOT {
             this._mySpawnParticlesTimer.start(delay);
             let type = Math.pp_randomPick(this._myPossibleGameObjectTypes);
             Global.myParticlesManager.explosion(this._myParticlesPosition, 1.25, [this._myParticlesSize, this._myParticlesSize, this._myParticlesSize], type, true);
+
+            this._addPulse(this._myParticlesPosition, this._mySpawnDelays.length <= 1);
+
             this._myParticlesPosition = this._getNextParticlePosition();
             this._myExplodeAudio.play();
         }
+    }
+
+    _addPulse(position, justRandom) {
+        let gamepad = PP.myLeftGamepad;
+        if (position.vec3_isConcordant([1, 0, 0])) {
+            gamepad = PP.myRightGamepad;
+        }
+
+        if (justRandom) {
+            gamepad = (Math.pp_random() < 0.5) ? PP.myLeftGamepad : PP.myRightGamepad;
+        }
+
+        gamepad.pulse(Math.pp_random(0.4, 0.8), Math.pp_random(0.4, 0.6));
     }
 
     _prepareDisappear() {
@@ -235,6 +251,9 @@ class MrNOT {
                 Global.myParticlesManager.explosion(this._myCurrentPosition, 1.6, [this._myParticlesSizeMrNot, this._myParticlesSizeMrNot, this._myParticlesSizeMrNot], GameObjectType.MR_NOT, true);
                 this._myDisappearEndTimer.start();
                 this._myExplodeAudio.play();
+
+                PP.myRightGamepad.pulse(0.6, 0.5);
+                PP.myLeftGamepad.pulse(0.6, 0.5);
             }
         }
 
@@ -264,16 +283,25 @@ class MrNOT {
                 position.vec3_normalize(position).vec3_scale(Math.pp_random(this._myScale[0] * 0.75, this._myScale[0] * 0.8));
             }
             this._myMrNotForward.vec3_scale(randomZ).vec3_add(position, position);
+
+            this._myMrNotUp.vec3_scale(Math.pp_random(0.75, 1)).vec3_add(position, position);
+            console.error(this._myScale[1].toFixed());
             this._myCurrentPosition.vec3_add(position, position);
 
             if (this._myParticlesPosition == null) {
                 attempts = 0;
             } else {
+                let relativeParticlePosition = this._myParticlesPosition.vec3_sub(this._myCurrentPosition);
+                let relativeNewPosition = position.vec3_sub(this._myCurrentPosition);
                 distance = position.vec3_distance(this._myParticlesPosition);
-                if (distance > this._myMinParticleDistance) {
+                if (distance > this._myMinParticleDistance &&
+                    relativeNewPosition.vec3_isConcordant([1, 0, 0]) != relativeParticlePosition.vec3_isConcordant([1, 0, 0])) {
                     attempts = 0;
                 } else {
                     attempts -= 1;
+                    if (attempts == 0) {
+                        console.error("attempts");
+                    }
                 }
             }
         }
