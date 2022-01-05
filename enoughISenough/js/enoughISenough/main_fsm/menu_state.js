@@ -569,7 +569,8 @@ class MenuTitle {
                 color[3] = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
                 this._mySubtitleText.material.outlineColor = color;
 
-                this._myTitlesObject.pp_setScale(Math.pp_interpolate(this._myHideScale, 1, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut));
+                let easing = t => t * (2 - t);
+                this._myTitlesObject.pp_setScale(Math.pp_interpolate(this._myHideScale, 1, this._myTimer.getPercentage(), easing));
             }
 
             if (this._myTimer.isDone()) {
@@ -598,7 +599,8 @@ class MenuTitle {
                 color[3] = 1 - PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
                 this._mySubtitleText.material.outlineColor = color;
 
-                let scale = Math.pp_interpolate(1, this._myHideScale, this._myTimer.getPercentage(), PP.EasingFunction.linear);
+                let easing = t => t * t;
+                let scale = Math.pp_interpolate(1, this._myHideScale, this._myTimer.getPercentage(), easing);
                 this._myTitlesObject.pp_setScale(scale);
             }
 
