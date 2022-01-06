@@ -84,6 +84,12 @@ class MenuState extends PP.State {
         this._myFSM.init("ready");
 
         this._myResetCount = 0;
+
+        Global.myIsInMenu = true;
+    }
+
+    end() {
+        Global.myIsInMenu = false;
     }
 
     _readyUpdate(dt, fsm) {

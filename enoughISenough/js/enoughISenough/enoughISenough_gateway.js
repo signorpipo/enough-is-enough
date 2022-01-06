@@ -131,4 +131,5 @@ var Global = {
     myLightFadeInTime: 0,
     myStartFadeOut: false,
     myStatistics: null,
+    myIsInMenu: false,
 };

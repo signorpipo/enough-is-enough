@@ -33,7 +33,7 @@ WL.registerComponent("credits-visualizer", {
         this._myFSM.update(dt);
     },
     _hideUpdate(dt) {
-        if (this._myGrabbable.isGrabbed()) {
+        if (this._myGrabbable.isGrabbed() && Global.myIsInMenu) {
             this._myWondermelonGrabTime += dt;
             if (this._myWondermelonGrabTime > 3.5) {
                 this._myText.active = true;
