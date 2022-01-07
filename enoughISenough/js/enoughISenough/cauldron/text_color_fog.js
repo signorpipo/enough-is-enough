@@ -5,7 +5,7 @@ WL.registerComponent("text-color-fog", {
         this._myDown = [0, -1, 0];
         this._myTempVec3 = vec3_create();
         this._myTempVec4 = vec4_create();
-        this._myFogAlpha = 0.5;
+        this._myFogAlpha = 0.33;
     },
     start: function () {
         this._myFirstUpdate = true;

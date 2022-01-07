@@ -78,14 +78,15 @@ WL.registerComponent("enough-IS-enough-gateway", {
         cloneParams.myDeepCloneParams.deepCloneComponentVariable("mesh", "material", true);
         Global.myGameObjectPoolMap.addPool(GameObjectType.MR_NOT_CLONE, Global.myGameObjects.get(GameObjectType.MR_NOT_CLONE), 10, cloneParams);
 
-        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 1", 0.5, 1, 3));
-        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 2", 0.7, 1, 3));
-        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 3", 1.5, 1, 3));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 1", 0.33, 1, 3));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 2", 30, 5, 3));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 3", 1.4, 5, 3));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 4", 4, 5, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Int", 4, 1));
         PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Bool", false));
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("mr NOT Clone Scale", 0.35, 0.1, 3));
-        PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Prevent Vent Lost", false));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Prevent Vent Lost", true));
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Explosion Particle Life", 0.15, 0.5, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Explosion Particles Duration", 0.5, 0.5, 3));

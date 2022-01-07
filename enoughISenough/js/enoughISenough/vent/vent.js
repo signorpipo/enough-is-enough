@@ -11,8 +11,8 @@ class Vent {
         this._myHitCounter = 0;
 
         //Setup
-        this._myStartDistance = 20;
-        this._myTimeToReachTarget = 5;
+        this._myStartDistance = 30;
+        this._myTimeToReachTarget = 7;
     }
 
     start() {
@@ -37,7 +37,7 @@ class Vent {
                     this._myTimer.start(499);
                 } else {
                     this._myTimer.start(Math.pp_random(1.5, 3.5));
-                    this._myTimer.start(7);
+                    this._myTimer.start(10);
                 }
 
                 let angle = this._startAngle;
@@ -60,7 +60,7 @@ class Vent {
                 direction.vec3_normalize(direction);
                 direction.vec3_scale(this._myStartDistance, direction);
 
-                let mrNOTClone = new MrNOTClone(direction.vec3_add([0, 2.5, 0]), [0, 1.7, 0], this._myTimeToReachTarget, this._mrNOTCloneHitByYou.bind(this), this._mrNOTCloneReachYou.bind(this));
+                let mrNOTClone = new MrNOTClone(direction.vec3_add([0, 4, 0]), [0, 1.4, 0], this._myTimeToReachTarget, this._mrNOTCloneHitByYou.bind(this), this._mrNOTCloneReachYou.bind(this));
                 this._myMrNOTClones.push(mrNOTClone);
 
                 this._startAngle = angle;
