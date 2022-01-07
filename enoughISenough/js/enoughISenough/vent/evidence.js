@@ -81,7 +81,8 @@ class Evidence {
         this._myFSM.perform("spawn");
     }
 
-    unspawn() {
+    unspawn(avoidParticles = false) {
+        this._myAvoidParticles = avoidParticles;
         this._myFSM.perform("unspawn");
     }
 
@@ -137,6 +138,7 @@ class Evidence {
         this._mySpawnTimer.start(1);
         this._myHitExplosion = false;
         this._myHitFloor = false;
+        this._myAvoidParticles = false;
     }
 
     _spawning(dt) {
@@ -193,7 +195,9 @@ class Evidence {
                 radiusMultiplier = 1.5;
             }
 
-            Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myParticlesRadius * radiusMultiplier, this._myScale.vec3_scale(scaleMultiplier), this._myObjectType);
+            if (!this._myAvoidParticles) {
+                Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myParticlesRadius * radiusMultiplier, this._myScale.vec3_scale(scaleMultiplier), this._myObjectType);
+            }
             this._myFSM.perform("end");
             this._myCallbackOnUnspawned(this);
             if (this._myEvidenceSetup.myCallbackOnUnspawned) {

@@ -98,6 +98,7 @@ class MrNOTVentState extends PP.State {
         this._myEvidenceManager.explode();
         this._myMrNOT.hide();
         this._myNotEnough.start();
+        Global.myParticlesManager.mrNOTParticles(Global.myPlayerPosition);
     }
 
     _updateDefeat(dt, fsm) {

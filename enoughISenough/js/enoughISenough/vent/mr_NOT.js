@@ -69,8 +69,8 @@ class MrNOT {
     update(dt) {
         if (Global.myDebugShortcutsEnabled) {
             if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(Global.myDebugShortcutsPress)) {
-                this._myCallbackOnPatienceOver();
-                this._myFSM.perform("explode");
+                //this._myCallbackOnPatienceOver();
+                //this._myFSM.perform("explode");
             }
         }
 

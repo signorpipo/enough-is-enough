@@ -29,6 +29,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         if (this._myFirstUpdate) {
             this._myFirstUpdate = false;
             this._start();
+            PP.setEasyTuneWidgetActiveVariable("Float 1");
         } else {
             Global.myFirstUpdateDone = true;
         }
@@ -66,24 +67,25 @@ WL.registerComponent("enough-IS-enough-gateway", {
         }
 
         for (let entry of Global.myMeshObjects.entries()) {
-            Global.myMeshObjectPoolMap.addPool(entry[0], entry[1], 10);
+            Global.myMeshObjectPoolMap.addPool(entry[0], entry[1], 20);
         }
 
         for (let entry of Global.myMeshNoFogObjects.entries()) {
-            Global.myMeshNoFogObjectPoolMap.addPool(entry[0], entry[1], 10);
+            Global.myMeshNoFogObjectPoolMap.addPool(entry[0], entry[1], 20);
         }
 
         let cloneParams = new PP.CloneParams();
         cloneParams.myDeepCloneParams.deepCloneComponentVariable("mesh", "material", true);
         Global.myGameObjectPoolMap.addPool(GameObjectType.MR_NOT_CLONE, Global.myGameObjects.get(GameObjectType.MR_NOT_CLONE), 10, cloneParams);
 
-        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 1", 2, 1, 3));
-        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 2", 1.5, 1, 3));
-        PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Int", 0, 1));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 1", 0.5, 1, 3));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 2", 0.7, 1, 3));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 3", 1.5, 1, 3));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Int", 4, 1));
         PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Bool", false));
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("mr NOT Clone Scale", 0.35, 0.1, 3));
-        PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Prevent Vent Lost", true));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Prevent Vent Lost", false));
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Explosion Particle Life", 0.15, 0.5, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Explosion Particles Duration", 0.5, 0.5, 3));

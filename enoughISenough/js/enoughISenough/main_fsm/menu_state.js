@@ -42,6 +42,7 @@ class MenuState extends PP.State {
 
     update(dt, fsm) {
         this._myFSM.update(dt);
+        this._myNotEnough.update(dt);
     }
 
     start(fsm, transitionID) {
@@ -107,7 +108,8 @@ class MenuState extends PP.State {
 
             //TEMP REMOVE THIS
             if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(Global.myDebugShortcutsPress)) {
-                this._myFSM.perform("unspawn_arcade_hard");
+                this._myNotEnough.start();
+                Global.myParticlesManager.mrNOTParticles(Global.myPlayerPosition);
             }
 
             //TEMP REMOVE THIS
