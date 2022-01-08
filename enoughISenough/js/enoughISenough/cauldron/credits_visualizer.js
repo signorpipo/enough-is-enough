@@ -16,6 +16,8 @@ WL.registerComponent("credits-visualizer", {
     start: function () {
         this._myText = this.object.pp_getComponentHierarchy("text");
         this._myText.material = this._myText.material.clone();
+        this._myTextColor = this._myText.material.color.pp_clone();
+
         let color = this._myText.material.color;
         color[3] = 0;
         this._myText.material.color = color;
@@ -62,13 +64,13 @@ WL.registerComponent("credits-visualizer", {
         if (this._mySpawnTimer.isRunning()) {
             this._mySpawnTimer.update(dt);
 
-            let color = this._myText.material.color;
-            color[3] = PP.EasingFunction.easeInOut(this._mySpawnTimer.getPercentage());
-            this._myText.material.color = color;
+            let tempColor = [0, 0, 0, 1];
 
-            color = this._myText.material.outlineColor;
-            color[3] = PP.EasingFunction.easeInOut(this._mySpawnTimer.getPercentage());
-            this._myText.material.outlineColor = color;
+            tempColor[0] = Math.pp_interpolate(0, this._myTextColor[0], this._mySpawnTimer.getPercentage(), PP.EasingFunction.easeInOut);
+            tempColor[1] = Math.pp_interpolate(0, this._myTextColor[1], this._mySpawnTimer.getPercentage(), PP.EasingFunction.easeInOut);
+            tempColor[2] = Math.pp_interpolate(0, this._myTextColor[2], this._mySpawnTimer.getPercentage(), PP.EasingFunction.easeInOut);
+
+            this._myText.material.color = tempColor;
 
             let easing = t => t * (2 - t);
             this._myText.object.pp_setScale(Math.pp_interpolate(this._myHideScale, 1, this._mySpawnTimer.getPercentage(), easing));
@@ -82,13 +84,13 @@ WL.registerComponent("credits-visualizer", {
         if (this._mySpawnTimer.isRunning()) {
             this._mySpawnTimer.update(dt);
 
-            let color = this._myText.material.color;
-            color[3] = 1 - PP.EasingFunction.easeInOut(this._mySpawnTimer.getPercentage());
-            this._myText.material.color = color;
+            let tempColor = [0, 0, 0, 1];
 
-            color = this._myText.material.outlineColor;
-            color[3] = 1 - PP.EasingFunction.easeInOut(this._mySpawnTimer.getPercentage());
-            this._myText.material.outlineColor = color;
+            tempColor[0] = Math.pp_interpolate(this._myTextColor[0], 0, this._mySpawnTimer.getPercentage(), PP.EasingFunction.easeInOut);
+            tempColor[1] = Math.pp_interpolate(this._myTextColor[1], 0, this._mySpawnTimer.getPercentage(), PP.EasingFunction.easeInOut);
+            tempColor[2] = Math.pp_interpolate(this._myTextColor[2], 0, this._mySpawnTimer.getPercentage(), PP.EasingFunction.easeInOut);
+
+            this._myText.material.color = tempColor;
 
             let easing = t => t * t;
             let scale = Math.pp_interpolate(1, this._myHideScale, this._mySpawnTimer.getPercentage(), easing);

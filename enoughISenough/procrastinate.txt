@@ -175,49 +175,49 @@ SFX:
 
 PULSE:
 - grab
-- not enough
 - collision (?)
 - release (?)
+v not enough
 
 EXTRA:
-- evidence bussola che se tenuto in mano mostra da dove arriva mr not
-- rallentare oggetti mentre scompaiono tipo quando cadono per evitare di fermali completamente e invece lasciarli andare troppo lontano mentre esplodono enough is enough
-- dare nomi alle fasi
-- altezza variable (almeno in step, a seconda dell'altezza una volta dentro il gioco, con reset?)
-- aggiungere mr not particles quando not enougha (?)
-- vibrazione per ogni colpo finale a mr not?
-- physx sulla mano per poter spostare gli oggetti?
 - qualche oggetto potrebbe avere un po' di alfa= come la spada di halo o il vetro di kh
-- mr not aumenta il fog color cosi che le prime volte si vede meno nella storia e poi sempre di piu?
+x evidence bussola che se tenuto in mano mostra da dove arriva mr not
+x rallentare oggetti mentre scompaiono tipo quando cadono per evitare di fermali completamente e invece lasciarli andare troppo lontano mentre esplodono enough is enough
+x dare nomi alle fasi
+x altezza variable (almeno in step, a seconda dell'altezza una volta dentro il gioco, con reset?)
+v aggiungere mr not particles quando not enougha (?)
+v vibrazione per ogni colpo finale a mr not?
+v physx sulla mano per poter spostare gli oggetti?
+x mr not aumenta il fog color cosi che le prime volte si vede meno nella storia e poi sempre di piu?
 
 
 TO DO:
 - rimuovere i debug
-- mr NOT testa che gira
-- mr NOT pannello nero fix alpha
-- se esci fuori un mr NOT clone arriva e ti not enougha nel mezzo (ascoltare evento di reset della view?)
-- regolare le luci
 - vibrazioni? sfx?
-- aumentare particles evidence size quando hittano? o solo durnate mr not? aumentarlo comunque un pochino?
-- all'interno di una explosion particle, avere size leggermente randomizzate
-- randomizzare size particle esplosione mr not?
-- spostare un po' piu avanti esplosione disappear mr not?
+? randomizzare size particle esplosione mr not?
+? spostare un po' piu avanti esplosione disappear mr not?
 - evidence clean ritardare per mr not boss explosion
-- aggiustare posizione testo
 - migliorare colore testo
-- aggiungere una luce in basso generale per migliorare i cloni?
-- migliorare posizione not enough audio
-- pp set transform as hand?
-- controllare che la luce in piu quando appare mr not non si noti
-- migliorare il modello del timer
-- aggiungere la fog (nero con valore 64 piu o meno ci siamo) ma a mr not normale no (lui ha le luci personali), facendo dei materiali specifici solo per lui uguali ma senza fog
+x mr NOT testa che gira
+x mr NOT pannello nero fix alpha
+x se esci fuori un mr NOT clone arriva e ti not enougha nel mezzo (ascoltare evento di reset della view?)
+v regolare le luci
+v aumentare particles evidence size quando hittano? o solo durnate mr not? aumentarlo comunque un pochino?
+v all'interno di una explosion particle, avere size leggermente randomizzate
+v aggiustare posizione testo
+x aggiungere una luce in basso generale per migliorare i cloni?
+v migliorare posizione not enough audio
+v pp set transform as hand?
+v controllare che la luce in piu quando appare mr not non si noti
+v migliorare il modello del timer
+v aggiungere la fog (nero con valore 64 piu o meno ci siamo) ma a mr not normale no (lui ha le luci personali), facendo dei materiali specifici solo per lui uguali ma senza fog
 
 TUNE:
 - altezza da cui partono i cloni, distanza, altezza di arrivo, tempo di arrivo, distanza iniziale (insomma tutto)
-- diminuire un pochino il tempo che inizia a scrivere il secondo enough del titolo durante la vibrazione per farlo sembrare piu scorrevole, ora parte a scriverlo quando tutto si è già fermato e stacca troppo
-- create un oggetto palette fatto di icosfere per tunare i colori
-- aggiustare posizione spawn evidence raggio per centrarlo meglio sul ring
-- migliorare explosion particle / tunare mr not explosion radius
+v diminuire un pochino il tempo che inizia a scrivere il secondo enough del titolo durante la vibrazione per farlo sembrare piu scorrevole, ora parte a scriverlo quando tutto si è già fermato e stacca troppo
+v create un oggetto palette fatto di icosfere per tunare i colori
+v aggiustare posizione spawn evidence raggio per centrarlo meglio sul ring
+v migliorare explosion particle / tunare mr not explosion radius
 
 BUG:
 - lag 

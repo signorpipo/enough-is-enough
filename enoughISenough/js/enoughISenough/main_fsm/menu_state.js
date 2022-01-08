@@ -508,7 +508,9 @@ class MenuTitle {
         this._mySubtitleObject = subtitleObject;
 
         this._myTitleText = this._myTitleObject.pp_getComponent("text");
+        this._myTitleTextColor = this._myTitleText.material.outlineColor.pp_clone();
         this._mySubtitleText = this._mySubtitleObject.pp_getComponent("text");
+        this._mySubtitleTextColor = this._mySubtitleText.material.outlineColor.pp_clone();
 
         this._myStartTimer = new PP.Timer(1, false);
         this._myTimer = new PP.Timer(1, false);
@@ -560,22 +562,20 @@ class MenuTitle {
         if (this._myStartTimer.isDone()) {
             if (this._myTimer.isRunning()) {
                 this._myTimer.update(dt);
-                this._myTitleText.material.color[3] = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
 
-                let color = this._myTitleText.material.color;
-                color[3] = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
-                this._myTitleText.material.color = color;
+                let tempColor = [0, 0, 0, 1];
 
-                color = this._myTitleText.material.outlineColor;
-                color[3] = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
-                this._myTitleText.material.outlineColor = color;
+                tempColor[0] = Math.pp_interpolate(0, this._myTitleTextColor[0], this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[1] = Math.pp_interpolate(0, this._myTitleTextColor[1], this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[2] = Math.pp_interpolate(0, this._myTitleTextColor[2], this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
 
-                color = this._mySubtitleText.material.color;
-                color[3] = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
-                this._mySubtitleText.material.color = color;
-                color = this._mySubtitleText.material.outlineColor;
-                color[3] = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
-                this._mySubtitleText.material.outlineColor = color;
+                this._myTitleText.material.outlineColor = tempColor;
+
+                tempColor[0] = Math.pp_interpolate(0, this._mySubtitleTextColor[0], this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[1] = Math.pp_interpolate(0, this._mySubtitleTextColor[1], this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[2] = Math.pp_interpolate(0, this._mySubtitleTextColor[2], this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+
+                this._mySubtitleText.material.outlineColor = tempColor;
 
                 let easing = t => t * (2 - t);
                 this._myTitlesObject.pp_setScale(Math.pp_interpolate(this._myHideScale, 1, this._myTimer.getPercentage(), easing));
@@ -592,20 +592,19 @@ class MenuTitle {
         if (this._myStartTimer.isDone()) {
             if (this._myTimer.isRunning()) {
                 this._myTimer.update(dt);
-                let color = this._myTitleText.material.color;
-                color[3] = 1 - PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
-                this._myTitleText.material.color = color;
+                let tempColor = [0, 0, 0, 1];
 
-                color = this._myTitleText.material.outlineColor;
-                color[3] = 1 - PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
-                this._myTitleText.material.outlineColor = color;
+                tempColor[0] = Math.pp_interpolate(this._myTitleTextColor[0], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[1] = Math.pp_interpolate(this._myTitleTextColor[1], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[2] = Math.pp_interpolate(this._myTitleTextColor[2], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
 
-                color = this._mySubtitleText.material.color;
-                color[3] = 1 - PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
-                this._mySubtitleText.material.color = color;
-                color = this._mySubtitleText.material.outlineColor;
-                color[3] = 1 - PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
-                this._mySubtitleText.material.outlineColor = color;
+                this._myTitleText.material.outlineColor = tempColor;
+
+                tempColor[0] = Math.pp_interpolate(this._mySubtitleTextColor[0], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[1] = Math.pp_interpolate(this._mySubtitleTextColor[1], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[2] = Math.pp_interpolate(this._mySubtitleTextColor[2], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+
+                this._mySubtitleText.material.outlineColor = tempColor;
 
                 let easing = t => t * t;
                 let scale = Math.pp_interpolate(1, this._myHideScale, this._myTimer.getPercentage(), easing);
