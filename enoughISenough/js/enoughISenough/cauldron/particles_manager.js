@@ -38,6 +38,8 @@ class ExplosionParticles {
         this._myTimer = new PP.Timer(PP.myEasyTuneVariables.get("Explosion Particles Duration"));
         this._mySpawnTimer = new PP.Timer(0);
         this._myParticles = [];
+
+        this._myLastScale = 1;
     }
 
     update(dt) {
@@ -71,7 +73,23 @@ class ExplosionParticles {
 
         let radius = Math.pp_random(this._myRadius * 0.75, this._myRadius * 1.25);
         let position = direction.vec3_scale(radius).vec3_add(this._myPosition);
-        let scale = Math.pp_random(this._myScale * 0.1, this._myScale * 0.25);
+
+        let minScale = 0.1;
+        let maxScale = 0.25;
+        let half = (maxScale + minScale) / 2;
+
+        let scale = half;
+
+        if (this._myLastScale >= 0) {
+            let ottave = (maxScale - minScale) / 8;
+            if (this._myLastScale > half) {
+                scale = Math.pp_random(this._myScale * minScale, this._myScale * (half + ottave));
+            } else {
+                scale = Math.pp_random(this._myScale * (half - ottave), this._myScale * maxScale);
+            }
+        }
+
+        this._myLastScale = scale;
 
         return new ExplosionParticle(position, scale, this._myObjectType, this._myNoFog);
     }
