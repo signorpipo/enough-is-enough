@@ -44,8 +44,10 @@ class TalkState extends PP.State {
         this._myBlather = new Blather(sentences);
 
         //Setup
-        this._mySpawnTime = 1.5;
-        this._myHideScale = 0.95;
+        this._myFogAlphaMax = 0.7;
+        this._myFogAlphaMin = 0;
+        this._mySpawnTime = 3.5;
+        this._myHideScale = 0.9;
 
         this._myMrNOT = Global.myGameObjects.get(GameObjectType.MR_NOT);
     }
@@ -70,7 +72,7 @@ class TalkState extends PP.State {
         this._myMrNOT.pp_setPosition([0, 11, -18]);
         this._myMrNOT.pp_setRotation([40, 0, 0]);
         this._myMrNOT.pp_setScale([5, 5, 5]);
-        PP.MeshUtils.setAlpha(this._myMrNOT, 0);
+        PP.MeshUtils.setFogColor(this._myMrNOT, [0, 0, 0, this._myFogAlphaMax]);
 
         Global.myLightFadeInTime = this._mySpawnTime * 2 / 3;
 
@@ -82,11 +84,12 @@ class TalkState extends PP.State {
     _updateMrNOTAppear(dt, fsm) {
         if (this._myTimer.isRunning()) {
             this._myTimer.update(dt);
-            PP.MeshUtils.setAlpha(this._myMrNOT, Math.pp_mapToNewInterval(this._myTimer.getPercentage(), 0, 0.7, 0, 1));
+            let easing = t => t * (2 - t);
+            PP.MeshUtils.setFogColor(this._myMrNOT, [0, 0, 0, Math.pp_mapToNewInterval(easing(this._myTimer.getPercentage()), 0, 1, this._myFogAlphaMax, this._myFogAlphaMin)]);
             let currentScaleFactor = Math.pp_interpolate(this._myHideScale, 1, this._myTimer.getPercentage(), PP.EasingFunction.easeOut);
 
             this._myMrNOT.pp_setScale([5, 5, 5]);
-            this._myMrNOT.pp_scaleObject(currentScaleFactor);
+            this._myMrNOT.pp_scaleObject([currentScaleFactor, currentScaleFactor, 1]);
 
             if (this._myTimer.isDone()) {
                 this._myTimer.reset();
@@ -108,18 +111,19 @@ class TalkState extends PP.State {
 
     _prepareMrNOTDisappear() {
         this._myTimer.start(this._mySpawnTime);
-        Global.myLightFadeInTime = this._mySpawnTime * 2 / 3;
+        Global.myLightFadeInTime = this._mySpawnTime;
         Global.myStartFadeOut = true;
     }
 
     _updateMrNOTDisappear(dt, fsm) {
         if (this._myTimer.isRunning()) {
             this._myTimer.update(dt);
-            PP.MeshUtils.setAlpha(this._myMrNOT, 1 - this._myTimer.getPercentage());
-            let currentScaleFactor = Math.pp_interpolate(1, this._myHideScale, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+            let easing = t => t * t;
+            PP.MeshUtils.setFogColor(this._myMrNOT, [0, 0, 0, Math.pp_mapToNewInterval(this._myTimer.getPercentage(), 0.05, 0.8, this._myFogAlphaMin, this._myFogAlphaMax)]);
+            let currentScaleFactor = Math.pp_interpolate(1, this._myHideScale, this._myTimer.getPercentage(), easing);
 
             this._myMrNOT.pp_setScale([5, 5, 5]);
-            this._myMrNOT.pp_scaleObject(currentScaleFactor);
+            this._myMrNOT.pp_scaleObject([currentScaleFactor, currentScaleFactor, 1]);
 
             if (this._myTimer.isDone()) {
                 this._myTimer.reset();
@@ -189,16 +193,16 @@ class Blather {
         this._myFSM = new PP.FSM();
         //this._myFSM.setDebugLogActive(true, "            Blather");
         this._myFSM.addState("init");
-        this._myFSM.addState("first_wait", new PP.TimerState(1, "end"));
+        this._myFSM.addState("first_wait", new PP.TimerState(0, "end"));
         this._myFSM.addState("blather", this._updateBlather.bind(this));
         this._myFSM.addState("wait", this._myTimerState);
         this._myFSM.addState("second_wait", this._myTimerState);
         this._myFSM.addState("done");
 
         this._myFSM.addTransition("init", "first_wait", "start", this._prepareState.bind(this));
-        this._myFSM.addTransition("first_wait", "blather", "end", this._nextBlather.bind(this));
+        this._myFSM.addTransition("first_wait", "blather", "end", this._nextBlather.bind(this, true));
         this._myFSM.addTransition("blather", "wait", "next");
-        this._myFSM.addTransition("wait", "blather", "end", this._nextBlather.bind(this));
+        this._myFSM.addTransition("wait", "blather", "end", this._nextBlather.bind(this, false));
         this._myFSM.addTransition("blather", "second_wait", "end");
         this._myFSM.addTransition("second_wait", "done", "end", this._done.bind(this));
         this._myFSM.addTransition("done", "first_wait", "start", this._prepareState.bind(this));
@@ -247,7 +251,7 @@ class Blather {
         this._myBigBlatherTextObject.pp_setActive(true);
     }
 
-    _nextBlather() {
+    _nextBlather(speedStart) {
         this._myIsDone = false;
         this._myCurrentSenteceIndex++;
         this._myCurrentCharacterIndex = 0;
@@ -258,7 +262,7 @@ class Blather {
             this._setBlatherPosition();
         }
 
-        this._myCharacterTimer.start(0.13);
+        this._myCharacterTimer.start(speedStart ? 0 : 0.13);
         this._myNextTimer.reset(1);
     }
 

@@ -19,9 +19,9 @@ WL.registerComponent("light-fade-in", {
         if (!Global.myStartFadeOut && this._myFadeTimer.isRunning()) {
             this._myFadeTimer.update(dt);
 
-            this._myLight.color[0] = this._myLightColor[0] * this._myFadeTimer.getPercentage();
-            this._myLight.color[1] = this._myLightColor[1] * this._myFadeTimer.getPercentage();
-            this._myLight.color[2] = this._myLightColor[2] * this._myFadeTimer.getPercentage();
+            this._myLight.color[0] = this._myLightColor[0] * PP.EasingFunction.easeOut(this._myFadeTimer.getPercentage());
+            this._myLight.color[1] = this._myLightColor[1] * PP.EasingFunction.easeOut(this._myFadeTimer.getPercentage());
+            this._myLight.color[2] = this._myLightColor[2] * PP.EasingFunction.easeOut(this._myFadeTimer.getPercentage());
         }
 
         if (!this._myLastFadeOut && Global.myStartFadeOut) {
@@ -33,9 +33,9 @@ WL.registerComponent("light-fade-in", {
             if (this._myFadeOutTimer.isRunning()) {
                 this._myFadeOutTimer.update(dt);
 
-                this._myLight.color[0] = this._myLightColor[0] * (1 - this._myFadeOutTimer.getPercentage());
-                this._myLight.color[1] = this._myLightColor[1] * (1 - this._myFadeOutTimer.getPercentage());
-                this._myLight.color[2] = this._myLightColor[2] * (1 - this._myFadeOutTimer.getPercentage());
+                this._myLight.color[0] = this._myLightColor[0] * (1 - PP.EasingFunction.easeIn(this._myFadeOutTimer.getPercentage()));
+                this._myLight.color[1] = this._myLightColor[1] * (1 - PP.EasingFunction.easeIn(this._myFadeOutTimer.getPercentage()));
+                this._myLight.color[2] = this._myLightColor[2] * (1 - PP.EasingFunction.easeIn(this._myFadeOutTimer.getPercentage()));
             }
         }
 
