@@ -51,11 +51,12 @@ WL.registerComponent("enough-IS-enough-gateway", {
                 PP.MeshUtils.setClonedMaterials(entry[1]);
                 PP.TextUtils.setClonedMaterials(entry[1]);
             }
+            entry[1].pp_setActive(false);
+
             let clonedMesh = entry[1].pp_clone();
             PP.MeshUtils.setClonedMaterials(clonedMesh);
             PP.TextUtils.setClonedMaterials(clonedMesh);
             PP.MeshUtils.setFogColor(clonedMesh, [0, 0, 0, 0]);
-            clonedMesh.pp_setActive(false);
             Global.myMeshNoFogObjects.set(entry[0], clonedMesh);
         }
 
@@ -64,6 +65,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
                 PP.MeshUtils.setClonedMaterials(entry[1]);
                 PP.TextUtils.setClonedMaterials(entry[1]);
             }
+            entry[1].pp_setActive(false);
         }
 
         for (let entry of Global.myMeshObjects.entries()) {
@@ -76,7 +78,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
         let cloneParams = new PP.CloneParams();
         cloneParams.myDeepCloneParams.deepCloneComponentVariable("mesh", "material", true);
-        Global.myGameObjectPoolMap.addPool(GameObjectType.MR_NOT_CLONE, Global.myGameObjects.get(GameObjectType.MR_NOT_CLONE), 10, cloneParams);
+        Global.myGameObjectPoolMap.addPool(GameObjectType.MR_NOT_CLONE, Global.myGameObjects.get(GameObjectType.MR_NOT_CLONE), 20, cloneParams);
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 1", 0.33, 1, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 2", 30, 5, 3));
