@@ -213,13 +213,13 @@ class MenuState extends PP.State {
 
         let initialPosition = [0, ringHeight, -ringRadius];
         positions.push(initialPosition.vec3_clone());
-        positions.push(initialPosition.vec3_rotateAxis([0, 1, 0], rotation));
-        positions.push(initialPosition.vec3_rotateAxis([0, 1, 0], -rotation));
-        positions.push(initialPosition.vec3_rotateAxis([0, 1, 0], rotation * 2));
-        positions.push(initialPosition.vec3_rotateAxis([0, 1, 0], -rotation * 2));
-        positions.push(initialPosition.vec3_rotateAxis([0, 1, 0], rotation * 3));
-        positions.push(initialPosition.vec3_rotateAxis([0, 1, 0], -rotation * 3));
-        positions.push(initialPosition.vec3_rotateAxis([0, 1, 0], -rotation * 4));
+        positions.push(initialPosition.vec3_rotateAxis(rotation, [0, 1, 0]));
+        positions.push(initialPosition.vec3_rotateAxis(-rotation, [0, 1, 0]));
+        positions.push(initialPosition.vec3_rotateAxis(rotation * 2, [0, 1, 0]));
+        positions.push(initialPosition.vec3_rotateAxis(-rotation * 2, [0, 1, 0]));
+        positions.push(initialPosition.vec3_rotateAxis(rotation * 3, [0, 1, 0]));
+        positions.push(initialPosition.vec3_rotateAxis(-rotation * 3, [0, 1, 0]));
+        positions.push(initialPosition.vec3_rotateAxis(-rotation * 4, [0, 1, 0]));
 
         {
             let startTrial = new MenuItem(Global.myGameObjects.get(GameObjectType.COIN), GameObjectType.COIN, positions[0], function () {

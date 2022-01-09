@@ -60,7 +60,7 @@ class Vent {
                 //angle = 180;
 
                 let direction = [0, 0, 1];
-                direction.vec3_rotateAxis([0, 1, 0], angle, direction);
+                direction.vec3_rotateAxis(angle, [0, 1, 0], direction);
                 direction.vec3_normalize(direction);
                 direction.vec3_scale(this._myStartDistance, direction);
 

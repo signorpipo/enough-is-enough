@@ -479,21 +479,21 @@ Array.prototype.vec3_rotateQuat = function () {
     };
 }();
 
-Array.prototype.vec3_rotateAxis = function (axis, angle, out) {
-    return this.vec3_rotateAxisDegrees(axis, angle, out);
+Array.prototype.vec3_rotateAxis = function (angle, axis, out) {
+    return this.vec3_rotateAxisDegrees(angle, axis, out);
 };
 
 Array.prototype.vec3_rotateAxisDegrees = function () {
     let zero = glMatrix.vec3.create();
-    return function (axis, angle, out) {
-        return this.vec3_rotateAroundAxisDegrees(axis, angle, zero, out);
+    return function (angle, axis, out) {
+        return this.vec3_rotateAroundAxisDegrees(angle, axis, zero, out);
     };
 }();
 
 Array.prototype.vec3_rotateAxisRadians = function () {
     let zero = glMatrix.vec3.create();
-    return function (axis, angle, out) {
-        return this.vec3_rotateAroundAxisRadians(axis, angle, zero, out);
+    return function (angle, axis, out) {
+        return this.vec3_rotateAroundAxisRadians(angle, axis, zero, out);
     };
 }();
 
@@ -524,17 +524,17 @@ Array.prototype.vec3_rotateAroundQuat = function (rotation, origin, out = glMatr
     return out;
 };
 
-Array.prototype.vec3_rotateAroundAxis = function (axis, angle, origin, out) {
-    return this.vec3_rotateAroundAxisDegrees(axis, angle, origin, out);
+Array.prototype.vec3_rotateAroundAxis = function (angle, axis, origin, out) {
+    return this.vec3_rotateAroundAxisDegrees(angle, axis, origin, out);
 };
 
-Array.prototype.vec3_rotateAroundAxisDegrees = function (axis, angle, origin, out) {
-    return this.vec3_rotateAroundAxisRadians(axis, glMatrix.glMatrix.toRadian(angle), origin, out);
+Array.prototype.vec3_rotateAroundAxisDegrees = function (angle, axis, origin, out) {
+    return this.vec3_rotateAroundAxisRadians(glMatrix.glMatrix.toRadian(angle), axis, origin, out);
 };
 
 Array.prototype.vec3_rotateAroundAxisRadians = function () {
     let quat = glMatrix.quat.create();
-    return function (axis, angle, origin, out = glMatrix.vec3.create()) {
+    return function (angle, axis, origin, out = glMatrix.vec3.create()) {
         glMatrix.quat.setAxisAngle(quat, axis, angle);
         return this.vec3_rotateAroundQuat(quat, origin, out);
     };

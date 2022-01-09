@@ -228,13 +228,13 @@ class EvidenceManager {
         let initialPosition = [0, ringHeight, -ringRadius];
 
         this._myCardinalPositionsMap.set(CardinalPosition.NORTH, initialPosition.vec3_clone());
-        this._myCardinalPositionsMap.set(CardinalPosition.NORTH_WEST, initialPosition.vec3_rotateAxis([0, 1, 0], rotation));
-        this._myCardinalPositionsMap.set(CardinalPosition.NORTH_EAST, initialPosition.vec3_rotateAxis([0, 1, 0], -rotation));
-        this._myCardinalPositionsMap.set(CardinalPosition.WEST, initialPosition.vec3_rotateAxis([0, 1, 0], rotation * 2));
-        this._myCardinalPositionsMap.set(CardinalPosition.EAST, initialPosition.vec3_rotateAxis([0, 1, 0], -rotation * 2));
-        this._myCardinalPositionsMap.set(CardinalPosition.SOUTH_WEST, initialPosition.vec3_rotateAxis([0, 1, 0], rotation * 3));
-        this._myCardinalPositionsMap.set(CardinalPosition.SOUTH_EAST, initialPosition.vec3_rotateAxis([0, 1, 0], -rotation * 3));
-        this._myCardinalPositionsMap.set(CardinalPosition.SOUTH, initialPosition.vec3_rotateAxis([0, 1, 0], -rotation * 4));
+        this._myCardinalPositionsMap.set(CardinalPosition.NORTH_WEST, initialPosition.vec3_rotateAxis(rotation, [0, 1, 0]));
+        this._myCardinalPositionsMap.set(CardinalPosition.NORTH_EAST, initialPosition.vec3_rotateAxis(-rotation, [0, 1, 0]));
+        this._myCardinalPositionsMap.set(CardinalPosition.WEST, initialPosition.vec3_rotateAxis(rotation * 2, [0, 1, 0]));
+        this._myCardinalPositionsMap.set(CardinalPosition.EAST, initialPosition.vec3_rotateAxis(-rotation * 2, [0, 1, 0]));
+        this._myCardinalPositionsMap.set(CardinalPosition.SOUTH_WEST, initialPosition.vec3_rotateAxis(rotation * 3, [0, 1, 0]));
+        this._myCardinalPositionsMap.set(CardinalPosition.SOUTH_EAST, initialPosition.vec3_rotateAxis(-rotation * 3, [0, 1, 0]));
+        this._myCardinalPositionsMap.set(CardinalPosition.SOUTH, initialPosition.vec3_rotateAxis(-rotation * 4, [0, 1, 0]));
     }
 
     _getInactiveEvidence(cardinalPosition) {
