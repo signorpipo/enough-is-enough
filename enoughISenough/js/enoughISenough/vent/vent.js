@@ -10,6 +10,8 @@ class Vent {
         this._myIsCleaning = true;
         this._myHitCounter = 0;
 
+        this._myPulseRadar = new PulseRadar();
+
         //Setup
         this._myStartDistance = 30;
         this._myTimeToReachTarget = 7;
@@ -26,6 +28,8 @@ class Vent {
         this._myFirst = true;
         this._mySignChange = Math.pp_randomInt(1, 3);
         this._mySign = Math.pp_randomSign();
+
+        this._myPulseRadar.start();
     }
 
     update(dt) {
@@ -33,11 +37,11 @@ class Vent {
             this._myTimer.update(dt);
             if (this._myTimer.isDone()) {
                 if (this._myVentSetup == 1) {
-                    this._myTimer.start(Math.pp_random(1, 2.5));
-                    this._myTimer.start(499);
-                } else {
                     this._myTimer.start(Math.pp_random(1.5, 3.5));
-                    this._myTimer.start(10);
+                    //this._myTimer.start(499);
+                } else {
+                    this._myTimer.start(Math.pp_random(1, 2.5));
+                    //this._myTimer.start(10);
                 }
 
                 let angle = this._startAngle;
@@ -52,8 +56,8 @@ class Vent {
                     }
                 }
 
-                angle = Math.pp_random(160, 200);
-                angle = 180;
+                //angle = Math.pp_random(160, 200);
+                //angle = 180;
 
                 let direction = [0, 0, 1];
                 direction.vec3_rotateAxis([0, 1, 0], angle, direction);
@@ -62,6 +66,8 @@ class Vent {
 
                 let mrNOTClone = new MrNOTClone(direction.vec3_add([0, 4, 0]), [0, 1.4, 0], this._myTimeToReachTarget, this._mrNOTCloneHitByYou.bind(this), this._mrNOTCloneReachYou.bind(this));
                 this._myMrNOTClones.push(mrNOTClone);
+
+                this._myPulseRadar.addSignal(direction);
 
                 this._startAngle = angle;
 
@@ -72,6 +78,8 @@ class Vent {
 
                 }
             }
+
+            this._myPulseRadar.update(dt);
         }
 
         for (let clone of this._myMrNOTClones) {

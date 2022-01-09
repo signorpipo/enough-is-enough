@@ -396,7 +396,7 @@ Array.prototype.vec3_angleSignedRadians = function () {
     return function (vector, axis) {
         this.vec3_cross(vector, crossAxis);
         let angle = this.vec3_angleRadians(vector);
-        if (!this.crossAxis.vec3_isConcordant(axis)) {
+        if (!crossAxis.vec3_isConcordant(axis)) {
             angle = -angle;
         }
 
