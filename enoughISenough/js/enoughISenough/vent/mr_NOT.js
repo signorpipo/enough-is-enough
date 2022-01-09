@@ -90,7 +90,7 @@ class MrNOT {
     }
 
     _prepareMove() {
-        PP.MeshUtils.setFogColor(this._myMrNOT, [0, 0, 0, 0]);
+        PP.MeshUtils.setFogColor(this._myObject, [0, 0, 0, 0]);
         this._myObject.pp_setPosition(this._myStartPosition);
         this._myObject.pp_setScale(this._myScale);
         this._myObject.pp_setRotation(this._myRotation);

@@ -170,6 +170,9 @@ class Blather {
         this._myBlatherTextComponent.justification = WL.Justification.Line;
         this._myBlatherTextComponent.material = Global.myMaterials.myText.clone();
         this._myBlatherTextComponent.material.outlineRange = [0.5, 0.5];
+        //this._myBlatherTextObject.pp_addComponent("pp-easy-text-color", { "_myVariableName": "ciao", "_myColorType": 0, "_myColorModel": 1 });
+
+
         //this._myBlatherTextComponent.material.color = [90 / 255, 90 / 255, 100 / 255, 1];
         //this._myBlatherTextComponent.material.outlineColor = [90 / 255, 90 / 255, 100 / 255, 1];
         this._myBlatherTextObject.pp_setActive(false);
@@ -180,8 +183,9 @@ class Blather {
         this._myBigBlatherTextComponent.text = "";
         this._myBigBlatherTextComponent.alignment = WL.Alignment.Left;
         this._myBigBlatherTextComponent.justification = WL.Justification.Line;
-        this._myBigBlatherTextComponent.material = Global.myMaterials.myText.clone();
+        this._myBigBlatherTextComponent.material = Global.myMaterials.myBigText.clone();
         this._myBigBlatherTextComponent.material.outlineRange = [0.5, 0.5];
+        //this._myBigBlatherTextObject.pp_addComponent("pp-easy-text-color", { "_myVariableName": "ciao2", "_myColorType": 0, "_myColorModel": 1 });
         //this._myBigBlatherTextComponent.material.color = [90 / 255, 90 / 255, 100 / 255, 1];
         //this._myBigBlatherTextComponent.material.outlineColor = [90 / 255, 90 / 255, 100 / 255, 1];
         this._myBigBlatherTextObject.pp_setActive(false);

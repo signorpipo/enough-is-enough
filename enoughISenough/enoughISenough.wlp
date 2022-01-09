@@ -341,12 +341,13 @@
                         "_mySubtitleMaterial": "117",
                         "_myTitle": "115",
                         "_mySubtitle": "117",
-                        "_myText": "184"
+                        "_myText": "184",
+                        "_myBigText": "1384"
                     }
                 },
                 {
                     "type": "pp-mute-all",
-                    "active": true
+                    "active": false
                 },
                 {
                     "type": "clear-console-on-session",
@@ -20765,7 +20766,7 @@
                     0.0
                 ],
                 "color": [
-                    0.4385643,
+                    0.3965894,
                     0.2706651,
                     0.627451,
                     1.0
@@ -23587,6 +23588,31 @@
                 "name": "DefaultMaterial",
                 "file": "assets\\models\\evidences\\floppy_f.fbx"
             }
+        },
+        "1384": {
+            "link": {
+                "name": "DefaultFontMaterial",
+                "file": "default"
+            },
+            "DistanceFieldVector": {
+                "outlineRange": [
+                    0.5,
+                    0.5
+                ],
+                "outlineColor": [
+                    1.0,
+                    0.9999899,
+                    0.9999899,
+                    0.0
+                ],
+                "color": [
+                    0.3058823,
+                    0.1699346,
+                    0.5098039,
+                    1.0
+                ]
+            },
+            "name": "BigBlatherMaterial"
         }
     },
     "shaders": {
