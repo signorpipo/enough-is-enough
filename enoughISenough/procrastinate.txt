@@ -170,8 +170,9 @@ SFX:
 - object appear
 - mr not die
 - mr not laughing (per capire da dove arriva)
-- title appearing from dark (also usable for mr not appearing)
+- title appearing/disappearing from dark (also usable for mr not appearing)
 - on object collision? like sound of something falling on the table (?)
+- mr not final explosions
 
 PULSE:
 - grab
@@ -196,8 +197,8 @@ TO DO:
 - vibrazioni? sfx?
 ? randomizzare size particle esplosione mr not?
 ? spostare un po' piu avanti esplosione disappear mr not?
-- evidence clean ritardare per mr not boss explosion
-- migliorare colore testo
+v evidence clean ritardare per mr not boss explosion
+v migliorare colore testo
 x mr NOT testa che gira
 x mr NOT pannello nero fix alpha
 x se esci fuori un mr NOT clone arriva e ti not enougha nel mezzo (ascoltare evento di reset della view?)

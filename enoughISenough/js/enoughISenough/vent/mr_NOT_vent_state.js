@@ -39,7 +39,7 @@ class MrNOTVentState extends PP.State {
         this._myNotEnough = new NotEnough();
         this._myMrNOT = new MrNOT(this._onPatienceOver.bind(this), this._onReach.bind(this), this._onExplosionDone.bind(this));
 
-        this._myCleanTimer = new PP.Timer(2);
+        this._myCleanTimer = new PP.Timer(2.75);
     }
 
     update(dt, fsm) {

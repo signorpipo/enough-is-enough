@@ -46,7 +46,8 @@ class TalkState extends PP.State {
         //Setup
         this._myFogAlphaMax = 0.7;
         this._myFogAlphaMin = 0;
-        this._mySpawnTime = 3.5;
+        this._mySpawnTime = 2.5;
+        this._myUnspawnTime = 3.5;
         this._myHideScale = 0.9;
 
         this._myMrNOT = Global.myGameObjects.get(GameObjectType.MR_NOT);
@@ -110,8 +111,8 @@ class TalkState extends PP.State {
     }
 
     _prepareMrNOTDisappear() {
-        this._myTimer.start(this._mySpawnTime);
-        Global.myLightFadeInTime = this._mySpawnTime;
+        this._myTimer.start(this._myUnspawnTime);
+        Global.myLightFadeInTime = this._myUnspawnTime;
         Global.myStartFadeOut = true;
     }
 
@@ -197,7 +198,7 @@ class Blather {
         this._myFSM = new PP.FSM();
         //this._myFSM.setDebugLogActive(true, "            Blather");
         this._myFSM.addState("init");
-        this._myFSM.addState("first_wait", new PP.TimerState(0, "end"));
+        this._myFSM.addState("first_wait", new PP.TimerState(0.5, "end"));
         this._myFSM.addState("blather", this._updateBlather.bind(this));
         this._myFSM.addState("wait", this._myTimerState);
         this._myFSM.addState("second_wait", this._myTimerState);
