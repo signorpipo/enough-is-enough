@@ -43,10 +43,13 @@ class TalkState extends PP.State {
 
         this._myBlather = new Blather(sentences);
 
+        this._myMrNOTAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_APPEAR);
+        this._myMrNOTDisappearAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_DISAPPEAR);
+
         //Setup
         this._myFogAlphaMax = 0.7;
         this._myFogAlphaMin = 0;
-        this._mySpawnTime = 2.5;
+        this._mySpawnTime = 3;
         this._myUnspawnTime = 3.5;
         this._myHideScale = 0.9;
 
@@ -80,6 +83,10 @@ class TalkState extends PP.State {
         this._myTimer.start(this._mySpawnTime);
 
         this._myMrNOT.pp_setActive(true);
+
+        this._myMrNOTAppearAudio.setPosition(this._myMrNOT.pp_getPosition());
+        this._myMrNOTDisappearAudio.setPosition(this._myMrNOT.pp_getPosition());
+        this._myMrNOTAppearAudio.play();
     }
 
     _updateMrNOTAppear(dt, fsm) {
@@ -114,6 +121,7 @@ class TalkState extends PP.State {
         this._myTimer.start(this._myUnspawnTime);
         Global.myLightFadeInTime = this._myUnspawnTime;
         Global.myStartFadeOut = true;
+        this._myMrNOTDisappearAudio.play();
     }
 
     _updateMrNOTDisappear(dt, fsm) {
@@ -198,7 +206,7 @@ class Blather {
         this._myFSM = new PP.FSM();
         //this._myFSM.setDebugLogActive(true, "            Blather");
         this._myFSM.addState("init");
-        this._myFSM.addState("first_wait", new PP.TimerState(0.5, "end"));
+        this._myFSM.addState("first_wait", new PP.TimerState(1, "end"));
         this._myFSM.addState("blather", this._updateBlather.bind(this));
         this._myFSM.addState("wait", this._myTimerState);
         this._myFSM.addState("second_wait", this._myTimerState);
