@@ -1,0 +1,65 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="mr_NOT_appear_data" version="1.3.0" audacityversion="2.3.2" sel0="0.0000000000" sel1="2.3546485261" vpos="176" h="0.0000000000" zoom="332.1055327869" rate="22050.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags/>
+	<wavetrack name="mr_NOT_appear" channel="2" linked="0" mute="1" solo="0" height="150" minimized="0" isSelected="0" rate="22050" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="46875">
+				<waveblock start="0">
+					<pcmaliasblockfile summaryfile="e080800f.auf" aliasfile=".\mr_NOT_appear.wav" aliasstart="0" aliaslen="46875" aliaschannel="0" min="-0.597107" max="0.595917" rms="0.126357"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="mygame_sfx_6" channel="2" linked="0" mute="1" solo="0" height="150" minimized="0" isSelected="0" rate="22050" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="58560">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808d6f.au" len="58560" min="-0.597961" max="0.594055" rms="0.113715"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="mygame_sfx_6" channel="2" linked="0" mute="1" solo="0" height="150" minimized="0" isSelected="0" rate="22050" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="58560">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808804.au" len="58560" min="-0.85045" max="0.844396" rms="0.196717"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="mygame_sfx_6" channel="2" linked="0" mute="1" solo="0" height="150" minimized="0" isSelected="0" rate="22050" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="56236">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808633.au" len="56236" min="-0.85045" max="0.844396" rms="0.199982"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="mr_NOT_appear" channel="2" linked="0" mute="1" solo="0" height="150" minimized="0" isSelected="0" rate="22050" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="47407">
+				<waveblock start="0">
+					<simpleblockfile filename="e08082aa.au" len="47407" min="-0.818591" max="0.820038" rms="0.192551"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="mygame_sfx_6" channel="2" linked="0" mute="0" solo="1" height="150" minimized="0" isSelected="1" rate="22050" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="51920">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808687.au" len="51920" min="-0.85045" max="0.844396" rms="0.207371"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>

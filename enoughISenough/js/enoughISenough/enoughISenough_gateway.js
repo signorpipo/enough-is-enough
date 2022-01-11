@@ -21,6 +21,8 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
         this.enoughISenough = new enoughISenough();
 
+        Global.myAudioManager.setVolume(1);
+
         this._myFirstUpdate = true;
     },
     start: function () {
@@ -80,7 +82,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         cloneParams.myDeepCloneParams.deepCloneComponentVariable("mesh", "material", true);
         Global.myGameObjectPoolMap.addPool(GameObjectType.MR_NOT_CLONE, Global.myGameObjects.get(GameObjectType.MR_NOT_CLONE), 20, cloneParams);
 
-        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 1", 0.33, 1, 3));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 1", 0, 10, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 2", 30, 5, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 3", 1.4, 5, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 4", 4, 5, 3));

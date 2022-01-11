@@ -46,6 +46,7 @@ class enoughISenough {
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/ring_rise.wav");
+            audioSetup.myVolume = 0.6;
             audioSetup.myRate = 0.8;
             manager.addAudioSetup(SfxID.RING_RISE, audioSetup);
         }
@@ -66,8 +67,8 @@ class enoughISenough {
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_disappear.wav");
             audioSetup.myReferenceDistance = 1000000;
-            audioSetup.myVolume = 0.8;
-            audioSetup.myPitch = 0.6;
+            audioSetup.myPitch = 0.8;
+            audioSetup.myVolume = 0.5;
             manager.addAudioSetup(SfxID.MR_NOT_DISAPPEAR, audioSetup);
         }
     }
