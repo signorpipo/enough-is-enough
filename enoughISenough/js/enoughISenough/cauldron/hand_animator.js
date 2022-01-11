@@ -57,6 +57,8 @@ WL.registerComponent("hand-animator", {
 
         this._myAppearList = [];
         this._myStarted = false;
+
+        this._myPulseTimer = new PP.Timer(0.25);
     },
     update: function (dt) {
         for (let piece of this._myHandPieces) {
@@ -73,7 +75,10 @@ WL.registerComponent("hand-animator", {
         }
 
         if (this._myStarted && !this.isDone()) {
-            this._myGamepad.pulse(0.5);
+            this._myPulseTimer.update(dt);
+            if (this._myPulseTimer.isDone()) {
+                this._myGamepad.pulse(0.5);
+            }
         }
     },
     begin: function () {
@@ -85,11 +90,17 @@ WL.registerComponent("hand-animator", {
             indexList[i] = i;
         }
 
+        let firstTime = true;
         while (indexList.length > 0) {
             let randomIndex = Math.pp_randomInt(0, indexList.length - 1);
             let index = indexList.pp_removeIndex(randomIndex);
 
             let randomTimer = Math.pp_random(0.15, 0.45);
+            if (firstTime) {
+                randomTimer = 0.2;
+                firstTime = false;
+            }
+
             this._myAppearList.push([index, new PP.Timer(randomTimer)]);
         }
     },
