@@ -56,7 +56,7 @@ class Vent {
                     }
                 }
 
-                //angle = Math.pp_random(160, 200);
+                angle = Math.pp_random(160, 200);
                 //angle = 180;
 
                 let direction = [0, 0, 1];

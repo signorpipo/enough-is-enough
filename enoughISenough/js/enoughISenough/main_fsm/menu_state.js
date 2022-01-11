@@ -108,8 +108,9 @@ class MenuState extends PP.State {
 
             //TEMP REMOVE THIS
             if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(Global.myDebugShortcutsPress)) {
-                this._myNotEnough.start();
-                Global.myParticlesManager.mrNOTParticles(Global.myPlayerPosition);
+                this._myFSM.perform("unspawn_arcade_hard");
+                //this._myNotEnough.start();
+                //Global.myParticlesManager.mrNOTParticles(Global.myPlayerPosition);
             }
 
             //TEMP REMOVE THIS

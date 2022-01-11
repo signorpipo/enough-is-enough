@@ -142,7 +142,7 @@ class MrNOTClone {
             evidence.hit(this._myObject);
             this.unspawn();
             this._myHitAudio.setPosition(this._myObject.pp_getPosition());
-            this._myHitAudio.setPitch(Math.pp_random(0.8, 1.1));
+            this._myHitAudio.setPitch(Math.pp_random(0.85, 1.05));
             this._myHitAudio.play();
             if (this._myCallbackOnHit) {
                 this._myCallbackOnHit(this, hittingObject);

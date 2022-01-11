@@ -89,11 +89,19 @@ class enoughISenough {
         }
 
         {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/clone_explode.wav");
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_explode.wav");
             audioSetup.myPitch = 1;
             audioSetup.myVolume = 1;
             audioSetup.myReferenceDistance = 3;
             manager.addAudioSetup(SfxID.CLONE_EXPLODE, audioSetup);
+        }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_explode.wav");
+            audioSetup.myPitch = 1;
+            audioSetup.myVolume = 1;
+            audioSetup.myReferenceDistance = 3;
+            manager.addAudioSetup(SfxID.MR_NOT_EXPLODE_EXPLODE, audioSetup);
         }
     }
 }
@@ -109,4 +117,5 @@ var SfxID = {
     TITLE_APPEAR: 7,
     TITLE_DISAPPEAR: 8,
     CLONE_EXPLODE: 9,
+    MR_NOT_EXPLODE_EXPLODE: 10,
 };

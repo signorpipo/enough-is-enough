@@ -43,7 +43,8 @@ class MrNOT {
 
         this._myCollisions = this._myObject.pp_getComponentsHierarchy("collision");
 
-        this._myExplodeAudio = Global.myAudioManager.createAudioPlayer(SfxID.BLABLA_2);
+        this._myExplodeAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_EXPLODE_EXPLODE);
+        this._myHitAudio = Global.myAudioManager.createAudioPlayer(SfxID.CLONE_EXPLODE);
 
         this._myRumbleScreen = new RumbleScreen();
 
@@ -172,6 +173,10 @@ class MrNOT {
         }
 
         if (hit) {
+            this._myHitAudio.setPosition(hittingObject.pp_getPosition());
+            this._myHitAudio.setPitch(Math.pp_random(0.85, 1.05));
+            this._myHitAudio.play();
+
             let evidence = hittingObject.pp_getComponent("evidence-component");
             evidence.hit(this._myObject);
 
@@ -261,8 +266,11 @@ class MrNOT {
 
             this._addPulse(this._myParticlesPosition, this._mySpawnDelays.length <= 1);
 
-            this._myParticlesPosition = this._getNextParticlePosition();
+            this._myExplodeAudio.setPosition(this._myParticlesPosition.pp_clone());
+            this._myExplodeAudio.setPitch(Math.pp_random(0.85, 1.05));
             this._myExplodeAudio.play();
+
+            this._myParticlesPosition = this._getNextParticlePosition();
 
             this._myRumbleScreen.start(Math.pp_random(0.4, 0.6), 1);
         }
