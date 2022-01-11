@@ -45,7 +45,7 @@ class MrNOTClone {
 
         this._myCollisions = this._myObject.pp_getComponentsHierarchy("collision");
 
-        this._myHitAudio = Global.myAudioManager.createAudioPlayer(SfxID.BLABLA_2);
+        this._myHitAudio = Global.myAudioManager.createAudioPlayer(SfxID.CLONE_EXPLODE);
 
         //Setup
         this._myReachTargetDistance = Global.myRingRadius * 2;
@@ -141,6 +141,8 @@ class MrNOTClone {
             let evidence = hittingObject.pp_getComponent("evidence-component");
             evidence.hit(this._myObject);
             this.unspawn();
+            this._myHitAudio.setPosition(this._myObject.pp_getPosition());
+            this._myHitAudio.setPitch(Math.pp_random(0.8, 1.1));
             this._myHitAudio.play();
             if (this._myCallbackOnHit) {
                 this._myCallbackOnHit(this, hittingObject);

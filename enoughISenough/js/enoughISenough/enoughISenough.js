@@ -87,6 +87,14 @@ class enoughISenough {
             audioSetup.myVolume = 0.4;
             manager.addAudioSetup(SfxID.TITLE_DISAPPEAR, audioSetup);
         }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/clone_explode.wav");
+            audioSetup.myPitch = 1;
+            audioSetup.myVolume = 1;
+            audioSetup.myReferenceDistance = 3;
+            manager.addAudioSetup(SfxID.CLONE_EXPLODE, audioSetup);
+        }
     }
 }
 
@@ -100,4 +108,5 @@ var SfxID = {
     MR_NOT_DISAPPEAR: 6,
     TITLE_APPEAR: 7,
     TITLE_DISAPPEAR: 8,
+    CLONE_EXPLODE: 9,
 };

@@ -120,9 +120,9 @@ class Vent {
     _mrNOTCloneHitByYou() {
         this._myHitCounter++;
 
-        let maxCounter = 15;
+        let maxCounter = 1500;
         if (this._myVentSetup == 1) {
-            maxCounter = 25;
+            maxCounter = 2500;
         }
 
         if (this._myHitCounter > maxCounter) {

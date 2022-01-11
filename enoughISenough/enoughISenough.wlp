@@ -2474,10 +2474,11 @@
                         "_myHandedness": "right",
                         "_myGrabButton": "squeeze",
                         "_myThrowVelocitySource": "hand",
-                        "_myThrowMaxLinearSpeed": 15.0,
+                        "_myThrowMaxLinearSpeed": 20.0,
                         "_myThrowMaxAngularSpeed": 1080.0,
                         "_myThrowLinearSpeedBoost": 1.75,
-                        "_myThrowAngularVelocityMultiplier": 0.5
+                        "_myThrowAngularVelocityMultiplier": 0.5,
+                        "_myThrowLinearVelocityMultiplier": 2.0
                     }
                 },
                 {
@@ -6839,9 +6840,10 @@
                         "_myHandedness": "left",
                         "_myGrabButton": "squeeze",
                         "_myThrowVelocitySource": "hand",
-                        "_myThrowMaxLinearSpeed": 15.0,
+                        "_myThrowMaxLinearSpeed": 20.0,
                         "_myThrowMaxAngularSpeed": 1080.0,
-                        "_myThrowLinearSpeedBoost": 1.75
+                        "_myThrowLinearSpeedBoost": 1.75,
+                        "_myThrowLinearVelocityMultiplier": 2.0
                     }
                 }
             ]
@@ -17628,7 +17630,7 @@
             ],
             "transformation": [
                 -0.136,
-                -1.1889443207735441e-8,
+                -1.188944320773544e-8,
                 3.850477270361807e-8,
                 0.0,
                 -3.8504133215155898e-8,
