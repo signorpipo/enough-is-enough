@@ -71,6 +71,22 @@ class enoughISenough {
             audioSetup.myVolume = 0.5;
             manager.addAudioSetup(SfxID.MR_NOT_DISAPPEAR, audioSetup);
         }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/title_appear.wav");
+            audioSetup.myReferenceDistance = 1000000;
+            audioSetup.myPitch = 0.8;
+            audioSetup.myVolume = 0.5;
+            manager.addAudioSetup(SfxID.TITLE_APPEAR, audioSetup);
+        }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/title_disappear.wav");
+            audioSetup.myReferenceDistance = 1000000;
+            audioSetup.myPitch = 0.8;
+            audioSetup.myVolume = 0.4;
+            manager.addAudioSetup(SfxID.TITLE_DISAPPEAR, audioSetup);
+        }
     }
 }
 
@@ -82,4 +98,6 @@ var SfxID = {
     HAND_PIECE_APPEAR: 4,
     MR_NOT_APPEAR: 5,
     MR_NOT_DISAPPEAR: 6,
+    TITLE_APPEAR: 7,
+    TITLE_DISAPPEAR: 8,
 };

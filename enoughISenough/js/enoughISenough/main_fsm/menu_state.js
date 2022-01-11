@@ -526,6 +526,9 @@ class MenuTitle {
 
         this._myFSM.init("spawn");
 
+        this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.TITLE_APPEAR);
+        this._myDisappearAudio = Global.myAudioManager.createAudioPlayer(SfxID.TITLE_DISAPPEAR);
+
         //Setup
         this._mySpawnTime = 1.5;
         this._myHideScale = 0.95;
@@ -535,6 +538,12 @@ class MenuTitle {
         if (!this._myTitleText.active) {
             this._myTitleObject.pp_setActive(true);
             this._mySubtitleObject.pp_setActive(true);
+
+            this._myTitleCenterPosition = [0, 168, -184];
+            this._myAppearAudio.setPosition(this._myTitleCenterPosition);
+            this._myDisappearAudio.setPosition(this._myTitleCenterPosition);
+
+            this._myAppearAudio.play();
 
             this._myTimer.start(this._mySpawnTime);
         }
@@ -547,6 +556,8 @@ class MenuTitle {
         this._myTimer.start(this._mySpawnTime);
         this._myStartTimer.start(timeToStart);
         this._myFSM.perform("unspawn");
+
+        this._myDisappearAudio.play();
     }
 
     update(dt) {

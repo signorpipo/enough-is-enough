@@ -1,0 +1,25 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="title_appear_data" version="1.3.0" audacityversion="2.3.2" sel0="0.0000000000" sel1="1.4760544218" vpos="0" h="0.0000000000" zoom="211.3710904377" rate="22050.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags/>
+	<wavetrack name="g_sfx_6" channel="2" linked="0" mute="0" solo="1" height="150" minimized="0" isSelected="1" rate="22050" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="32547">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808018.au" len="32547" min="-0.245232" max="0.244335" rms="0.09563"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="g_sfx_6" channel="2" linked="0" mute="1" solo="0" height="150" minimized="0" isSelected="0" rate="22050" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="32547">
+				<waveblock start="0">
+					<simpleblockfile filename="e080827e.au" len="32547" min="-0.245232" max="0.244335" rms="0.095403"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>
