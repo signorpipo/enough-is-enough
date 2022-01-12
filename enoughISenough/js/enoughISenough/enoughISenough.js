@@ -76,7 +76,7 @@ class enoughISenough {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/title_appear.wav");
             audioSetup.myReferenceDistance = 1000000;
             audioSetup.myPitch = 0.8;
-            audioSetup.myVolume = 0.5;
+            audioSetup.myVolume = 0.6;
             manager.addAudioSetup(SfxID.TITLE_APPEAR, audioSetup);
         }
 
@@ -84,7 +84,7 @@ class enoughISenough {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/title_disappear.wav");
             audioSetup.myReferenceDistance = 1000000;
             audioSetup.myPitch = 0.8;
-            audioSetup.myVolume = 0.4;
+            audioSetup.myVolume = 0.5;
             manager.addAudioSetup(SfxID.TITLE_DISAPPEAR, audioSetup);
         }
 
@@ -103,6 +103,22 @@ class enoughISenough {
             audioSetup.myReferenceDistance = 3;
             manager.addAudioSetup(SfxID.MR_NOT_EXPLODE_EXPLODE, audioSetup);
         }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/evidence_appear.wav");
+            audioSetup.myPitch = 0.8;
+            audioSetup.myVolume = 0.2;
+            audioSetup.myReferenceDistance = 3;
+            manager.addAudioSetup(SfxID.EVIDENCE_APPEAR, audioSetup);
+        }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/evidence_disappear_2.wav");
+            audioSetup.myPitch = 1;
+            audioSetup.myVolume = 0.5;
+            audioSetup.myReferenceDistance = 3;
+            manager.addAudioSetup(SfxID.EVIDENCE_DISAPPEAR, audioSetup);
+        }
     }
 }
 
@@ -118,4 +134,6 @@ var SfxID = {
     TITLE_DISAPPEAR: 8,
     CLONE_EXPLODE: 9,
     MR_NOT_EXPLODE_EXPLODE: 10,
+    EVIDENCE_APPEAR: 11,
+    EVIDENCE_DISAPPEAR: 12,
 };

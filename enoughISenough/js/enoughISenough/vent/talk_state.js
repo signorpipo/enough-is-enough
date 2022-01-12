@@ -290,7 +290,7 @@ class Blather {
         if (!this._myNextTimer.isRunning()) {
             this._myCharacterTimer.update(dt);
 
-            if (this._myCharacterTimer.isDone()) {
+            if (this._myCurrentCharacterIndex != sentence.mySentence.length && this._myCharacterTimer.isDone()) {
                 let character = sentence.mySentence[this._myCurrentCharacterIndex];
                 textComponent.text = textComponent.text.concat(character);
 

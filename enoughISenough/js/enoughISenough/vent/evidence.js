@@ -54,6 +54,10 @@ class Evidence {
         this._myHasBeenThrown = false;
 
         this._myParticlesRadius = 0.225;
+
+        this._myAudioTimer = new PP.Timer(0);
+        this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_APPEAR);
+        this._myDisappearAudio = Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_DISAPPEAR);
     }
 
     getEvidenceSetup() {
@@ -139,13 +143,26 @@ class Evidence {
         this._myHitExplosion = false;
         this._myHitFloor = false;
         this._myAvoidParticles = false;
+
+        this._myAudioTimer.start(0.2);
+        this._myAppearAudio.setPosition(position);
+        this._myAppearAudio.setPitch(Math.pp_random(0.85, 1.05));
     }
 
     _spawning(dt) {
+        if (this._myAudioTimer.isRunning()) {
+            this._myAudioTimer.update(dt);
+            if (this._myAudioTimer.isDone()) {
+                this._myAppearAudio.play();
+            }
+        }
+
         this._mySpawnTimer.update(dt);
 
         let scaleMultiplier = PP.EasingFunction.easeInOut(this._mySpawnTimer.getPercentage());
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
+
+        this._myAppearAudio.updatePosition(this._myObject.pp_getPosition());
 
         if (this._mySpawnTimer.isDone()) {
             this._myFSM.perform("end");
@@ -179,6 +196,12 @@ class Evidence {
         }
 
         this._myGrabbable.release();
+
+        if (!this._myHitExplosion) {
+            this._myDisappearAudio.setPosition(this._myObject.pp_getPosition());
+            this._myDisappearAudio.setPitch(Math.pp_random(0.85, 1.05));
+            this._myDisappearAudio.play();
+        }
     }
 
     _unspawning(dt) {

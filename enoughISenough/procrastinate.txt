@@ -165,14 +165,14 @@ MUSIC:
 - arcade music
 
 SFX:
-- grab (?)
 - object explode
 - object appear
-- mr not die
 - mr not laughing (per capire da dove arriva)
-- title appearing/disappearing from dark (also usable for mr not appearing)
-- on object collision? like sound of something falling on the table (?)
-- mr not final explosions
+x grab (?)
+x on object collision? like sound of something falling on the table (?)
+v mr not die
+v title appearing/disappearing from dark (also usable for mr not appearing)
+v mr not final explosions
 
 PULSE:
 - grab
@@ -181,7 +181,8 @@ PULSE:
 v not enough
 
 EXTRA:
-- qualche oggetto potrebbe avere un po' di alfa= come la spada di halo o il vetro di kh
+- mr NOT boss finale ha anche i cloni che arrivano dai lati
+x qualche oggetto potrebbe avere un po' di alfa come la spada di halo o il vetro di kh
 x evidence bussola che se tenuto in mano mostra da dove arriva mr not
 x rallentare oggetti mentre scompaiono tipo quando cadono per evitare di fermali completamente e invece lasciarli andare troppo lontano mentre esplodono enough is enough
 x dare nomi alle fasi

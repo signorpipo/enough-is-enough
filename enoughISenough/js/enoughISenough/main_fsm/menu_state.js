@@ -316,6 +316,7 @@ class MenuItem {
         this._myScale = this._myObject.pp_getScale();
 
         this._myTimer = new PP.Timer(0);
+        this._myAudioTimer = new PP.Timer(0);
 
         this._myCallbackOnFall = callbackOnFall;
 
@@ -348,6 +349,9 @@ class MenuItem {
         this._myPhysx.onCollision(this._onCollision.bind(this));
 
         this._myParticlesRadius = 0.225;
+
+        this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_APPEAR);
+        this._myDisappearAudio = Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_DISAPPEAR);
     }
 
     init(timeBeforeFirstSpawn) {
@@ -415,13 +419,26 @@ class MenuItem {
 
         this._myTimer.start(1);
         this._myThrowTimer.reset();
+
+        this._myAudioTimer.start(0.2);
+        this._myAppearAudio.setPosition(position);
+        this._myAppearAudio.setPitch(Math.pp_random(0.85, 1.05));
     }
 
     _spawning(dt) {
+        if (this._myAudioTimer.isRunning()) {
+            this._myAudioTimer.update(dt);
+            if (this._myAudioTimer.isDone()) {
+                this._myAppearAudio.play();
+            }
+        }
+
         this._myTimer.update(dt);
 
         let scaleMultiplier = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
+
+        this._myAppearAudio.updatePosition(this._myObject.pp_getPosition());
 
         if (this._myTimer.isDone()) {
             this._myFSM.perform("end");
@@ -453,6 +470,10 @@ class MenuItem {
         }
 
         this._myGrabbable.release();
+
+        this._myDisappearAudio.setPosition(this._myObject.pp_getPosition());
+        this._myDisappearAudio.setPitch(Math.pp_random(0.85, 1.05));
+        this._myDisappearAudio.play();
     }
 
     _unspawning(dt) {
@@ -460,6 +481,8 @@ class MenuItem {
 
         let scaleMultiplier = Math.pp_interpolate(1, PP.myEasyTuneVariables.get("Unspawn Menu Scale"), this._myTimer.getPercentage());
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
+
+        //this._myDisappearAudio.updatePosition(this._myObject.pp_getPosition());
 
         if (this._myTimer.isDone()) {
             Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myParticlesRadius, this._myScale, this._myObjectType);
