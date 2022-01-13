@@ -165,9 +165,9 @@ MUSIC:
 - arcade music
 
 SFX:
-- object explode
-- object appear
-- mr not laughing (per capire da dove arriva)
+v object explode
+v object appear
+v mr not laughing (per capire da dove arriva)
 x grab (?)
 x on object collision? like sound of something falling on the table (?)
 v mr not die
@@ -175,9 +175,9 @@ v title appearing/disappearing from dark (also usable for mr not appearing)
 v mr not final explosions
 
 PULSE:
-- grab
-- collision (?)
-- release (?)
+x collision (?)
+x release (?)
+v grab
 v not enough
 
 EXTRA:
@@ -195,9 +195,9 @@ x mr not aumenta il fog color cosi che le prime volte si vede meno nella storia 
 
 TO DO:
 - rimuovere i debug
-- vibrazioni? sfx?
 ? randomizzare size particle esplosione mr not?
 ? spostare un po' piu avanti esplosione disappear mr not?
+v vibrazioni? sfx?
 v evidence clean ritardare per mr not boss explosion
 v migliorare colore testo
 x mr NOT testa che gira

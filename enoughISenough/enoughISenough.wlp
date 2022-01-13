@@ -2522,6 +2522,12 @@
                         "_myColorModel": "hsv",
                         "_myColorType": "specular color"
                     }
+                },
+                {
+                    "type": "pulse-on-grab",
+                    "pulse-on-grab": {
+                        "_myHandedness": "right"
+                    }
                 }
             ]
         },
@@ -6845,6 +6851,9 @@
                         "_myThrowLinearSpeedBoost": 1.75,
                         "_myThrowLinearVelocityMultiplier": 2.0
                     }
+                },
+                {
+                    "type": "pulse-on-grab"
                 }
             ]
         },
