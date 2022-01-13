@@ -23,7 +23,7 @@ class PulseRadar {
     }
 
     addSignal(position) {
-        this._myPositionsDelayed.push([position, 0.3]);
+        this._myPositionsDelayed.push([position, 0.35]);
     }
 
     update(dt) {

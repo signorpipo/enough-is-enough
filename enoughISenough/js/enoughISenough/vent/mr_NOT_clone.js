@@ -46,6 +46,9 @@ class MrNOTClone {
         this._myCollisions = this._myObject.pp_getComponentsHierarchy("collision");
 
         this._myHitAudio = Global.myAudioManager.createAudioPlayer(SfxID.CLONE_EXPLODE);
+        this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.CLONE_APPEAR);
+
+        this._myAppearAudioDelay = new PP.Timer(0.2);
 
         //Setup
         this._myReachTargetDistance = Global.myRingRadius * 2;
@@ -73,6 +76,15 @@ class MrNOTClone {
     }
 
     _move(dt) {
+        if (this._myAppearAudioDelay.isRunning()) {
+            this._myAppearAudioDelay.update(dt);
+            if (this._myAppearAudioDelay.isDone()) {
+                this._myAppearAudio.setPosition(this._myObject.pp_getPosition());
+                this._myAppearAudio.setPitch(Math.pp_random(0.85, 1.05));
+                this._myAppearAudio.play();
+            }
+        }
+
         if (this._mySpawnTimer.isRunning()) {
             this._mySpawnTimer.update(dt);
             PP.MeshUtils.setAlpha(this._myObject, this._mySpawnTimer.getPercentage());
