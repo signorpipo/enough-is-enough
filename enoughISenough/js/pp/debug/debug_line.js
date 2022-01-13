@@ -116,4 +116,4 @@ PP.DebugLine = class DebugLine {
             this._refreshLine(0);
         }
     }
-}
+};
