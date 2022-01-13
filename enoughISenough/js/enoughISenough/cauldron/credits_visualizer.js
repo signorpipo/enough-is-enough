@@ -29,6 +29,11 @@ WL.registerComponent("credits-visualizer", {
         this._mySpawnTimer = new PP.Timer(1.5);
         this._myHideScale = 0.85;
 
+        this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.TITLE_APPEAR);
+        this._myDisappearAudio = Global.myAudioManager.createAudioPlayer(SfxID.TITLE_DISAPPEAR);
+        this._myAppearAudio.setPosition(this.object.pp_getPosition());
+        this._myDisappearAudio.setPosition(this.object.pp_getPosition());
+
         this._myFSM.init("hide");
     },
     update(dt) {
@@ -41,6 +46,8 @@ WL.registerComponent("credits-visualizer", {
                 this._myText.active = true;
                 this._myWondermelonGrabTime = 0;
                 this._mySpawnTimer.start();
+
+                this._myAppearAudio.play();
                 this._myFSM.perform("spawn");
 
             }
@@ -54,6 +61,7 @@ WL.registerComponent("credits-visualizer", {
             if (this._myWondermelonGrabTime > 1) {
                 this._myWondermelonGrabTime = 0;
                 this._mySpawnTimer.start();
+                this._myDisappearAudio.play();
                 this._myFSM.perform("unspawn");
             }
         } else {
