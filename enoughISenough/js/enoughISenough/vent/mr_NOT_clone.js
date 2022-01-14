@@ -4,7 +4,7 @@ class MrNOTClone {
         PP.MeshUtils.setAlpha(this._myObject, 0);
         this._myObject.pp_setPosition(position);
         this._myFacing = targetPosition.vec3_sub(position);
-        this._myObject.pp_lookTo(this._myFacing);
+        this._myObject.pp_lookTo(this._myFacing, [0, 1, 0]);
         this._myObject.pp_setScale([1, 1, 1]);
         this._myObject.pp_setActive(true);
         this._myScale = this._myObject.pp_getScale();
@@ -28,7 +28,7 @@ class MrNOTClone {
 
         this._myFSM = new PP.FSM();
 
-        //this._myFSM.setDebugLogActive(true, "        Mr NOT Clone");
+        //this._myFSM.setDebugLogActive(true, "        Mr NOT Clone"); 
         this._myFSM.addState("init");
         this._myFSM.addState("move", this._move.bind(this));
         this._myFSM.addState("unspawning", this._unspawning.bind(this));
@@ -49,6 +49,18 @@ class MrNOTClone {
         this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.CLONE_APPEAR);
 
         this._myAppearAudioDelay = new PP.Timer(0.2);
+
+        let maxAngle = 15;
+        let anglePercentage = Math.pp_mapToNewInterval(Global.myVentDuration, 20, 60, 0, 1);
+        let rotation = Math.pp_random(0, maxAngle * anglePercentage) * Math.pp_randomSign();
+        console.error(rotation.toFixed(3), anglePercentage.toFixed(3));
+        this._myObject.pp_rotateObject([0, 0, rotation]);
+
+        this._mySpin = false;
+        if (Global.myVentDuration > 90) {
+            this._mySpin = Math.pp_random(0, 10) > 9;
+        }
+        this._mySpinSpeed = Math.pp_random(4, 6) * Math.pp_randomSign();
 
         //Setup
         this._myReachTargetDistance = Global.myRingRadius * 2;
@@ -76,6 +88,10 @@ class MrNOTClone {
     }
 
     _move(dt) {
+        if (this._mySpin) {
+            this._myObject.pp_rotateObject([0, 0, Math.sin(dt * this._mySpinSpeed) * 180]);
+        }
+
         if (this._myAppearAudioDelay.isRunning()) {
             this._myAppearAudioDelay.update(dt);
             if (this._myAppearAudioDelay.isDone()) {
