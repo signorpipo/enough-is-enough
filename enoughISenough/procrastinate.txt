@@ -181,6 +181,7 @@ v grab
 v not enough
 
 EXTRA:
+- le teste si storgono piu in la nel tempo? a parte in arcade, nella trial, la prima niente, la seconda si storgono, nella terza una ogni tot tempo gira anche
 - mr NOT boss finale ha anche i cloni che arrivano dai lati
 v ogni tanto un clone spinna di brutto sulla z cosi per fare piu paura?
 x qualche oggetto potrebbe avere un po' di alfa come la spada di halo o il vetro di kh
@@ -278,3 +279,48 @@ being through some feedbacks, or even just a laugh together.
 As last, I would also like to thank those who hurt me. 
 Thanks to you, I've grown so much and I've learned so many things about myself that I would have not otherwise.
 It's a weird thing to say, but I'm glad you did what you did to me, because now I feel better than ever.
+
+WAVE:
+- Sceglie un tipo di ondata, la esegue, quando tutti i cloni dell'ondata sono stati spawnati, parte il timer per la prossima ondata
+- A seconda del tipo di ondata, questa può partire ad un angolo che dipende dall'angolo a cui è spawnato l'ultimo clone, oppure ad un angolo definito dalla wave precedente alla sua conclusione
+	- Una wave semplice da il suo centro come angle, la wave circle da l'ultimo clone
+- Ogni tanto una pausa, tipo ogni X cloni sconfitti e almeno Y tempo passato dall'ultima pausa
+- Ogni tipo di ondata ha una sua probabilità e un tempo minimo prima di cui non appare, la probabilità potrebbe anche aumentare col tempo
+- Ci può essere più volte lo stesso tipo di ondata ma con configurazioni diverse (più facili o difficili)
+- Lista di angolo ad angolo dove la wave può essere (servirebbe solo per il boss finale)
+- Si può specificare i comportamenti "estetici" dei cloni come il tilt o lo spin
+
+Tipi di waves:
+- I am here:
+	- Il clone arriva da una direzione
+	- Si può specificare anche che più cloni vengono spawnati ad una breve distanza e l'angolo massimo di differenza
+	- Il numero di cloni può aumentare nel tempo (sia il numero minimo che il massimo), così anche l'angolo
+	- Il primo clone è al centro o meno da impostazione
+- I am everywhere:
+	- Un numero di cloni arrivano da parti random
+	- Si può specificare l'angolo minimo e massimo dall'ultimo clone
+	- Specificare il tempo fra i cloni e nel tempo
+	- Il singolo clone può essere anche una I am here wave, e quindi un gruppetto di cloni
+- Merry go round:
+	- I cloni si creano a raggiera verso una direzione sola
+	- Specificare l'angolo fra cloni minimo e massimo e nel tempo
+	- Specificare il tempo fra i cloni e nel tempo
+	- Il singolo clone può essere anche una I am here wave, e quindi un gruppetto di cloni
+	x Opzione per dire se può cambiare direzione e con che probabilità (? forse no perde un po' il suo senso)
+- Queue for you:
+	- I cloni sono uno perfettamente dietro l'altro
+	- Specificare il tempo fra i cloni e nel tempo
+	- Il singolo clone può essere anche una I am here wave, e quindi un gruppetto di cloni
+- Give us a hug:
+	- I cloni arrivano ad uno stesso angolo a partire dal forward del giocatore allo stesso tempo
+	- Specificare l'angolo fra cloni minimo e massimo e nel tempo
+	- Specificare quanti cloni insieme
+	- L'angolo deve essere tale per cui sono tutti visibili insieme, quindi circa < 50
+	- Il singolo clone può essere anche una I am here wave, e quindi un gruppetto di cloni
+- Man in the middle:
+	- I cloni arrivano da direzioni perfettamente opposte con un po' di tempo di differenza
+	- Specificare l'angolo fra cloni minimo e massimo e nel tempo
+	- Specificare il tempo fra i cloni e nel tempo
+	- Il singolo clone può essere anche una I am here wave, e quindi un gruppetto di cloni
+	
+	
