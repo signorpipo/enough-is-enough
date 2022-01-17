@@ -64,7 +64,7 @@ class Vent {
         this._myFSM.addTransition("break", "clean", "startClean", this._startClean.bind(this));
         this._myFSM.addTransition("smallBreak", "clean", "startClean", this._startClean.bind(this));
 
-        this._myFSM.addTransition("clean", "done", "end", this._clean.bind(this));
+        this._myFSM.addTransition("clean", "done", "end");
 
         this._myFSM.init("init");
 
@@ -268,7 +268,7 @@ class Vent {
         this._updateClones(dt);
 
         if (this._myMrNOTClones.length <= 0) {
-            fsm.perform("end");
+            this._myFSM.perform("end");
         }
     }
 

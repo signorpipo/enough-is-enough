@@ -22,7 +22,7 @@ class CloneRotationSetup {
          this.mySpinChance = new RangeValueOverTime([1, 30], [1, 15], 60, 120, true);
          this.mySpinStartTime = 60;
  
-         this.myTilt = new RangeValueOverTime([0, 0], [0, 15], 20, 60, false);
+         this.myTiltAngle = new RangeValueOverTime([0, 0], [0, 15], 20, 60, false);
          */
     }
 }
@@ -111,7 +111,7 @@ class MrNOTClone {
     }
 
     stop() {
-        this._myFSM.perform("stop");
+        this._myFSM.perform("startStop");
     }
 
     isDone() {

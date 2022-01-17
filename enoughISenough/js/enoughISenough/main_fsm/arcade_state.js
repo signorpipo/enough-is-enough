@@ -15,6 +15,7 @@ class ArcadeState extends PP.State {
         this._myFSM.addTransition("init", "first_wait", "start");
         this._myFSM.addTransition("first_wait", "vent", "end");
         this._myFSM.addTransition("vent", "defeat", "defeat");
+        this._myFSM.addTransition("vent", "defeat", "end");
         this._myFSM.addTransition("defeat", "done", "end", this._backToMenu.bind(this));
         this._myFSM.addTransition("done", "first_wait", "start");
 
@@ -113,15 +114,20 @@ class ArcadeState extends PP.State {
         ventSetup.mySmallBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([10, 20], [15, 20], 30, 120, false);
         ventSetup.mySmallBreakSetup.myBreakCloneCooldown = new RangeValueOverTime([4, 5], [8, 12], 30, 120, true);
 
+        ventSetup.myCloneRotationSetup.mySpinSpeed = new RangeValue([4, 6], false);
+        ventSetup.myCloneRotationSetup.mySpinChance = new RangeValueOverTime([1, 30], [1, 15], 60, 120, true);
+        ventSetup.myCloneRotationSetup.mySpinStartTime = 60;
+        ventSetup.myCloneRotationSetup.myTiltAngle = new RangeValueOverTime([0, 0], [0, 15], 60, 120, false);
+
         {
             let wave = new IAmHereWaveSetup();
 
-            wave.myClonesCount = new RangeValueOverTime([3, 3], [3, 4], 0, 30, true);
-            wave.myWaveAngle = new RangeValue([10, 20]);
-            wave.myMinAngleBetweenClones = 5;
+            wave.myClonesCount = new RangeValueOverTime([1, 1], [3, 4], 0, 30, true);
+            wave.myWaveAngle = new RangeValue([20, 40]);
+            wave.myMinAngleBetweenClones = 10;
             wave.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
             wave.myWaveStartAngleDisplacement = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
-            wave.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 2], 0, 0, false);
+            wave.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
             wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 4], 0, 0, false);
 
             ventSetup.myWavesMap.set("I Am Here - Easy", wave);
