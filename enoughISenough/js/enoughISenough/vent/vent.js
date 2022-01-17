@@ -97,7 +97,7 @@ class Vent {
         this._myVentTimer = new PP.Timer(this._myVentSetup.myVentDuration);
         this._myClonesLeft = this._myVentSetup.myClonesToDismiss;
 
-        console.log("Next Wave -", this._myCurrentWaveID);
+        this._debugNextWave();
     }
 
     _updateWave(dt) {
@@ -139,9 +139,7 @@ class Vent {
             this._myCurrentWaveID = this._myVentSetup.myNextWavesMap.get(this._myCurrentWaveID).getNextWave(Global.myVentDuration);
             this._myCurrentWave = this._myVentSetup.myWavesMap.get(this._myCurrentWaveID).createWave(this._myVentSetup, Global.myVentDuration);
 
-            if (this._myDebugActive) {
-                console.log("Next Wave -", this._myCurrentWaveID);
-            }
+            this._debugNextWave();
         }
     }
 
@@ -318,5 +316,13 @@ class Vent {
 
     _isVentCompleted() {
         return this._myVentCompleted && this._myMrNOTClones.length <= 0;
+    }
+
+    _debugNextWave() {
+        if (this._myDebugActive) {
+            console.log("Next Wave -", this._myCurrentWaveID);
+            console.log("   Break -", this._myBreakDelayTimer.getTimer().toFixed(3), " -", this._myBreakCloneCooldown);
+            console.log("   Small Break -", this._mySmallBreakDelayTimer.getTimer().toFixed(3), " -", this._mySmallBreakCloneCooldown);
+        }
     }
 }
