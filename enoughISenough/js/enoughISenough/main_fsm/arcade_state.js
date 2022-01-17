@@ -58,10 +58,10 @@ class ArcadeState extends PP.State {
 
     _buildVentSetup() {
         if (this._myIsDispute) {
-            return 0;
+            return this._disputeVentSetup();
         }
 
-        return 1;
+        return this._chatVentSetup();
     }
 
     //Evidences that appear later in the trial appear later in time in the arcade
@@ -100,5 +100,45 @@ class ArcadeState extends PP.State {
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ALOE_VERA, 5));
 
         return evidenceSetupList;
+    }
+
+    _disputeVentSetup() {
+        let ventSetup = new VentSetup();
+
+        ventSetup.myBreakSetup.myBreakDuration = new RangeValueOverTime([5, 6], [4, 5], 30, 120, false);
+        ventSetup.myBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([40, 50], [50, 70], 30, 120, false);
+        ventSetup.myBreakSetup.myBreakCloneCooldown = new RangeValueOverTime([10, 20], [20, 30], 30, 120, true);
+
+        ventSetup.mySmallBreakSetup.myBreakDuration = new RangeValueOverTime([2, 3], [1, 2], 30, 120, false);
+        ventSetup.mySmallBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([10, 20], [15, 20], 30, 120, false);
+        ventSetup.mySmallBreakSetup.myBreakCloneCooldown = new RangeValueOverTime([4, 5], [8, 12], 30, 120, true);
+
+        {
+            let wave = new IAmHereWaveSetup();
+
+            wave.myClonesCount = new RangeValueOverTime([3, 3], [3, 4], 0, 30, true);
+            wave.myWaveAngle = new RangeValue([10, 20]);
+            wave.myMinAngleBetweenClones = 5;
+            wave.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+            wave.myWaveStartAngleDisplacement = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+            wave.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 2], 0, 0, false);
+            wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 4], 0, 0, false);
+
+            ventSetup.myWavesMap.set("I Am Here - Easy", wave);
+
+            let nextWavesSetup = new NextWavesSetup();
+            nextWavesSetup.addWave("I Am Here - Easy", 10, 0, null);
+
+            ventSetup.myNextWavesMap.set("I Am Here - Easy", nextWavesSetup);
+
+        }
+
+        ventSetup.myFirstWave = "I Am Here - Easy";
+
+        return ventSetup;
+    }
+
+    _chatVentSetup() {
+        return this._disputeVentSetup();
     }
 }

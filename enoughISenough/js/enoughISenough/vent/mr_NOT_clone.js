@@ -1,5 +1,34 @@
+class MrNOTCloneSetup {
+    constructor() {
+        this.myStartHeight = 4;
+        this.myEndHeight = 1.4;
+        this.myTimeToReachTarget = 7;
+        this.myStartDistance = 30;
+
+        this.myDirection = [0, 0, 1];
+    }
+}
+
+class CloneRotationSetup {
+    constructor() {
+        this.mySpinSpeed = new RangeValue([0, 0], false);
+        this.mySpinChance = new RangeValueOverTime([2, 2], [2, 2], 0, 0, true);
+        this.mySpinStartTime = -1;
+
+        this.myTiltAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+
+        /* 
+         this.mySpinSpeed = new RangeValue([4, 6], false);
+         this.mySpinChance = new RangeValueOverTime([1, 30], [1, 15], 60, 120, true);
+         this.mySpinStartTime = 60;
+ 
+         this.myTilt = new RangeValueOverTime([0, 0], [0, 15], 20, 60, false);
+         */
+    }
+}
+
 class MrNOTClone {
-    constructor(position, targetPosition, timeToReachTarget, callbackOnHit, callbackOnReach) {
+    constructor(position, targetPosition, timeToReachTarget, rotationSetup, callbackOnDismiss, callbackOnReach) {
         this._myObject = Global.myGameObjectPoolMap.getObject(GameObjectType.MR_NOT_CLONE);
         PP.MeshUtils.setAlpha(this._myObject, 0);
         this._myObject.pp_setPosition(position);
@@ -15,7 +44,7 @@ class MrNOTClone {
 
         this._myTimeToReachTarget = timeToReachTarget;
 
-        this._myCallbackOnHit = callbackOnHit;
+        this._myCallbackOnDismiss = callbackOnDismiss;
         this._myCallbackOnReach = callbackOnReach;
 
         this._myCurrentPosition = [];
@@ -31,11 +60,14 @@ class MrNOTClone {
         //this._myFSM.setDebugLogActive(true, "        Mr NOT Clone"); 
         this._myFSM.addState("init");
         this._myFSM.addState("move", this._move.bind(this));
+        this._myFSM.addState("stop");
         this._myFSM.addState("unspawning", this._unspawning.bind(this));
         this._myFSM.addState("inactive");
 
         this._myFSM.addTransition("init", "move", "start");
         this._myFSM.addTransition("move", "unspawning", "unspawn");
+        this._myFSM.addTransition("move", "stop", "startStop");
+        this._myFSM.addTransition("stop", "unspawning", "unspawn");
         this._myFSM.addTransition("unspawning", "inactive", "end");
         this._myFSM.addTransition("move", "inactive", "destroy");
         this._myFSM.addTransition("unspawning", "inactive", "destroy");
@@ -50,17 +82,14 @@ class MrNOTClone {
 
         this._myAppearAudioDelay = new PP.Timer(0.2);
 
-        let maxAngle = 15;
-        let anglePercentage = Math.pp_mapToNewInterval(Global.myVentDuration, 20, 60, 0, 1);
-        let rotation = Math.pp_random(0, maxAngle * anglePercentage) * Math.pp_randomSign();
-        console.error(rotation.toFixed(3), anglePercentage.toFixed(3));
-        this._myObject.pp_rotateObject([0, 0, rotation]);
+        let tiltAngle = rotationSetup.myTiltAngle.get(Global.myVentDuration) * Math.pp_randomSign();
+        this._myObject.pp_rotateObject([0, 0, tiltAngle]);
 
         this._mySpin = false;
-        if (Global.myVentDuration > 90) {
-            this._mySpin = Math.pp_random(0, 10) > 9;
+        if (rotationSetup.mySpinStartTime >= 0 && Global.myVentDuration >= rotationSetup.mySpinStartTime) {
+            this._mySpin = rotationSetup.mySpinChance.get(Global.myVentDuration) == 1;
         }
-        this._mySpinSpeed = Math.pp_random(4, 6) * Math.pp_randomSign();
+        this._mySpinSpeed = rotationSetup.mySpinSpeed.get(Global.myVentDuration) * Math.pp_randomSign();
 
         //Setup
         this._myReachTargetDistance = Global.myRingRadius * 2;
@@ -70,11 +99,19 @@ class MrNOTClone {
         this._myFSM.update(dt);
     }
 
+    canUnspawn() {
+        return this._myFSM.canPerform("unspawn");
+    }
+
     unspawn() {
         if (this._myFSM.canPerform("unspawn")) {
             this._mySpawnTimer.start(PP.myEasyTuneVariables.get("Unspawn Menu Time"));
         }
         this._myFSM.perform("unspawn");
+    }
+
+    stop() {
+        this._myFSM.perform("stop");
     }
 
     isDone() {
@@ -121,6 +158,7 @@ class MrNOTClone {
 
         if (distanceToTarget < this._myReachTargetDistance || distanceToTargetFromStart < distanceToCurrentFromStart) {
             if (PP.myEasyTuneVariables.get("Prevent Vent Lost")) {
+                this._myCallbackOnDismiss(this, null);
                 this.unspawn();
             } else {
                 if (this._myCallbackOnReach) {
@@ -172,8 +210,8 @@ class MrNOTClone {
             this._myHitAudio.setPosition(this._myObject.pp_getPosition());
             this._myHitAudio.setPitch(Math.pp_random(0.85, 1.05));
             this._myHitAudio.play();
-            if (this._myCallbackOnHit) {
-                this._myCallbackOnHit(this, hittingObject);
+            if (this._myCallbackOnDismiss) {
+                this._myCallbackOnDismiss(this, hittingObject);
             }
 
             Global.myStatistics.myMrNOTCloneDismissed += 1;

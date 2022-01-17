@@ -289,6 +289,7 @@ WAVE:
 - Ci può essere più volte lo stesso tipo di ondata ma con configurazioni diverse (più facili o difficili)
 - Lista di angolo ad angolo dove la wave può essere (servirebbe solo per il boss finale)
 - Si può specificare i comportamenti "estetici" dei cloni come il tilt o lo spin
+- Mappa di custom wave (un tipo di wave con i suoi parametri specifici) dove per ogni custom wave del vent si specifica quali altri wave ci sono, a che tempo si sbloccano, e quanta probabilità hanno (come le evidence)
 
 Tipi di waves:
 - I am here:

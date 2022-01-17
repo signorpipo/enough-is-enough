@@ -1,101 +1,229 @@
+class BreakSetup {
+    constructor() {
+        this.myBreakDuration = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+        this.myBreakTimeCooldown = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+        this.myBreakCloneCooldown = new RangeValueOverTime([0, 0], [0, 0], 0, 0, true);
+    }
+}
+
+class VentSetup {
+    constructor() {
+        this.myValidAngleRangeList = [[-180, 180]];
+
+        this.myBreakSetup = new BreakSetup();
+        this.mySmallBreakSetup = new BreakSetup();
+
+        this.myIsEndless = true;
+        this.myClonesToDismiss = 0;
+        this.myVentDuration = 0;
+
+        this.myWavesMap = new Map();
+        this.myNextWavesMap = new Map();
+
+        this.myFirstWave = "";
+
+        this.myCloneRotationSetup = new CloneRotationSetup();
+    }
+}
+
 class Vent {
     constructor(ventSetup) {
         this._myVentSetup = ventSetup;
+        this._myPulseRadar = new PulseRadar();
 
         this._myMrNOTClones = [];
 
         this._myOnVentLostCallback = null;
         this._myOnVentCompletedCallback = null;
 
-        this._myIsCleaning = true;
-        this._myHitCounter = 0;
+        this._myFSM = new PP.FSM();
 
-        this._myPulseRadar = new PulseRadar();
+        //this._myFSM.setDebugLogActive(true, "        Vent");
+        this._myFSM.addState("init");
+        this._myFSM.addState("first_wait", new PP.TimerState(/*4.5*/0, "end"));
+        this._myFSM.addState("wave", this._updateWave.bind(this));
+        this._myFSM.addState("break", this._break.bind(this));
+        this._myFSM.addState("smallBreak", this._break.bind(this));
+        this._myFSM.addState("clean", this._clean.bind(this));
+        this._myFSM.addState("done");
 
-        //Setup
-        this._myStartDistance = 30;
-        this._myTimeToReachTarget = 7;
+        this._myFSM.addTransition("init", "first_wait", "start");
+        this._myFSM.addTransition("done", "first_wait", "start");
+        this._myFSM.addTransition("first_wait", "wave", "end", this._startVent.bind(this));
+        this._myFSM.addTransition("wave", "break", "startBreak", this._startBreak.bind(this));
+        this._myFSM.addTransition("wave", "smallBreak", "startSmallBreak", this._startSmallBreak.bind(this));
+        this._myFSM.addTransition("break", "wave", "end", this._endBreak.bind(this));
+        this._myFSM.addTransition("smallBreak", "wave", "end", this._endSmallBreak.bind(this));
+        this._myFSM.addTransition("smallBreak", "break", "startBreak", this._startBreak.bind(this));
+
+        this._myFSM.addTransition("wave", "done", "stop", this._stop.bind(this));
+        this._myFSM.addTransition("break", "done", "stop", this._stop.bind(this));
+        this._myFSM.addTransition("smallBreak", "done", "stop", this._stop.bind(this));
+
+        this._myFSM.addTransition("wave", "clean", "startClean", this._startClean.bind(this));
+        this._myFSM.addTransition("break", "clean", "startClean", this._startClean.bind(this));
+        this._myFSM.addTransition("smallBreak", "clean", "startClean", this._startClean.bind(this));
+
+        this._myFSM.addTransition("clean", "done", "end", this._clean.bind(this));
+
+        this._myFSM.init("init");
+
+        this._myDebugActive = true;
     }
 
     start() {
-        this._myMrNOTClones = [];
-        this._myTimer = new PP.Timer(3);
-
-        this._myIsCleaning = false;
-        this._myHitCounter = 0;
-
-        this._startAngle = Math.pp_random(160, 200);
-        this._myFirst = true;
-        this._mySignChange = Math.pp_randomInt(1, 3);
-        this._mySign = Math.pp_randomSign();
-
-        this._myPulseRadar.start();
+        this._myFSM.perform("start");
     }
 
     update(dt) {
-        if (!this._myIsCleaning) {
-            this._myTimer.update(dt);
-            if (this._myTimer.isDone()) {
-                if (this._myVentSetup == 1) {
-                    this._myTimer.start(Math.pp_random(1.5, 3.5));
-                    //this._myTimer.start(499);
-                } else {
-                    this._myTimer.start(Math.pp_random(1, 2.5));
-                    //this._myTimer.start(10);
-                }
+        this._myFSM.update(dt);
+    }
 
-                let angle = this._startAngle;
+    _startVent() {
+        this._myMrNOTClones = [];
+        this._myPulseRadar.start();
 
-                if (this._myFirst) {
-                    this._myFirst = false;
-                } else {
-                    if (this._myVentSetup == 1) {
-                        angle = this._startAngle + Math.pp_random(20, 75) * this._mySign;
-                    } else {
-                        angle = this._startAngle + Math.pp_random(20, 55) * this._mySign;
-                    }
-                }
+        this._myVentCompleted = false;
 
-                //angle = Math.pp_random(160, 200);
-                //angle = 180;
+        this._myCurrentWave = this._myVentSetup.myWavesMap.get(this._myVentSetup.myFirstWave).createWave(this._myVentSetup, Global.myVentDuration);
+        this._myCurrentWaveID = this._myVentSetup.myFirstWave;
 
-                let direction = [0, 0, 1];
-                direction.vec3_rotateAxis(angle, [0, 1, 0], direction);
-                direction.vec3_normalize(direction);
-                direction.vec3_scale(this._myStartDistance, direction);
+        this._myBreakDelayTimer = new PP.Timer(this._myVentSetup.myBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration));
+        this._myBreakCloneCooldown = this._myVentSetup.myBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
 
-                let mrNOTClone = new MrNOTClone(direction.vec3_add([0, 4, 0]), [0, 1.4, 0], this._myTimeToReachTarget, this._mrNOTCloneHitByYou.bind(this), this._mrNOTCloneReachYou.bind(this));
-                this._myMrNOTClones.push(mrNOTClone);
+        this._mySmallBreakDelayTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration));
+        this._mySmallBreakCloneCooldown = this._myVentSetup.mySmallBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
 
-                this._myPulseRadar.addSignal(direction);
+        this._myVentTimer = new PP.Timer(this._myVentSetup.myVentDuration);
+        this._myClonesLeft = this._myVentSetup.myClonesToDismiss;
 
-                this._startAngle = angle;
+        console.log("Next Wave -", this._myCurrentWaveID);
+    }
 
-                this._mySignChange--;
-                if (this._mySignChange == 0) {
-                    this._mySignChange = Math.pp_randomInt(1, 3);
-                    this._mySign = Math.pp_randomSign();
+    _updateWave(dt) {
+        this._myVentTimer.update(dt);
+        this._myBreakDelayTimer.update(dt);
+        this._mySmallBreakDelayTimer.update(dt);
 
-                }
+        if (this._myCurrentWave != null) {
+            let cloneSetups = this._myCurrentWave.update(dt);
+            for (let cloneSetup of cloneSetups) {
+                this.addClone(cloneSetup);
             }
-
-            this._myPulseRadar.update(dt);
         }
 
-        for (let clone of this._myMrNOTClones) {
-            clone.update(dt);
-        }
+        this._myPulseRadar.update(dt);
+        this._updateClones(dt);
 
-        this._myMrNOTClones.pp_removeAll(element => element.isDone());
+        if (this._isVentCompleted()) {
+            if (this._myOnVentCompletedCallback) {
+                this._myOnVentCompletedCallback();
+            }
+        } else if (this._myCurrentWave != null && this._myCurrentWave.isDone()) {
+            this._getNextWave();
+            if (this._myCurrentWave != null) {
+                this._checkBreak();
+            }
+        }
+    }
+
+    _getNextWave() {
+        if (!this._myVentSetup.myIsEndless && this._myVentTimer.isDone() && this._myClonesLeft <= 0) {
+            this._myVentCompleted = true;
+            this._myCurrentWave = null;
+
+            if (this._myDebugActive) {
+                console.log("Vent Completed");
+            }
+        } else {
+            this._myCurrentWaveID = this._myVentSetup.myNextWavesMap.get(this._myCurrentWaveID).getNextWave(Global.myVentDuration);
+            this._myCurrentWave = this._myVentSetup.myWavesMap.get(this._myCurrentWaveID).createWave(this._myVentSetup, Global.myVentDuration);
+
+            if (this._myDebugActive) {
+                console.log("Next Wave -", this._myCurrentWaveID);
+            }
+        }
+    }
+
+    _checkBreak() {
+        if (this._myBreakDelayTimer.isDone() && this._myBreakCloneCooldown <= 0) {
+            this._myFSM.perform("startBreak");
+        } else if (this._mySmallBreakDelayTimer.isDone() && this._mySmallBreakCloneCooldown <= 0) {
+            this._myFSM.perform("startSmallBreak");
+        }
+    }
+
+    _startBreak() {
+        this._myBreakTimer = new PP.Timer(this._myVentSetup.myBreakSetup.myBreakDuration.get(Global.myVentDuration));
+        this._myIsSmallBreak = false;
+
+        if (this._myDebugActive) {
+            console.log("Break -", this._myBreakTimer.getDuration().toFixed(3));
+        }
+    }
+
+    _startSmallBreak() {
+        this._myBreakTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakDuration.get(Global.myVentDuration));
+        this._myIsSmallBreak = true;
+
+        if (this._myDebugActive) {
+            console.log("Small Break -", this._myBreakTimer.getDuration().toFixed(3));
+        }
+    }
+
+    _break(dt) {
+        this._myVentTimer.update(dt);
+        this._myBreakTimer.update(dt);
+        this._myBreakDelayTimer.update(dt);
+
+        this._myPulseRadar.update(dt);
+        this._updateClones(dt);
+
+        if (this._isVentCompleted()) {
+            if (this._myOnVentCompletedCallback) {
+                this._myOnVentCompletedCallback();
+            }
+        } else if (this._myBreakTimer.isDone()) {
+            if (this._myIsSmallBreak && this._myBreakDelayTimer.isDone() && this._myBreakCloneCooldown <= 0) {
+                this._myFSM.perform("startBreak");
+            } else {
+                this._myFSM.perform("end");
+            }
+        }
+    }
+
+    _endBreak() {
+        this._myBreakDelayTimer = new PP.Timer(this._myVentSetup.myBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration));
+        this._myBreakCloneCooldown = this._myVentSetup.myBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
+
+        this._mySmallBreakTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration));
+        this._mySmallBreakCloneCooldown = this._myVentSetup.mySmallBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
+    }
+
+    _endSmallBreak() {
+        this._mySmallBreakDelayTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration));
+        this._mySmallBreakCloneCooldown = this._myVentSetup.mySmallBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
+
+        /*
+        if (this._myBreakDelayTimer.getTimer() < 10) {
+            this._myBreakDelayTimer = new PP.Timer(Math.pp_random(10, 15));
+            this._myBreakCloneCooldown = Math.pp_randomInt(10, 20);
+
+            this._mySmallBreakTimer = new PP.Timer(0, false);
+            this._mySmallBreakCloneCooldown = 0;
+        }
+        */
     }
 
     isDone() {
-        return this._myMrNOTClones.length == 0;
+        return this._myFSM.isInState("done");
     }
 
     stop() {
-        this._myIsCleaning = true;
+        this._myFSM.perform("stop");
+    }
 
+    _stop() {
         for (let clone of this._myMrNOTClones) {
             clone.destroy();
         }
@@ -103,9 +231,46 @@ class Vent {
     }
 
     clean() {
-        this._myIsCleaning = true;
-        for (let clone of this._myMrNOTClones) {
-            clone.unspawn();
+        this._myFSM.perform("startClean");
+    }
+
+    _startClean() {
+        this._myUnspawnList = [];
+
+        let indexList = [];
+        for (let i = 0; i < this._myMrNOTClones.length; i++) {
+            if (this._myMrNOTClones[i].canUnspawn()) {
+                indexList.push(i);
+                this._myMrNOTClones[i].stop();
+            }
+        }
+
+        while (indexList.length > 0) {
+            let randomIndex = Math.pp_randomInt(0, indexList.length - 1);
+            let index = indexList.pp_removeIndex(randomIndex);
+
+            let randomTimer = Math.pp_random(0.20, 0.25);
+            if (this._myUnspawnList.length == 0) {
+                randomTimer += 0.3;
+            }
+            this._myUnspawnList.push([this._myMrNOTClones[index], new PP.Timer(randomTimer)]);
+        }
+    }
+
+    _clean(dt) {
+        if (this._myUnspawnList.length > 0) {
+            let first = this._myUnspawnList[0];
+            first[1].update(dt);
+            if (first[1].isDone()) {
+                first[0].unspawn();
+                this._myUnspawnList.shift();
+            }
+        }
+
+        this._updateClones(dt);
+
+        if (this._myMrNOTClones.length <= 0) {
+            fsm.perform("end");
         }
     }
 
@@ -117,19 +282,24 @@ class Vent {
         this._myOnVentCompletedCallback = callback;
     }
 
-    _mrNOTCloneHitByYou() {
-        this._myHitCounter++;
+    addClone(cloneSetup) {
+        let startPosition = cloneSetup.myDirection.pp_clone();
+        startPosition.vec3_normalize(startPosition);
+        startPosition.vec3_scale(cloneSetup.myStartDistance, startPosition);
+        startPosition[1] += cloneSetup.myStartHeight;
 
-        let maxCounter = 1500;
-        if (this._myVentSetup == 1) {
-            maxCounter = 2500;
-        }
+        let endPosition = [0, cloneSetup.myEndHeight, 0];
 
-        if (this._myHitCounter > maxCounter) {
-            if (this._myOnVentCompletedCallback) {
-                this._myOnVentCompletedCallback();
-            }
-        }
+        this._myPulseRadar.addSignal(startPosition);
+
+        let mrNOTClone = new MrNOTClone(startPosition, endPosition, cloneSetup.myTimeToReachTarget, this._myVentSetup.myCloneRotationSetup, this._mrNOTCloneDismissed.bind(this), this._mrNOTCloneReachYou.bind(this));
+        this._myMrNOTClones.push(mrNOTClone);
+    }
+
+    _mrNOTCloneDismissed() {
+        this._myClonesLeft = Math.max(0, this._myClonesLeft - 1);
+        this._myBreakCloneCooldown = Math.max(0, this._myBreakCloneCooldown - 1);
+        this._mySmallBreakCloneCooldown = Math.max(0, this._mySmallBreakCloneCooldown - 1);
     }
 
     _mrNOTCloneReachYou() {
@@ -138,5 +308,15 @@ class Vent {
         }
     }
 
+    _updateClones(dt) {
+        for (let clone of this._myMrNOTClones) {
+            clone.update(dt);
+        }
 
+        this._myMrNOTClones.pp_removeAll(element => element.isDone());
+    }
+
+    _isVentCompleted() {
+        return this._myVentCompleted && this._myMrNOTClones.length <= 0;
+    }
 }

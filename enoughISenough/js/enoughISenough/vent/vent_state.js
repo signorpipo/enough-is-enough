@@ -3,7 +3,7 @@ class VentState extends PP.State {
         super();
 
         this._myFSM = new PP.FSM();
-        //this._myFSM.setDebugLogActive(true, "        Vent");
+        //this._myFSM.setDebugLogActive(true, "        Vent State");
         this._myFSM.addState("init");
         this._myFSM.addState("first_wait", new PP.TimerState(1.5, "end"));
         this._myFSM.addState("vent", this._updateVent.bind(this));

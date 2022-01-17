@@ -28,7 +28,18 @@ Math.pp_roundDecimal = function (number, decimalPlaces) {
 
 // Start interval value doesn't need to be lower than the end one, so you can map from [0,1] to [3,2], where 3 is greater than 2
 Math.pp_mapToNewInterval = function (value, originIntervalStart, originIntervalEnd, newIntervalStart, newIntervalEnd) {
+    if (originIntervalStart == originIntervalEnd) {
+        return newIntervalStart;
+    }
+
     let clampedValue = Math.pp_clamp(value, originIntervalStart, originIntervalEnd);
+
+    if (clampedValue == originIntervalStart) {
+        return newIntervalStart;
+    } else if (clampedValue == originIntervalEnd) {
+        return newIntervalEnd;
+    }
+
     let newValue = newIntervalStart + ((newIntervalEnd - newIntervalStart) / (originIntervalEnd - originIntervalStart)) * (clampedValue - originIntervalStart);
     let clampedNewValue = Math.pp_clamp(newValue, newIntervalStart, newIntervalEnd);
     return clampedNewValue;
@@ -71,6 +82,12 @@ Math.pp_randomPick = function (...args) {
 };
 
 Math.pp_lerp = function (from, to, interpolationValue) {
+    if (interpolationValue == 0) {
+        return from;
+    } else if (interpolationValue == 1) {
+        return to;
+    }
+
     return interpolationValue * (to - from) + from;
 };
 
