@@ -19,18 +19,20 @@ WL.registerComponent("adjust-materials", {
     _my16: { type: WL.Type.Material }
 }, {
     init: function () {
-        this._myMaterials = [];
-        this._mySpecularColors = [];
-        for (let i = 1; i < 17; i++) {
-            let material = "_my".concat(i);
-            this[material].fogColor = [0, 0, 0, this._myFogAlpha];
-            this._myMaterials.push(this[material]);
+        if (this.active) {
+            this._myMaterials = [];
+            this._mySpecularColors = [];
+            for (let i = 1; i < 17; i++) {
+                let material = "_my".concat(i);
+                this[material].fogColor = [0, 0, 0, this._myFogAlpha];
+                this._myMaterials.push(this[material]);
 
-            this._mySpecularColors.push(this[material].specularColor.pp_clone());
-            let specularColor = this[material].specularColor.vec_scale(this._mySpecularMultiplier);
-            specularColor[3] = this[material].specularColor[3];
+                this._mySpecularColors.push(this[material].specularColor.pp_clone());
+                let specularColor = this[material].specularColor.vec_scale(this._mySpecularMultiplier);
+                specularColor[3] = this[material].specularColor[3];
 
-            this[material].specularColor = specularColor;
+                this[material].specularColor = specularColor;
+            }
         }
     },
     start() {

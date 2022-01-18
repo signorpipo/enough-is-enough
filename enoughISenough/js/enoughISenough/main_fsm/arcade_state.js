@@ -122,13 +122,14 @@ class ArcadeState extends PP.State {
         {
             let wave = new IAmHereWaveSetup();
 
-            wave.myClonesCount = new RangeValueOverTime([1, 1], [3, 4], 0, 30, true);
+            wave.myClonesCount = new RangeValueOverTime([3, 3], [3, 4], 0, 30, true);
             wave.myWaveAngle = new RangeValue([20, 40]);
             wave.myMinAngleBetweenClones = 10;
             wave.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
             wave.myWaveStartAngleDisplacement = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
             wave.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
             wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 4], 0, 0, false);
+            wave.myFirstCloneInTheMiddle = true;
 
             ventSetup.myWavesMap.set("I Am Here - Easy", wave);
 
