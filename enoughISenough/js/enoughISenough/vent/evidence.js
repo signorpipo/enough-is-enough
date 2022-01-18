@@ -56,8 +56,8 @@ class Evidence {
         this._myParticlesRadius = 0.225;
 
         this._myAudioTimer = new PP.Timer(0);
-        this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_APPEAR);
-        this._myDisappearAudio = Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_DISAPPEAR);
+        this._myAppearAudio = null;
+        this._myDisappearAudio = null;
     }
 
     getEvidenceSetup() {
@@ -118,6 +118,11 @@ class Evidence {
     }
 
     _startSpawn() {
+        if (this._myAppearAudio == null) {
+            this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_APPEAR);
+            this._myDisappearAudio = Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_DISAPPEAR);
+        }
+
         this._myEvidenceComponent = this._myObject.pp_getComponentHierarchy("evidence-component");
         this._myEvidenceComponent.setCallbackOnHit(this._onHit.bind(this));
         this._myEvidenceComponent.setEvidence(this);

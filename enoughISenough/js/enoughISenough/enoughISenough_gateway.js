@@ -24,6 +24,9 @@ WL.registerComponent("enough-IS-enough-gateway", {
         Global.myAudioManager.setVolume(1);
 
         this._myFirstUpdate = true;
+        this._myIncreasePool = false;
+        this._myMeshObjectPoolSize = 20;
+        this._myGameObjectPoolSize = 40;
     },
     start: function () {
     },
@@ -36,8 +39,12 @@ WL.registerComponent("enough-IS-enough-gateway", {
             Global.myFirstUpdateDone = true;
         }
 
-        this.enoughISenough.update(dt);
-        Global.myParticlesManager.update(dt);
+        if (this._myIncreasePool) {
+            this._increasePools();
+        } else {
+            this.enoughISenough.update(dt);
+            Global.myParticlesManager.update(dt);
+        }
     },
     _start() {
         {
@@ -100,7 +107,34 @@ WL.registerComponent("enough-IS-enough-gateway", {
         PP.CAUtils.setDummyServer(new EIECADummyServer());
 
         this.enoughISenough.start();
+    },
+    _increasePools() {
+        let amountToIncrease = 5;
 
+        if (this._myMeshObjectPoolSize > 0) {
+            this._myMeshObjectPoolSize -= amountToIncrease;
+
+            for (let entry of Global.myMeshObjects.entries()) {
+                Global.myMeshObjectPoolMap.increasePool(entry[0], amountToIncrease);
+            }
+
+            for (let entry of Global.myMeshNoFogObjects.entries()) {
+                Global.myMeshNoFogObjectPoolMap.increasePool(entry[0], amountToIncrease);
+            }
+        }
+
+        if (this._myGameObjectPoolSize > 0) {
+            this._myGameObjectPoolSize -= amountToIncrease;
+
+            Global.myGameObjectPoolMap.increasePool(GameObjectType.MR_NOT_CLONE, amountToIncrease);
+        }
+
+        if (this._myGameObjectPoolSize <= 0 && this._myMeshObjectPoolSize <= 0) {
+            this._myIncreasePool = false;
+            if (WL.xrSession) {
+                console.clear();
+            }
+        }
     }
 });
 

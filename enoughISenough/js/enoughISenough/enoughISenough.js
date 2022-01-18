@@ -127,6 +127,10 @@ class enoughISenough {
             audioSetup.myReferenceDistance = 1000000;
             manager.addAudioSetup(SfxID.CLONE_APPEAR, audioSetup);
         }
+
+        for (let i = 0; i < SfxID.CLONE_APPEAR; i++) {
+            manager.createAudioPlayer(i);
+        }
     }
 }
 
@@ -145,5 +149,4 @@ var SfxID = {
     EVIDENCE_APPEAR: 11,
     EVIDENCE_DISAPPEAR: 12,
     CLONE_APPEAR: 13,
-    CLONE_APPEAR_2: 14,
 };

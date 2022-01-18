@@ -181,7 +181,7 @@ class TrialState extends PP.State {
         let sentences = [];
 
         sentences.push(new Sentence("You may think you are stronger now"));
-        sentences.push(new Sentence("You may feel free from others judgment", 1, 0));
+        sentences.push(new Sentence("You may feel free from others' judgment", 1, 0));
         sentences.push(new Sentence("and from your own"));
         sentences.push(new Sentence("You may fool yourself into believing this..."));
         sentences.push(new Sentence("But after all has been said and done", 0.75, 0));

@@ -16,6 +16,13 @@ class ObjectPoolMap {
         }
     }
 
+    increasePool(poolID, amount) {
+        let pool = this._myPoolMap.get(poolID);
+        if (pool) {
+            pool.increase(amount);
+        }
+    }
+
     getObject(poolID) {
         return this._myPoolMap.get(poolID).get();
     }
@@ -40,7 +47,7 @@ class ObjectPool {
         let object = this._myAvailableObjects.shift();
 
         if (!object) {
-            this._addToPool(Math.floor(this._myBusyObjects.length * 0.5 + 1), true);
+            this._addToPool(Math.floor(this._myBusyObjects.length * 0.2 + 1), true);
             object = this._myAvailableObjects.shift();
         }
 
@@ -55,6 +62,10 @@ class ObjectPool {
             released.pp_setActive(false);
             this._myAvailableObjects.push(released);
         }
+    }
+
+    increase(amount) {
+        this._addToPool(amount, false);
     }
 
     _addToPool(size, log) {

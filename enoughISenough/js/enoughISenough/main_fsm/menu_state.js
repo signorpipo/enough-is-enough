@@ -350,8 +350,8 @@ class MenuItem {
 
         this._myParticlesRadius = 0.225;
 
-        this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_APPEAR);
-        this._myDisappearAudio = Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_DISAPPEAR);
+        this._myAppearAudio = null;
+        this._myDisappearAudio = null;
     }
 
     init(timeBeforeFirstSpawn) {
@@ -397,6 +397,11 @@ class MenuItem {
     }
 
     _startSpawn() {
+        if (this._myAppearAudio == null) {
+            this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_APPEAR);
+            this._myDisappearAudio = Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_DISAPPEAR);
+        }
+
         let position = this._myPosition.pp_clone();
 
         let evidenceComponent = this._myObject.pp_getComponentHierarchy("evidence-component");
