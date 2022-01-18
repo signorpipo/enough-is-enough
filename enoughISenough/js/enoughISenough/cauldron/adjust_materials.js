@@ -1,5 +1,5 @@
 WL.registerComponent("adjust-materials", {
-    _myFogAlpha: { type: WL.Type.Float, default: 0 },
+    _myFogAlpha: { type: WL.Type.Float, default: 0 }, //0.330
     _mySpecularMultiplier: { type: WL.Type.Float, default: 1 },
     _my1: { type: WL.Type.Material },
     _my2: { type: WL.Type.Material },

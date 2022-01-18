@@ -666,6 +666,10 @@
                     "pp-player-height": {
                         "_myEyesHeight": 1.6499999
                     }
+                },
+                {
+                    "type": "top-down-view",
+                    "active": false
                 }
             ]
         },
@@ -17641,7 +17645,7 @@
             ],
             "transformation": [
                 -0.136,
-                -1.188944320773544e-8,
+                -1.1889443207735441e-8,
                 3.850477270361807e-8,
                 0.0,
                 -3.8504133215155898e-8,
@@ -23729,7 +23733,8 @@
                 "js/pp/tool/easy_tune/easy_object_tuners",
                 "js/pp/tool/easy_tune/easy_tune_widgets",
                 "js/pp/debug/components",
-                "js/enoughISenough/vent/wave"
+                "js/enoughISenough/vent/wave",
+                "js/enoughISenough/vent/wave/sub"
             ]
         },
         "editor": {
