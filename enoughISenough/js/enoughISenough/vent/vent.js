@@ -138,8 +138,6 @@ class Vent {
         } else {
             this._myCurrentWaveID = this._myVentSetup.myNextWavesMap.get(this._myCurrentWaveID).getNextWave(Global.myVentDuration);
             this._myCurrentWave = this._myVentSetup.myWavesMap.get(this._myCurrentWaveID).createWave(this._myVentSetup, Global.myVentDuration);
-
-            this._debugNextWave();
         }
     }
 
@@ -148,6 +146,8 @@ class Vent {
             this._myFSM.perform("startBreak");
         } else if (this._mySmallBreakDelayTimer.isDone() && this._mySmallBreakCloneCooldown <= 0) {
             this._myFSM.perform("startSmallBreak");
+        } else {
+            this._debugNextWave();
         }
     }
 
@@ -196,6 +196,8 @@ class Vent {
 
         this._mySmallBreakTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration));
         this._mySmallBreakCloneCooldown = this._myVentSetup.mySmallBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
+
+        this._debugNextWave();
     }
 
     _endSmallBreak() {
@@ -211,6 +213,8 @@ class Vent {
             this._mySmallBreakCloneCooldown = 0;
         }
         */
+
+        this._debugNextWave();
     }
 
     isDone() {
