@@ -126,7 +126,6 @@ class ArcadeState extends PP.State {
             wave.myWaveAngle = new RangeValue([20, 40]);
             wave.myMinAngleBetweenClones = 10;
             wave.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
-            wave.myWaveStartAngleDisplacement = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
             wave.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
             wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 4], 0, 0, false);
             wave.myFirstCloneInTheMiddle = true;
@@ -145,7 +144,7 @@ class ArcadeState extends PP.State {
             let wave = new IAmEverywhereWaveSetup();
 
             wave.myWavesCount = new RangeValueOverTime([3, 3], [3, 4], 0, 30, true);
-            wave.myMinAngleBetweenWaves = new RangeValue([20, 100]);
+            wave.myMinAngleBetweenWaves = new RangeValue([40, 100]);
             wave.myTimeBetweenWaves = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
             wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 4], 0, 0, false);
 
@@ -162,7 +161,6 @@ class ArcadeState extends PP.State {
 
             queueForYou.myClonesCount = new RangeValueOverTime([3, 3], [3, 4], 0, 30, true);
             queueForYou.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
-            queueForYou.myWaveStartAngleDisplacement = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
             queueForYou.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
             queueForYou.myDoneDelay = new RangeValueOverTime([2, 4], [2, 4], 0, 0, false);
             queueForYou.myFirstCloneInTheMiddle = true;
@@ -184,7 +182,6 @@ class ArcadeState extends PP.State {
 
             wave.myClonesCount = new RangeValueOverTime([3, 3], [3, 4], 0, 30, true);
             wave.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
-            wave.myWaveStartAngleDisplacement = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
             wave.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
             wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 4], 0, 0, false);
             wave.myFirstCloneInTheMiddle = true;

@@ -1,7 +1,9 @@
 class IAmEverywhereWaveSetup extends WaveOfWavesSetup {
     constructor() {
         super();
+
         this.myMinAngleBetweenWaves = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+        this.myFirstWaveAngle = new RangeValue([0, 180]);
     }
 
     createWave(ventSetup, timeElapsed, refDirection = null) {
@@ -11,15 +13,11 @@ class IAmEverywhereWaveSetup extends WaveOfWavesSetup {
 
 class IAmEverywhereWave extends WaveOfWaves {
     constructor(ventSetup, waveSetup, timeElapsed, refDirection) {
-        super(ventSetup, waveSetup, timeElapsed);
+        super(ventSetup, waveSetup, timeElapsed, refDirection);
 
-        this._myWaveAngle = 180;
+        this._myWaveAngle = new RangeValue([0, 180]);
         this._myMinAngleBetweenWaves = this._myWaveSetup.myMinAngleBetweenWaves.get(timeElapsed);
         this._myPreviousAngle = 0;
-        this._myWaveStartDirection = refDirection;
-        if (refDirection == null) {
-            this._myWaveStartDirection = Global.myPlayerForward.vec3_removeComponentAlongAxis([0, 1, 0]);
-        }
 
         this._myFirst = true;
     }
@@ -32,7 +30,11 @@ class IAmEverywhereWave extends WaveOfWaves {
         let attempts = 100;
 
         while (attempts > 0) {
-            angle = Math.pp_random(0, this._myWaveAngle) * Math.pp_randomSign();
+            if (this._myFirst) {
+                angle = this._myWaveSetup.myFirstWaveAngle.get(this._myGameTimeElapsed) * Math.pp_randomSign();
+            } else {
+                angle = this._myWaveAngle.get(this._myGameTimeElapsed) * Math.pp_randomSign();
+            }
 
             if (Math.pp_angleDistance(angle, this._myPreviousAngle) >= this._myMinAngleBetweenWaves || this._myFirst) {
                 let startDirection = this._myWaveStartDirection.vec3_rotateAxis(angle, [0, 1, 0]);

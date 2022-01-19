@@ -4,7 +4,6 @@ class IAmHereWaveSetup {
         this.myWaveAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
         this.myMinAngleBetweenClones = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
         this.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
-        this.myWaveStartAngleDisplacement = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
         this.myTimeBetweenClones = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
         this.myFirstCloneInTheMiddle = true;
         this.myDoneDelay = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
@@ -116,7 +115,6 @@ class IAmHereWave {
         let angleValid = false;
 
         let flatRefDirection = refDirection.vec3_removeComponentAlongAxis([0, 1, 0]);
-        flatRefDirection.vec3_rotateAxis(this._myWaveSetup.myWaveStartAngleDisplacement.get(this._myGameTimeElapsed) * Math.pp_randomSign(), [0, 1, 0], flatRefDirection);
 
         while (attempts > 0 && !angleValid) {
             this._myWaveStartAngle = this._myWaveSetup.myWaveStartAngle.get(this._myGameTimeElapsed) * Math.pp_randomSign();

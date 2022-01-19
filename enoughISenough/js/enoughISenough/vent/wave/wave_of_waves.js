@@ -4,12 +4,14 @@ class WaveOfWavesSetup {
         this.myTimeBetweenWaves = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
         this.myDoneDelay = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
 
+        this.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+
         this.myWavesSetup = []; // every item is an array, 0 is a wave setup, 1 is the chance, 2 is the debug name
     }
 }
 
 class WaveOfWaves {
-    constructor(ventSetup, waveSetup, timeElapsed) {
+    constructor(ventSetup, waveSetup, timeElapsed, refDirection) {
         this._myGameTimeElapsed = timeElapsed;
         this._myWaveSetup = waveSetup;
         this._myVentSetup = ventSetup;
@@ -22,6 +24,8 @@ class WaveOfWaves {
 
         this._mySpawnTimer = new PP.Timer(0);
         this._myDoneDelayTimer = new PP.Timer(this._myWaveSetup.myDoneDelay.get(this._myGameTimeElapsed), false);
+
+        this._computeWaveStartDirection(refDirection);
 
         this._myCurrentWaves = [];
 
@@ -98,5 +102,33 @@ class WaveOfWaves {
         }
 
         return wave;
+    }
+
+    _computeWaveStartDirection(refDirection) {
+        if (refDirection == null) {
+            refDirection = Global.myPlayerForward;
+        }
+
+        let attempts = 100;
+        let angleValid = false;
+
+        let flatRefDirection = refDirection.vec3_removeComponentAlongAxis([0, 1, 0]);
+
+        while (attempts > 0 && !angleValid) {
+            this._myWaveStartAngle = this._myWaveSetup.myWaveStartAngle.get(this._myGameTimeElapsed) * Math.pp_randomSign();
+            let startDirection = flatRefDirection.vec3_rotateAxis(this._myWaveStartAngle, [0, 1, 0]);
+            let angle = -startDirection.vec3_angleSigned([0, 0, 1], [0, 1, 0]);
+            for (let range of this._myVentSetup.myValidAngleRangeList) {
+                if (angle >= range[0] && angle <= range[1]) {
+                    angleValid = true;
+                    break;
+                }
+            }
+
+            attempts--;
+        }
+
+        this._myWaveStartDirection = flatRefDirection.vec3_rotateAxis(this._myWaveStartAngle, [0, 1, 0]);
+        this._myWaveStartDirection.vec3_normalize(this._myWaveStartDirection);
     }
 }
