@@ -156,7 +156,7 @@ class ArcadeState extends PP.State {
             iAmHereWave.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
             iAmHereWave.myFirstCloneInTheMiddle = true;
 
-            wave.myWavesSetup.push([iAmHereWave, 1]);
+            wave.myWavesSetup.push([iAmHereWave, 1, "I_Am_Here"]);
 
             let queueForYou = new QueueForYouWaveSetup();
 
@@ -167,7 +167,7 @@ class ArcadeState extends PP.State {
             queueForYou.myDoneDelay = new RangeValueOverTime([2, 4], [2, 4], 0, 0, false);
             queueForYou.myFirstCloneInTheMiddle = true;
 
-            wave.myWavesSetup.push([queueForYou, 1]);
+            wave.myWavesSetup.push([queueForYou, 1, "Queue_For_You"]);
 
             ventSetup.myWavesMap.set("I_Am_Everywhere_Easy", wave);
 

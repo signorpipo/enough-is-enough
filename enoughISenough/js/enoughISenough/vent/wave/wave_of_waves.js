@@ -4,7 +4,7 @@ class WaveOfWavesSetup {
         this.myTimeBetweenWaves = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
         this.myDoneDelay = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
 
-        this.myWavesSetup = []; // every item is a pair, 0 is a wave setup, 1 is the chance
+        this.myWavesSetup = []; // every item is an array, 0 is a wave setup, 1 is the chance, 2 is the debug name
     }
 }
 
@@ -24,6 +24,8 @@ class WaveOfWaves {
         this._myDoneDelayTimer = new PP.Timer(this._myWaveSetup.myDoneDelay.get(this._myGameTimeElapsed), false);
 
         this._myCurrentWaves = [];
+
+        this._myDebugActive = true;
     }
 
     update(dt) {
@@ -73,6 +75,7 @@ class WaveOfWaves {
 
     _getWaveSetup() {
         let wave = this._myWaveSetup.myWavesSetup[0][0];
+        let name = this._myWaveSetup.myWavesSetup[0][2];
 
         let totalChance = 0;
         for (let waveSetup of this._myWaveSetup.myWavesSetup) {
@@ -85,8 +88,13 @@ class WaveOfWaves {
             currentChance += waveSetup[1].get(this._myGameTimeElapsed);
             if (randomChance <= currentChance) {
                 wave = waveSetup[0];
+                name = waveSetup[2];
                 break;
             }
+        }
+
+        if (this._myDebugActive) {
+            console.log("   Wave -", name);
         }
 
         return wave;
