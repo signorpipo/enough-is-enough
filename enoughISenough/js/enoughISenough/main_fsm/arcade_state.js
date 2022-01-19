@@ -133,7 +133,7 @@ class ArcadeState extends PP.State {
             ventSetup.myWavesMap.set("I_Am_Here_Easy", wave);
 
             let nextWavesSetup = new NextWavesSetup();
-            nextWavesSetup.addWave("I_Am_Here_Easy", 5, 0, null);
+            nextWavesSetup.addWave("I_Am_Here_Easy", 5000, 0, null);
             nextWavesSetup.addWave("I_Am_Everywhere_Easy", 10, 0, null);
             nextWavesSetup.addWave("Queue_For_You_Easy", 10, 0, null);
 
@@ -196,7 +196,33 @@ class ArcadeState extends PP.State {
             ventSetup.myNextWavesMap.set("Queue_For_You_Easy", nextWavesSetup);
         }
 
-        ventSetup.myFirstWave = "I_Am_Everywhere_Easy";
+        {
+            let wave = new MerryGoRoundSetup();
+
+            wave.myWavesCount = new RangeValueOverTime([30, 30], [30, 40], 0, 30, true);
+            wave.myAngleBetweenWaves = new RangeValue([15, 25]);
+            wave.myTimeBetweenWaves = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
+            wave.myTimeBetweenWaves = 0.5;
+            wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 4], 0, 0, false);
+
+            let queueForYou = new QueueForYouWaveSetup();
+            queueForYou.myClonesCount = new RangeValueOverTime([3, 3], [3, 4], 0, 30, true);
+            queueForYou.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+            queueForYou.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
+            queueForYou.myDoneDelay = new RangeValueOverTime([1, 2], [1, 2], 0, 0, false);
+            queueForYou.myFirstCloneInTheMiddle = true;
+            //wave.myWavesSetup.push([queueForYou, 1, "Queue_For_You"]);
+
+            ventSetup.myWavesMap.set("Merry_Go_Round_Easy", wave);
+
+            let nextWavesSetup = new NextWavesSetup();
+            nextWavesSetup.addWave("Merry_Go_Round_Easy", 105, 0, null);
+
+            ventSetup.myNextWavesMap.set("Merry_Go_Round_Easy", nextWavesSetup);
+        }
+
+        ventSetup.myFirstWave = "Merry_Go_Round_Easy";
+        ventSetup.myValidAngleRanges = [[-180, 180]];
 
         return ventSetup;
     }

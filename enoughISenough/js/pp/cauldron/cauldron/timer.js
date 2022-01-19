@@ -18,7 +18,7 @@ PP.Timer = class Timer {
 
     reset(duration = null) {
         if (duration != null) {
-            this._myDuration = duration;
+            this._myDuration = Math.max(0, duration);
         }
 
         this._myTimer = this._myDuration;
@@ -52,7 +52,7 @@ PP.Timer = class Timer {
     }
 
     setDuration(duration) {
-        this._myDuration = duration;
+        this._myDuration = Math.max(0, duration);
     }
 
     getTimer() {

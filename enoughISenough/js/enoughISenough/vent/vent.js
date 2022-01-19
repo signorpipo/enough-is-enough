@@ -8,7 +8,7 @@ class BreakSetup {
 
 class VentSetup {
     constructor() {
-        this.myValidAngleRangeList = [[-180, 180]];
+        this.myValidAngleRanges = [[-180, 180]];
 
         this.myBreakSetup = new BreakSetup();
         this.mySmallBreakSetup = new BreakSetup();
@@ -69,6 +69,8 @@ class Vent {
         this._myFSM.init("init");
 
         this._myDebugActive = true;
+
+        this._myOncePerFrame = false;
     }
 
     start() {
@@ -101,6 +103,8 @@ class Vent {
     }
 
     _updateWave(dt) {
+        this._myOncePerFrame = true;
+
         this._myVentTimer.update(dt);
         this._myBreakDelayTimer.update(dt);
         this._mySmallBreakDelayTimer.update(dt);
@@ -305,8 +309,9 @@ class Vent {
     }
 
     _mrNOTCloneReachYou() {
-        if (this._myOnVentLostCallback) {
+        if (this._myOnVentLostCallback && this._myOncePerFrame && this._myFSM.isInState("wave")) {
             this._myOnVentLostCallback();
+            this._myOncePerFrame = false;
         }
     }
 

@@ -17,7 +17,7 @@ class WaveOfWaves {
         this._myVentSetup = ventSetup;
 
         if (waveSetup.myWavesSetup.length == 0) {
-            waveSetup.myWavesSetup.push([new IAmHereWaveSetup(), 1]);
+            waveSetup.myWavesSetup.push([new IAmHereWaveSetup(), 1, "I_Am_Here"]);
         }
 
         this._myWavesCount = this._myWaveSetup.myWavesCount.get(timeElapsed);
@@ -97,11 +97,24 @@ class WaveOfWaves {
             }
         }
 
-        if (this._myDebugActive) {
+        if (this._myDebugActive && this._myWaveSetup.myWavesSetup.length > 1) {
             console.log("   Wave -", name);
         }
 
         return wave;
+    }
+
+    _checkVentAngleValid(direction) {
+        let angleValid = false;
+        let angle = direction.vec3_angleSigned([0, 0, -1], [0, 1, 0]);
+        for (let range of this._myVentSetup.myValidAngleRanges) {
+            if (angle >= range[0] && angle <= range[1]) {
+                angleValid = true;
+                break;
+            }
+        }
+
+        return angleValid;
     }
 
     _computeWaveStartDirection(refDirection) {
@@ -117,13 +130,7 @@ class WaveOfWaves {
         while (attempts > 0 && !angleValid) {
             this._myWaveStartAngle = this._myWaveSetup.myWaveStartAngle.get(this._myGameTimeElapsed) * Math.pp_randomSign();
             let startDirection = flatRefDirection.vec3_rotateAxis(this._myWaveStartAngle, [0, 1, 0]);
-            let angle = -startDirection.vec3_angleSigned([0, 0, 1], [0, 1, 0]);
-            for (let range of this._myVentSetup.myValidAngleRangeList) {
-                if (angle >= range[0] && angle <= range[1]) {
-                    angleValid = true;
-                    break;
-                }
-            }
+            let angleValid = this._checkVentAngleValid(startDirection);
 
             attempts--;
         }

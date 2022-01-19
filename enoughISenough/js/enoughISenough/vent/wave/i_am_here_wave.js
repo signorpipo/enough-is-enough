@@ -32,6 +32,7 @@ class IAmHereWave {
 
         this._myFirst = true;
         this._myLastSign = Math.pp_randomSign();
+        this._myOneCloneSetupValid = false;
     }
 
     update(dt) {
@@ -47,10 +48,28 @@ class IAmHereWave {
                 cloneSetups = this._createCloneSetups();
                 this._myClonesCount -= cloneSetups.length;
 
+                cloneSetups.pp_removeAll(element => element == null);
+
+                if (cloneSetups.length > 0) {
+                    this._myOneCloneSetupValid = true;
+                }
+
                 if (this._myClonesCount <= 0) {
-                    this._myDoneDelayTimer.start();
+                    if (this._myOneCloneSetupValid) {
+                        if (cloneSetups.length > 0) {
+                            this._myDoneDelayTimer.start();
+                        } else {
+                            this._myDoneDelayTimer.start(this._myDoneDelayTimer.getDuration() - this._mySpawnTimer.getDuration());
+                        }
+                    } else {
+                        this._myDoneDelayTimer.start(0);
+                    }
                 } else {
-                    this._mySpawnTimer.start(this._myWaveSetup.myTimeBetweenClones.get(this._myGameTimeElapsed));
+                    if (cloneSetups.length > 0) {
+                        this._mySpawnTimer.start(this._myWaveSetup.myTimeBetweenClones.get(this._myGameTimeElapsed));
+                    } else {
+                        this._mySpawnTimer.start(0);
+                    }
                 }
             }
         }
@@ -75,7 +94,11 @@ class IAmHereWave {
             cloneSetup.myDirection = this._myWaveStartDirection.pp_clone();
             cloneSetup.myDirection.vec3_normalize(cloneSetup.myDirection);
 
-            cloneSetups.push(cloneSetup);
+            if (this._checkVentAngleValid(cloneSetup.myDirection)) {
+                cloneSetups.push(cloneSetup);
+            } else {
+                cloneSetups.push(null);
+            }
 
             this._myPreviousAngle = 0;
         } else {
@@ -98,12 +121,29 @@ class IAmHereWave {
             this._myLastSign *= -1;
             this._myPreviousAngle = angle;
 
-            cloneSetups.push(cloneSetup);
+            if (this._checkVentAngleValid(cloneSetup.myDirection)) {
+                cloneSetups.push(cloneSetup);
+            } else {
+                cloneSetups.push(null);
+            }
 
             this._myFirst = false;
         }
 
         return cloneSetups;
+    }
+
+    _checkVentAngleValid(direction) {
+        let angleValid = false;
+        let angle = direction.vec3_angleSigned([0, 0, -1], [0, 1, 0]);
+        for (let range of this._myVentSetup.myValidAngleRanges) {
+            if (angle >= range[0] && angle <= range[1]) {
+                angleValid = true;
+                break;
+            }
+        }
+
+        return angleValid;
     }
 
     _computeWaveStartDirection(refDirection) {
@@ -119,13 +159,8 @@ class IAmHereWave {
         while (attempts > 0 && !angleValid) {
             this._myWaveStartAngle = this._myWaveSetup.myWaveStartAngle.get(this._myGameTimeElapsed) * Math.pp_randomSign();
             let startDirection = flatRefDirection.vec3_rotateAxis(this._myWaveStartAngle, [0, 1, 0]);
-            let angle = -startDirection.vec3_angleSigned([0, 0, 1], [0, 1, 0]);
-            for (let range of this._myVentSetup.myValidAngleRangeList) {
-                if (angle >= range[0] && angle <= range[1]) {
-                    angleValid = true;
-                    break;
-                }
-            }
+
+            angleValid = this._checkVentAngleValid(startDirection);
 
             attempts--;
         }

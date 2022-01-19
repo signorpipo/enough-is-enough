@@ -38,15 +38,7 @@ class IAmEverywhereWave extends WaveOfWaves {
 
             if (Math.pp_angleDistance(angle, this._myPreviousAngle) >= this._myMinAngleBetweenWaves || this._myFirst) {
                 let startDirection = this._myWaveStartDirection.vec3_rotateAxis(angle, [0, 1, 0]);
-                let angleToCheck = -startDirection.vec3_angleSigned([0, 0, 1], [0, 1, 0]);
-                let angleValid = false;
-
-                for (let range of this._myVentSetup.myValidAngleRangeList) {
-                    if (angleToCheck >= range[0] && angleToCheck <= range[1]) {
-                        angleValid = true;
-                        break;
-                    }
-                }
+                let angleValid = this._checkVentAngleValid(startDirection);
 
                 if (angleValid) {
                     attempts = 0;
