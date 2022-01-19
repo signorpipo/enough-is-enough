@@ -1,0 +1,68 @@
+class IAmEverywhereWaveSetup extends WaveOfWavesSetup {
+    constructor() {
+        super();
+        this.myMinAngleBetweenWaves = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+    }
+
+    createWave(ventSetup, timeElapsed, refDirection = null) {
+        return new IAmEverywhereWave(ventSetup, this, timeElapsed, refDirection);
+    }
+}
+
+class IAmEverywhereWave extends WaveOfWaves {
+    constructor(ventSetup, waveSetup, timeElapsed, refDirection) {
+        super(ventSetup, waveSetup, timeElapsed);
+
+        this._myWaveAngle = 180;
+        this._myMinAngleBetweenWaves = this._myWaveSetup.myMinAngleBetweenWaves.get(timeElapsed);
+        this._myPreviousAngle = 0;
+        this._myWaveStartDirection = refDirection;
+        if (refDirection == null) {
+            this._myWaveStartDirection = Global.myPlayerForward.vec3_removeComponentAlongAxis([0, 1, 0]);
+        }
+
+        this._myFirst = true;
+    }
+
+    _createNextWaves() {
+        let waves = [];
+
+        let angle = 0;
+
+        let attempts = 100;
+
+        while (attempts > 0) {
+            angle = Math.pp_random(0, this._myWaveAngle) * Math.pp_randomSign();
+
+            if (Math.pp_angleDistance(angle, this._myPreviousAngle) >= this._myMinAngleBetweenWaves || this._myFirst) {
+                let startDirection = this._myWaveStartDirection.vec3_rotateAxis(angle, [0, 1, 0]);
+                let angleToCheck = -startDirection.vec3_angleSigned([0, 0, 1], [0, 1, 0]);
+                let angleValid = false;
+
+                for (let range of this._myVentSetup.myValidAngleRangeList) {
+                    if (angleToCheck >= range[0] && angleToCheck <= range[1]) {
+                        angleValid = true;
+                        break;
+                    }
+                }
+
+                if (angleValid) {
+                    attempts = 0;
+                }
+            }
+
+            attempts--;
+        }
+
+        this._myFirst = false;
+
+        this._myPreviousAngle = angle;
+
+        let direction = this._myWaveStartDirection.vec3_rotateAxis(angle, [0, 1, 0]);
+        direction.vec3_normalize(direction);
+
+        waves.push(this._getWaveSetup().createWave(this._myVentSetup, this._myGameTimeElapsed, direction));
+
+        return waves;
+    }
+}

@@ -102,3 +102,61 @@ Math.pp_interpolate = function (from, to, interpolationValue, easingFunction = P
     let lerpValue = easingFunction(interpolationValue);
     return Math.pp_lerp(from, to, lerpValue);
 };
+
+Math.pp_angleDistance = function (first, second) {
+    return Math.pp_angleDistanceDegrees(first, second);
+};
+
+Math.pp_angleDistanceDegrees = function (first, second) {
+    return Math.abs(Math.pp_angleDistanceSignedDegrees(first, second));
+};
+
+Math.pp_angleDistanceRadians = function (first, second) {
+    return Math.abs(Math.pp_angleDistanceSignedRadians(first, second));
+};
+
+Math.pp_angleDistanceSigned = function (first, second) {
+    return Math.pp_angleDistanceSignedDegrees(first, second);
+};
+
+
+Math.pp_angleDistanceSignedDegrees = function (first, second) {
+    let clampedFirst = Math.pp_angleClampDegrees(first, true);
+    let clampedSecond = Math.pp_angleClampDegrees(second, true);
+
+    return clampedSecond - clampedFirst;
+};
+
+Math.pp_angleDistanceSignedRadians = function (first, second) {
+    return Math.pp_toRadians(Math.pp_angleDistanceSignedDegrees(Math.pp_toDegrees(first), Math.pp_toDegrees(second)));
+};
+
+//Clamp the angle to -180/+180, so that, for example, 270 will be -90
+//if usePositiveRange is true, the angle will be clamped to 0/360
+Math.pp_angleClamp = function (angle, usePositiveRange = false) {
+    return Math.pp_angleClampDegrees(angle, usePositiveRange);
+};
+
+//Clamp the angle to -180/+180, so that, for example, 270 will be -90
+//if usePositiveRange is true, the angle will be clamped to 0/360
+Math.pp_angleClampDegrees = function (angle, usePositiveRange = false) {
+    let clampedAngle = angle % 360;
+
+    if (clampedAngle < 0) {
+        clampedAngle += 360;
+    }
+
+    if (!usePositiveRange) {
+        if (clampedAngle > 180) {
+            clampedAngle -= 360;
+        }
+    }
+
+    return clampedAngle;
+};
+
+//Clamp the angle to -Pi/+Pi, so that, for example, 270 will be -90
+//if usePositiveRange is true, the angle will be clamped to 0/2Pi
+Math.pp_angleClampRadians = function (angle, usePositiveRange = false) {
+    return Math.pp_toRadians(Math.pp_angleClampDegrees(Math.pp_toDegrees(angle), usePositiveRange));
+};

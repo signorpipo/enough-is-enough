@@ -88,7 +88,7 @@ class IAmHereWave {
 
             while (attempts > 0) {
                 angle = Math.pp_random(0, this._myWaveAngle) * -this._myLastSign;
-                if (Math.abs(angle - this._myPreviousAngle) > this._myMinAngleBetweenClones || this._myFirst) {
+                if (Math.pp_angleDistance(angle, this._myPreviousAngle) >= this._myMinAngleBetweenClones || this._myFirst) {
                     attempts = 0;
                 }
                 attempts--;
@@ -119,7 +119,7 @@ class IAmHereWave {
         flatRefDirection.vec3_rotateAxis(this._myWaveSetup.myWaveStartAngleDisplacement.get(this._myGameTimeElapsed) * Math.pp_randomSign(), [0, 1, 0], flatRefDirection);
 
         while (attempts > 0 && !angleValid) {
-            this._myWaveStartAngle = this._myWaveSetup.myWaveStartAngle.get(this._myGameTimeElapsed);
+            this._myWaveStartAngle = this._myWaveSetup.myWaveStartAngle.get(this._myGameTimeElapsed) * Math.pp_randomSign();
             let startDirection = flatRefDirection.vec3_rotateAxis(this._myWaveStartAngle, [0, 1, 0]);
             let angle = -startDirection.vec3_angleSigned([0, 0, 1], [0, 1, 0]);
             for (let range of this._myVentSetup.myValidAngleRangeList) {
