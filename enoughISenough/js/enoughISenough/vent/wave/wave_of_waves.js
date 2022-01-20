@@ -2,6 +2,7 @@ class WaveOfWavesSetup {
     constructor() {
         this.myWavesCount = new RangeValueOverTime([1, 1], [1, 1], 0, 0, true);
         this.myTimeBetweenWaves = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+        this.mySameTimeBetweenWaves = new RangeValueOverTime([-1, -1], [-1, -1], 0, 0, false); // >= 0 means true
         this.myDoneDelay = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
 
         this.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
@@ -21,7 +22,9 @@ class WaveOfWaves {
         }
 
         this._myWavesCount = this._myWaveSetup.myWavesCount.get(timeElapsed);
+        this._mySameTimeBetweenWaves = waveSetup.mySameTimeBetweenWaves.get(timeElapsed) >= 0;
 
+        this._myTimeBetweenWaves = this._myWaveSetup.myTimeBetweenWaves.get(this._myGameTimeElapsed);
         this._mySpawnTimer = new PP.Timer(0);
         this._myDoneDelayTimer = new PP.Timer(this._myWaveSetup.myDoneDelay.get(this._myGameTimeElapsed), false);
 
@@ -78,7 +81,11 @@ class WaveOfWaves {
     }
 
     _getSpawnTimer() {
-        return this._myWaveSetup.myTimeBetweenWaves.get(this._myGameTimeElapsed);
+        if (!this._mySameTimeBetweenWaves) {
+            this._myTimeBetweenWaves = this._myWaveSetup.myTimeBetweenWaves.get(this._myGameTimeElapsed);
+        }
+
+        return this._myTimeBetweenWaves;
     }
 
     _getWaveSetup() {

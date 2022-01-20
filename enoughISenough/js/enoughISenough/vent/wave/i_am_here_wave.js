@@ -5,6 +5,7 @@ class IAmHereWaveSetup {
         this.myMinAngleBetweenClones = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
         this.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
         this.myTimeBetweenClones = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+        this.mySameTimeBetweenClones = new RangeValueOverTime([-1, -1], [-1, -1], 0, 0, false); // >= 0 means true
         this.myFirstCloneInTheMiddle = true;
         this.myDoneDelay = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
     }
@@ -25,8 +26,11 @@ class IAmHereWave {
         this._myMinAngleBetweenClones = this._myWaveSetup.myMinAngleBetweenClones.get(timeElapsed);
         this._myPreviousAngle = 0;
 
+        this._mySameTimeBetweenClones = waveSetup.mySameTimeBetweenClones.get(timeElapsed) >= 0;
+
         this._computeWaveStartDirection(refDirection);
 
+        this._myTimeBetweenClones = this._myWaveSetup.myTimeBetweenClones.get(this._myGameTimeElapsed);
         this._mySpawnTimer = new PP.Timer(0);
         this._myDoneDelayTimer = new PP.Timer(this._myWaveSetup.myDoneDelay.get(this._myGameTimeElapsed), false);
 
@@ -66,7 +70,10 @@ class IAmHereWave {
                     }
                 } else {
                     if (cloneSetups.length > 0) {
-                        this._mySpawnTimer.start(this._myWaveSetup.myTimeBetweenClones.get(this._myGameTimeElapsed));
+                        this._mySpawnTimer.start(this._myTimeBetweenClones);
+                        if (!this._mySameTimeBetweenClones) {
+                            this._myTimeBetweenClones = this._myWaveSetup.myTimeBetweenClones.get(this._myGameTimeElapsed);
+                        }
                     } else {
                         this._mySpawnTimer.start(0);
                     }

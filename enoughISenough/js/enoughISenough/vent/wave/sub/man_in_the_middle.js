@@ -17,6 +17,8 @@ class ManInTheMiddle extends WaveOfWaves {
         this._myWavesCount *= 2;
         this._myWaveAngle = new RangeValue([0, 80]);
 
+        this._myTimeBeforeOpposite = this._myWaveSetup.myTimeBeforeOpposite.get(this._myGameTimeElapsed);
+
         this._myFirst = true;
 
         this._myCurrentDirection = this._myWaveStartDirection;
@@ -28,7 +30,11 @@ class ManInTheMiddle extends WaveOfWaves {
             return super._getSpawnTimer();
         }
 
-        return this._myWaveSetup.myTimeBeforeOpposite.get(this._myGameTimeElapsed);
+        if (!this._mySameTimeBetweenWaves) {
+            this._myTimeBeforeOpposite = this._myWaveSetup.myTimeBeforeOpposite.get(this._myGameTimeElapsed);
+        }
+
+        return this._myTimeBeforeOpposite;
     }
 
     _createNextWaves() {
