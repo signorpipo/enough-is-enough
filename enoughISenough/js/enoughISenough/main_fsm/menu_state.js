@@ -275,7 +275,7 @@ class MenuState extends PP.State {
                 this._myResetCount = 0;
                 let zestyComponent = this._myZestyObject.getObject().pp_getComponentHierarchy("zesty-banner");
                 if (zestyComponent) {
-                    zestyComponent.onClick();
+                    Global.myZestyToClick = zestyComponent;
                 }
             }.bind(this));
             this._myMenuItems.push(zestyMarket);

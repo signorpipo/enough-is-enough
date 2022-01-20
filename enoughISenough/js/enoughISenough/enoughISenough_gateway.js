@@ -45,6 +45,11 @@ WL.registerComponent("enough-IS-enough-gateway", {
             this.enoughISenough.update(dt);
             Global.myParticlesManager.update(dt);
         }
+
+        if (Global.myZestyToClick != null) {
+            Global.myZestyToClick.onClick();
+            Global.myZestyToClick = null;
+        }
     },
     _start() {
         {
@@ -173,4 +178,5 @@ var Global = {
     myStartFadeOut: false,
     myStatistics: null,
     myIsInMenu: false,
+    myZestyToClick: null
 };

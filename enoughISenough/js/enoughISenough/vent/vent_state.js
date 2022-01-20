@@ -95,7 +95,7 @@ class VentState extends PP.State {
         if (grabbable.isGrabbed()) {
             let zestyComponent = zestyObject.pp_getComponentHierarchy("zesty-banner");
             if (zestyComponent) {
-                zestyComponent.onClick();
+                Global.myZestyToClick = zestyComponent;
             }
         }
 
