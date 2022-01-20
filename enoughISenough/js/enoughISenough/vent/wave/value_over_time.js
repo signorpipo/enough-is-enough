@@ -46,6 +46,16 @@ class RangeValueOverTime {
 
         return randomValue;
     }
+
+    isInside(value, timeElapsed) {
+        let startValue = this._myRangeStartValue.get(timeElapsed);
+        let endValue = this._myRangeEndValue.get(timeElapsed);
+
+        let min = Math.min(startValue, endValue);
+        let max = Math.max(startValue, endValue);
+
+        return value >= min && value <= max;
+    }
 }
 
 Number.prototype.get = function () {
@@ -68,6 +78,13 @@ class RangeValue {
         }
 
         return randomValue;
+    }
+
+    isInside(value) {
+        let min = Math.min(this._myRange[0], this._myRange[1]);
+        let max = Math.max(this._myRange[0], this._myRange[1]);
+
+        return value >= min && value <= max;
     }
 }
 

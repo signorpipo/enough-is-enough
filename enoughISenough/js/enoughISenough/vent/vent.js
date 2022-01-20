@@ -8,7 +8,7 @@ class BreakSetup {
 
 class VentSetup {
     constructor() {
-        this.myValidAngleRanges = [[-180, 180]];
+        this.myValidAngleRanges = [new RangeValue([-180, 180])];
 
         this.myBreakSetup = new BreakSetup();
         this.mySmallBreakSetup = new BreakSetup();

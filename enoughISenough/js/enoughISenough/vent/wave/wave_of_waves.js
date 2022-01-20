@@ -108,7 +108,7 @@ class WaveOfWaves {
         let angleValid = false;
         let angle = direction.vec3_angleSigned([0, 0, -1], [0, 1, 0]);
         for (let range of this._myVentSetup.myValidAngleRanges) {
-            if (angle >= range[0] && angle <= range[1]) {
+            if (range.isInside(angle, this._myGameTimeElapsed)) {
                 angleValid = true;
                 break;
             }
