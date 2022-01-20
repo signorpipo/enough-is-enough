@@ -42,8 +42,8 @@ WL.registerComponent("enough-IS-enough-gateway", {
         if (this._myIncreasePool) {
             this._increasePools();
         } else {
-            this.enoughISenough.update(dt);
-            Global.myParticlesManager.update(dt);
+            this.enoughISenough.update(dt * Global.myDeltaTimeSpeed);
+            Global.myParticlesManager.update(dt * Global.myDeltaTimeSpeed);
         }
 
         if (Global.myZestyToClick != null) {
@@ -144,6 +144,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
 });
 
 var Global = {
+    myDeltaTimeSpeed: 1,
     myScene: null,
     myFirstUpdateDone: false,
     myAudioManager: null,
