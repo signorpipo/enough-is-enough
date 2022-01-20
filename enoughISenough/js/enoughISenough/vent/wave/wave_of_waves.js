@@ -55,7 +55,7 @@ class WaveOfWaves {
         this._myCurrentWaves.pp_removeAll(element => element.isDone());
 
         if (this._myCurrentWaves.length == 0 && this._myWavesCount > 0 && !this._mySpawnTimer.isRunning()) {
-            this._mySpawnTimer.start(this._myWaveSetup.myTimeBetweenWaves.get(this._myGameTimeElapsed));
+            this._mySpawnTimer.start(this._getSpawnTimer());
         }
 
         if (this._myDoneDelayTimer.isRunning()) {
@@ -75,6 +75,10 @@ class WaveOfWaves {
         let waves = [];
 
         return waves;
+    }
+
+    _getSpawnTimer() {
+        return this._myWaveSetup.myTimeBetweenWaves.get(this._myGameTimeElapsed);
     }
 
     _getWaveSetup() {

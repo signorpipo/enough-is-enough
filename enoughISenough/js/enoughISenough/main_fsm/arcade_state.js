@@ -162,7 +162,6 @@ class ArcadeState extends PP.State {
             queueForYou.myClonesCount = new RangeValueOverTime([3, 3], [3, 4], 0, 30, true);
             queueForYou.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
             queueForYou.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
-            queueForYou.myDoneDelay = new RangeValueOverTime([2, 4], [2, 4], 0, 0, false);
             queueForYou.myFirstCloneInTheMiddle = true;
 
             wave.myWavesSetup.push([queueForYou, 1, "Queue_For_You"]);
@@ -209,7 +208,6 @@ class ArcadeState extends PP.State {
             queueForYou.myClonesCount = new RangeValueOverTime([3, 3], [3, 4], 0, 30, true);
             queueForYou.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
             queueForYou.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
-            queueForYou.myDoneDelay = new RangeValueOverTime([1, 2], [1, 2], 0, 0, false);
             queueForYou.myFirstCloneInTheMiddle = true;
             //wave.myWavesSetup.push([queueForYou, 1, "Queue_For_You"]);
 
@@ -246,7 +244,31 @@ class ArcadeState extends PP.State {
             ventSetup.myNextWavesMap.set("Give_Us_A_Hug_Easy", nextWavesSetup);
         }
 
-        ventSetup.myFirstWave = "Give_Us_A_Hug_Easy";
+        {
+            let wave = new ManInTheMiddleSetup();
+
+            wave.myWavesCount = new RangeValueOverTime([3, 3], [3, 4], 0, 30, true);
+            wave.myTimeBetweenWaves = new RangeValueOverTime([2, 3], [2, 2.5], 0, 0, false);
+            wave.myTimeBeforeOpposite = new RangeValueOverTime([0.5, 1], [0.5, 1], 0, 0, false);
+            wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 4], 0, 0, false);
+            wave.myWaveStartAngle = new RangeValue([0, 180]);
+
+            let queueForYou = new QueueForYouWaveSetup();
+            queueForYou.myClonesCount = new RangeValueOverTime([1, 2], [1, 2], 0, 30, true);
+            queueForYou.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+            queueForYou.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
+            queueForYou.myFirstCloneInTheMiddle = true;
+            wave.myWavesSetup.push([queueForYou, 1, "Queue_For_You"]);
+
+            ventSetup.myWavesMap.set("Man_In_The_Middle_Easy", wave);
+
+            let nextWavesSetup = new NextWavesSetup();
+            nextWavesSetup.addWave("Man_In_The_Middle_Easy", 105, 0, null);
+
+            ventSetup.myNextWavesMap.set("Man_In_The_Middle_Easy", nextWavesSetup);
+        }
+
+        ventSetup.myFirstWave = "Man_In_The_Middle_Easy";
         ventSetup.myValidAngleRanges = [new RangeValue([-180, 0]), new RangeValue([0, 180])];
 
         return ventSetup;
