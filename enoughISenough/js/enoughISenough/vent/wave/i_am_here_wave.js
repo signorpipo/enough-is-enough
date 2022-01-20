@@ -88,22 +88,15 @@ class IAmHereWave {
     _createCloneSetups() {
         let cloneSetups = [];
 
+        let direction = null;
+
         if (this._myFirst && this._myWaveSetup.myFirstCloneInTheMiddle) {
             this._myFirst = false;
-            let cloneSetup = new MrNOTCloneSetup();
-            cloneSetup.myDirection = this._myWaveStartDirection.pp_clone();
-            cloneSetup.myDirection.vec3_normalize(cloneSetup.myDirection);
-
-            if (this._checkVentAngleValid(cloneSetup.myDirection)) {
-                cloneSetups.push(cloneSetup);
-            } else {
-                cloneSetups.push(null);
-            }
+            direction = this._myWaveStartDirection.pp_clone();
+            direction.vec3_normalize(direction);
 
             this._myPreviousAngle = 0;
         } else {
-            let cloneSetup = new MrNOTCloneSetup();
-            cloneSetup.myDirection = this._myWaveStartDirection.pp_clone();
 
             let attempts = 100;
             let angle = 0;
@@ -116,19 +109,35 @@ class IAmHereWave {
                 attempts--;
             }
 
-            cloneSetup.myDirection.vec3_rotateAxis(angle, [0, 1, 0], cloneSetup.myDirection);
-            cloneSetup.myDirection.vec3_normalize(cloneSetup.myDirection);
+            direction = this._myWaveStartDirection.pp_clone();
+            direction.vec3_rotateAxis(angle, [0, 1, 0], direction);
+            direction.vec3_normalize(direction);
             this._myLastSign *= -1;
             this._myPreviousAngle = angle;
 
-            if (this._checkVentAngleValid(cloneSetup.myDirection)) {
+            this._myFirst = false;
+        }
+
+        let tempCloneSetups = this._createCloneSetupsWithDirection(direction);
+
+        for (let cloneSetup of tempCloneSetups) {
+            if (cloneSetup != null && this._checkVentAngleValid(cloneSetup.myDirection)) {
                 cloneSetups.push(cloneSetup);
             } else {
                 cloneSetups.push(null);
             }
-
-            this._myFirst = false;
         }
+
+        return cloneSetups;
+    }
+
+    _createCloneSetupsWithDirection(direction) {
+        let cloneSetups = [];
+
+        let cloneSetup = new MrNOTCloneSetup();
+        cloneSetup.myDirection = direction;
+
+        cloneSetups.push(cloneSetup);
 
         return cloneSetups;
     }
