@@ -145,7 +145,7 @@ class MrNOTVentState extends PP.State {
         let evidenceSetupList = [];
 
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.TRIAL_TIMER, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 4));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.TUCIA_DRAWING, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS_PRIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.PIANO, 5));
@@ -153,7 +153,26 @@ class MrNOTVentState extends PP.State {
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.WATER_LILY, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.LOL, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRINK_ME_EARRING, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 2));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 3));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.TROPHY, 5));
+
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERMELON, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PSI, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERLAND, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.VR, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EGGPLANT, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PICO_8, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EVERYEYE, 5));
+
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ANT_MAIN_CHARACTER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.HEART, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.HALO_SWORD, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FOX, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FAMILY, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MIRROR, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ALOE_VERA, 5));
+
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WAYFINDER, 30));
 
         return evidenceSetupList;
     }

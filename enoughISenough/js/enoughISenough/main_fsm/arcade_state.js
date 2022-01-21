@@ -69,8 +69,8 @@ class ArcadeState extends PP.State {
     _buildEvidenceSetupList() {
         let evidenceSetupList = [];
 
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.VENT_TIMER, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.TRIAL_TIMER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, new ValueOverTime(3, 0, 60, 120, true)));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.TUCIA_DRAWING, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS_PRIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.PIANO, 5));
@@ -78,27 +78,32 @@ class ArcadeState extends PP.State {
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.WATER_LILY, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.LOL, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRINK_ME_EARRING, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 1));
-
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERMELON, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MR_NOT_EVIDENCE, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.SHATTERED_COIN, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PSI, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERLAND, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ANT_MAIN_CHARACTER, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.HEART, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.HALO_SWORD, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FOX, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PICO_8, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EGGPLANT, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.VR, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, new ValueOverTime(1, 3, 60, 120, true)));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.TROPHY, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FAMILY, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MIRROR, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WAYFINDER, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ETHEREUM, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EVERYEYE, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ALOE_VERA, 5));
+
+        let secondStarTime = 25;
+        let secondEndTime = 80;
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERMELON, new ValueOverTime(0, 5, secondStarTime, secondEndTime, true)));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PSI, new ValueOverTime(0, 5, secondStarTime, secondEndTime, true)));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERLAND, new ValueOverTime(0, 5, secondStarTime, secondEndTime, true)));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.VR, new ValueOverTime(0, 5, secondStarTime, secondEndTime, true)));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EGGPLANT, new ValueOverTime(0, 5, secondStarTime, secondEndTime, true)));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PICO_8, new ValueOverTime(0, 5, secondStarTime, secondEndTime, true)));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EVERYEYE, new ValueOverTime(0, 5, secondStarTime, secondEndTime, true)));
+
+        let thirdStarTime = 80;
+        let thirdEndTime = 135;
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ANT_MAIN_CHARACTER, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.HEART, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.HALO_SWORD, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FOX, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FAMILY, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MIRROR, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ALOE_VERA, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
+
+        let lastStarTime = 135;
+        let lastEndTime = 190;
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WAYFINDER, new ValueOverTime(0, 5, lastStarTime, lastEndTime, true)));
 
         return evidenceSetupList;
     }
@@ -106,16 +111,16 @@ class ArcadeState extends PP.State {
     _disputeVentSetup() {
         let ventSetup = new VentSetup();
 
-        ventSetup.myBreakSetup.myBreakDuration = new RangeValueOverTime([5, 6], [4, 5], 30, 120, false);
-        ventSetup.myBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([40, 50], [50, 70], 30, 120, false);
-        ventSetup.myBreakSetup.myBreakCloneCooldown = new RangeValueOverTime([10, 20], [20, 30], 30, 120, true);
+        ventSetup.myBreakSetup.myBreakDuration = new RangeValueOverTime([5, 6], [4, 5], 30, 180, false);
+        ventSetup.myBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([40, 50], [50, 70], 30, 180, false);
+        ventSetup.myBreakSetup.myBreakCloneCooldown = new RangeValueOverTime([30, 40], [30, 40], 30, 180, true);
 
-        ventSetup.mySmallBreakSetup.myBreakDuration = new RangeValueOverTime([2, 3], [1, 2], 30, 120, false);
-        ventSetup.mySmallBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([10, 20], [15, 20], 30, 120, false);
-        ventSetup.mySmallBreakSetup.myBreakCloneCooldown = new RangeValueOverTime([4, 5], [8, 12], 30, 120, true);
+        ventSetup.mySmallBreakSetup.myBreakDuration = new RangeValueOverTime([2, 3], [1, 2], 30, 180, false);
+        ventSetup.mySmallBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([15, 20], [15, 20], 30, 180, false);
+        ventSetup.mySmallBreakSetup.myBreakCloneCooldown = new RangeValueOverTime([10, 20], [10, 20], 30, 180, true);
 
         ventSetup.myCloneRotationSetup.mySpinSpeed = new RangeValue([4, 6], false);
-        ventSetup.myCloneRotationSetup.mySpinChance = new RangeValueOverTime([1, 30], [1, 15], 60, 120, true);
+        ventSetup.myCloneRotationSetup.mySpinChance = new RangeValueOverTime([1, 30], [1, 15], 60, 180, true);
         ventSetup.myCloneRotationSetup.mySpinStartTime = 60;
         ventSetup.myCloneRotationSetup.myTiltAngle = new RangeValueOverTime([0, 0], [0, 15], 60, 120, false);
 

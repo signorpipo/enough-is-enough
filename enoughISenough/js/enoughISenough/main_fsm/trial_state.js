@@ -79,8 +79,6 @@ class TrialState extends PP.State {
 
         let trialLevel = PP.SaveUtils.loadNumber("trial_level", 1);
         let transition = "start_".concat(trialLevel);
-        console.error(transition);
-
         this._myFSM.perform(transition);
 
     }
@@ -193,14 +191,210 @@ class TrialState extends PP.State {
     }
 
     _firstVentSetup() {
-        return 0;
+        let ventSetup = new VentSetup();
+
+        ventSetup.myBreakSetup.myBreakDuration = new RangeValueOverTime([5, 6], [4, 5], 30, 180, false);
+        ventSetup.myBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([40, 50], [50, 70], 30, 180, false);
+        ventSetup.myBreakSetup.myBreakCloneCooldown = new RangeValueOverTime([30, 40], [30, 40], 30, 180, true);
+
+        ventSetup.mySmallBreakSetup.myBreakDuration = new RangeValueOverTime([2, 3], [1, 2], 30, 180, false);
+        ventSetup.mySmallBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([15, 20], [15, 20], 30, 180, false);
+        ventSetup.mySmallBreakSetup.myBreakCloneCooldown = new RangeValueOverTime([10, 20], [10, 20], 30, 180, true);
+
+        ventSetup.myCloneRotationSetup.mySpinSpeed = new RangeValue([4, 6], false);
+        ventSetup.myCloneRotationSetup.mySpinChance = new RangeValueOverTime([1, 30], [1, 15], 60, 180, true);
+        ventSetup.myCloneRotationSetup.mySpinStartTime = 60;
+        ventSetup.myCloneRotationSetup.myTiltAngle = new RangeValueOverTime([0, 0], [0, 15], 60, 120, false);
+
+        {
+            let wave = new IAmHereWaveSetup();
+
+            wave.myClonesCount = new RangeValueOverTime([1, 3], [1, 4], 0, 30, true);
+            wave.myWaveAngle = new RangeValue([20, 40]);
+            wave.myMinAngleBetweenClones = 10;
+            wave.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+            wave.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
+            wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 4], 0, 0, false);
+            wave.myFirstCloneInTheMiddle = true;
+            wave.myWaveStartAngle = new RangeValue([0, 180]);
+
+            ventSetup.myWavesMap.set("I_Am_Here_Easy", wave);
+
+            let nextWavesSetup = new NextWavesSetup();
+            nextWavesSetup.addWave("I_Am_Here_Easy", 10, 0, null);
+            nextWavesSetup.addWave("I_Am_Everywhere_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Queue_For_You_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Merry_Go_Round_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Give_Us_A_Hug_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Man_In_The_Middle_Easy", 10, 0, null);
+
+            ventSetup.myNextWavesMap.set("I_Am_Here_Easy", nextWavesSetup);
+        }
+
+        {
+            let wave = new IAmEverywhereWaveSetup();
+
+            wave.myWavesCount = new RangeValueOverTime([1, 3], [1, 4], 0, 30, true);
+            wave.myMinAngleBetweenWaves = new RangeValue([40, 100]);
+            wave.myTimeBetweenWaves = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
+            wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 4], 0, 0, false);
+            wave.myWaveStartAngle = new RangeValue([0, 180]);
+
+            let iAmHereWave = new IAmHereWaveSetup();
+            iAmHereWave.myClonesCount = new RangeValueOverTime([1, 3], [1, 4], 0, 30, true);
+            iAmHereWave.myWaveAngle = new RangeValue([20, 40]);
+            iAmHereWave.myMinAngleBetweenClones = 10;
+            iAmHereWave.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
+            iAmHereWave.myFirstCloneInTheMiddle = true;
+
+            wave.myWavesSetup.push([iAmHereWave, 1, "I_Am_Here"]);
+
+            let queueForYou = new QueueForYouWaveSetup();
+
+            queueForYou.myClonesCount = new RangeValueOverTime([3, 3], [3, 4], 0, 30, true);
+            queueForYou.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+            queueForYou.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
+            queueForYou.myFirstCloneInTheMiddle = true;
+
+
+            ventSetup.myWavesMap.set("I_Am_Everywhere_Easy", wave);
+
+            let nextWavesSetup = new NextWavesSetup();
+            nextWavesSetup.addWave("I_Am_Here_Easy", 10, 0, null);
+            nextWavesSetup.addWave("I_Am_Everywhere_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Queue_For_You_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Merry_Go_Round_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Give_Us_A_Hug_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Man_In_The_Middle_Easy", 10, 0, null);
+            ventSetup.myNextWavesMap.set("I_Am_Everywhere_Easy", nextWavesSetup);
+        }
+
+        {
+            let wave = new QueueForYouWaveSetup();
+
+            wave.myClonesCount = new RangeValueOverTime([2, 3], [2, 4], 0, 30, true);
+            wave.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+            wave.myTimeBetweenClones = new RangeValueOverTime([1, 3], [1, 3], 0, 0, false);
+            wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 4], 0, 0, false);
+            wave.myFirstCloneInTheMiddle = true;
+            wave.myWaveStartAngle = new RangeValue([0, 180]);
+            wave.mySameTimeBetweenClones = new RangeValueOverTime([-1, -1], [-1, -1], 0, 0, false); // >= 0 means true
+
+            ventSetup.myWavesMap.set("Queue_For_You_Easy", wave);
+
+            let nextWavesSetup = new NextWavesSetup();
+            nextWavesSetup.addWave("I_Am_Here_Easy", 10, 0, null);
+            nextWavesSetup.addWave("I_Am_Everywhere_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Queue_For_You_Easy", 11230, 0, null);
+            nextWavesSetup.addWave("Merry_Go_Round_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Give_Us_A_Hug_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Man_In_The_Middle_Easy", 10, 0, null);
+
+            ventSetup.myNextWavesMap.set("Queue_For_You_Easy", nextWavesSetup);
+        }
+
+        {
+            let wave = new MerryGoRoundSetup();
+
+            wave.myWavesCount = new RangeValueOverTime([3, 7], [3, 7], 0, 30, true);
+            wave.myAngleBetweenWaves = new RangeValue([15, 25]);
+            wave.myTimeBetweenWaves = new RangeValueOverTime([1, 4], [1, 4], 0, 0, false);
+            wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 4], 0, 0, false);
+            wave.myWaveStartAngle = new RangeValue([0, 180]);
+            wave.mySameTimeBetweenWaves = 1;
+
+            let queueForYou = new QueueForYouWaveSetup();
+            queueForYou.myClonesCount = new RangeValueOverTime([3, 3], [3, 4], 0, 30, true);
+            queueForYou.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+            queueForYou.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
+            queueForYou.myFirstCloneInTheMiddle = true;
+            //wave.myWavesSetup.push([queueForYou, 1, "Queue_For_You"]);
+
+            ventSetup.myWavesMap.set("Merry_Go_Round_Easy", wave);
+
+            let nextWavesSetup = new NextWavesSetup();
+            nextWavesSetup.addWave("I_Am_Here_Easy", 10, 0, null);
+            nextWavesSetup.addWave("I_Am_Everywhere_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Queue_For_You_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Merry_Go_Round_Easy", 1230, 0, null);
+            nextWavesSetup.addWave("Give_Us_A_Hug_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Man_In_The_Middle_Easy", 10, 0, null);
+
+            ventSetup.myNextWavesMap.set("Merry_Go_Round_Easy", nextWavesSetup);
+        }
+
+        {
+            let wave = new GiveUsAHugSetup();
+
+            wave.myClonesCount = new RangeValueOverTime([1, 3], [1, 3], 0, 30, true);
+            wave.myWaveAngle = new RangeValue([20, 40]);
+            wave.myMinAngleBetweenClones = 10;
+            wave.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+            wave.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
+            wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 4], 0, 0, false);
+            wave.myFirstCloneInTheMiddle = true;
+            wave.myWaveStartAngle = new RangeValue([0, 180]);
+
+            wave.myHugSize = new RangeValueOverTime([2, 3], [2, 3], 0, 0, true);
+            wave.myHugAngle = new RangeValueOverTime([30, 70], [30, 70], 0, 0, false);
+            wave.mySkipLastCloneHugging = false;
+            wave.myEqualDistance = true;
+            wave.myMinAngleBetweenClonesHugging = new RangeValueOverTime([10, 10], [10, 10], 0, 0, false);
+
+            ventSetup.myWavesMap.set("Give_Us_A_Hug_Easy", wave);
+
+            let nextWavesSetup = new NextWavesSetup();
+            nextWavesSetup.addWave("I_Am_Here_Easy", 10, 0, null);
+            nextWavesSetup.addWave("I_Am_Everywhere_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Queue_For_You_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Merry_Go_Round_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Give_Us_A_Hug_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Man_In_The_Middle_Easy", 10, 0, null);
+
+            ventSetup.myNextWavesMap.set("Give_Us_A_Hug_Easy", nextWavesSetup);
+        }
+
+        {
+            let wave = new ManInTheMiddleSetup();
+
+            wave.myWavesCount = new RangeValueOverTime([1, 3], [1, 4], 0, 30, true);
+            wave.myTimeBetweenWaves = new RangeValueOverTime([2, 3], [2, 2.5], 0, 0, false);
+            wave.myTimeBeforeOpposite = new RangeValueOverTime([0.5, 1], [0.5, 1], 0, 0, false);
+            wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 4], 0, 0, false);
+            wave.myWaveStartAngle = new RangeValue([0, 180]);
+            wave.mySameTimeBetweenWaves = -1;
+
+            let queueForYou = new QueueForYouWaveSetup();
+            queueForYou.myClonesCount = new RangeValueOverTime([1, 2], [1, 2], 0, 30, true);
+            queueForYou.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+            queueForYou.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
+            queueForYou.myFirstCloneInTheMiddle = true;
+            //wave.myWavesSetup.push([queueForYou, 1, "Queue_For_You"]);
+
+            ventSetup.myWavesMap.set("Man_In_The_Middle_Easy", wave);
+
+            let nextWavesSetup = new NextWavesSetup();
+            nextWavesSetup.addWave("I_Am_Here_Easy", 10, 0, null);
+            nextWavesSetup.addWave("I_Am_Everywhere_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Queue_For_You_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Merry_Go_Round_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Give_Us_A_Hug_Easy", 10, 0, null);
+            nextWavesSetup.addWave("Man_In_The_Middle_Easy", 12310, 0, null);
+
+            ventSetup.myNextWavesMap.set("Man_In_The_Middle_Easy", nextWavesSetup);
+        }
+
+        ventSetup.myFirstWave = "Merry_Go_Round_Easy";
+        ventSetup.myValidAngleRanges = [new RangeValue([-180, 0]), new RangeValue([0, 180])];
+
+        return ventSetup;
     }
 
     _firstEvidenceSetupList() {
         let evidenceSetupList = [];
 
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.TRIAL_TIMER, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 3));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.TUCIA_DRAWING, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS_PRIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.PIANO, 5));
@@ -209,26 +403,7 @@ class TrialState extends PP.State {
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.LOL, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRINK_ME_EARRING, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 1));
-
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERMELON, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MR_NOT_EVIDENCE, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.SHATTERED_COIN, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PSI, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERLAND, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ANT_MAIN_CHARACTER, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.HEART, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.HALO_SWORD, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FOX, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PICO_8, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EGGPLANT, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.VR, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.TROPHY, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FAMILY, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MIRROR, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WAYFINDER, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ETHEREUM, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EVERYEYE, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ALOE_VERA, 5));
 
         return evidenceSetupList;
     }
@@ -241,7 +416,7 @@ class TrialState extends PP.State {
         let evidenceSetupList = [];
 
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.TRIAL_TIMER, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 4));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.TUCIA_DRAWING, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS_PRIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.PIANO, 5));
@@ -250,6 +425,15 @@ class TrialState extends PP.State {
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.LOL, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRINK_ME_EARRING, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 2));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.TROPHY, 5));
+
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERMELON, 7));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PSI, 7));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERLAND, 7));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.VR, 7));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EGGPLANT, 7));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PICO_8, 7));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EVERYEYE, 7));
 
         return evidenceSetupList;
     }
@@ -262,7 +446,7 @@ class TrialState extends PP.State {
         let evidenceSetupList = [];
 
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.TRIAL_TIMER, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, 4));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.TUCIA_DRAWING, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS_PRIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.PIANO, 5));
@@ -270,7 +454,24 @@ class TrialState extends PP.State {
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.WATER_LILY, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.LOL, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.DRINK_ME_EARRING, 5));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 2));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 3));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.TROPHY, 5));
+
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERMELON, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PSI, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERLAND, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.VR, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EGGPLANT, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PICO_8, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EVERYEYE, 5));
+
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ANT_MAIN_CHARACTER, 10));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.HEART, 10));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.HALO_SWORD, 10));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FOX, 10));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.FAMILY, 10));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MIRROR, 10));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.ALOE_VERA, 10));
 
         return evidenceSetupList;
     }

@@ -245,7 +245,8 @@ class EvidenceManager {
             let setup = evidence.getEvidenceSetup();
             if ((setup.myCardinalPositions == null || setup.myCardinalPositions.includes(cardinalPosition)) &&
                 (setup.myStartSpawnTime == null || setup.myStartSpawnTime < Global.myVentDuration) &&
-                (setup.myEndSpawnTime == null || setup.myEndSpawnTime > Global.myVentDuration)) {
+                (setup.myEndSpawnTime == null || setup.myEndSpawnTime > Global.myVentDuration) &&
+                setup.myRandomChance.get(Global.myVentDuration) > 0) {
                 validEvidences.push(evidence);
             }
         }
@@ -256,7 +257,8 @@ class EvidenceManager {
                 let setup = unspawnEvidence[0].getEvidenceSetup();
                 if ((setup.myCardinalPositions == null || setup.myCardinalPositions.includes(cardinalPosition)) &&
                     (setup.myStartSpawnTime == null || setup.myStartSpawnTime < Global.myVentDuration) &&
-                    (setup.myEndSpawnTime == null || setup.myEndSpawnTime > Global.myVentDuration)) {
+                    (setup.myEndSpawnTime == null || setup.myEndSpawnTime > Global.myVentDuration) &&
+                    setup.myRandomChance.get(Global.myVentDuration) > 0) {
                     validEvidences.push(unspawnEvidence[0]);
                 }
             }
@@ -264,14 +266,14 @@ class EvidenceManager {
 
         let randomChanceSum = 0;
         for (let evidence of validEvidences) {
-            randomChanceSum += evidence.getEvidenceSetup().myRandomChance;
+            randomChanceSum += evidence.getEvidenceSetup().myRandomChance.get(Global.myVentDuration);
         }
 
-        let random = Math.pp_randomInt(0, randomChanceSum - 1);
+        let random = Math.pp_randomInt(1, randomChanceSum);
         let currentSum = 0;
         for (let evidence of validEvidences) {
-            currentSum += evidence.getEvidenceSetup().myRandomChance;
-            if (random < currentSum) {
+            currentSum += evidence.getEvidenceSetup().myRandomChance.get(Global.myVentDuration);
+            if (random <= currentSum) {
                 randomEvidence = evidence;
                 break;
             }
