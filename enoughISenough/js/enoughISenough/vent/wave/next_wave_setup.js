@@ -12,7 +12,7 @@ class NextWavesSetup {
         let validWaves = [];
         let totalChance = 0;
         for (let nextWave of this._myNextWaves) {
-            if (nextWave.myStartTime < timeElapsed && (nextWave.myEndTime == null || nextWave.myEndTime > timeElapsed)) {
+            if (nextWave.myStartTime <= timeElapsed && (nextWave.myEndTime == null || nextWave.myEndTime > timeElapsed)) {
                 validWaves.push(nextWave);
                 totalChance += nextWave.myChance.get(timeElapsed);
             }

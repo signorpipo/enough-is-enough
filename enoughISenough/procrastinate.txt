@@ -324,4 +324,29 @@ Tipi di waves:
 	- Specificare il tempo fra i cloni e nel tempo
 	- Il singolo clone può essere anche una I am here wave, e quindi un gruppetto di cloni
 	
+First Trial:
+	- I am here
+	- I am everywhere
+	
+Second Trial:
+	- I am here
+	- I am everywhere
+	- Merry go round
+	- Queue for you
+	
+Third Trial:
+	- I am here
+	- I am everywhere
+	- Merry go round
+	- Queue for you
+	- Give us a hug
+	- Man in the middle
+	
+Last Trial:
+	- I am here
+	- I am everywhere
+	- Merry go round
+	- Queue for you
+	- Give us a hug
+	
 	

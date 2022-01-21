@@ -6,6 +6,7 @@ class PulseRadar {
         this._myPulseDuration = 0.35;
 
         this._myMinAngle = 45;
+        this._myBehindMinAngle = 160;
 
         this._myLeftPulseDownTimer = new PP.Timer(this._myDownDuration, false);
         this._myLeftPulseActiveTimer = new PP.Timer(this._myPulseDuration, false);
@@ -61,7 +62,15 @@ class PulseRadar {
         let flatPlayerForward = Global.myPlayerForward.vec3_removeComponentAlongAxis([0, 1, 0]);
 
         let angleSigned = flatPlayerForward.vec3_angleSigned(playerDirection, [0, 1, 0]);
-        if (angleSigned >= this._myMinAngle) {
+        if (angleSigned >= this._myBehindMinAngle || angleSigned <= -this._myBehindMinAngle) {
+            if (!this._myLeftPulseActiveTimer.isRunning() && !this._myLeftPulseDownTimer.isRunning()) {
+                this._myLeftPulseActiveTimer.start();
+                this._myRightPulseActiveTimer.start();
+            } else if (!this._myRightPulseActiveTimer.isRunning() && !this._myRightPulseDownTimer.isRunning()) {
+                this._myLeftPulseActiveTimer.start();
+                this._myRightPulseActiveTimer.start();
+            }
+        } else if (angleSigned >= this._myMinAngle) {
             if (!this._myLeftPulseActiveTimer.isRunning() && !this._myLeftPulseDownTimer.isRunning()) {
                 this._myLeftPulseActiveTimer.start();
             }

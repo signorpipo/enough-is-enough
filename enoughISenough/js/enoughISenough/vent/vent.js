@@ -23,6 +23,8 @@ class VentSetup {
         this.myFirstWave = "";
 
         this.myCloneRotationSetup = new CloneRotationSetup();
+
+        this.myRefDirection = null;
     }
 }
 
@@ -141,7 +143,12 @@ class Vent {
             }
         } else {
             this._myCurrentWaveID = this._myVentSetup.myNextWavesMap.get(this._myCurrentWaveID).getNextWave(Global.myVentDuration);
-            this._myCurrentWave = this._myVentSetup.myWavesMap.get(this._myCurrentWaveID).createWave(this._myVentSetup, Global.myVentDuration);
+
+            let refDirection = Global.myPlayerForward;
+            if (this._myVentSetup.myRefDirection != null) {
+                refDirection = this._myVentSetup.myRefDirection.pp_clone();
+            }
+            this._myCurrentWave = this._myVentSetup.myWavesMap.get(this._myCurrentWaveID).createWave(this._myVentSetup, Global.myVentDuration, refDirection);
         }
     }
 
