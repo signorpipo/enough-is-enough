@@ -8,6 +8,8 @@ class IAmHereWaveSetup {
         this.mySameTimeBetweenClones = new RangeValueOverTime([-1, -1], [-1, -1], 0, 0, false); // >= 0 means true
         this.myFirstCloneInTheMiddle = true;
         this.myDoneDelay = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+
+        this.myRefDirection = null;
     }
 
     createWave(ventSetup, timeElapsed, refDirection = null) {
@@ -163,7 +165,9 @@ class IAmHereWave {
     }
 
     _computeWaveStartDirection(refDirection) {
-        if (refDirection == null) {
+        if (this._myWaveSetup.myRefDirection != null) {
+            refDirection = this._myWaveSetup.myRefDirection;
+        } else if (refDirection == null) {
             refDirection = Global.myPlayerForward;
         }
 

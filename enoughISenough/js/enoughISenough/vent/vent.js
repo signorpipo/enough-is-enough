@@ -44,7 +44,7 @@ class Vent {
 
         //this._myFSM.setDebugLogActive(true, "        Vent");
         this._myFSM.addState("init");
-        this._myFSM.addState("first_wait", new PP.TimerState(/*4.5*/0, "end"));
+        this._myFSM.addState("first_wait", new PP.TimerState(4.5, "end"));
         this._myFSM.addState("wave", this._updateWave.bind(this));
         this._myFSM.addState("break", this._break.bind(this));
         this._myFSM.addState("smallBreak", this._break.bind(this));
@@ -73,6 +73,8 @@ class Vent {
         this._myFSM.init("init");
 
         this._myDebugActive = true;
+        this._myDebugActiveBreak = false;
+        this._myDebugActiveStats = true;
 
         this._myOncePerFrame = false;
     }
@@ -102,6 +104,8 @@ class Vent {
 
         this._myVentTimer = new PP.Timer(this._myVentSetup.myVentDuration);
         this._myClonesLeft = this._myVentSetup.myClonesToDismiss;
+
+        this._myCloneDismissed = 0;
 
         this._debugNextWave();
     }
@@ -317,6 +321,8 @@ class Vent {
         this._myClonesLeft = Math.max(0, this._myClonesLeft - 1);
         this._myBreakCloneCooldown = Math.max(0, this._myBreakCloneCooldown - 1);
         this._mySmallBreakCloneCooldown = Math.max(0, this._mySmallBreakCloneCooldown - 1);
+
+        this._myCloneDismissed++;
     }
 
     _mrNOTCloneReachYou() {
@@ -341,8 +347,15 @@ class Vent {
     _debugNextWave() {
         if (this._myDebugActive) {
             console.log("Next Wave -", this._myCurrentWaveID);
-            console.log("   Break -", this._myBreakDelayTimer.getTimer().toFixed(3), " -", this._myBreakCloneCooldown);
-            console.log("   Small Break -", this._mySmallBreakDelayTimer.getTimer().toFixed(3), " -", this._mySmallBreakCloneCooldown);
+            if (this._myDebugActiveBreak) {
+                console.log("   Break -", this._myBreakDelayTimer.getTimer().toFixed(3), " -", this._myBreakCloneCooldown);
+                console.log("   Small Break -", this._mySmallBreakDelayTimer.getTimer().toFixed(3), " -", this._mySmallBreakCloneCooldown);
+            }
+
+            if (this._myDebugActiveStats) {
+                console.log("   Duration -", Global.myVentDuration.toFixed(3));
+                console.log("   Dismissed -", this._myCloneDismissed);
+            }
         }
     }
 }

@@ -347,7 +347,7 @@
                 },
                 {
                     "type": "pp-mute-all",
-                    "active": true
+                    "active": false
                 },
                 {
                     "type": "clear-console-on-session",
@@ -383,7 +383,8 @@
                         "_my16": "287",
                         "_myFogAlpha": 0.33,
                         "_mySpecularMultiplier": 2.0
-                    }
+                    },
+                    "active": true
                 }
             ]
         },
@@ -655,14 +656,14 @@
                 1.0000152,
                 0.0,
                 0.0,
-                1.6499999,
-                0.0,
+                1.6499998,
+                -0.1,
                 1.0
             ],
             "components": [
                 {
                     "type": "pp-player-height",
-                    "active": true,
+                    "active": false,
                     "pp-player-height": {
                         "_myEyesHeight": 1.6499999
                     }
@@ -17645,7 +17646,7 @@
             ],
             "transformation": [
                 -0.136,
-                -1.1889443207735441e-8,
+                -1.188944320773544e-8,
                 3.850477270361807e-8,
                 0.0,
                 -3.8504133215155898e-8,
@@ -23734,7 +23735,8 @@
                 "js/pp/tool/easy_tune/easy_tune_widgets",
                 "js/pp/debug/components",
                 "js/enoughISenough/vent/wave",
-                "js/enoughISenough/vent/wave/sub"
+                "js/enoughISenough/vent/wave/sub",
+                "js/enoughISenough/vent/vent_setup"
             ]
         },
         "editor": {

@@ -3,7 +3,7 @@ class NextWavesSetup {
         this._myNextWaves = [];
     }
 
-    addWave(waveID, chance, startTime, endTime) {
+    addWave(waveID, chance, startTime = 0, endTime = null) {
         let wave = new NextWaveSetup(waveID, chance, startTime, endTime);
         this._myNextWaves.push(wave);
     }

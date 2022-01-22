@@ -3,6 +3,7 @@ class IAmEverywhereWaveSetup extends WaveOfWavesSetup {
         super();
 
         this.myMinAngleBetweenWaves = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+        this.myMaxAngleBetweenWaves = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
         this.myFirstWaveAngle = new RangeValue([0, 180]);
     }
 
@@ -17,6 +18,12 @@ class IAmEverywhereWave extends WaveOfWaves {
 
         this._myWaveAngle = new RangeValue([0, 180]);
         this._myMinAngleBetweenWaves = this._myWaveSetup.myMinAngleBetweenWaves.get(timeElapsed);
+        this._myMaxAngleBetweenWaves = this._myWaveSetup.myMaxAngleBetweenWaves.get(timeElapsed);
+
+        if (this._myMaxAngleBetweenWaves < this._myMinAngleBetweenWaves) {
+            this._myMaxAngleBetweenWaves = this._myMinAngleBetweenWaves + 10;
+        }
+
         this._myPreviousAngle = 0;
 
         this._myFirst = true;
@@ -36,7 +43,8 @@ class IAmEverywhereWave extends WaveOfWaves {
                 angle = this._myWaveAngle.get(this._myGameTimeElapsed) * Math.pp_randomSign();
             }
 
-            if (Math.pp_angleDistance(angle, this._myPreviousAngle) >= this._myMinAngleBetweenWaves || this._myFirst) {
+            if ((Math.pp_angleDistance(angle, this._myPreviousAngle) >= this._myMinAngleBetweenWaves &&
+                Math.pp_angleDistance(angle, this._myPreviousAngle) <= this._myMaxAngleBetweenWaves) || this._myFirst) {
                 let startDirection = this._myWaveStartDirection.vec3_rotateAxis(angle, [0, 1, 0]);
                 let angleValid = this._checkVentAngleValid(startDirection);
 

@@ -102,7 +102,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Bool", false));
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("mr NOT Clone Scale", 0.35, 0.1, 3));
-        PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Prevent Vent Lost", true));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Prevent Vent Lost", false));
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Explosion Particle Life", 0.15, 0.5, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Explosion Particles Duration", 0.5, 0.5, 3));
