@@ -25,6 +25,8 @@ class VentSetup {
         this.myCloneRotationSetup = new CloneRotationSetup();
 
         this.myRefDirection = null;
+
+        this.mySkipBreakWhenTimerBelow = 20;
     }
 }
 
@@ -153,9 +155,10 @@ class Vent {
     }
 
     _checkBreak() {
-        if (this._myBreakDelayTimer.isDone() && this._myBreakCloneCooldown <= 0) {
+        let skipBreak = !this._myVentSetup.myIsEndless && this._myVentTimer.getTimer() <= this._myVentSetup.mySkipBreakWhenTimerBelow;
+        if (!skipBreak && this._myBreakDelayTimer.isDone() && this._myBreakCloneCooldown <= 0) {
             this._myFSM.perform("startBreak");
-        } else if (this._mySmallBreakDelayTimer.isDone() && this._mySmallBreakCloneCooldown <= 0) {
+        } else if (!skipBreak && this._mySmallBreakDelayTimer.isDone() && this._mySmallBreakCloneCooldown <= 0) {
             this._myFSM.perform("startSmallBreak");
         } else {
             this._debugNextWave();
@@ -193,7 +196,8 @@ class Vent {
                 this._myOnVentCompletedCallback();
             }
         } else if (this._myBreakTimer.isDone()) {
-            if (this._myIsSmallBreak && this._myBreakDelayTimer.isDone() && this._myBreakCloneCooldown <= 0) {
+            let skipBreak = !this._myVentSetup.myIsEndless && this._myVentTimer.getTimer() <= this._myVentSetup.mySkipBreakWhenTimerBelow;
+            if (!skipBreak && this._myIsSmallBreak && this._myBreakDelayTimer.isDone() && this._myBreakCloneCooldown <= 0) {
                 this._myFSM.perform("startBreak");
             } else {
                 this._myFSM.perform("end");
@@ -205,7 +209,7 @@ class Vent {
         this._myBreakDelayTimer = new PP.Timer(this._myVentSetup.myBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration));
         this._myBreakCloneCooldown = this._myVentSetup.myBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
 
-        this._mySmallBreakTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration));
+        this._mySmallBreakDelayTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration));
         this._mySmallBreakCloneCooldown = this._myVentSetup.mySmallBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
 
         this._debugNextWave();
