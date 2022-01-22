@@ -389,10 +389,6 @@
             ]
         },
         "50": {
-            "link": {
-                "name": "Left_Quest_Controller",
-                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
-            },
             "parent": "84",
             "components": [
                 {
@@ -523,10 +519,6 @@
             "deleted": true
         },
         "58": {
-            "link": {
-                "name": "Right_Quest_Controller",
-                "file": "assets\\models\\quest_controllers_credits_Jezza3D.glb"
-            },
             "parent": "84",
             "components": [
                 {
@@ -17646,7 +17638,7 @@
             ],
             "transformation": [
                 -0.136,
-                -1.188944320773544e-8,
+                -1.1889443207735441e-8,
                 3.850477270361807e-8,
                 0.0,
                 -3.8504133215155898e-8,
