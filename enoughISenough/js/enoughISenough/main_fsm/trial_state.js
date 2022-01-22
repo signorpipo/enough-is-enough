@@ -110,7 +110,7 @@ class TrialState extends PP.State {
 
         sentences.push(new Sentence("Glad to see you again"));
         sentences.push(new Sentence("Maybe we can have a little conversation"));
-        sentences.push(new Sentence("Why don't you show me what you have learned so far?", 2, 1.5));
+        sentences.push(new Sentence("Why don't you show me what you have learned so far?", 2.5, 1.5));
 
         return sentences;
     }
@@ -118,7 +118,7 @@ class TrialState extends PP.State {
     _firstDefeatSentences() {
         let sentences = [];
 
-        sentences.push(new Sentence("Don't even bother", 2, 1.5));
+        sentences.push(new Sentence("Don't even bother", 2.5, 2));
 
         return sentences;
     }
@@ -126,9 +126,9 @@ class TrialState extends PP.State {
     _secondTalkSentences() {
         let sentences = [];
 
-        sentences.push(new Sentence("After our last time together", 1, 0));
+        sentences.push(new Sentence("After our last time together", 1.5, 0));
         sentences.push(new Sentence("I see you have tried many things"));
-        sentences.push(new Sentence("Were they worth your time?", 2, 1.5));
+        sentences.push(new Sentence("Were they worth your time?", 2.5, 1.5));
 
         return sentences;
     }
@@ -136,7 +136,7 @@ class TrialState extends PP.State {
     _secondDefeatSentences() {
         let sentences = [];
 
-        sentences.push(new Sentence("Stop wasting my time too", 2, 1.5));
+        sentences.push(new Sentence("Stop wasting my time too", 2.5, 2));
 
         return sentences;
     }
@@ -144,9 +144,9 @@ class TrialState extends PP.State {
     _thirdTalkSentences() {
         let sentences = [];
 
-        sentences.push(new Sentence("I've watched you jump from one thing to another", 1, 0));
+        sentences.push(new Sentence("I've watched you jump from one thing to another", 1.5, 0));
         sentences.push(new Sentence("hoping to find what's yours"));
-        sentences.push(new Sentence("Don't you realize how meaningless this is?", 2, 1.5));
+        sentences.push(new Sentence("Don't you realize how meaningless this is?", 2.5, 1.5));
 
         return sentences;
     }
@@ -154,7 +154,7 @@ class TrialState extends PP.State {
     _thirdDefeatSentences() {
         let sentences = [];
 
-        sentences.push(new Sentence("There is no purpose left for you", 2, 1.5));
+        sentences.push(new Sentence("There is no purpose left for you", 2.5, 2));
 
         return sentences;
     }
@@ -179,7 +179,7 @@ class TrialState extends PP.State {
         let sentences = [];
 
         sentences.push(new Sentence("You may think you are stronger now"));
-        sentences.push(new Sentence("You may feel free from others' judgment", 1, 0));
+        sentences.push(new Sentence("You may feel free from others' judgment", 1.5, 0));
         sentences.push(new Sentence("and from your own"));
         sentences.push(new Sentence("You may fool yourself into believing this..."));
         sentences.push(new Sentence("But after all has been said and done", 0.75, 0));

@@ -41,7 +41,7 @@ class TalkState extends PP.State {
 
         this._myTimer = new PP.Timer(1);
 
-        this._myBlather = new Blather(sentences);
+        this._myBlather = new Blather(sentences, isDefeat);
 
         this._myMrNOTAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_APPEAR);
         this._myMrNOTDisappearAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_DISAPPEAR);
@@ -170,7 +170,7 @@ class TalkState extends PP.State {
 }
 
 class Blather {
-    constructor(sentences) {
+    constructor(sentences, isDefeat) {
         this._myBlatherTextObject = WL.scene.addObject(Global.myScene);
         this._myBlatherTextComponent = this._myBlatherTextObject.pp_addComponent("text");
         this._myBlatherTextComponent.text = " ";
@@ -206,7 +206,7 @@ class Blather {
         this._myFSM = new PP.FSM();
         //this._myFSM.setDebugLogActive(true, "            Blather");
         this._myFSM.addState("init");
-        this._myFSM.addState("first_wait", new PP.TimerState(1, "end"));
+        this._myFSM.addState("first_wait", new PP.TimerState(isDefeat ? 1 : 1.25, "end"));
         this._myFSM.addState("blather", this._updateBlather.bind(this));
         this._myFSM.addState("wait", this._myTimerState);
         this._myFSM.addState("second_wait", this._myTimerState);
@@ -371,7 +371,7 @@ class Blather {
 }
 
 class Sentence {
-    constructor(sentence, timeToWaitBeforeDisappearing = 1, timeToWaitAfterDisappearing = 1, isBigBlather = false) {
+    constructor(sentence, timeToWaitBeforeDisappearing = 1.75, timeToWaitAfterDisappearing = 1.5, isBigBlather = false) {
         this.mySentence = sentence;
         this.myTimeToWaitBeforeDisappearing = timeToWaitBeforeDisappearing;
         this.myTimeToWaitAfterDisappearing = timeToWaitAfterDisappearing;
