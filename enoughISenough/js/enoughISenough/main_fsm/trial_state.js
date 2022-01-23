@@ -208,10 +208,6 @@ class TrialState extends PP.State {
         return evidenceSetupList;
     }
 
-    _secondVentSetup() {
-        return 1;
-    }
-
     _secondEvidenceSetupList() {
         let evidenceSetupList = [];
 

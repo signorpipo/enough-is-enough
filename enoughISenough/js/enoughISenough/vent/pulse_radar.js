@@ -2,7 +2,7 @@ class PulseRadar {
     constructor() {
         this._myPulseIntensity = 0.35;
 
-        this._myDownDuration = 2;
+        this._myDownDuration = 1.5;
         this._myPulseDuration = 0.35;
 
         this._myMinAngle = 45;

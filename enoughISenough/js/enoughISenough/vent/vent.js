@@ -26,7 +26,12 @@ class VentSetup {
 
         this.myRefDirection = null;
 
-        this.mySkipBreakWhenTimerBelow = 20;
+        this.mySkipBreakWhenTimerBelow = 15;
+        this.mySkipSmallBreakWhenTimerBelow = 7;
+        this.mySkipSmallBreakWhenBreakTimerBelow = 5;
+
+        this.myResetBreakWhenBreakTimerBelow = 10;
+        this.myResetBreakAmount = new RangeValue([10, 12]);
     }
 }
 
@@ -73,7 +78,7 @@ class Vent {
         this._myFSM.init("init");
 
         this._myDebugActive = true;
-        this._myDebugActiveBreak = false;
+        this._myDebugActiveBreak = true;
         this._myDebugActiveStats = true;
 
         this._myOncePerFrame = false;
@@ -102,7 +107,7 @@ class Vent {
         this._mySmallBreakDelayTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration));
         this._mySmallBreakCloneCooldown = this._myVentSetup.mySmallBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
 
-        this._myVentTimer = new PP.Timer(this._myVentSetup.myVentDuration);
+        this._myVentTimer = new PP.Timer(this._myVentSetup.myVentDuration - Global.myVentDuration);
         this._myClonesLeft = this._myVentSetup.myClonesToDismiss;
 
         this._myCloneDismissed = 0;
@@ -159,10 +164,12 @@ class Vent {
     }
 
     _checkBreak() {
-        let skipBreak = !this._myVentSetup.myIsEndless && this._myVentTimer.getTimer() <= this._myVentSetup.mySkipBreakWhenTimerBelow;
+        let skipBreak = !this._myVentSetup.myIsEndless && this._myVentTimer.getTimer() <= this._myVentSetup.mySkipBreakWhenTimerBelow.get(Global.myVentDuration);
+        let skipSmallBreak = !this._myVentSetup.myIsEndless && this._myVentTimer.getTimer() <= this._myVentSetup.mySkipSmallBreakWhenTimerBelow.get(Global.myVentDuration);
+        skipSmallBreak = skipSmallBreak || (!skipBreak && this._myBreakDelayTimer.getTimer() < this._myVentSetup.mySkipSmallBreakWhenBreakTimerBelow.get(Global.myVentDuration));
         if (!skipBreak && this._myBreakDelayTimer.isDone() && this._myBreakCloneCooldown <= 0) {
             this._myFSM.perform("startBreak");
-        } else if (!skipBreak && this._mySmallBreakDelayTimer.isDone() && this._mySmallBreakCloneCooldown <= 0) {
+        } else if (!skipSmallBreak && this._mySmallBreakDelayTimer.isDone() && this._mySmallBreakCloneCooldown <= 0) {
             this._myFSM.perform("startSmallBreak");
         } else {
             this._debugNextWave();
@@ -200,7 +207,7 @@ class Vent {
                 this._myOnVentCompletedCallback();
             }
         } else if (this._myBreakTimer.isDone()) {
-            let skipBreak = !this._myVentSetup.myIsEndless && this._myVentTimer.getTimer() <= this._myVentSetup.mySkipBreakWhenTimerBelow;
+            let skipBreak = !this._myVentSetup.myIsEndless && this._myVentTimer.getTimer() <= this._myVentSetup.mySkipBreakWhenTimerBelow.get(Global.myVentDuration);
             if (!skipBreak && this._myIsSmallBreak && this._myBreakDelayTimer.isDone() && this._myBreakCloneCooldown <= 0) {
                 this._myFSM.perform("startBreak");
             } else {
@@ -223,15 +230,12 @@ class Vent {
         this._mySmallBreakDelayTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration));
         this._mySmallBreakCloneCooldown = this._myVentSetup.mySmallBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
 
-        /*
-        if (this._myBreakDelayTimer.getTimer() < 10) {
-            this._myBreakDelayTimer = new PP.Timer(Math.pp_random(10, 15));
-            this._myBreakCloneCooldown = Math.pp_randomInt(10, 20);
+        if (this._myBreakDelayTimer.getTimer() < this._myVentSetup.myResetBreakWhenBreakTimerBelow.get(Global.myVentDuration)) {
+            this._myBreakDelayTimer = new PP.Timer(this._myVentSetup.myResetBreakAmount.get(Global.myVentDuration));
 
             this._mySmallBreakTimer = new PP.Timer(0, false);
             this._mySmallBreakCloneCooldown = 0;
         }
-        */
 
         this._debugNextWave();
     }
