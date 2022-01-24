@@ -2,9 +2,7 @@ class IAmEverywhereWaveSetup extends WaveOfWavesSetup {
     constructor() {
         super();
 
-        this.myMinAngleBetweenWaves = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
-        this.myMaxAngleBetweenWaves = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
-        this.myFirstWaveAngle = new RangeValue([0, 180]);
+        this.myAngleBetweenWaves = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
     }
 
     createWave(ventSetup, timeElapsed, refDirection = null) {
@@ -16,51 +14,36 @@ class IAmEverywhereWave extends WaveOfWaves {
     constructor(ventSetup, waveSetup, timeElapsed, refDirection) {
         super(ventSetup, waveSetup, timeElapsed, refDirection);
 
-        this._myWaveAngle = new RangeValue([0, 180]);
-        this._myMinAngleBetweenWaves = this._myWaveSetup.myMinAngleBetweenWaves.get(timeElapsed);
-        this._myMaxAngleBetweenWaves = this._myWaveSetup.myMaxAngleBetweenWaves.get(timeElapsed);
-
-        if (this._myMaxAngleBetweenWaves < this._myMinAngleBetweenWaves) {
-            this._myMaxAngleBetweenWaves = this._myMinAngleBetweenWaves + 10;
-        }
-
-        this._myPreviousAngle = 0;
-
+        this._myCurrentDirection = this._myWaveStartDirection.pp_clone();
         this._myFirst = true;
     }
 
     _createNextWaves() {
         let waves = [];
 
-        let angle = 0;
+        if (!this._myFirst) {
+            let angle = 0;
+            let attempts = 100;
 
-        let attempts = 100;
+            while (attempts > 0) {
+                angle = this._myWaveSetup.myAngleBetweenWaves.get(this._myGameTimeElapsed) * Math.pp_randomSign();
 
-        while (attempts > 0) {
-            if (this._myFirst) {
-                angle = this._myWaveSetup.myFirstWaveAngle.get(this._myGameTimeElapsed) * Math.pp_randomSign();
-            } else {
-                angle = this._myWaveAngle.get(this._myGameTimeElapsed) * Math.pp_randomSign();
-            }
-
-            if ((Math.pp_angleDistance(angle, this._myPreviousAngle) >= this._myMinAngleBetweenWaves &&
-                Math.pp_angleDistance(angle, this._myPreviousAngle) <= this._myMaxAngleBetweenWaves) || this._myFirst) {
-                let startDirection = this._myWaveStartDirection.vec3_rotateAxis(angle, [0, 1, 0]);
+                let startDirection = this._myCurrentDirection.vec3_rotateAxis(angle, [0, 1, 0]);
                 let angleValid = this._checkVentAngleValid(startDirection);
 
                 if (angleValid) {
                     attempts = 0;
                 }
+
+                attempts--;
             }
 
-            attempts--;
+            this._myCurrentDirection.vec3_rotateAxis(angle, [0, 1, 0], this._myCurrentDirection);
+        } else {
+            this._myFirst = false;
         }
 
-        this._myFirst = false;
-
-        this._myPreviousAngle = angle;
-
-        let direction = this._myWaveStartDirection.vec3_rotateAxis(angle, [0, 1, 0]);
+        let direction = this._myCurrentDirection.pp_clone();
         direction.vec3_normalize(direction);
 
         waves.push(this._getWaveSetup().createWave(this._myVentSetup, this._myGameTimeElapsed, direction));

@@ -4,6 +4,7 @@ class GiveUsAHugSetup extends IAmHereWaveSetup {
 
         this.myHugSize = new RangeValueOverTime([2, 2], [2, 2], 0, 0, true);
         this.myHugAngle = new RangeValueOverTime([40, 40], [40, 40], 0, 0, false);
+        this.mySameHugAngle = new RangeValueOverTime([-1, -1], [-1, -1], 0, 0, false); // >= 0 means true
         this.mySkipLastCloneHugging = false; //just in case u want to have a full 360 hug
 
         this.myEqualDistance = true;
@@ -25,6 +26,7 @@ class GiveUsAHug extends IAmHereWave {
 
         this._myHugSize = waveSetup.myHugSize.get(timeElapsed);
         this._myHugAngle = waveSetup.myHugAngle.get(timeElapsed);
+        this._mySameHugAngle = waveSetup.mySameHugAngle.get(timeElapsed) >= 0;
         this._myMinAngleBetweenClonesHugging = waveSetup.myMinAngleBetweenClonesHugging.get(timeElapsed);
 
         this._myTotalClonesCount *= this._myHugSize;
@@ -81,6 +83,10 @@ class GiveUsAHug extends IAmHereWave {
                 cloneSetup.myDirection.vec3_rotateAxis(angle, [0, 1, 0], cloneSetup.myDirection);
                 cloneSetups.push(cloneSetup);
             }
+        }
+
+        if (!this._mySameHugAngle) {
+            this._myHugAngle = waveSetup.myHugAngle.get(timeElapsed);
         }
 
         if (this._myWaveSetup.mySkipLastCloneHugging) {

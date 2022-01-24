@@ -29,7 +29,7 @@ class ManInTheMiddle extends WaveOfWaves {
 
         this._myFirst = true;
 
-        this._myCurrentDirection = this._myWaveStartDirection;
+        this._myCurrentDirection = this._myWaveStartDirection.pp_clone();
         this._myIsOpposite = false;
     }
 
@@ -54,8 +54,8 @@ class ManInTheMiddle extends WaveOfWaves {
 
         if (!this._myFirst) {
             if (!this._myIsOpposite) {
-                let attempts = 100;
                 let angle = 0;
+                let attempts = 100;
 
                 while (attempts > 0) {
                     angle = this._myWaveSetup.myAngleBetweenWaves.get(this._myGameTimeElapsed) * Math.pp_randomSign();
@@ -74,7 +74,7 @@ class ManInTheMiddle extends WaveOfWaves {
             this._myFirst = false;
         }
 
-        let direction = this._myCurrentDirection;
+        let direction = this._myCurrentDirection.pp_clone();;
         if (this._myIsOpposite) {
             direction = direction.vec3_negate();
         }

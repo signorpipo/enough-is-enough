@@ -11,6 +11,6 @@ class QueueForYouWaveSetup extends IAmHereWaveSetup {
 class QueueForYouWave extends IAmHereWave {
     constructor(ventSetup, waveSetup, timeElapsed, refDirection) {
         super(ventSetup, waveSetup, timeElapsed, refDirection);
-        this._myWaveAngle = 0;
+        this._mySpawnConeAngle = 0;
     }
 }

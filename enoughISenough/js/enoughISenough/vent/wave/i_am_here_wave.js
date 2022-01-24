@@ -1,7 +1,7 @@
 class IAmHereWaveSetup {
     constructor() {
         this.myClonesCount = new RangeValueOverTime([1, 1], [1, 1], 0, 0, true);
-        this.myWaveAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+        this.mySpawnConeAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
         this.myMinAngleBetweenClones = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
         this.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
         this.myTimeBetweenClones = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
@@ -29,7 +29,7 @@ class IAmHereWave {
 
         this._myTotalClonesCount = this._myWaveSetup.myClonesCount.get(timeElapsed);
         this._myClonesCount = this._myTotalClonesCount;
-        this._myWaveAngle = this._myWaveSetup.myWaveAngle.get(timeElapsed);
+        this._mySpawnConeAngle = this._myWaveSetup.mySpawnConeAngle.get(timeElapsed);
         this._myMinAngleBetweenClones = this._myWaveSetup.myMinAngleBetweenClones.get(timeElapsed);
         this._myPreviousAngle = 0;
 
@@ -120,9 +120,14 @@ class IAmHereWave {
             let angle = 0;
 
             while (attempts > 0) {
-                angle = Math.pp_random(0, this._myWaveAngle) * -this._myLastSign;
+                angle = Math.pp_random(0, this._mySpawnConeAngle) * -this._myLastSign;
                 if (Math.pp_angleDistance(angle, this._myPreviousAngle) >= this._myMinAngleBetweenClones || this._myFirst) {
-                    attempts = 0;
+                    let startDirection = this._myWaveStartDirection.vec3_rotateAxis(angle, [0, 1, 0]);
+                    let angleValid = this._checkVentAngleValid(startDirection);
+
+                    if (angleValid) {
+                        attempts = 0;
+                    }
                 }
                 attempts--;
             }
