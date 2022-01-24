@@ -15,6 +15,10 @@ class IAmHereWaveSetup {
     createWave(ventSetup, timeElapsed, refDirection = null) {
         return new IAmHereWave(ventSetup, this, timeElapsed, refDirection);
     }
+
+    getAverageClonesCount(timeElapsed) {
+        return this.myClonesCount.getAverage(timeElapsed);
+    }
 }
 
 class IAmHereWave {
@@ -23,7 +27,8 @@ class IAmHereWave {
         this._myWaveSetup = waveSetup;
         this._myVentSetup = ventSetup;
 
-        this._myClonesCount = this._myWaveSetup.myClonesCount.get(timeElapsed);
+        this._myTotalClonesCount = this._myWaveSetup.myClonesCount.get(timeElapsed);
+        this._myClonesCount = this._myTotalClonesCount;
         this._myWaveAngle = this._myWaveSetup.myWaveAngle.get(timeElapsed);
         this._myMinAngleBetweenClones = this._myWaveSetup.myMinAngleBetweenClones.get(timeElapsed);
         this._myPreviousAngle = 0;
@@ -88,6 +93,10 @@ class IAmHereWave {
         }
 
         return cloneSetups;
+    }
+
+    getAverageClonesCount() {
+        return this._myTotalClonesCount;
     }
 
     isDone() {

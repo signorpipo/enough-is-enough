@@ -323,6 +323,8 @@ Tipi di waves:
 	- Specificare l'angolo fra cloni minimo e massimo e nel tempo
 	- Specificare il tempo fra i cloni e nel tempo
 	- Il singolo clone può essere anche una I am here wave, e quindi un gruppetto di cloni
+?
+	- wave che parte dal centro poi si allarga facendo uno a destra e uno a sinistra e poi ritorna al centro
 	
 First Trial:
 	- I am here

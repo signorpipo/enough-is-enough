@@ -9,6 +9,16 @@ class WaveOfWavesSetup {
 
         this.myWavesSetup = []; // every item is an array, 0 is a wave setup, 1 is the chance, 2 is the debug name
     }
+
+    getAverageClonesCount(timeElapsed) {
+        let average = 0;
+        for (let waveSetup of this._myWaveSetup.myWavesSetup) {
+            average += waveSetup[0].getAverageClonesCount(timeElapsed);
+        }
+        average = average / this._myWaveSetup.myWavesSetup.length;
+
+        return Math.round(this.myWavesCount.getAverage(timeElapsed) * average);
+    }
 }
 
 class WaveOfWaves {
@@ -21,7 +31,8 @@ class WaveOfWaves {
             waveSetup.myWavesSetup.push([new IAmHereWaveSetup(), 1, "I_Am_Here"]);
         }
 
-        this._myWavesCount = this._myWaveSetup.myWavesCount.get(timeElapsed);
+        this._myTotalWavesCount = this._myWaveSetup.myWavesCount.get(timeElapsed);
+        this._myWavesCount = this._myTotalWavesCount;
         this._mySameTimeBetweenWaves = waveSetup.mySameTimeBetweenWaves.get(timeElapsed) >= 0;
 
         this._myTimeBetweenWaves = this._myWaveSetup.myTimeBetweenWaves.get(this._myGameTimeElapsed);
@@ -72,6 +83,16 @@ class WaveOfWaves {
 
     isDone() {
         return this._myDoneDelayTimer.isDone();
+    }
+
+    getAverageClonesCount() {
+        let average = 0;
+        for (let waveSetup of this._myWaveSetup.myWavesSetup) {
+            average += waveSetup[0].getAverageClonesCount(this._myGameTimeElapsed);
+        }
+        average = average / this._myWaveSetup.myWavesSetup.length;
+
+        return Math.round(this._myTotalWavesCount * average);
     }
 
     _createNextWaves() {

@@ -351,14 +351,16 @@ class Vent {
     _debugNextWave() {
         if (this._myDebugActive) {
             console.log("Next Wave -", this._myCurrentWaveID);
+
+            if (this._myDebugActiveStats) {
+                console.log("   Wave Clones -", this._myCurrentWave.getAverageClonesCount());
+                console.log("   Duration -", Global.myVentDuration.toFixed(3));
+                console.log("   Dismissed -", this._myCloneDismissed);
+            }
+
             if (this._myDebugActiveBreak) {
                 console.log("   Break -", this._myBreakDelayTimer.getTimer().toFixed(3), " -", this._myBreakCloneCooldown);
                 console.log("   Small Break -", this._mySmallBreakDelayTimer.getTimer().toFixed(3), " -", this._mySmallBreakCloneCooldown);
-            }
-
-            if (this._myDebugActiveStats) {
-                console.log("   Duration -", Global.myVentDuration.toFixed(3));
-                console.log("   Dismissed -", this._myCloneDismissed);
             }
         }
     }

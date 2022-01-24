@@ -23,6 +23,10 @@ class ValueOverTime {
 
         return lerpValue;
     }
+
+    getAverage(timeElapsed) {
+        return this.get(timeElapsed);
+    }
 }
 
 class RangeValueOverTime {
@@ -56,11 +60,19 @@ class RangeValueOverTime {
 
         return value >= min && value <= max;
     }
-}
 
-Number.prototype.get = function () {
-    return this.valueOf();
-};
+    getAverage(timeElapsed) {
+        let startValue = this._myRangeStartValue.get(timeElapsed);
+        let endValue = this._myRangeEndValue.get(timeElapsed);
+
+        let average = (startValue + endValue) / 2;
+        if (this._myIsInt) {
+            average = Math.round(average);
+        }
+
+        return average;
+    }
+}
 
 class RangeValue {
     constructor(range, isInt = false) {
@@ -86,8 +98,21 @@ class RangeValue {
 
         return value >= min && value <= max;
     }
+
+    getAverage(timeElapsed) {
+        let average = (this._myRange[0] + this._myRange[1]) / 2;
+        if (this._myIsInt) {
+            average = Math.round(average);
+        }
+
+        return average;
+    }
 }
 
 Number.prototype.get = function () {
+    return this.valueOf();
+};
+
+Number.prototype.average = function () {
     return this.valueOf();
 };

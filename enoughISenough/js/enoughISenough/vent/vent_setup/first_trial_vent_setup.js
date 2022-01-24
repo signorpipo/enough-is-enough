@@ -33,7 +33,7 @@ TrialState.prototype._firstVentSetup = function () {
     {
         let wave = new IAmHereWaveSetup();
 
-        wave.myClonesCount = new RangeValueOverTime([1, 1], [1, 3], 30, 90, true);
+        wave.myClonesCount = new RangeValueOverTime([1, 1], [1, 3], 30, 85, true);
         wave.myWaveStartAngle = new RangeValueOverTime([0, 30], [0, 50], 30, 90, false);
         wave.myWaveAngle = new RangeValue([20, 40]);
         wave.myMinAngleBetweenClones = 10;
@@ -53,7 +53,7 @@ TrialState.prototype._firstVentSetup = function () {
     {
         let wave = new IAmHereWaveSetup();
 
-        wave.myClonesCount = new RangeValueOverTime([1, 1], [1, 3], 30, 90, true);
+        wave.myClonesCount = new RangeValueOverTime([1, 1], [1, 3], 30, 85, true);
         wave.myWaveAngle = new RangeValue([20, 40]);
         wave.myMinAngleBetweenClones = 10;
         wave.myWaveStartAngle = new RangeValueOverTime([60, 130], [60, 180], 30, 90, false);
