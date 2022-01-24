@@ -29,6 +29,14 @@ WL.registerComponent("enough-IS-enough-gateway", {
         this._myGameObjectPoolSize = 40;
     },
     start: function () {
+        let version = PP.SaveUtils.loadNumber("game_version", 0);
+        let currentVersion = 1;
+        if (version < currentVersion) {
+            PP.SaveUtils.save("game_version", currentVersion);
+            PP.SaveUtils.save("trial_started_once", false);
+            PP.SaveUtils.save("trial_completed", false);
+            PP.SaveUtils.save("trial_level", 1);
+        }
     },
     update: function (dt) {
         if (this._myFirstUpdate) {
