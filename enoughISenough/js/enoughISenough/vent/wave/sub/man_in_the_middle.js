@@ -2,7 +2,12 @@ class ManInTheMiddleSetup extends WaveOfWavesSetup {
     constructor() {
         super();
 
+        this.myAngleBetweenWaves = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
         this.myTimeBeforeOpposite = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+        this.mySameOppositeTimeBetweenWaves = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
+        this.myOppositeTimeAsTimeBetweenWaves = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
+
+        this.mySameTimeBetweenWaves = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
     }
 
     createWave(ventSetup, timeElapsed, refDirection = null) {
@@ -15,9 +20,12 @@ class ManInTheMiddle extends WaveOfWaves {
         super(ventSetup, waveSetup, timeElapsed, refDirection);
 
         this._myWavesCount *= 2;
-        this._myWaveAngle = new RangeValue([0, 80]);
-
+        this._myOppositeTimeAsTimeBetweenWaves = waveSetup.myOppositeTimeAsTimeBetweenWaves.get(timeElapsed) >= 0;
+        this._mySameOppositeTimeBetweenWaves = waveSetup.mySameOppositeTimeBetweenWaves.get(timeElapsed) >= 0;
         this._myTimeBeforeOpposite = this._myWaveSetup.myTimeBeforeOpposite.get(this._myGameTimeElapsed);
+        if (this._myOppositeTimeAsTimeBetweenWaves) {
+            this._myTimeBeforeOpposite = this._myTimeBetweenWaves;
+        }
 
         this._myFirst = true;
 
@@ -30,8 +38,12 @@ class ManInTheMiddle extends WaveOfWaves {
             return super._getSpawnTimer();
         }
 
-        if (!this._mySameTimeBetweenWaves) {
-            this._myTimeBeforeOpposite = this._myWaveSetup.myTimeBeforeOpposite.get(this._myGameTimeElapsed);
+        if (!this._mySameOppositeTimeBetweenWaves) {
+            if (this._myOppositeTimeAsTimeBetweenWaves) {
+                this._myTimeBeforeOpposite = this._myTimeBetweenWaves;
+            } else {
+                this._myTimeBeforeOpposite = this._myWaveSetup.myTimeBeforeOpposite.get(this._myGameTimeElapsed);
+            }
         }
 
         return this._myTimeBeforeOpposite;
@@ -46,7 +58,7 @@ class ManInTheMiddle extends WaveOfWaves {
                 let angle = 0;
 
                 while (attempts > 0) {
-                    angle = this._myWaveAngle.get(this._myGameTimeElapsed) * Math.pp_randomSign();
+                    angle = this._myWaveSetup.myAngleBetweenWaves.get(this._myGameTimeElapsed) * Math.pp_randomSign();
                     let direction = this._myCurrentDirection.vec3_rotateAxis(angle, [0, 1, 0]);
                     if (this._checkVentAngleValid(direction)) {
                         attempts = 0;
