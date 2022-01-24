@@ -359,8 +359,9 @@
                 {
                     "type": "enable-debug-shortcuts",
                     "enable-debug-shortcuts": {
-                        "_myShortcutsEnabled": true
-                    }
+                        "_myShortcutsEnabled": false
+                    },
+                    "active": true
                 },
                 {
                     "type": "adjust-materials",
@@ -402,7 +403,7 @@
                         "_myShowOnStart": false,
                         "_myEnableChangeVariableShortcut": true
                     },
-                    "active": true
+                    "active": false
                 },
                 {
                     "type": "pp-console-vr",
@@ -415,7 +416,7 @@
                         "_myPulseOnNewMessage": "never",
                         "_myShowVisibilityButton": false
                     },
-                    "active": true
+                    "active": false
                 },
                 {
                     "type": "pp-set-hand-transform",
@@ -17638,7 +17639,7 @@
             ],
             "transformation": [
                 -0.136,
-                -1.1889443207735441e-8,
+                -1.188944320773544e-8,
                 3.850477270361807e-8,
                 0.0,
                 -3.8504133215155898e-8,
