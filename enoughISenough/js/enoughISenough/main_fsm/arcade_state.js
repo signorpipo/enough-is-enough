@@ -128,7 +128,7 @@ class ArcadeState extends PP.State {
             let wave = new IAmHereWaveSetup();
 
             wave.myClonesCount = new RangeValueOverTime([1, 3], [1, 4], 0, 30, true);
-            wave.myWaveAngle = new RangeValue([20, 40]);
+            wave.mySpawnConeAngle = new RangeValue([20, 40]);
             wave.myMinAngleBetweenClones = 10;
             wave.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
             wave.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
@@ -160,7 +160,7 @@ class ArcadeState extends PP.State {
 
             let iAmHereWave = new IAmHereWaveSetup();
             iAmHereWave.myClonesCount = new RangeValueOverTime([1, 3], [1, 4], 0, 30, true);
-            iAmHereWave.myWaveAngle = new RangeValue([20, 40]);
+            iAmHereWave.mySpawnConeAngle = new RangeValue([20, 40]);
             iAmHereWave.myMinAngleBetweenClones = 10;
             iAmHereWave.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
             iAmHereWave.myFirstCloneInTheMiddle = true;
@@ -245,7 +245,7 @@ class ArcadeState extends PP.State {
             let wave = new GiveUsAHugSetup();
 
             wave.myClonesCount = new RangeValueOverTime([1, 3], [1, 3], 0, 30, true);
-            wave.myWaveAngle = new RangeValue([20, 40]);
+            wave.mySpawnConeAngle = new RangeValue([20, 40]);
             wave.myMinAngleBetweenClones = 10;
             wave.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
             wave.myTimeBetweenClones = new RangeValueOverTime([1, 2], [1, 1.5], 0, 0, false);
