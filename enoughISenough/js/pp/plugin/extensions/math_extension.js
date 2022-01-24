@@ -119,12 +119,18 @@ Math.pp_angleDistanceSigned = function (first, second) {
     return Math.pp_angleDistanceSignedDegrees(first, second);
 };
 
-
 Math.pp_angleDistanceSignedDegrees = function (first, second) {
     let clampedFirst = Math.pp_angleClampDegrees(first, true);
     let clampedSecond = Math.pp_angleClampDegrees(second, true);
 
-    return clampedSecond - clampedFirst;
+    let distance = clampedSecond - clampedFirst;
+    if (clampedSecond - clampedFirst > 180) {
+        distance = (clampedSecond - clampedFirst) - 360;
+    } else if (clampedSecond - clampedFirst < -180) {
+        distance = (clampedSecond - clampedFirst) + 360;
+    }
+
+    return distance;
 };
 
 Math.pp_angleDistanceSignedRadians = function (first, second) {
