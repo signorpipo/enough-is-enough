@@ -118,6 +118,8 @@ WL.registerComponent("enough-IS-enough-gateway", {
         PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Explosion Particles Amount", 2, 10));
 
         PP.CAUtils.setDummyServer(new EIECADummyServer());
+        PP.CAUtils.setUseDummyServerOnSDKMissing(true);
+        PP.CAUtils.setUseDummyServerOnError(true);
 
         this.enoughISenough.start();
     },
