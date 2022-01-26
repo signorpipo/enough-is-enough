@@ -1,7 +1,7 @@
 PP.GamepadManager = class GamepadManager {
     constructor() {
-        this._myLeftGamepad = new PP.Gamepad(PP.GamepadHandedness.LEFT);
-        this._myRightGamepad = new PP.Gamepad(PP.GamepadHandedness.RIGHT);
+        this._myLeftGamepad = new PP.Gamepad(PP.Handedness.LEFT);
+        this._myRightGamepad = new PP.Gamepad(PP.Handedness.RIGHT);
     }
 
     start() {
