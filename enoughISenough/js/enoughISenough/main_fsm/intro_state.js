@@ -47,6 +47,9 @@ class IntroState extends PP.State {
 
     waitSession(dt, fsm) {
         if (WL.xrSession) {
+            let currentVersion = PP.SaveUtils.loadNumber("game_version", 0);
+            console.log("Game Version:", currentVersion);
+
             fsm.perform("end");
         }
     }

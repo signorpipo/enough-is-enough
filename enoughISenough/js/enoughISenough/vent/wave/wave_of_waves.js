@@ -4,6 +4,7 @@ class WaveOfWavesSetup {
         this.myTimeBetweenWaves = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
         this.mySameTimeBetweenWaves = new RangeValueOverTime([-1, -1], [-1, -1], 0, 0, false); // >= 0 means true
         this.myDoneDelay = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+        this.myTimeBeforeStart = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
 
         this.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
 
@@ -36,7 +37,7 @@ class WaveOfWaves {
         this._mySameTimeBetweenWaves = waveSetup.mySameTimeBetweenWaves.get(timeElapsed) >= 0;
 
         this._myTimeBetweenWaves = this._myWaveSetup.myTimeBetweenWaves.get(this._myGameTimeElapsed);
-        this._mySpawnTimer = new PP.Timer(0);
+        this._mySpawnTimer = new PP.Timer(this._myWaveSetup.myTimeBeforeStart.get(this._myGameTimeElapsed));
         this._myDoneDelayTimer = new PP.Timer(this._myWaveSetup.myDoneDelay.get(this._myGameTimeElapsed), false);
 
         this._computeWaveStartDirection(refDirection);
@@ -56,8 +57,10 @@ class WaveOfWaves {
         if (this._mySpawnTimer.isRunning()) {
             this._mySpawnTimer.update(dt);
             if (this._mySpawnTimer.isDone()) {
-                this._myCurrentWaves = this._createNextWaves();
-                this._myWavesCount -= this._myCurrentWaves.length;
+                if (this._myWavesCount > 0) {
+                    this._myCurrentWaves = this._createNextWaves();
+                    this._myWavesCount -= this._myCurrentWaves.length;
+                }
             }
         }
 
@@ -70,12 +73,12 @@ class WaveOfWaves {
 
         if (this._myCurrentWaves.length == 0 && this._myWavesCount > 0 && !this._mySpawnTimer.isRunning()) {
             this._mySpawnTimer.start(this._getSpawnTimer());
+        } else if (!this._myDoneDelayTimer.isRunning() && this._myWavesCount <= 0 && this._myCurrentWaves.length == 0) {
+            this._myDoneDelayTimer.start();
         }
 
         if (this._myDoneDelayTimer.isRunning()) {
             this._myDoneDelayTimer.update(dt);
-        } else if (this._myWavesCount <= 0 && this._myCurrentWaves.length == 0) {
-            this._myDoneDelayTimer.start();
         }
 
         return cloneSetups;

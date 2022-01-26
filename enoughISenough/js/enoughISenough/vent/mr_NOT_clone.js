@@ -16,6 +16,8 @@ class CloneRotationSetup {
         this.mySpinStartTime = -1;
 
         this.myTiltAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+        this.myTiltChance = new RangeValueOverTime([2, 2], [2, 2], 0, 0, true);
+        this.myTiltStartTime = -1;
 
         /* 
          this.mySpinSpeed = new RangeValue([4, 6], false);
@@ -82,8 +84,12 @@ class MrNOTClone {
 
         this._myAppearAudioDelay = new PP.Timer(0.2);
 
-        let tiltAngle = rotationSetup.myTiltAngle.get(Global.myVentDuration) * Math.pp_randomSign();
-        this._myObject.pp_rotateObject([0, 0, tiltAngle]);
+        if (rotationSetup.myTiltStartTime >= 0 && Global.myVentDuration >= rotationSetup.myTiltStartTime) {
+            if (rotationSetup.myTiltChance.get(Global.myVentDuration) == 1) {
+                let tiltAngle = rotationSetup.myTiltAngle.get(Global.myVentDuration) * Math.pp_randomSign();
+                this._myObject.pp_rotateObject([0, 0, tiltAngle]);
+            }
+        }
 
         this._mySpin = false;
         if (rotationSetup.mySpinStartTime >= 0 && Global.myVentDuration >= rotationSetup.mySpinStartTime) {

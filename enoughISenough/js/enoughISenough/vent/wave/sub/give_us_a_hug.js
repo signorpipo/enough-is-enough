@@ -86,7 +86,7 @@ class GiveUsAHug extends IAmHereWave {
         }
 
         if (!this._mySameHugAngle) {
-            this._myHugAngle = waveSetup.myHugAngle.get(timeElapsed);
+            this._myHugAngle = this._myWaveSetup.myHugAngle.get(this._myGameTimeElapsed);
         }
 
         if (this._myWaveSetup.mySkipLastCloneHugging) {

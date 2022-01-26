@@ -74,7 +74,7 @@ class ManInTheMiddle extends WaveOfWaves {
             this._myFirst = false;
         }
 
-        let direction = this._myCurrentDirection.pp_clone();;
+        let direction = this._myCurrentDirection.pp_clone();
         if (this._myIsOpposite) {
             direction = direction.vec3_negate();
         }

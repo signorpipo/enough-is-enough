@@ -8,6 +8,7 @@ class IAmHereWaveSetup {
         this.mySameTimeBetweenClones = new RangeValueOverTime([-1, -1], [-1, -1], 0, 0, false); // >= 0 means true
         this.myFirstCloneInTheMiddle = true;
         this.myDoneDelay = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+        this.myTimeBeforeStart = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
 
         this.myRefDirection = null;
     }
@@ -38,7 +39,7 @@ class IAmHereWave {
         this._computeWaveStartDirection(refDirection);
 
         this._myTimeBetweenClones = this._myWaveSetup.myTimeBetweenClones.get(this._myGameTimeElapsed);
-        this._mySpawnTimer = new PP.Timer(0);
+        this._mySpawnTimer = new PP.Timer(this._myWaveSetup.myTimeBeforeStart.get(this._myGameTimeElapsed));
         this._myDoneDelayTimer = new PP.Timer(this._myWaveSetup.myDoneDelay.get(this._myGameTimeElapsed), false);
 
         this._myFirst = true;
@@ -56,13 +57,16 @@ class IAmHereWave {
         if (this._mySpawnTimer.isRunning()) {
             this._mySpawnTimer.update(dt);
             if (this._mySpawnTimer.isDone()) {
-                cloneSetups = this._createCloneSetups();
-                this._myClonesCount -= cloneSetups.length;
 
-                cloneSetups.pp_removeAll(element => element == null);
+                if (this._myClonesCount > 0) {
+                    cloneSetups = this._createCloneSetups();
+                    this._myClonesCount -= cloneSetups.length;
 
-                if (cloneSetups.length > 0) {
-                    this._myOneCloneSetupValid = true;
+                    cloneSetups.pp_removeAll(element => element == null);
+
+                    if (cloneSetups.length > 0) {
+                        this._myOneCloneSetupValid = true;
+                    }
                 }
 
                 if (this._myClonesCount <= 0) {
