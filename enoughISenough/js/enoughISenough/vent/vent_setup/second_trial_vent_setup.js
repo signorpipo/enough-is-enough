@@ -13,6 +13,10 @@ TrialState.prototype._secondVentSetup = function () {
     ventSetup.mySmallBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([40, 50], [8, 12], 10, 45, false);
     ventSetup.mySmallBreakSetup.myBreakCloneCooldown = 3;
 
+    ventSetup.myCloneRotationSetup.myTiltAngle = new RangeValueOverTime([0, 10], [0, 15], 40, 80, false);
+    ventSetup.myCloneRotationSetup.myTiltChance = new RangeValueOverTime([1, 6], [1, 3], 40, 80, true);
+    ventSetup.myCloneRotationSetup.myTiltStartTime = 40;
+
     {
         let wave = new IAmHereWaveSetup();
 
