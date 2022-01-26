@@ -126,7 +126,7 @@ class TrialState extends PP.State {
     _secondTalkSentences() {
         let sentences = [];
 
-        sentences.push(new Sentence("After our last time together", 1.5, 0));
+        sentences.push(new Sentence("After our last time together", 1, 0));
         sentences.push(new Sentence("I see you have tried many things"));
         sentences.push(new Sentence("Were they worth your time?", 2.5, 1.5));
 
@@ -144,7 +144,7 @@ class TrialState extends PP.State {
     _thirdTalkSentences() {
         let sentences = [];
 
-        sentences.push(new Sentence("I've watched you jump from one thing to another", 1.5, 0));
+        sentences.push(new Sentence("I've watched you jump from one thing to another", 1, 0));
         sentences.push(new Sentence("hoping to find what's yours"));
         sentences.push(new Sentence("Don't you realize how meaningless this is?", 2.5, 1.5));
 
@@ -162,7 +162,7 @@ class TrialState extends PP.State {
     _mrNOTTalkSentences() {
         let sentences = [];
 
-        sentences.push(new Sentence("enough is enough", 1, 0));
+        sentences.push(new Sentence("enough is enough", 0.15, 0));
 
         return sentences;
     }
@@ -179,7 +179,7 @@ class TrialState extends PP.State {
         let sentences = [];
 
         sentences.push(new Sentence("You may think you are stronger now"));
-        sentences.push(new Sentence("You may feel free from others' judgment", 1.5, 0));
+        sentences.push(new Sentence("You may feel free from others' judgment", 2, 0));
         sentences.push(new Sentence("and from your own"));
         sentences.push(new Sentence("You may fool yourself into believing this..."));
         sentences.push(new Sentence("But after all has been said and done", 0.75, 0));
