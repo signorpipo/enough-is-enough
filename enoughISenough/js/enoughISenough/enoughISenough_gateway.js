@@ -37,6 +37,8 @@ WL.registerComponent("enough-IS-enough-gateway", {
             PP.SaveUtils.save("trial_completed", false);
             PP.SaveUtils.save("trial_level", 1);
         }
+
+        PP.SaveUtils.save("trial_level", 3);
     },
     update: function (dt) {
         if (this._myFirstUpdate) {

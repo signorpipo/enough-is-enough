@@ -22,7 +22,7 @@ class TrialState extends PP.State {
 
         this._myFSM.addTransition("init", "first_talk", "start_1");
         this._myFSM.addTransition("init", "second_talk", "start_2");
-        this._myFSM.addTransition("init", "first_talk", "start_3");
+        this._myFSM.addTransition("init", "third_talk", "start_3");
 
         this._myFSM.addTransition("first_talk", "first_vent", "end");
         this._myFSM.addTransition("first_vent", "first_defeat", "defeat");
@@ -34,7 +34,7 @@ class TrialState extends PP.State {
 
         this._myFSM.addTransition("third_talk", "third_vent", "end");
         this._myFSM.addTransition("third_vent", "third_defeat", "defeat");
-        this._myFSM.addTransition("third_vent", "MrNOT_talk", "end");
+        this._myFSM.addTransition("third_vent", "MrNOT_defeat", "end");
 
         this._myFSM.addTransition("MrNOT_talk", "MrNOT_vent", "end");
         this._myFSM.addTransition("MrNOT_vent", "MrNOT_defeat", "defeat");
@@ -44,12 +44,12 @@ class TrialState extends PP.State {
 
         this._myFSM.addTransition("first_defeat", "done", "end", this._backToMenu.bind(this, 1));
         this._myFSM.addTransition("second_defeat", "done", "end", this._backToMenu.bind(this, 2));
-        this._myFSM.addTransition("third_defeat", "done", "end", this._backToMenu.bind(this, 1));
-        this._myFSM.addTransition("MrNOT_defeat", "done", "end", this._backToMenu.bind(this, 1));
+        this._myFSM.addTransition("third_defeat", "done", "end", this._backToMenu.bind(this, 3));
+        this._myFSM.addTransition("MrNOT_defeat", "done", "end", this._backToMenu.bind(this, 3));
 
         this._myFSM.addTransition("done", "first_talk", "start_1");
         this._myFSM.addTransition("done", "second_talk", "start_2");
-        this._myFSM.addTransition("done", "first_talk", "start_3");
+        this._myFSM.addTransition("done", "third_talk", "start_3");
 
         let states = this._myFSM.getStates();
         for (let state of states) {
@@ -154,7 +154,7 @@ class TrialState extends PP.State {
     _thirdDefeatSentences() {
         let sentences = [];
 
-        sentences.push(new Sentence("gg u made it", 2.5, 2));
+        sentences.push(new Sentence("There is no purpose left for you", 2.5, 2));
 
         return sentences;
     }
@@ -170,7 +170,7 @@ class TrialState extends PP.State {
     _mrNOTDefeatSentences() {
         let sentences = [];
 
-        sentences.push(new Sentence("", 2, 1.5));
+        sentences.push(new Sentence("gg u made it", 2.5, 2));
 
         return sentences;
     }
