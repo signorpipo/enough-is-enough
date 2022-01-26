@@ -57,8 +57,10 @@ class WaveOfWaves {
         if (this._mySpawnTimer.isRunning()) {
             this._mySpawnTimer.update(dt);
             if (this._mySpawnTimer.isDone()) {
-                this._myCurrentWaves = this._createNextWaves();
-                this._myWavesCount -= this._myCurrentWaves.length;
+                if (this._myWavesCount > 0) {
+                    this._myCurrentWaves = this._createNextWaves();
+                    this._myWavesCount -= this._myCurrentWaves.length;
+                }
             }
         }
 
@@ -71,12 +73,12 @@ class WaveOfWaves {
 
         if (this._myCurrentWaves.length == 0 && this._myWavesCount > 0 && !this._mySpawnTimer.isRunning()) {
             this._mySpawnTimer.start(this._getSpawnTimer());
+        } else if (!this._myDoneDelayTimer.isRunning() && this._myWavesCount <= 0 && this._myCurrentWaves.length == 0) {
+            this._myDoneDelayTimer.start();
         }
 
         if (this._myDoneDelayTimer.isRunning()) {
             this._myDoneDelayTimer.update(dt);
-        } else if (this._myWavesCount <= 0 && this._myCurrentWaves.length == 0) {
-            this._myDoneDelayTimer.start();
         }
 
         return cloneSetups;

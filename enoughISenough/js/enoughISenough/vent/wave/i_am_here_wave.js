@@ -57,13 +57,16 @@ class IAmHereWave {
         if (this._mySpawnTimer.isRunning()) {
             this._mySpawnTimer.update(dt);
             if (this._mySpawnTimer.isDone()) {
-                cloneSetups = this._createCloneSetups();
-                this._myClonesCount -= cloneSetups.length;
 
-                cloneSetups.pp_removeAll(element => element == null);
+                if (this._myClonesCount > 0) {
+                    cloneSetups = this._createCloneSetups();
+                    this._myClonesCount -= cloneSetups.length;
 
-                if (cloneSetups.length > 0) {
-                    this._myOneCloneSetupValid = true;
+                    cloneSetups.pp_removeAll(element => element == null);
+
+                    if (cloneSetups.length > 0) {
+                        this._myOneCloneSetupValid = true;
+                    }
                 }
 
                 if (this._myClonesCount <= 0) {
