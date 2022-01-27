@@ -2,12 +2,6 @@
 //you must also add var in front of the enums (like var Handedness = {}) since now they are no longer child of PP
 //and also remove the class assignment to the same name (like ButtonInfo = class ButtonInfo{}) since now they can be global
 
-PP.GamepadHandedness =
-{
-    LEFT: "left",
-    RIGHT: "right"
-};
-
 PP.ButtonType = {
     SELECT: 0,  //Trigger
     SQUEEZE: 1, //Grip
@@ -176,7 +170,7 @@ PP.PulseInfo = class PulseInfo {
 PP.Gamepad = class Gamepad {
 
     /**
-     * @param {PP.GamepadHandedness} handedness specifies which controller this gamepad will represent, left or right
+     * @param {PP.Handedness} handedness specifies which controller this gamepad will represent, left or right
      */
     constructor(handedness) {
         this._myHandedness = handedness;
@@ -218,7 +212,7 @@ PP.Gamepad = class Gamepad {
     }
 
     /**
-     * @returns {PP.GamepadHandedness}
+     * @returns {PP.Handedness}
      */
     getHandedness() {
         return this._myHandedness;

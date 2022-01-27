@@ -195,6 +195,8 @@ v le teste si storgono piu in la nel tempo? a parte in arcade, nella trial, la p
 	- il boss appare ma con l'animazione del talk state? forse piu figo che appare di colpo ma vedere se funziona bene
 	- quando c'è il boss ai vent angle normali si aggiungono il vent angle del boss che è costante e calcolato a runtime (dato che l'angolo si deve ingrandire in base al tempo attuale)
 	- mettere bool per dire se la next wave è valida quanto c'è mr NOT
+	- il time elapsed passato alle vent dovrebbe essere diverso dalla vent duration e non aumentare quando c'è il boss? per evitare l'aumento di difficoltà subito dopo il boss, ma forse non importa, 
+	  anzi ci sta come se fosse diventato il livello ulteriore dopo il boss
 v ogni tanto un clone spinna di brutto sulla z cosi per fare piu paura?
 x qualche oggetto potrebbe avere un po' di alfa come la spada di halo o il vetro di kh
 x evidence bussola che se tenuto in mano mostra da dove arriva mr not
