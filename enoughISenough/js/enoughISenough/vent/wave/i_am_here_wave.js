@@ -60,7 +60,10 @@ class IAmHereWave {
 
                 if (this._myClonesCount > 0) {
                     cloneSetups = this._createCloneSetups();
-                    this._myClonesCount -= cloneSetups.length;
+
+                    if (cloneSetups.length > 0) {
+                        this._myClonesCount -= 1;
+                    }
 
                     cloneSetups.pp_removeAll(element => element == null);
 
