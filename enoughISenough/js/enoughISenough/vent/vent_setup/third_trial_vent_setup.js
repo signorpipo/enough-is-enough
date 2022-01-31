@@ -217,7 +217,7 @@ TrialState.prototype._thirdVentSetup = function () {
         wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 3], 10, 70, false);
         wave.myFirstCloneInTheMiddle = true;
 
-        wave.myHugSize = new RangeValueOverTime([2, 2], [2, 3], 40, 50, true);
+        wave.myHugSize = new RangeValueOverTime([2, 2], [2, 2], 40, 50, true);
         wave.myHugAngle = new RangeValueOverTime([25, 35], [30, 50], 40, 60, false);
 
         let nextWavesSetup = new NextWavesSetup();
