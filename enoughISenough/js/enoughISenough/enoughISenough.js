@@ -46,7 +46,7 @@ class enoughISenough {
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/ring_rise.wav");
-            audioSetup.myVolume = 0.6;
+            audioSetup.myVolume = 0.5;
             audioSetup.myRate = 0.8;
             manager.addAudioSetup(SfxID.RING_RISE, audioSetup);
         }
@@ -128,7 +128,14 @@ class enoughISenough {
             manager.addAudioSetup(SfxID.CLONE_APPEAR, audioSetup);
         }
 
-        for (let i = 0; i < SfxID.CLONE_APPEAR; i++) {
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_fast_appear.wav");
+            audioSetup.myVolume = 0.8;
+            audioSetup.myReferenceDistance = 1000000;
+            manager.addAudioSetup(SfxID.MR_NOT_FAST_APPEAR, audioSetup);
+        }
+
+        for (let i = 0; i < SfxID.MR_NOT_FAST_APPEAR; i++) {
             manager.createAudioPlayer(i);
         }
     }
@@ -149,4 +156,5 @@ var SfxID = {
     EVIDENCE_APPEAR: 11,
     EVIDENCE_DISAPPEAR: 12,
     CLONE_APPEAR: 13,
+    MR_NOT_FAST_APPEAR: 14
 };

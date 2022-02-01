@@ -162,7 +162,7 @@ class TrialState extends PP.State {
     _mrNOTTalkSentences() {
         let sentences = [];
 
-        sentences.push(new Sentence("enough is enough", 0.15, 0));
+        sentences.push(new Sentence("enough IS enough", 0.1, 0));
 
         return sentences;
     }
