@@ -166,3 +166,37 @@ Math.pp_angleClampDegrees = function (angle, usePositiveRange = false) {
 Math.pp_angleClampRadians = function (angle, usePositiveRange = false) {
     return Math.pp_toRadians(Math.pp_angleClampDegrees(Math.pp_toDegrees(angle), usePositiveRange));
 };
+
+//The range goes from start to end by going toward the positive direction (if useShortestAngle is false)
+//[20,300] is a 280 degrees range, [300, 20] is an 80 degrees range, [-150,-170] = [210, 190] is a 240 degrees range, [0, -10] = [0, 350] is a 350 degrees range
+Math.pp_isInsideAngleRange = function (angle, start, end, useShortestAngle = false) {
+    return Math.pp_isInsideAngleRangeDegrees(angle, start, end, useShortestAngle);
+};
+
+Math.pp_isInsideAngleRangeDegrees = function (angle, start, end, useShortestAngle = false) {
+    let isInside = false;
+
+    let anglePositive = Math.pp_angleClampDegrees(angle, true);
+    let startPositive = Math.pp_angleClampDegrees(start, true);
+    let endPositive = Math.pp_angleClampDegrees(end, true);
+
+    if (useShortestAngle) {
+        if (Math.pp_angleDistanceSignedDegrees(startPositive, endPositive) < 0) {
+            let temp = startPositive;
+            startPositive = endPositive;
+            endPositive = temp;
+        }
+    }
+
+    if (startPositive <= endPositive) {
+        isInside = anglePositive >= startPositive && anglePositive <= endPositive;
+    } else {
+        isInside = anglePositive >= startPositive || anglePositive <= endPositive;
+    }
+
+    return isInside;
+};
+
+Math.pp_isInsideAngleRangeRadians = function (angle, start, end, useShortestAngle = false) {
+    return Math.pp_isInsideAngleRangeDegrees(Math.pp_toDegrees(angle), Math.pp_toDegrees(start), Math.pp_toDegrees(end), useShortestAngle);
+};
