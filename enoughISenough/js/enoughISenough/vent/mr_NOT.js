@@ -25,19 +25,21 @@ class MrNOT {
 
         //this._myFSM.setDebugLogActive(true, "        Mr NOT Clone");
         this._myFSM.addState("init");
+        this._myFSM.addState("first_wait", new PP.TimerState(0.1, "end"));
         this._myFSM.addState("move", this._move.bind(this));
         this._myFSM.addState("explode", this._exploding.bind(this));
         this._myFSM.addState("disappear", this._disappear.bind(this));
         this._myFSM.addState("inactive");
 
-        this._myFSM.addTransition("init", "move", "start", this._prepareMove.bind(this));
+        this._myFSM.addTransition("init", "first_wait", "start", this._prepareMove.bind(this));
+        this._myFSM.addTransition("first_wait", "move", "end", this._startMove.bind(this));
         this._myFSM.addTransition("move", "explode", "explode", this._prepareExplode.bind(this));
         this._myFSM.addTransition("explode", "disappear", "end", this._prepareDisappear.bind(this));
         this._myFSM.addTransition("disappear", "inactive", "end");
         this._myFSM.addTransition("move", "inactive", "hide");
         this._myFSM.addTransition("explode", "inactive", "hide");
         this._myFSM.addTransition("disappear", "inactive", "hide");
-        this._myFSM.addTransition("inactive", "move", "start", this._prepareMove.bind(this));
+        this._myFSM.addTransition("inactive", "first_wait", "start", this._prepareMove.bind(this));
 
         this._myFSM.init("init");
 
@@ -45,6 +47,7 @@ class MrNOT {
 
         this._myExplodeAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_EXPLODE_EXPLODE);
         this._myHitAudio = Global.myAudioManager.createAudioPlayer(SfxID.CLONE_EXPLODE);
+        this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_FAST_APPEAR);
 
         this._myRumbleScreen = new RumbleScreen();
 
@@ -56,7 +59,6 @@ class MrNOT {
         this._myParticlesSizeMrNot = 0.9;
         this._myMaxPatience = 1;
         this._myPatienceRefill = 5;
-
     }
 
     start(dt) {
@@ -109,6 +111,11 @@ class MrNOT {
 
         this._myPatience = this._myMaxPatience;
 
+        this._myAppearAudio.setPosition(this._myObject.pp_getPosition());
+        this._myAppearAudio.play();
+    }
+
+    _startMove() {
         this._myObject.pp_setActive(true);
     }
 

@@ -5,10 +5,10 @@ class GiveUsAHugSetup extends IAmHereWaveSetup {
         this.myHugSize = new RangeValueOverTime([2, 2], [2, 2], 0, 0, true);
         this.myHugAngle = new RangeValueOverTime([40, 40], [40, 40], 0, 0, false);
         this.mySameHugAngle = new RangeValueOverTime([-1, -1], [-1, -1], 0, 0, false); // >= 0 means true
-        this.mySkipLastCloneHugging = false; //just in case u want to have a full 360 hug
+        this.mySameHugSize = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
 
-        this.myEqualDistance = true;
-        this.myMinAngleBetweenClonesHugging = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+        this.myEqualDistance = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
+        this.myMinAngleBetweenClonesHugging = new RangeValueOverTime([10, 10], [10, 10], 0, 0, false);
     }
 
     createWave(ventSetup, timeElapsed, refDirection = null) {
@@ -27,34 +27,39 @@ class GiveUsAHug extends IAmHereWave {
         this._myHugSize = waveSetup.myHugSize.get(timeElapsed);
         this._myHugAngle = waveSetup.myHugAngle.get(timeElapsed);
         this._mySameHugAngle = waveSetup.mySameHugAngle.get(timeElapsed) >= 0;
+        this._mySameHugSize = waveSetup.mySameHugSize.get(timeElapsed) >= 0;
+        this._myEqualDistance = waveSetup.myEqualDistance.get(timeElapsed) >= 0;
         this._myMinAngleBetweenClonesHugging = waveSetup.myMinAngleBetweenClonesHugging.get(timeElapsed);
+    }
 
-        this._myTotalClonesCount *= this._myHugSize;
-        this._myClonesCount = this._myTotalClonesCount;
+    getAverageClonesCount() {
+        return this._myTotalClonesCount * this._myHugSize;
     }
 
     _createCloneSetupsWithDirection(direction) {
         let cloneSetups = [];
 
-        let hugSize = this._myWaveSetup.mySkipLastCloneHugging ? this._myHugSize - 1 : this._myHugSize;
-
-        if (this._myWaveSetup.myEqualDistance) {
+        if (this._myEqualDistance) {
             let totalAngle = this._myHugAngle * 2;
             let sliceAngle = totalAngle / (this._myHugSize - 1);
 
             let startAngle = -this._myHugAngle;
 
-            for (let i = 0; i < hugSize; i++) {
+            for (let i = 0; i < this._myHugSize; i++) {
                 let angle = startAngle + sliceAngle * i;
 
                 let cloneSetup = new MrNOTCloneSetup();
                 cloneSetup.myDirection = direction.pp_clone();
                 cloneSetup.myDirection.vec3_rotateAxis(angle, [0, 1, 0], cloneSetup.myDirection);
-                cloneSetups.push(cloneSetup);
+                if (this._areFarEnough(cloneSetup, cloneSetups)) {
+                    cloneSetups.push(cloneSetup);
+                } else {
+                    cloneSetups.push(null);
+                }
             }
         } else {
             let previousAngles = [];
-            for (let i = 0; i < hugSize; i++) {
+            for (let i = 0; i < this._myHugSize; i++) {
                 let attempts = 100;
                 let angle = 0;
 
@@ -81,7 +86,11 @@ class GiveUsAHug extends IAmHereWave {
                 let cloneSetup = new MrNOTCloneSetup();
                 cloneSetup.myDirection = direction.pp_clone();
                 cloneSetup.myDirection.vec3_rotateAxis(angle, [0, 1, 0], cloneSetup.myDirection);
-                cloneSetups.push(cloneSetup);
+                if (this._areFarEnough(cloneSetup, cloneSetups)) {
+                    cloneSetups.push(cloneSetup);
+                } else {
+                    cloneSetups.push(null);
+                }
             }
         }
 
@@ -89,10 +98,23 @@ class GiveUsAHug extends IAmHereWave {
             this._myHugAngle = this._myWaveSetup.myHugAngle.get(this._myGameTimeElapsed);
         }
 
-        if (this._myWaveSetup.mySkipLastCloneHugging) {
-            cloneSetups.push(null);
+        if (!this._mySameHugSize) {
+            this._myHugSize = this._myWaveSetup.myHugSize.get(this._myGameTimeElapsed);
         }
 
         return cloneSetups;
     }
+
+    _areFarEnough(cloneSetupToTest, cloneSetups) {
+        let valid = true;
+        for (let cloneSetup of cloneSetups) {
+            if (cloneSetup.myDirection.vec3_angle(cloneSetupToTest.myDirection) < this._myMinAngleBetweenClonesHugging) {
+                valid = false;
+                break;
+            }
+        }
+
+        return valid;
+    }
+
 }

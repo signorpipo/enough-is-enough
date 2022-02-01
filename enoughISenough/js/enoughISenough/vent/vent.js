@@ -150,7 +150,7 @@ class Vent {
             this._myCurrentWave = null;
 
             if (this._myDebugActive) {
-                console.log("Vent Completed");
+                console.log("Vent Completed - Duration -", Global.myVentDuration.toFixed(3), "- Dismissed -", this._myCloneDismissed);
             }
         } else {
             this._myCurrentWaveID = this._myVentSetup.myNextWavesMap.get(this._myCurrentWaveID).getNextWave(Global.myVentDuration);

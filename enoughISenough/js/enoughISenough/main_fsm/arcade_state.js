@@ -255,7 +255,6 @@ class ArcadeState extends PP.State {
 
             wave.myHugSize = new RangeValueOverTime([2, 3], [2, 3], 0, 0, true);
             wave.myHugAngle = new RangeValueOverTime([30, 70], [30, 70], 0, 0, false);
-            wave.mySkipLastCloneHugging = false;
             wave.myEqualDistance = true;
             wave.myMinAngleBetweenClonesHugging = new RangeValueOverTime([10, 10], [10, 10], 0, 0, false);
 
