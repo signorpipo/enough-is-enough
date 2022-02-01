@@ -40,6 +40,7 @@ class MrNOTVentState extends PP.State {
         this._myMrNOT = new MrNOT(this._onPatienceOver.bind(this), this._onReach.bind(this), this._onExplosionDone.bind(this));
 
         this._myCleanTimer = new PP.Timer(2.75);
+        this._myEvidenceTimer = new PP.Timer(1);
     }
 
     update(dt, fsm) {
@@ -70,11 +71,18 @@ class MrNOTVentState extends PP.State {
     }
 
     _prepareVent() {
-        this._myEvidenceManager.start();
         this._myMrNOT.start();
+        this._myEvidenceTimer.start();
     }
 
     _updateVent(dt, fsm) {
+        if (this._myEvidenceTimer.isRunning()) {
+            this._myEvidenceTimer.update(dt);
+            if (this._myEvidenceTimer.isDone()) {
+                this._myEvidenceManager.start();
+            }
+        }
+
     }
 
     _prepareClean() {

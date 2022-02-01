@@ -130,7 +130,8 @@ class enoughISenough {
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_fast_appear.wav");
-            audioSetup.myVolume = 0.8;
+            audioSetup.myRate = 1.5;
+            audioSetup.myVolume = 0.7;
             audioSetup.myReferenceDistance = 1000000;
             manager.addAudioSetup(SfxID.MR_NOT_FAST_APPEAR, audioSetup);
         }

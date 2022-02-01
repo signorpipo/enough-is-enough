@@ -51,6 +51,7 @@ PP.AudioPlayer = class AudioPlayer {
 
             this.updatePosition(this._myAudioSetup.myPosition, true);
             this.updatePitch(this._myAudioSetup.myPitch, true);
+            this.updateVolume(this._myAudioSetup.myVolume, true);
         }
     }
 
@@ -94,6 +95,18 @@ PP.AudioPlayer = class AudioPlayer {
         }
     }
 
+    updateVolume(volume, updateOnlyLast = false) {
+        this.setVolume(volume);
+
+        if (volume != null) {
+            if (updateOnlyLast) {
+                this._myAudio.volume(volume, this._myLastAudioID);
+            } else {
+                this._myAudio.volume(volume);
+            }
+        }
+    }
+
     setSpatial(spatial) {
         this._myAudioSetup.mySpatial = spatial;
     }
@@ -108,6 +121,10 @@ PP.AudioPlayer = class AudioPlayer {
 
     setRate(rate) {
         this._myAudioSetup.myRate = rate;
+    }
+
+    setVolume(volume) {
+        this._myAudioSetup.myVolume = volume;
     }
 
     getDuration() {

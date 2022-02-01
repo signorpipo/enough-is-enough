@@ -25,7 +25,7 @@ class MrNOT {
 
         //this._myFSM.setDebugLogActive(true, "        Mr NOT Clone");
         this._myFSM.addState("init");
-        this._myFSM.addState("first_wait", new PP.TimerState(0.1, "end"));
+        this._myFSM.addState("first_wait", new PP.TimerState(0.05, "end"));
         this._myFSM.addState("move", this._move.bind(this));
         this._myFSM.addState("explode", this._exploding.bind(this));
         this._myFSM.addState("disappear", this._disappear.bind(this));
