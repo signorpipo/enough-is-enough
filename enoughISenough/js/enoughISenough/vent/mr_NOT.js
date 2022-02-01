@@ -59,13 +59,13 @@ class MrNOT {
         this._myParticlesSizeMrNot = 0.9;
         this._myMaxPatience = 1;
         this._myPatienceRefill = 5;
-    }
 
-    start(dt) {
         this._mySpeed = this._myTargetPosition.vec3_sub(this._myStartPosition).vec3_length() / PP.myEasyTuneVariables.get("Time To Reach Target");
         this._myReachTargetDistance = PP.myEasyTuneVariables.get("Reach Distance");
         this._myMaxPatience = PP.myEasyTuneVariables.get("Max Patience");
+    }
 
+    start(dt) {
         this._myFSM.perform("start");
     }
 

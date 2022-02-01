@@ -145,7 +145,7 @@ WL.registerComponent('pp-grabber-hand', {
 
         // This way I give an increasing and smooth boost to the throw so that when u want to perform a weak throw, the value is not changed, but if u put more speed
         // it will be boosted to make it easier and still feel good and natural (value does not increase suddenly)
-        let speedEaseMultiplier = Math.pp_mapToNewInterval(speed, this._myThrowLinearVelocityBoostMinSpeedThreshold, this._myThrowLinearVelocityBoostMaxSpeedThreshold, 0, 1);
+        let speedEaseMultiplier = Math.pp_mapToRange(speed, this._myThrowLinearVelocityBoostMinSpeedThreshold, this._myThrowLinearVelocityBoostMaxSpeedThreshold, 0, 1);
         speedEaseMultiplier = PP.EasingFunction.easeIn(speedEaseMultiplier);
 
         // Add the boost to the speed

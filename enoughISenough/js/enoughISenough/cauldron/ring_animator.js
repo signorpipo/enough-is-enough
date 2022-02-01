@@ -53,7 +53,7 @@ WL.registerComponent("ring-animator", {
             this._myRingOutAudio.play();
         }
 
-        let alphaInterpolationValue = Math.pp_mapToNewInterval(this._myTimer.getPercentage(), 0, 0.5, 0, 1);
+        let alphaInterpolationValue = Math.pp_mapToRange(this._myTimer.getPercentage(), 0, 0.5, 0, 1);
         let alphaValue = PP.EasingFunction.easeOut(alphaInterpolationValue);
         PP.MeshUtils.setAlpha(this._myRingOut, alphaValue);
         PP.MeshUtils.setAlpha(this._myRingMiddle, alphaValue);

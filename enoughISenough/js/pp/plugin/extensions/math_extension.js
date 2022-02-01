@@ -2,12 +2,12 @@ if (!PP) {
     var PP = {};
 }
 
-Math.pp_clamp = function (value, intervalStart, intervalEnd) {
-    let fixedIntervalStart = (intervalStart != null) ? intervalStart : Number.MIN_VALUE;
-    let fixedIntervalEnd = (intervalEnd != null) ? intervalEnd : Number.MAX_VALUE;
+Math.pp_clamp = function (value, start, end) {
+    let fixedStart = (start != null) ? start : Number.MIN_VALUE;
+    let fixedEnd = (end != null) ? end : Number.MAX_VALUE;
 
-    let min = Math.min(fixedIntervalStart, fixedIntervalEnd);
-    let max = Math.max(fixedIntervalStart, fixedIntervalEnd);
+    let min = Math.min(fixedStart, fixedEnd);
+    let max = Math.max(fixedStart, fixedEnd);
     return Math.min(Math.max(value, min), max);
 };
 
@@ -26,34 +26,34 @@ Math.pp_roundDecimal = function (number, decimalPlaces) {
     return number;
 };
 
-// Start interval value doesn't need to be lower than the end one, so you can map from [0,1] to [3,2], where 3 is greater than 2
-Math.pp_mapToNewInterval = function (value, originIntervalStart, originIntervalEnd, newIntervalStart, newIntervalEnd) {
-    if (originIntervalStart == originIntervalEnd) {
-        return newIntervalStart;
+// Start range value doesn't need to be lower than the end one, so you can map from [0,1] to [3,2], where 3 is greater than 2
+Math.pp_mapToRange = function (value, originRangeStart, originRangeEnd, newRangeStart, newRangeEnd) {
+    if (originRangeStart == originRangeEnd) {
+        return newRangeStart;
     }
 
-    let clampedValue = Math.pp_clamp(value, originIntervalStart, originIntervalEnd);
+    let clampedValue = Math.pp_clamp(value, originRangeStart, originRangeEnd);
 
-    if (clampedValue == originIntervalStart) {
-        return newIntervalStart;
-    } else if (clampedValue == originIntervalEnd) {
-        return newIntervalEnd;
+    if (clampedValue == originRangeStart) {
+        return newRangeStart;
+    } else if (clampedValue == originRangeEnd) {
+        return newRangeEnd;
     }
 
-    let newValue = newIntervalStart + ((newIntervalEnd - newIntervalStart) / (originIntervalEnd - originIntervalStart)) * (clampedValue - originIntervalStart);
-    let clampedNewValue = Math.pp_clamp(newValue, newIntervalStart, newIntervalEnd);
+    let newValue = newRangeStart + ((newRangeEnd - newRangeStart) / (originRangeEnd - originRangeStart)) * (clampedValue - originRangeStart);
+    let clampedNewValue = Math.pp_clamp(newValue, newRangeStart, newRangeEnd);
     return clampedNewValue;
 };
 
-//Interval is [intervalStart, intervalEnd)
-Math.pp_random = function (intervalStart = 0, intervalEnd = 1) {
-    return Math.random() * (intervalEnd - intervalStart) + intervalStart;
+//Range is [start, end)
+Math.pp_random = function (start = 0, end = 1) {
+    return Math.random() * (end - start) + start;
 };
 
-//Interval is [intervalStart, intervalEnd]
-Math.pp_randomInt = function (intervalStart, intervalEnd) {
-    let min = Math.min(intervalStart, intervalEnd);
-    let max = Math.max(intervalStart, intervalEnd);
+//Range is [start, end]
+Math.pp_randomInt = function (start, end) {
+    let min = Math.min(start, end);
+    let max = Math.max(start, end);
     return Math.floor(Math.random() * (max - min + 1) + min);
 };
 

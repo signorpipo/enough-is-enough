@@ -268,13 +268,13 @@ Float32Array.prototype.vec_ceil = function (out = null) {
     return out;
 };
 
-Float32Array.prototype.vec_clamp = function (intervalStart, intervalEnd, out = null) {
+Float32Array.prototype.vec_clamp = function (start, end, out = null) {
     out = this._vec_prepareOut(out);
 
-    let fixedIntervalStart = (intervalStart != null) ? intervalStart : Number.MIN_VALUE;
-    let fixedIntervalEnd = (intervalEnd != null) ? intervalEnd : Number.MAX_VALUE;
-    let min = Math.min(fixedIntervalStart, fixedIntervalEnd);
-    let max = Math.max(fixedIntervalStart, fixedIntervalEnd);
+    let fixedStart = (start != null) ? start : Number.MIN_VALUE;
+    let fixedEnd = (end != null) ? end : Number.MAX_VALUE;
+    let min = Math.min(fixedStart, fixedEnd);
+    let max = Math.max(fixedStart, fixedEnd);
 
     for (let i = 0; i < out.length; i++) {
         out[i] = Math.min(Math.max(out[i], min), max);

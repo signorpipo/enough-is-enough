@@ -93,7 +93,7 @@ class TalkState extends PP.State {
         if (this._myTimer.isRunning()) {
             this._myTimer.update(dt);
             let easing = t => t * (2 - t);
-            PP.MeshUtils.setFogColor(this._myMrNOT, [0, 0, 0, Math.pp_mapToNewInterval(easing(this._myTimer.getPercentage()), 0, 1, this._myFogAlphaMax, this._myFogAlphaMin)]);
+            PP.MeshUtils.setFogColor(this._myMrNOT, [0, 0, 0, Math.pp_mapToRange(easing(this._myTimer.getPercentage()), 0, 1, this._myFogAlphaMax, this._myFogAlphaMin)]);
             let currentScaleFactor = Math.pp_interpolate(this._myHideScale, 1, this._myTimer.getPercentage(), PP.EasingFunction.easeOut);
 
             this._myMrNOT.pp_setScale([5, 5, 5]);
@@ -128,7 +128,7 @@ class TalkState extends PP.State {
         if (this._myTimer.isRunning()) {
             this._myTimer.update(dt);
             let easing = t => t * t;
-            PP.MeshUtils.setFogColor(this._myMrNOT, [0, 0, 0, Math.pp_mapToNewInterval(this._myTimer.getPercentage(), 0.05, 0.8, this._myFogAlphaMin, this._myFogAlphaMax)]);
+            PP.MeshUtils.setFogColor(this._myMrNOT, [0, 0, 0, Math.pp_mapToRange(this._myTimer.getPercentage(), 0.05, 0.8, this._myFogAlphaMin, this._myFogAlphaMax)]);
             let currentScaleFactor = Math.pp_interpolate(1, this._myHideScale, this._myTimer.getPercentage(), easing);
 
             this._myMrNOT.pp_setScale([5, 5, 5]);

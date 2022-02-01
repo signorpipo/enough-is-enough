@@ -10,7 +10,7 @@ class ValueOverTime {
     }
 
     get(timeElapsed) {
-        let interpolationValue = Math.pp_mapToNewInterval(timeElapsed, this._myStartTime, this._myEndTime, 0, 1);
+        let interpolationValue = Math.pp_mapToRange(timeElapsed, this._myStartTime, this._myEndTime, 0, 1);
         let lerpValue = Math.pp_lerp(this._myStartValue, this._myEndValue, interpolationValue);
 
         if (this._myIsInt) {
