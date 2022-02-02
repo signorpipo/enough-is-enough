@@ -61,6 +61,13 @@ class RangeValueOverTime {
         return value >= min && value <= max;
     }
 
+    isInsideAngle(value) {
+        let startValue = this._myRangeStartValue.get(timeElapsed);
+        let endValue = this._myRangeEndValue.get(timeElapsed);
+
+        return Math.pp_isInsideAngleRange(value, startValue, endValue);
+    }
+
     getAverage(timeElapsed) {
         let startValue = this._myRangeStartValue.get(timeElapsed);
         let endValue = this._myRangeEndValue.get(timeElapsed);
@@ -97,6 +104,10 @@ class RangeValue {
         let max = Math.max(this._myRange[0], this._myRange[1]);
 
         return value >= min && value <= max;
+    }
+
+    isInsideAngle(value) {
+        return Math.pp_isInsideAngleRange(value, this._myRange[0], this._myRange[1]);
     }
 
     getAverage(timeElapsed) {

@@ -170,7 +170,6 @@ TrialState.prototype._secondVentSetup = function () {
     }
 
     ventSetup.myFirstWave = "I_Am_Here_Warm_Up";
-    ventSetup.myValidAngleRanges = [new RangeValue([-180, 0]), new RangeValue([0, 180])];
 
     return ventSetup;
 };

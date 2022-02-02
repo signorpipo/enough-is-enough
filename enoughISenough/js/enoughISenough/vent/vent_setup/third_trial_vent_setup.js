@@ -260,7 +260,6 @@ TrialState.prototype._thirdVentSetup = function () {
     }
 
     ventSetup.myFirstWave = "Zero";
-    ventSetup.myValidAngleRanges = [new RangeValue([-180, 0]), new RangeValue([0, 180])];
 
     return ventSetup;
 };

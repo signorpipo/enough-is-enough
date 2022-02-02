@@ -188,7 +188,7 @@ Math.pp_isInsideAngleRangeDegrees = function (angle, start, end, useShortestAngl
         }
     }
 
-    if (startPositive <= endPositive) {
+    if (startPositive < endPositive) {
         isInside = anglePositive >= startPositive && anglePositive <= endPositive;
     } else {
         isInside = anglePositive >= startPositive || anglePositive <= endPositive;

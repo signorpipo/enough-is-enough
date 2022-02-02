@@ -141,9 +141,9 @@ class WaveOfWaves {
 
     _checkVentAngleValid(direction) {
         let angleValid = false;
-        let angle = direction.vec3_angleSigned([0, 0, -1], [0, 1, 0]);
         for (let range of this._myVentRuntimeSetup.myValidAngleRanges) {
-            if (range.isInside(angle, this._myGameTimeElapsed)) {
+            let angle = direction.vec3_angleSigned(range[1], [0, 1, 0]);
+            if (range[0].isInsideAngle(angle, this._myGameTimeElapsed)) {
                 angleValid = true;
                 break;
             }
