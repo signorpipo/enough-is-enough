@@ -61,7 +61,7 @@ class RangeValueOverTime {
         return value >= min && value <= max;
     }
 
-    isInsideAngle(value) {
+    isInsideAngle(value, timeElapsed) {
         let startValue = this._myRangeStartValue.get(timeElapsed);
         let endValue = this._myRangeEndValue.get(timeElapsed);
 

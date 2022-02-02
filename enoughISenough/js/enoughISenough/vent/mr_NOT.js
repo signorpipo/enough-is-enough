@@ -9,17 +9,13 @@ class MrNOT {
         this._myTargetPosition = [0, 0, 0];
         this._myDirection = this._myTargetPosition.vec3_sub(this._myStartPosition);
 
-        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Time To Reach Target", 30, 10, 3));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Time To Reach Target", 50, 10, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Max Patience", 15, 10));
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Reach Distance", 5, 10, 3));
-
-        this._myTimeToReachTarget = 20;
 
         this._myCallbackOnPatienceOver = callbackOnPatienceOver;
         this._myCallbackOnReach = callbackOnReach;
         this._myCallbackOnExplosionDone = callbackOnExplosionDone;
-
-        this._mySpeed = this._myTargetPosition.vec3_sub(this._myStartPosition).vec3_length() / this._myTimeToReachTarget;
 
         this._myFSM = new PP.FSM();
 
@@ -60,8 +56,12 @@ class MrNOT {
         this._myMaxPatience = 1;
         this._myPatienceRefill = 5;
 
-        this._mySpeed = this._myTargetPosition.vec3_sub(this._myStartPosition).vec3_length() / PP.myEasyTuneVariables.get("Time To Reach Target");
         this._myReachTargetDistance = PP.myEasyTuneVariables.get("Reach Distance");
+
+        let directionAngle = this._myDirection.vec3_angle(this._myDirection.vec3_removeComponentAlongAxis([0, 1, 0]));
+        let distanceToIgnore = this._myReachTargetDistance / Math.cos(Math.pp_toRadians(directionAngle));
+
+        this._mySpeed = (this._myTargetPosition.vec3_sub(this._myStartPosition).vec3_length() - distanceToIgnore) / PP.myEasyTuneVariables.get("Time To Reach Target");
         this._myMaxPatience = PP.myEasyTuneVariables.get("Max Patience");
     }
 

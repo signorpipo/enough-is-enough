@@ -88,9 +88,11 @@ class Vent {
         this._myFSM.addTransition("smallBreak", "wave", "end", this._endSmallBreak.bind(this));
         this._myFSM.addTransition("smallBreak", "break", "startBreak", this._startBreak.bind(this));
 
+        this._myFSM.addTransition("first_wait", "done", "stop", this._stop.bind(this));
         this._myFSM.addTransition("wave", "done", "stop", this._stop.bind(this));
         this._myFSM.addTransition("break", "done", "stop", this._stop.bind(this));
         this._myFSM.addTransition("smallBreak", "done", "stop", this._stop.bind(this));
+        this._myFSM.addTransition("clean", "done", "stop", this._stop.bind(this));
 
         this._myFSM.addTransition("wave", "clean", "startClean", this._startClean.bind(this));
         this._myFSM.addTransition("break", "clean", "startClean", this._startClean.bind(this));
@@ -289,11 +291,11 @@ class Vent {
         this._myMrNOTClones = [];
     }
 
-    clean() {
-        this._myFSM.perform("startClean");
+    clean(cleanDelay = 0) {
+        this._myFSM.perform("startClean", cleanDelay);
     }
 
-    _startClean() {
+    _startClean(fsm, transition, cleanDelay) {
         this._myUnspawnList = [];
 
         let indexList = [];
@@ -310,7 +312,7 @@ class Vent {
 
             let randomTimer = Math.pp_random(0.20, 0.25);
             if (this._myUnspawnList.length == 0) {
-                randomTimer += 0.3;
+                randomTimer += 0.3 + cleanDelay;
             }
             this._myUnspawnList.push([this._myMrNOTClones[index], new PP.Timer(randomTimer)]);
         }

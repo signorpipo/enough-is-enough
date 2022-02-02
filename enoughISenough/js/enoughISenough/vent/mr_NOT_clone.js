@@ -72,6 +72,7 @@ class MrNOTClone {
         this._myFSM.addTransition("stop", "unspawning", "unspawn");
         this._myFSM.addTransition("unspawning", "inactive", "end");
         this._myFSM.addTransition("move", "inactive", "destroy");
+        this._myFSM.addTransition("stop", "inactive", "destroy");
         this._myFSM.addTransition("unspawning", "inactive", "destroy");
 
         this._myFSM.init("init");
