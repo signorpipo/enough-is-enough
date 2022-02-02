@@ -271,7 +271,7 @@ class MenuState extends PP.State {
         }
 
         {
-            let zestyMarket = new MenuItem(Global.myGameObjects.get(GameObjectType.ZESTY_MARKET), GameObjectType.ZESTY_MARKET, positions[5], function () {
+            let zestyMarket = new MenuItem(Global.myGameObjects.get(GameObjectType.ZESTY_MARKET), GameObjectType.ZESTY_MARKET, positions[6], function () {
                 this._myResetCount = 0;
                 let zestyComponent = this._myZestyObject.getObject().pp_getComponentHierarchy("zesty-banner");
                 if (zestyComponent) {
@@ -283,7 +283,7 @@ class MenuState extends PP.State {
         }
 
         {
-            let floppyDisk = new MenuItem(Global.myGameObjects.get(GameObjectType.FLOPPY_DISK), GameObjectType.FLOPPY_DISK, positions[6], function () {
+            let floppyDisk = new MenuItem(Global.myGameObjects.get(GameObjectType.FLOPPY_DISK), GameObjectType.FLOPPY_DISK, positions[5], function () {
                 this._myResetCount++;
 
                 if (this._myResetCount >= 5) {
@@ -458,10 +458,7 @@ class MenuItem {
     }
 
     _readyUpdate(dt) {
-        if (this._myObject.pp_getPosition()[1] <= -6 || this._myObject.pp_getPosition()[1] > 20 || this._myObject.pp_getPosition().vec3_length() > 50) {
-            if (this._myCallbackOnFall && WL.xrSession && this._myThrowTimer.isRunning()) {
-                this._myCallbackOnFall();
-            }
+        if (this._myObject.pp_getPosition()[1] <= -10 || this._myObject.pp_getPosition()[1] > 20 || this._myObject.pp_getPosition().vec3_length() > 50) {
             this._myFSM.perform("unspawn");
         }
     }
@@ -492,6 +489,9 @@ class MenuItem {
         if (this._myTimer.isDone()) {
             Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myParticlesRadius, this._myScale, this._myObjectType);
             this._myFSM.perform("end");
+            if (this._myCallbackOnFall && WL.xrSession && this._myThrowTimer.isRunning()) {
+                this._myCallbackOnFall();
+            }
         }
     }
 

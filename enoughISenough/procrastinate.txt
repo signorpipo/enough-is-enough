@@ -165,7 +165,7 @@ MUSIC:
 - arcade music
 
 SFX:
-- suono rapido per quando appare mr not boss di colpo
+v suono rapido per quando appare mr not boss di colpo
 v object explode
 v object appear
 v mr not laughing (per capire da dove arriva)
@@ -176,13 +176,12 @@ v title appearing/disappearing from dark (also usable for mr not appearing)
 v mr not final explosions
 
 PULSE:
-x collision (?)
+- collision (?)
 x release (?)
 v grab
 v not enough
 
 EXTRA:
-v le teste si storgono piu in la nel tempo? a parte in arcade, nella trial, la prima niente, la seconda si storgono, nella terza una ogni tot tempo gira anche
 - mr NOT boss finale ha anche i cloni che arrivano dai lati
 - nell'arcade arriva anche mr not boss finale ogni tanto
 	- quando arriva cambia il vent angle
@@ -197,6 +196,7 @@ v le teste si storgono piu in la nel tempo? a parte in arcade, nella trial, la p
 	- mettere bool per dire se la next wave è valida quanto c'è mr NOT
 	- il time elapsed passato alle vent dovrebbe essere diverso dalla vent duration e non aumentare quando c'è il boss? per evitare l'aumento di difficoltà subito dopo il boss, ma forse non importa, 
 	  anzi ci sta come se fosse diventato il livello ulteriore dopo il boss
+v le teste si storgono piu in la nel tempo? a parte in arcade, nella trial, la prima niente, la seconda si storgono, nella terza una ogni tot tempo gira anche
 v ogni tanto un clone spinna di brutto sulla z cosi per fare piu paura?
 x qualche oggetto potrebbe avere un po' di alfa come la spada di halo o il vetro di kh
 x evidence bussola che se tenuto in mano mostra da dove arriva mr not
@@ -211,8 +211,8 @@ x mr not aumenta il fog color cosi che le prime volte si vede meno nella storia 
 
 TO DO:
 - rimuovere i debug
-? randomizzare size particle esplosione mr not?
-? spostare un po' piu avanti esplosione disappear mr not?
+x randomizzare size particle esplosione mr not?
+x spostare un po' piu avanti esplosione disappear mr not?
 v vibrazioni? sfx?
 v evidence clean ritardare per mr not boss explosion
 v migliorare colore testo
@@ -231,7 +231,7 @@ v migliorare il modello del timer
 v aggiungere la fog (nero con valore 64 piu o meno ci siamo) ma a mr not normale no (lui ha le luci personali), facendo dei materiali specifici solo per lui uguali ma senza fog
 
 TUNE:
-- altezza da cui partono i cloni, distanza, altezza di arrivo, tempo di arrivo, distanza iniziale (insomma tutto)
+v altezza da cui partono i cloni, distanza, altezza di arrivo, tempo di arrivo, distanza iniziale (insomma tutto)
 v diminuire un pochino il tempo che inizia a scrivere il secondo enough del titolo durante la vibrazione per farlo sembrare piu scorrevole, ora parte a scriverlo quando tutto si è già fermato e stacca troppo
 v create un oggetto palette fatto di icosfere per tunare i colori
 v aggiustare posizione spawn evidence raggio per centrarlo meglio sul ring

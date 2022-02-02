@@ -69,7 +69,7 @@ class ArcadeState extends PP.State {
     _buildEvidenceSetupList() {
         let evidenceSetupList = [];
 
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.TRIAL_TIMER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.VENT_TIMER, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ZESTY_MARKET, new ValueOverTime(3, 0, 60, 120, true)));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.TUCIA_DRAWING, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.CPLUSPLUS_PRIMER, 5));
