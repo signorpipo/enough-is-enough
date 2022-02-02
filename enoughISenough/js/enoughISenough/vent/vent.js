@@ -9,6 +9,7 @@ class BreakSetup {
 class VentSetup {
     constructor() {
         this.myValidAngleRanges = [[new RangeValue([-180, 180]), [0, 0, -1]]];
+        this.myVentMultipliers = new VentRuntimeMultipliers();
 
         this.myBreakSetup = new BreakSetup();
         this.mySmallBreakSetup = new BreakSetup();
@@ -33,13 +34,27 @@ class VentSetup {
         this.myResetBreakWhenBreakTimerBelow = 10;
         this.myResetBreakAmount = new RangeValue([10, 12]);
 
-        this.myDelayBeforeStart = 40.5;
+        this.myDelayBeforeStart = 4.5;
     }
 }
 
 class VentRuntimeSetup {
     constructor() {
         this.myValidAngleRanges = [[new RangeValue([-180, 180]), [0, 0, -1]]];
+
+        this.myVentMultipliers = new VentRuntimeMultipliers();
+
+    }
+}
+
+class VentRuntimeMultipliers {
+    constructor() {
+        this.mySpawnTimeMultiplier = 1;
+        this.myDoneTimeMultiplier = 1;
+        this.myBreakTimeMultiplier = 1;
+        this.myBreakDelayTimeMultiplier = 1;
+        this.mySmallBreakTimeMultiplier = 1;
+        this.mySmallBreakDelayTimeMultiplier = 1;
     }
 }
 
@@ -113,10 +128,12 @@ class Vent {
         this._myCurrentWave = this._myVentSetup.myWavesMap.get(this._myVentSetup.myFirstWave).createWave(this._myCurrentVentRuntimeSetup, Global.myVentDuration);
         this._myCurrentWaveID = this._myVentSetup.myFirstWave;
 
-        this._myBreakDelayTimer = new PP.Timer(this._myVentSetup.myBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration));
+        let breakDelayMultiplier = this._myCurrentVentRuntimeSetup.myVentMultipliers.myBreakDelayTimeMultiplier.get(Global.myVentDuration);
+        this._myBreakDelayTimer = new PP.Timer(this._myVentSetup.myBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration) * breakDelayMultiplier);
         this._myBreakCloneCooldown = this._myVentSetup.myBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
 
-        this._mySmallBreakDelayTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration));
+        let smallBreakDelayMultiplier = this._myCurrentVentRuntimeSetup.myVentMultipliers.mySmallBreakDelayTimeMultiplier.get(Global.myVentDuration);
+        this._mySmallBreakDelayTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration) * smallBreakDelayMultiplier);
         this._mySmallBreakCloneCooldown = this._myVentSetup.mySmallBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
 
         this._myVentTimer = new PP.Timer(this._myVentSetup.myVentDuration - Global.myVentDuration);
@@ -189,7 +206,8 @@ class Vent {
     }
 
     _startBreak() {
-        this._myBreakTimer = new PP.Timer(this._myVentSetup.myBreakSetup.myBreakDuration.get(Global.myVentDuration));
+        let multiplier = this._myCurrentVentRuntimeSetup.myVentMultipliers.myBreakTimeMultiplier.get(Global.myVentDuration);
+        this._myBreakTimer = new PP.Timer(this._myVentSetup.myBreakSetup.myBreakDuration.get(Global.myVentDuration) * multiplier);
         this._myIsSmallBreak = false;
 
         if (this._myDebugActive) {
@@ -198,7 +216,8 @@ class Vent {
     }
 
     _startSmallBreak() {
-        this._myBreakTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakDuration.get(Global.myVentDuration));
+        let multiplier = this._myCurrentVentRuntimeSetup.myVentMultipliers.mySmallBreakTimeMultiplier.get(Global.myVentDuration);
+        this._myBreakTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakDuration.get(Global.myVentDuration) * multiplier);
         this._myIsSmallBreak = true;
 
         if (this._myDebugActive) {
@@ -229,17 +248,20 @@ class Vent {
     }
 
     _endBreak() {
-        this._myBreakDelayTimer = new PP.Timer(this._myVentSetup.myBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration));
+        let breakDelayMultiplier = this._myCurrentVentRuntimeSetup.myVentMultipliers.myBreakDelayTimeMultiplier.get(Global.myVentDuration);
+        this._myBreakDelayTimer = new PP.Timer(this._myVentSetup.myBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration) * breakDelayMultiplier);
         this._myBreakCloneCooldown = this._myVentSetup.myBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
 
-        this._mySmallBreakDelayTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration));
+        let smallBreakDelayMultiplier = this._myCurrentVentRuntimeSetup.myVentMultipliers.mySmallBreakDelayTimeMultiplier.get(Global.myVentDuration);
+        this._mySmallBreakDelayTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration) * smallBreakDelayMultiplier);
         this._mySmallBreakCloneCooldown = this._myVentSetup.mySmallBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
 
         this._debugNextWave();
     }
 
     _endSmallBreak() {
-        this._mySmallBreakDelayTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration));
+        let smallBreakDelayMultiplier = this._myCurrentVentRuntimeSetup.myVentMultipliers.mySmallBreakDelayTimeMultiplier.get(Global.myVentDuration);
+        this._mySmallBreakDelayTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration) * smallBreakDelayMultiplier);
         this._mySmallBreakCloneCooldown = this._myVentSetup.mySmallBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
 
         if (this._myBreakDelayTimer.getTimer() < this._myVentSetup.myResetBreakWhenBreakTimerBelow.get(Global.myVentDuration)) {
@@ -379,5 +401,6 @@ class Vent {
 
     _prepareVentRuntimeSetup() {
         this._myCurrentVentRuntimeSetup.myValidAngleRanges = this._myVentSetup.myValidAngleRanges;
+        this._myCurrentVentRuntimeSetup.myVentMultipliers = this._myVentSetup.myVentMultipliers;
     }
 }

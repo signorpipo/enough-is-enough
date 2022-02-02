@@ -36,9 +36,11 @@ class WaveOfWaves {
         this._myWavesCount = this._myTotalWavesCount;
         this._mySameTimeBetweenWaves = waveSetup.mySameTimeBetweenWaves.get(timeElapsed) >= 0;
 
-        this._myTimeBetweenWaves = this._myWaveSetup.myTimeBetweenWaves.get(this._myGameTimeElapsed);
-        this._mySpawnTimer = new PP.Timer(this._myWaveSetup.myTimeBeforeStart.get(this._myGameTimeElapsed));
-        this._myDoneDelayTimer = new PP.Timer(this._myWaveSetup.myDoneDelay.get(this._myGameTimeElapsed), false);
+        let spawnTimeMultiplier = this._myVentRuntimeSetup.myVentMultipliers.mySpawnTimeMultiplier.get(this._myGameTimeElapsed);
+        this._myTimeBetweenWaves = this._myWaveSetup.myTimeBetweenWaves.get(this._myGameTimeElapsed) * spawnTimeMultiplier;
+        this._mySpawnTimer = new PP.Timer(this._myWaveSetup.myTimeBeforeStart.get(this._myGameTimeElapsed) * spawnTimeMultiplier);
+        let doneTimeMultiplier = this._myVentRuntimeSetup.myVentMultipliers.myDoneTimeMultiplier.get(this._myGameTimeElapsed);
+        this._myDoneDelayTimer = new PP.Timer(this._myWaveSetup.myDoneDelay.get(this._myGameTimeElapsed) * doneTimeMultiplier, false);
 
         this._computeWaveStartDirection(refDirection);
 
@@ -106,7 +108,8 @@ class WaveOfWaves {
 
     _getSpawnTimer() {
         if (!this._mySameTimeBetweenWaves) {
-            this._myTimeBetweenWaves = this._myWaveSetup.myTimeBetweenWaves.get(this._myGameTimeElapsed);
+            let spawnTimeMultiplier = this._myVentRuntimeSetup.myVentMultipliers.mySpawnTimeMultiplier.get(this._myGameTimeElapsed);
+            this._myTimeBetweenWaves = this._myWaveSetup.myTimeBetweenWaves.get(this._myGameTimeElapsed) * spawnTimeMultiplier;
         }
 
         return this._myTimeBetweenWaves;

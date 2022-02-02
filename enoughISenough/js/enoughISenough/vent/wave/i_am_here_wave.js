@@ -38,9 +38,12 @@ class IAmHereWave {
 
         this._computeWaveStartDirection(refDirection);
 
-        this._myTimeBetweenClones = this._myWaveSetup.myTimeBetweenClones.get(this._myGameTimeElapsed);
-        this._mySpawnTimer = new PP.Timer(this._myWaveSetup.myTimeBeforeStart.get(this._myGameTimeElapsed));
-        this._myDoneDelayTimer = new PP.Timer(this._myWaveSetup.myDoneDelay.get(this._myGameTimeElapsed), false);
+        let spawnTimeMultiplier = this._myVentRuntimeSetup.myVentMultipliers.mySpawnTimeMultiplier.get(this._myGameTimeElapsed);
+        this._myTimeBetweenClones = this._myWaveSetup.myTimeBetweenClones.get(this._myGameTimeElapsed) * spawnTimeMultiplier;
+
+        this._mySpawnTimer = new PP.Timer(this._myWaveSetup.myTimeBeforeStart.get(this._myGameTimeElapsed) * spawnTimeMultiplier);
+        let doneTimeMultiplier = this._myVentRuntimeSetup.myVentMultipliers.myDoneTimeMultiplier.get(this._myGameTimeElapsed);
+        this._myDoneDelayTimer = new PP.Timer(this._myWaveSetup.myDoneDelay.get(this._myGameTimeElapsed) * doneTimeMultiplier, false);
 
         this._myFirst = true;
         this._myLastSign = Math.pp_randomSign();
@@ -86,7 +89,8 @@ class IAmHereWave {
                     if (cloneSetups.length > 0) {
                         this._mySpawnTimer.start(this._myTimeBetweenClones);
                         if (!this._mySameTimeBetweenClones) {
-                            this._myTimeBetweenClones = this._myWaveSetup.myTimeBetweenClones.get(this._myGameTimeElapsed);
+                            let spawnTimeMultiplier = this._myVentRuntimeSetup.myVentMultipliers.mySpawnTimeMultiplier.get(this._myGameTimeElapsed);
+                            this._myTimeBetweenClones = this._myWaveSetup.myTimeBetweenClones.get(this._myGameTimeElapsed) * spawnTimeMultiplier;
                         }
                     } else {
                         this._mySpawnTimer.start(0);
