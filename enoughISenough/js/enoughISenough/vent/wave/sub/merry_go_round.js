@@ -39,7 +39,7 @@ class MerryGoRound extends WaveOfWaves {
             }
             let angle = this._myAngleBetweenWaves * this._myWaveDirection;
 
-            let maxAttempts = 200;
+            let maxAttempts = 0;
             let attempts = maxAttempts;
 
             while (attempts > 0) {
