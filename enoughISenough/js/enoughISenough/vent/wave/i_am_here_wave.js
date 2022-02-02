@@ -10,6 +10,8 @@ class IAmHereWaveSetup {
         this.myDoneDelay = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
         this.myTimeBeforeStart = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
 
+        this.myDiscardOutsideValidAngle = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
+
         this.myRefDirection = null;
     }
 
@@ -36,6 +38,8 @@ class IAmHereWave {
 
         this._mySameTimeBetweenClones = waveSetup.mySameTimeBetweenClones.get(timeElapsed) >= 0;
 
+        this._myDiscardOutsideValidAngle = waveSetup.myDiscardOutsideValidAngle.get(timeElapsed) >= 0;
+
         this._computeWaveStartDirection(refDirection);
 
         let spawnTimeMultiplier = this._myVentRuntimeSetup.myVentMultipliers.mySpawnTimeMultiplier.get(this._myGameTimeElapsed);
@@ -47,7 +51,9 @@ class IAmHereWave {
 
         this._myFirst = true;
         this._myLastSign = Math.pp_randomSign();
+
         this._myOneCloneSetupValid = false;
+        this._myLastValidSpawnTimer = this._mySpawnTimer.getDuration();
     }
 
     update(dt) {
@@ -80,7 +86,7 @@ class IAmHereWave {
                         if (cloneSetups.length > 0) {
                             this._myDoneDelayTimer.start();
                         } else {
-                            this._myDoneDelayTimer.start(this._myDoneDelayTimer.getDuration() - this._mySpawnTimer.getDuration());
+                            this._myDoneDelayTimer.start(this._myDoneDelayTimer.getDuration() - this._myLastValidSpawnTimer);
                         }
                     } else {
                         this._myDoneDelayTimer.start(0);
@@ -92,6 +98,7 @@ class IAmHereWave {
                             let spawnTimeMultiplier = this._myVentRuntimeSetup.myVentMultipliers.mySpawnTimeMultiplier.get(this._myGameTimeElapsed);
                             this._myTimeBetweenClones = this._myWaveSetup.myTimeBetweenClones.get(this._myGameTimeElapsed) * spawnTimeMultiplier;
                         }
+                        this._myLastValidSpawnTimer = this._mySpawnTimer.getDuration();
                     } else {
                         this._mySpawnTimer.start(0);
                     }
@@ -155,7 +162,7 @@ class IAmHereWave {
         let tempCloneSetups = this._createCloneSetupsWithDirection(direction);
 
         for (let cloneSetup of tempCloneSetups) {
-            if (cloneSetup != null && this._checkVentAngleValid(cloneSetup.myDirection)) {
+            if (cloneSetup != null && (!this._myDiscardOutsideValidAngle || this._checkVentAngleValid(cloneSetup.myDirection))) {
                 cloneSetups.push(cloneSetup);
             } else {
                 cloneSetups.push(null);

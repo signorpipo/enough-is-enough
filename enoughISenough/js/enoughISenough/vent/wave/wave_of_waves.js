@@ -47,6 +47,10 @@ class WaveOfWaves {
         this._myCurrentWaves = [];
 
         this._myDebugActive = true;
+
+        this._myOneCloneSetupValid = false;
+        this._myOneCloneSetupValidCurrentWave = false;
+        this._myLastValidSpawnTimer = this._mySpawnTimer.getDuration();
     }
 
     update(dt) {
@@ -60,6 +64,7 @@ class WaveOfWaves {
             this._mySpawnTimer.update(dt);
             if (this._mySpawnTimer.isDone()) {
                 if (this._myWavesCount > 0) {
+                    this._myOneCloneSetupValidCurrentWave = false;
                     this._myCurrentWaves = this._createNextWaves();
                     this._myWavesCount -= this._myCurrentWaves.length;
                 }
@@ -67,16 +72,36 @@ class WaveOfWaves {
         }
 
         for (let wave of this._myCurrentWaves) {
-            let innerCloneSetups = wave.update(dt);
-            cloneSetups.push(...innerCloneSetups);
+            if (wave != null) {
+                let innerCloneSetups = wave.update(dt);
+                cloneSetups.push(...innerCloneSetups);
+            }
         }
 
-        this._myCurrentWaves.pp_removeAll(element => element.isDone());
+        if (cloneSetups.length > 0) {
+            this._myOneCloneSetupValid = true;
+            this._myOneCloneSetupValidCurrentWave = true;
+        }
+
+        this._myCurrentWaves.pp_removeAll(element => element == null || element.isDone());
 
         if (this._myCurrentWaves.length == 0 && this._myWavesCount > 0 && !this._mySpawnTimer.isRunning()) {
-            this._mySpawnTimer.start(this._getSpawnTimer());
+            if (this._myOneCloneSetupValidCurrentWave) {
+                this._mySpawnTimer.start(this._getSpawnTimer());
+                this._myLastValidSpawnTimer = this._mySpawnTimer.getDuration();
+            } else {
+                this._mySpawnTimer.start(0);
+            }
         } else if (!this._myDoneDelayTimer.isRunning() && this._myWavesCount <= 0 && this._myCurrentWaves.length == 0) {
-            this._myDoneDelayTimer.start();
+            if (this._myOneCloneSetupValid) {
+                if (this._myOneCloneSetupValidCurrentWave) {
+                    this._myDoneDelayTimer.start();
+                } else {
+                    this._myDoneDelayTimer.start(this._myDoneDelayTimer.getDuration() - this._myLastValidSpawnTimer);
+                }
+            } else {
+                this._myDoneDelayTimer.start(0);
+            }
         }
 
         if (this._myDoneDelayTimer.isRunning()) {
@@ -168,7 +193,7 @@ class WaveOfWaves {
         while (attempts > 0 && !angleValid) {
             this._myWaveStartAngle = this._myWaveSetup.myWaveStartAngle.get(this._myGameTimeElapsed) * Math.pp_randomSign();
             let startDirection = flatRefDirection.vec3_rotateAxis(this._myWaveStartAngle, [0, 1, 0]);
-            let angleValid = this._checkVentAngleValid(startDirection);
+            angleValid = this._checkVentAngleValid(startDirection);
 
             attempts--;
         }

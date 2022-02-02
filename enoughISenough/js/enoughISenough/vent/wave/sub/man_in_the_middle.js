@@ -51,6 +51,31 @@ class ManInTheMiddle extends WaveOfWaves {
         return this._myTimeBeforeOpposite;
     }
 
+    _checkVentAngleValid(direction) {
+        let angleValid = false;
+        let oppositeAngleValid = false;
+        for (let range of this._myVentRuntimeSetup.myValidAngleRanges) {
+            let angle = direction.vec3_angleSigned(range[1], [0, 1, 0]);
+            if (range[0].isInsideAngle(angle, Global.myVentDuration)) {
+                angleValid = true;
+                break;
+            }
+        }
+
+        if (angleValid) {
+            let negateDirection = direction.vec3_negate();
+            for (let range of this._myVentRuntimeSetup.myValidAngleRanges) {
+                let oppositeAngle = negateDirection.vec3_angleSigned(range[1], [0, 1, 0]);
+                if (range[0].isInsideAngle(oppositeAngle, Global.myVentDuration)) {
+                    oppositeAngleValid = true;
+                    break;
+                }
+            }
+        }
+
+        return angleValid && oppositeAngleValid;
+    }
+
     _createNextWaves() {
         let waves = [];
 
