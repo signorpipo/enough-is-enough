@@ -5,14 +5,14 @@ class IAmEverywhereWaveSetup extends WaveOfWavesSetup {
         this.myAngleBetweenWaves = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
     }
 
-    createWave(ventSetup, timeElapsed, refDirection = null) {
-        return new IAmEverywhereWave(ventSetup, this, timeElapsed, refDirection);
+    createWave(ventRuntimeSetup, timeElapsed, refDirection = null) {
+        return new IAmEverywhereWave(ventRuntimeSetup, this, timeElapsed, refDirection);
     }
 }
 
 class IAmEverywhereWave extends WaveOfWaves {
-    constructor(ventSetup, waveSetup, timeElapsed, refDirection) {
-        super(ventSetup, waveSetup, timeElapsed, refDirection);
+    constructor(ventRuntimeSetup, waveSetup, timeElapsed, refDirection) {
+        super(ventRuntimeSetup, waveSetup, timeElapsed, refDirection);
 
         this._myCurrentDirection = this._myWaveStartDirection.pp_clone();
         this._myFirst = true;
@@ -46,7 +46,7 @@ class IAmEverywhereWave extends WaveOfWaves {
         let direction = this._myCurrentDirection.pp_clone();
         direction.vec3_normalize(direction);
 
-        waves.push(this._getWaveSetup().createWave(this._myVentSetup, this._myGameTimeElapsed, direction));
+        waves.push(this._getWaveSetup().createWave(this._myVentRuntimeSetup, this._myGameTimeElapsed, direction));
 
         return waves;
     }

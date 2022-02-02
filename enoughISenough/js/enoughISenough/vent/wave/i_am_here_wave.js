@@ -13,8 +13,8 @@ class IAmHereWaveSetup {
         this.myRefDirection = null;
     }
 
-    createWave(ventSetup, timeElapsed, refDirection = null) {
-        return new IAmHereWave(ventSetup, this, timeElapsed, refDirection);
+    createWave(ventRuntimeSetup, timeElapsed, refDirection = null) {
+        return new IAmHereWave(ventRuntimeSetup, this, timeElapsed, refDirection);
     }
 
     getAverageClonesCount(timeElapsed) {
@@ -23,10 +23,10 @@ class IAmHereWaveSetup {
 }
 
 class IAmHereWave {
-    constructor(ventSetup, waveSetup, timeElapsed, refDirection) {
+    constructor(ventRuntimeSetup, waveSetup, timeElapsed, refDirection) {
         this._myGameTimeElapsed = timeElapsed;
         this._myWaveSetup = waveSetup;
-        this._myVentSetup = ventSetup;
+        this._myVentRuntimeSetup = ventRuntimeSetup;
 
         this._myTotalClonesCount = this._myWaveSetup.myClonesCount.get(timeElapsed);
         this._myClonesCount = this._myTotalClonesCount;
@@ -175,7 +175,7 @@ class IAmHereWave {
     _checkVentAngleValid(direction) {
         let angleValid = false;
         let angle = direction.vec3_angleSigned([0, 0, -1], [0, 1, 0]);
-        for (let range of this._myVentSetup.myValidAngleRanges) {
+        for (let range of this._myVentRuntimeSetup.myValidAngleRanges) {
             if (range.isInside(angle, this._myGameTimeElapsed)) {
                 angleValid = true;
                 break;

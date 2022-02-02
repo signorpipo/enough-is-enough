@@ -23,10 +23,10 @@ class WaveOfWavesSetup {
 }
 
 class WaveOfWaves {
-    constructor(ventSetup, waveSetup, timeElapsed, refDirection) {
+    constructor(ventRuntimeSetup, waveSetup, timeElapsed, refDirection) {
         this._myGameTimeElapsed = timeElapsed;
         this._myWaveSetup = waveSetup;
-        this._myVentSetup = ventSetup;
+        this._myVentRuntimeSetup = ventRuntimeSetup;
 
         if (waveSetup.myWavesSetup.length == 0) {
             waveSetup.myWavesSetup.push([new IAmHereWaveSetup(), 1, "I_Am_Here"]);
@@ -142,7 +142,7 @@ class WaveOfWaves {
     _checkVentAngleValid(direction) {
         let angleValid = false;
         let angle = direction.vec3_angleSigned([0, 0, -1], [0, 1, 0]);
-        for (let range of this._myVentSetup.myValidAngleRanges) {
+        for (let range of this._myVentRuntimeSetup.myValidAngleRanges) {
             if (range.isInside(angle, this._myGameTimeElapsed)) {
                 angleValid = true;
                 break;

@@ -35,6 +35,12 @@ class VentSetup {
     }
 }
 
+class VentRuntimeSetup {
+    constructor() {
+        this.myValidAngleRanges = [new RangeValue([-180, 180])];
+    }
+}
+
 class Vent {
     constructor(ventSetup) {
         this._myVentSetup = ventSetup;
@@ -82,6 +88,8 @@ class Vent {
         this._myDebugActiveStats = true;
 
         this._myOncePerFrame = false;
+
+        this._myCurrentVentRuntimeSetup = new VentRuntimeSetup();
     }
 
     start() {
@@ -98,7 +106,9 @@ class Vent {
 
         this._myVentCompleted = false;
 
-        this._myCurrentWave = this._myVentSetup.myWavesMap.get(this._myVentSetup.myFirstWave).createWave(this._myVentSetup, Global.myVentDuration);
+        this._prepareVentRuntimeSetup();
+
+        this._myCurrentWave = this._myVentSetup.myWavesMap.get(this._myVentSetup.myFirstWave).createWave(this._myCurrentVentRuntimeSetup, Global.myVentDuration);
         this._myCurrentWaveID = this._myVentSetup.myFirstWave;
 
         this._myBreakDelayTimer = new PP.Timer(this._myVentSetup.myBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration));
@@ -159,7 +169,7 @@ class Vent {
             if (this._myVentSetup.myRefDirection != null) {
                 refDirection = this._myVentSetup.myRefDirection.pp_clone();
             }
-            this._myCurrentWave = this._myVentSetup.myWavesMap.get(this._myCurrentWaveID).createWave(this._myVentSetup, Global.myVentDuration, refDirection);
+            this._myCurrentWave = this._myVentSetup.myWavesMap.get(this._myCurrentWaveID).createWave(this._myCurrentVentRuntimeSetup, Global.myVentDuration, refDirection);
         }
     }
 
@@ -363,5 +373,9 @@ class Vent {
                 console.log("   Small Break -", this._mySmallBreakDelayTimer.getTimer().toFixed(3), " -", this._mySmallBreakCloneCooldown);
             }
         }
+    }
+
+    _prepareVentRuntimeSetup() {
+        this._myCurrentVentRuntimeSetup.myValidAngleRanges = this._myVentSetup.myValidAngleRanges;
     }
 }

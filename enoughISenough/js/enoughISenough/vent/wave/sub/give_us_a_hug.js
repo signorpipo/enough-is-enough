@@ -11,8 +11,8 @@ class GiveUsAHugSetup extends IAmHereWaveSetup {
         this.myMinAngleBetweenClonesHugging = new RangeValueOverTime([10, 10], [10, 10], 0, 0, false);
     }
 
-    createWave(ventSetup, timeElapsed, refDirection = null) {
-        return new GiveUsAHug(ventSetup, this, timeElapsed, refDirection);
+    createWave(ventRuntimeSetup, timeElapsed, refDirection = null) {
+        return new GiveUsAHug(ventRuntimeSetup, this, timeElapsed, refDirection);
     }
 
     getAverageClonesCount(timeElapsed) {
@@ -21,8 +21,8 @@ class GiveUsAHugSetup extends IAmHereWaveSetup {
 }
 
 class GiveUsAHug extends IAmHereWave {
-    constructor(ventSetup, waveSetup, timeElapsed, refDirection) {
-        super(ventSetup, waveSetup, timeElapsed, refDirection);
+    constructor(ventRuntimeSetup, waveSetup, timeElapsed, refDirection) {
+        super(ventRuntimeSetup, waveSetup, timeElapsed, refDirection);
 
         this._myHugSize = waveSetup.myHugSize.get(timeElapsed);
         this._myHugAngle = waveSetup.myHugAngle.get(timeElapsed);
