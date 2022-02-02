@@ -32,6 +32,8 @@ class VentSetup {
 
         this.myResetBreakWhenBreakTimerBelow = 10;
         this.myResetBreakAmount = new RangeValue([10, 12]);
+
+        this.myDelayBeforeStart = 40.5;
     }
 }
 
@@ -55,7 +57,7 @@ class Vent {
 
         //this._myFSM.setDebugLogActive(true, "        Vent");
         this._myFSM.addState("init");
-        this._myFSM.addState("first_wait", new PP.TimerState(4.5, "end"));
+        this._myFSM.addState("first_wait", new PP.TimerState(ventSetup.myDelayBeforeStart, "end"));
         this._myFSM.addState("wave", this._updateWave.bind(this));
         this._myFSM.addState("break", this._break.bind(this));
         this._myFSM.addState("smallBreak", this._break.bind(this));
