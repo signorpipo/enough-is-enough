@@ -10,10 +10,10 @@ PP.HandPose = class HandPose {
         this._myReferenceSpace = null;
 
         this._myPosition = [0, 0, 0];
-        this._myRotation = [0, 0, 0, 0];
+        this._myRotation = [0, 0, 0, 1];
 
         this._myPrevPosition = [0, 0, 0];
-        this._myPrevRotation = [0, 0, 0, 0];
+        this._myPrevRotation = [0, 0, 0, 1];
 
         this._myLinearVelocity = [0, 0, 0];
         this._myAngularVelocity = [0, 0, 0]; // Radians

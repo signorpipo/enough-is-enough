@@ -44,6 +44,7 @@ class MrNOTVent {
         this._myFSM.init("init");
 
         this._myCollisions = this._myObject.pp_getComponentsHierarchy("collision");
+        this._myPhysx = this._myObject.pp_getComponentHierarchy("physx");
 
         this._myExplodeAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_EXPLODE);
         this._myHitAudio = Global.myAudioManager.createAudioPlayer(SfxID.CLONE_EXPLODE);
@@ -105,6 +106,8 @@ class MrNOTVent {
                 collision.extents = [this._myScale[0], this._myScale[1], this._myScale[2] * 0.2];
             }
         }
+
+        this._myPhysx.extents = [this._myScale[0] * 0.021, this._myScale[1] * 0.021, this._myScale[2] * 0.021];
 
         this._myCurrentPosition = [];
         this._myObject.pp_getPosition(this._myCurrentPosition);
