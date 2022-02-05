@@ -347,7 +347,7 @@
                 },
                 {
                     "type": "pp-mute-all",
-                    "active": false
+                    "active": true
                 },
                 {
                     "type": "clear-console-on-session",
@@ -4708,8 +4708,8 @@
                         "groups": 1,
                         "box": {
                             "extents": [
-                                0.1,
-                                0.1,
+                                0.1299999,
+                                0.07,
                                 0.1
                             ]
                         }
@@ -13551,8 +13551,8 @@
                         "box": {
                             "extents": [
                                 0.1,
-                                0.0599999,
-                                0.3
+                                0.0299999,
+                                0.25
                             ]
                         },
                         "groups": 1
@@ -13926,9 +13926,9 @@
                         "collider": "box",
                         "box": {
                             "extents": [
-                                0.1,
-                                0.1,
-                                0.0599999
+                                0.0799999,
+                                0.0299999,
+                                0.1
                             ]
                         },
                         "groups": 1
@@ -14193,7 +14193,7 @@
                         "box": {
                             "extents": [
                                 0.1,
-                                0.1,
+                                0.07,
                                 0.0599999
                             ]
                         },
@@ -14325,8 +14325,8 @@
                         "collider": "box",
                         "box": {
                             "extents": [
-                                0.1,
-                                0.1,
+                                0.07,
+                                0.1199999,
                                 0.0599999
                             ]
                         },
@@ -14662,7 +14662,7 @@
                         "box": {
                             "extents": [
                                 0.1,
-                                0.1,
+                                0.0299999,
                                 0.15
                             ]
                         },
@@ -15159,8 +15159,8 @@
                         "box": {
                             "extents": [
                                 0.1,
-                                0.1,
-                                0.15
+                                0.0299999,
+                                0.1
                             ]
                         },
                         "groups": 1
@@ -17302,7 +17302,7 @@
                         "box": {
                             "extents": [
                                 0.1,
-                                0.0399999,
+                                0.0299999,
                                 0.1
                             ]
                         },
@@ -17434,9 +17434,9 @@
                         "collider": "box",
                         "box": {
                             "extents": [
+                                0.05,
                                 0.1,
-                                0.0399999,
-                                0.1
+                                0.05
                             ]
                         },
                         "groups": 1
@@ -23673,6 +23673,12 @@
                 "name": "Particle",
                 "file": "default"
             }
+        },
+        "1385": {
+            "link": {
+                "name": "Depth",
+                "file": "default"
+            }
         }
     },
     "settings": {
@@ -23681,7 +23687,8 @@
             "version": [
                 0,
                 8,
-                8
+                9,
+                16
             ]
         },
         "vr": {
@@ -23902,6 +23909,18 @@
             "depthFunction": "less or equal",
             "sampleAlphaToCoverage": false,
             "blendEqAlpha": "max"
+        },
+        "1386": {
+            "link": {
+                "name": "Depth",
+                "file": "default"
+            }
+        },
+        "1387": {
+            "link": {
+                "name": "Depth Textured",
+                "file": "default"
+            }
         }
     }
 }
