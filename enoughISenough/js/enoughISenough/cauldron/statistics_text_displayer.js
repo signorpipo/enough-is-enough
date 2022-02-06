@@ -18,16 +18,18 @@ WL.registerComponent("statistics-text-displayer", {
         text = text.concat("Total Play Time: ", this._convertTimeToString(Global.myStatistics.myTotalPlayTime), "\n\n");
         text = text.concat("Trial Play Time: ", this._convertTimeToString(Global.myStatistics.myTrialPlayTime), "\n");
         text = text.concat("Trial Best Time: ", this._convertTimeToString(Global.myStatistics.myTrialBestTime), "\n");
-        text = text.concat("Trial Play Count: ", Global.myStatistics.myTrialPlayCount, "\n");
-        text = text.concat("Trial Completed Count: ", Global.myStatistics.myTrialCompletedCount, "\n\n");
+        text = text.concat("Trial Played: ", Global.myStatistics.myTrialPlayCount, "\n");
+        text = text.concat("Trial Completed: ", Global.myStatistics.myTrialCompletedCount, "\n\n");
         text = text.concat("Chat Play Time: ", this._convertTimeToString(Global.myStatistics.myChatPlayTime), "\n");
         text = text.concat("Chat Best Time: ", this._convertTimeToString(Global.myStatistics.myChatBestTime), "\n");
-        text = text.concat("Chat Play Count: ", Global.myStatistics.myChatPlayCount, "\n\n");
+        text = text.concat("Chat Played: ", Global.myStatistics.myChatPlayCount, "\n\n");
         text = text.concat("Dispute Play Time: ", this._convertTimeToString(Global.myStatistics.myDisputePlayTime), "\n");
         text = text.concat("Dispute Best Time: ", this._convertTimeToString(Global.myStatistics.myDisputeBestTime), "\n");
-        text = text.concat("Dispute Play Count: ", Global.myStatistics.myDisputePlayCount, "\n\n");
+        text = text.concat("Dispute Played: ", Global.myStatistics.myDisputePlayCount, "\n\n");
         text = text.concat("Evidences Thrown: ", Global.myStatistics.myEvidencesThrown, "\n");
-        text = text.concat("mr NOT Clone Dismissed: ", Global.myStatistics.myMrNOTCloneDismissed);
+        text = text.concat("mr NOT Clones Dismissed: ", Global.myStatistics.myMrNOTCloneDismissed, "\n");
+        text = text.concat("mr NOT Dismissed: ", Global.myStatistics.myMrNOTDismissed, "\n");
+        text = text.concat(" ");
 
         this._myText.text = text;
     },

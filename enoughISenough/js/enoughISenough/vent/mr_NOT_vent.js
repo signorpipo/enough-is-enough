@@ -45,6 +45,7 @@ class MrNOTVent {
 
         this._myCollisions = this._myObject.pp_getComponentsHierarchy("collision");
         this._myPhysx = this._myObject.pp_getComponentHierarchy("physx");
+        this._myCollisionsCollector = new PP.PhysXCollisionCollector(this._myPhysx);
 
         this._myExplodeAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_EXPLODE);
         this._myHitAudio = Global.myAudioManager.createAudioPlayer(SfxID.CLONE_EXPLODE);
@@ -73,6 +74,8 @@ class MrNOTVent {
     }
 
     update(dt) {
+        this._myCollisionsCollector.update(dt);
+
         this._myFSM.update(dt);
 
         this._myRumbleScreen.update(dt);
@@ -107,7 +110,7 @@ class MrNOTVent {
             }
         }
 
-        this._myPhysx.extents = [this._myScale[0] * 0.021, this._myScale[1] * 0.021, this._myScale[2] * 0.021];
+        this._myPhysx.extents = [this._myScale[0] * 0.021, this._myScale[1] * 0.021, this._myScale[2] * 0.025];
 
         this._myCurrentPosition = [];
         this._myObject.pp_getPosition(this._myCurrentPosition);
@@ -152,55 +155,75 @@ class MrNOTVent {
 
     _checkHit(avoidCallbacks = false) {
         let hit = false;
-        let hittingObject = null;
+        let hittingObjects = [];
 
-        let collidingComps = [];
-        for (let collision of this._myCollisions) {
-            collidingComps.push(collision.queryOverlaps());
-        }
+        let useCollider = false;
+        if (useCollider) {
+            let collidingComps = [];
+            for (let collision of this._myCollisions) {
+                collidingComps.push(collision.queryOverlaps());
+            }
 
-        if (collidingComps.length > 0) {
-            for (let i = 0; i < collidingComps[0].length; ++i) {
-                let collidingComponent = collidingComps[0][i];
-                if (collidingComponent.object.pp_getComponent("evidence-component") != null) {
-                    let isColliding = true;
-                    for (let j = 1; j < collidingComps.length; ++j) {
-                        if (collidingComps[j].pp_find(element => element.equals(collidingComponent)) == null) {
-                            isColliding = false;
-                            break;
+            if (collidingComps.length > 0) {
+                for (let i = 0; i < collidingComps[0].length; ++i) {
+                    let collidingComponent = collidingComps[0][i];
+                    if (collidingComponent.object.pp_getComponent("evidence-component") != null) {
+                        let isColliding = true;
+                        for (let j = 1; j < collidingComps.length; ++j) {
+                            if (collidingComps[j].pp_find(element => element.equals(collidingComponent)) == null) {
+                                isColliding = false;
+                                break;
+                            }
                         }
-                    }
 
-                    if (isColliding) {
-                        let evidenceComponent = collidingComponent.object.pp_getComponent("evidence-component");
-                        if (evidenceComponent.getEvidence().canHit()) {
-                            hit = true;
-                            hittingObject = collidingComponent.object;
-                            break;
+                        if (isColliding) {
+                            let evidenceComponent = collidingComponent.object.pp_getComponent("evidence-component");
+                            if (evidenceComponent.getEvidence().canHit()) {
+                                hit = true;
+                                hittingObjects.push(collidingComponent.object);
+                                break;
+                            }
                         }
                     }
                 }
             }
         }
 
-        if (hit) {
-            this._myHitAudio.setPosition(hittingObject.pp_getPosition());
-            this._myHitAudio.setPitch(Math.pp_random(0.85, 1.05));
-            this._myHitAudio.play();
+        let usePhysx = true;
+        if (usePhysx) {
+            let collisionsStart = this._myCollisionsCollector.getCollisionsStart();
+            if (collisionsStart.length > 0) {
+                hit = true;
+                hittingObjects.push(...collisionsStart);
+            }
+        }
 
-            let evidence = hittingObject.pp_getComponent("evidence-component");
-            evidence.hit(this._myObject);
+        if (hit) {
+            let patienceToRemove = 0;
+            for (let object of hittingObjects) {
+                this._myHitAudio.setPosition(object.pp_getPosition());
+                this._myHitAudio.setPitch(Math.pp_random(0.85, 1.05));
+                this._myHitAudio.play();
+
+                let evidence = object.pp_getComponent("evidence-component");
+                evidence.hit(this._myObject);
+
+                patienceToRemove++;
+            }
 
             if (!avoidCallbacks) {
-                let hittingPosition = hittingObject.pp_getPosition();
-                //Global.myParticlesManager.explosion(hittingPosition, [this._myParticlesSize, this._myParticlesSize, this._myParticlesSize], evidence.getEvidence().getEvidenceSetup().myObjectType);
-                //spawn particles
+                this._myPatience -= patienceToRemove;
 
-                this._myPatience -= 1;
+                let distanceToTarget = this._myTargetPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myCurrentPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
+
+                if (distanceToTarget > this._myMinTargetDistance) {
+                    this._myPatience = Math.max(this._myPatience, this._myPatienceRefill);
+                }
 
                 if (this._myPatience <= 0) {
-                    this._myCallbackOnPatienceOver();
+                    Global.myStatistics.myMrNOTDismissed += 1;
                     this._myFSM.perform("disappear");
+                    this._myCallbackOnPatienceOver();
                 }
             }
         }

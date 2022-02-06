@@ -101,7 +101,7 @@ class enoughISenough {
             audioSetup.myPitch = 1;
             audioSetup.myVolume = 1;
             audioSetup.myReferenceDistance = 3;
-            manager.addAudioSetup(SfxID.MR_NOT_EXPLODE_EXPLODE, audioSetup);
+            manager.addAudioSetup(SfxID.MR_NOT_EXPLODE, audioSetup);
         }
 
         {
@@ -153,7 +153,7 @@ var SfxID = {
     TITLE_APPEAR: 7,
     TITLE_DISAPPEAR: 8,
     CLONE_EXPLODE: 9,
-    MR_NOT_EXPLODE_EXPLODE: 10,
+    MR_NOT_EXPLODE: 10,
     EVIDENCE_APPEAR: 11,
     EVIDENCE_DISAPPEAR: 12,
     CLONE_APPEAR: 13,

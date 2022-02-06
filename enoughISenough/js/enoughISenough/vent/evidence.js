@@ -194,13 +194,6 @@ class Evidence {
         }
 
         this._myTimer.start(PP.myEasyTuneVariables.get("Unspawn Menu Time"));
-        this._myPhysx.kinematic = true;
-
-        if (!this._myGrabbable.isGrabbed()) {
-            this._myPhysx.kinematic = false;
-        }
-
-        this._myGrabbable.release();
 
         if (!this._myHitExplosion) {
             this._myDisappearAudio.setPosition(this._myObject.pp_getPosition());
@@ -242,7 +235,6 @@ class Evidence {
         if (this._myPhysx.active) {
             this._myPhysx.linearVelocity = [0, 0, 0];
             this._myPhysx.angularVelocity = [0, 0, 0];
-            this._myPhysx.kinematic = true;
             this._myObject.pp_setPosition([0, -10, 0]);
         }
         this._myObject.pp_setActive(false);

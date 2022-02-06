@@ -428,6 +428,8 @@ class MenuItem {
         this._myAudioTimer.start(0.2);
         this._myAppearAudio.setPosition(position);
         this._myAppearAudio.setPitch(Math.pp_random(0.85, 1.05));
+
+        this._myHitFloor = false;
     }
 
     _spawning(dt) {
@@ -459,19 +461,17 @@ class MenuItem {
 
     _readyUpdate(dt) {
         if (this._myObject.pp_getPosition()[1] <= -10 || this._myObject.pp_getPosition()[1] > 20 || this._myObject.pp_getPosition().vec3_length() > 50) {
+            this._myHitFloor = true;
             this._myFSM.perform("unspawn");
         }
     }
 
     _startUnspawn() {
-        this._myTimer.start(PP.myEasyTuneVariables.get("Unspawn Menu Time"));
-        this._myPhysx.kinematic = true;
-
-        if (!this._myGrabbable.isGrabbed()) {
-            this._myPhysx.kinematic = false;
+        if (this._myHitFloor) {
+            Global.myStatistics.myEvidencesThrown += 1;
         }
 
-        this._myGrabbable.release();
+        this._myTimer.start(PP.myEasyTuneVariables.get("Unspawn Menu Time"));
 
         this._myDisappearAudio.setPosition(this._myObject.pp_getPosition());
         this._myDisappearAudio.setPitch(Math.pp_random(0.85, 1.05));
@@ -516,7 +516,6 @@ class MenuItem {
         if (this._myPhysx.active) {
             this._myPhysx.linearVelocity = [0, 0, 0];
             this._myPhysx.angularVelocity = [0, 0, 0];
-            this._myPhysx.kinematic = true;
             this._myObject.pp_setPosition([0, -10, 0]);
         }
         this._myObject.pp_setActive(false);

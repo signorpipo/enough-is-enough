@@ -302,7 +302,6 @@ class ArcadeState extends PP.State {
         }
 
         ventSetup.myFirstWave = "Merry_Go_Round_Easy";
-        ventSetup.myValidAngleRanges = [new RangeValue([-180, 0]), new RangeValue([0, 180])];
 
         return ventSetup;
     }

@@ -6,6 +6,12 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
 
         this._myCollisions = [];
 
+        this._myCollisionsStart = [];
+        this._myCollisionsEnd = [];
+        this._myUpdateActive = false;
+        this._myCollisionsStartToProcess = [];
+        this._myCollisionsEndToProcess = [];
+
         this._myDebugActive = false;
     }
 
@@ -13,12 +19,27 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
         return this._myCollisions.pp_clone();
     }
 
-    reset() {
-        this._myCollisions = [];
+    getCollisionsStart() {
+        return this._myCollisionsStart.pp_clone();
+    }
+
+    getCollisionsEnd() {
+        return this._myCollisionsEnd.pp_clone();
     }
 
     setDebugActive(active) {
         this._myDebugActive = active;
+    }
+
+    //Update is not mandatory, use it only if u want to access collisions start and end
+    update(dt) {
+        this._myUpdateActive = true;
+
+        this._myCollisionsStart = this._myCollisionsStartToProcess;
+        this._myCollisionsStartToProcess = [];
+
+        this._myCollisionsEnd = this._myCollisionsEndToProcess;
+        this._myCollisionsEndToProcess = [];
     }
 
     _onCollision(type, physxComponent) {
@@ -45,6 +66,14 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
         }
 
         this._myCollisions.push(physxComponent.object);
+
+        if (this._myUpdateActive) {
+            this._myCollisionsStartToProcess.push(physxComponent.object);
+            this._myCollisionsEndToProcess.pp_removeAll(function (element) {
+                return element.pp_equals(physxComponent.object);
+            });
+        }
+
         if (this._myDebugActive) {
             console.log("Collision Start -", this._myCollisions.length);
         }
@@ -65,9 +94,17 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
             }
         }
 
+
         this._myCollisions.pp_removeAll(function (element) {
             return element.pp_equals(physxComponent.object);
         });
+
+        if (this._myUpdateActive) {
+            this._myCollisionsEndToProcess.push(physxComponent.object);
+            this._myCollisionsStartToProcess.pp_removeAll(function (element) {
+                return element.pp_equals(physxComponent.object);
+            });
+        }
 
         if (this._myDebugActive) {
             console.log("Collision End -", this._myCollisions.length);

@@ -41,6 +41,7 @@ class Statistics {
         this.myDisputeBestTime = 0;
         this.myEvidencesThrown = 0;
         this.myMrNOTCloneDismissed = 0;
+        this.myMrNOTDismissed = 0;
     }
 
     load() {
@@ -61,6 +62,7 @@ class Statistics {
 
         this.myEvidencesThrown = PP.SaveUtils.loadNumber("evidences_thrown", 0);
         this.myMrNOTCloneDismissed = PP.SaveUtils.loadNumber("mr_NOT_clone_dismissed", 0);
+        this.myMrNOTDismissed = PP.SaveUtils.loadNumber("mr_NOT_dismissed", 0);
     }
 
     save() {
@@ -85,6 +87,7 @@ class Statistics {
 
         PP.SaveUtils.save("evidences_thrown", this.myEvidencesThrown);
         PP.SaveUtils.save("mr_NOT_clone_dismissed", this.myMrNOTCloneDismissed);
+        PP.SaveUtils.save("mr_NOT_dismissed", this.myMrNOTDismissed);
 
     }
 }
