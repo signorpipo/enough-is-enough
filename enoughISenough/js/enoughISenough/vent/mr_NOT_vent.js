@@ -30,15 +30,19 @@ class MrNOTVent {
         this._myFSM.addState("init");
         this._myFSM.addState("first_wait", new PP.TimerState(0.05, "end"));
         this._myFSM.addState("move", this._move.bind(this));
+        this._myFSM.addState("stop");
         this._myFSM.addState("disappear", this._disappear.bind(this));
         this._myFSM.addState("inactive");
 
         this._myFSM.addTransition("init", "first_wait", "start", this._prepareMove.bind(this));
         this._myFSM.addTransition("first_wait", "move", "end", this._startMove.bind(this));
         this._myFSM.addTransition("move", "disappear", "disappear", this._prepareDisappear.bind(this));
+        this._myFSM.addTransition("move", "stop", "startStop");
+        this._myFSM.addTransition("stop", "disappear", "disappear", this._prepareDisappear.bind(this));
         this._myFSM.addTransition("disappear", "inactive", "end");
         this._myFSM.addTransition("move", "inactive", "hide");
         this._myFSM.addTransition("disappear", "inactive", "hide");
+        this._myFSM.addTransition("stop", "inactive", "hide");
         this._myFSM.addTransition("inactive", "first_wait", "start", this._prepareMove.bind(this));
 
         this._myFSM.init("init");
@@ -89,6 +93,10 @@ class MrNOTVent {
         this._myRumbleScreen.stop();
         this._myObject.pp_setActive(false);
         this._myFSM.perform("hide");
+    }
+
+    stop() {
+        this._myFSM.perform("startStop");
     }
 
     _prepareMove() {
@@ -231,6 +239,10 @@ class MrNOTVent {
                 }
             }
         }
+    }
+
+    disappear() {
+        this._myFSM.perform("disappear");
     }
 
     _prepareDisappear() {

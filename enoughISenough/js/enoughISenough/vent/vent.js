@@ -35,6 +35,25 @@ class VentSetup {
         this.myResetBreakAmount = new RangeValue([10, 12]);
 
         this.myDelayBeforeStart = 4.5;
+
+        this.myMrNOTSetup = new VentMrNOTSetup();
+    }
+}
+
+class VentMrNOTSetup {
+    constructor() {
+        this.myMrNOTAppearenceEnabled = false;
+        this.myMrNOTTimeCooldown = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+        this.myVentMultipliers = new VentRuntimeMultipliers();
+
+        this.myResetMrNOTTimerWhenBelowBreak = 4;
+        this.myResetTimerAmountBreak = new RangeValue([6, 8]);
+        this.myResetMrNOTTimerWhenBelowSmallBreak = 2;
+        this.myResetTimerAmountSmallBreak = new RangeValue([3, 5]);
+
+        this.myStartAngle = new RangeValueOverTime([180, 180], [180, 180], 0, 0, false);
+        this.myTimeToReachTarget = new RangeValueOverTime([50, 50], [50, 50], 0, 0, false);
+        this.myMaxPatience = new ValueOverTime(15, 15, 0, 0, true);
     }
 }
 
@@ -88,6 +107,12 @@ class Vent {
         this._myFSM.addTransition("smallBreak", "wave", "end", this._endSmallBreak.bind(this));
         this._myFSM.addTransition("smallBreak", "break", "startBreak", this._startBreak.bind(this));
 
+        this._myFSM.addTransition("break", "break", "startBreak", this._startBreak.bind(this));
+        this._myFSM.addTransition("smallBreak", "break", "startBreak", this._startBreak.bind(this));
+
+        this._myFSM.addTransition("break", "wave", "forceEnd");
+        this._myFSM.addTransition("smallBreak", "wave", "forceEnd");
+
         this._myFSM.addTransition("first_wait", "done", "stop", this._stop.bind(this));
         this._myFSM.addTransition("wave", "done", "stop", this._stop.bind(this));
         this._myFSM.addTransition("break", "done", "stop", this._stop.bind(this));
@@ -103,12 +128,15 @@ class Vent {
         this._myFSM.init("init");
 
         this._myDebugActive = true;
-        this._myDebugActiveBreak = true;
-        this._myDebugActiveStats = true;
+        this._myDebugActiveBreak = false;
+        this._myDebugActiveStats = false;
+        this._myDebugActiveMrNOT = true;
 
         this._myOncePerFrame = false;
 
         this._myCurrentVentRuntimeSetup = new VentRuntimeSetup();
+
+        this._myMrNOT = null;
     }
 
     start() {
@@ -143,6 +171,9 @@ class Vent {
 
         this._myCloneDismissed = 0;
 
+        this._myMrNOT = null;
+        this._myMrNOTTimer = new PP.Timer(this._myVentSetup.myMrNOTSetup.myMrNOTTimeCooldown.get(Global.myVentDuration) - Global.myVentDuration);
+
         this._debugNextWave();
     }
 
@@ -152,6 +183,7 @@ class Vent {
         this._myVentTimer.update(dt);
         this._myBreakDelayTimer.update(dt);
         this._mySmallBreakDelayTimer.update(dt);
+        this._myMrNOTTimer.update(dt);
 
         if (this._myCurrentWave != null) {
             let cloneSetups = this._myCurrentWave.update(dt);
@@ -162,15 +194,28 @@ class Vent {
 
         this._myPulseRadar.update(dt);
         this._updateClones(dt);
-
-        if (this._isVentCompleted()) {
-            if (this._myOnVentCompletedCallback) {
-                this._myOnVentCompletedCallback();
+        if (this._myMrNOT) {
+            this._myMrNOT.update(dt);
+            if (this._myMrNOT && this._myMrNOT.isDone()) {
+                this._mrNOTDismissedDone();
             }
-        } else if (this._myCurrentWave != null && this._myCurrentWave.isDone()) {
-            this._getNextWave();
-            if (this._myCurrentWave != null) {
-                this._checkBreak();
+        }
+
+        if (this._myFSM.isInState("wave")) {
+            if (this._isVentCompleted()) {
+                if (this._myOnVentCompletedCallback) {
+                    this._myOnVentCompletedCallback();
+                }
+            } else if (this._myCurrentWave != null && this._myCurrentWave.isDone()) {
+                this._getNextWave();
+                if (this._myCurrentWave != null) {
+                    this._checkBreak();
+                }
+            } else if (this._myVentSetup.myMrNOTSetup.myMrNOTAppearenceEnabled && !this._myVentCompleted) {
+                if (this._myMrNOTTimer.isDone()) {
+                    this._myMrNOTTimer.reset();
+                    this._mrNOTAppear();
+                }
             }
         }
     }
@@ -231,20 +276,26 @@ class Vent {
         this._myVentTimer.update(dt);
         this._myBreakTimer.update(dt);
         this._myBreakDelayTimer.update(dt);
+        this._myMrNOTTimer.update(dt);
 
         this._myPulseRadar.update(dt);
         this._updateClones(dt);
+        if (this._myMrNOT) {
+            this._myMrNOT.update(dt);
+        }
 
-        if (this._isVentCompleted()) {
-            if (this._myOnVentCompletedCallback) {
-                this._myOnVentCompletedCallback();
-            }
-        } else if (this._myBreakTimer.isDone()) {
-            let skipBreak = !this._myVentSetup.myIsEndless && this._myVentTimer.getTimer() <= this._myVentSetup.mySkipBreakWhenTimerBelow.get(Global.myVentDuration);
-            if (!skipBreak && this._myIsSmallBreak && this._myBreakDelayTimer.isDone() && this._myBreakCloneCooldown <= 0) {
-                this._myFSM.perform("startBreak");
-            } else {
-                this._myFSM.perform("end");
+        if (this._myFSM.isInState("break") || this._myFSM.isInState("smallBreak")) {
+            if (this._isVentCompleted()) {
+                if (this._myOnVentCompletedCallback) {
+                    this._myOnVentCompletedCallback();
+                }
+            } else if (this._myBreakTimer.isDone()) {
+                let skipBreak = !this._myVentSetup.myIsEndless && this._myVentTimer.getTimer() <= this._myVentSetup.mySkipBreakWhenTimerBelow.get(Global.myVentDuration);
+                if (!skipBreak && this._myIsSmallBreak && this._myBreakDelayTimer.isDone() && this._myBreakCloneCooldown <= 0) {
+                    this._myFSM.perform("startBreak");
+                } else {
+                    this._myFSM.perform("end");
+                }
             }
         }
     }
@@ -257,6 +308,10 @@ class Vent {
         let smallBreakDelayMultiplier = this._myCurrentVentRuntimeSetup.myVentMultipliers.mySmallBreakDelayTimeMultiplier.get(Global.myVentDuration);
         this._mySmallBreakDelayTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration) * smallBreakDelayMultiplier);
         this._mySmallBreakCloneCooldown = this._myVentSetup.mySmallBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
+
+        if (this._myMrNOTTimer.isStarted() && this._myMrNOTTimer.getTimer() <= this._myVentSetup.myMrNOTSetup.myResetMrNOTTimerWhenBelowBreak.get(Global.myVentDuration)) {
+            this._myMrNOTTimer = new PP.Timer(this._myVentSetup.myMrNOTSetup.myResetTimerAmountBreak.get(Global.myVentDuration));
+        }
 
         this._debugNextWave();
     }
@@ -271,6 +326,10 @@ class Vent {
 
             this._mySmallBreakTimer = new PP.Timer(0, false);
             this._mySmallBreakCloneCooldown = 0;
+        }
+
+        if (this._myMrNOTTimer.isStarted() && this._myMrNOTTimer.getTimer() <= this._myVentSetup.myMrNOTSetup.myResetMrNOTTimerWhenBelowSmallBreak.get(Global.myVentDuration)) {
+            this._myMrNOTTimer = new PP.Timer(this._myVentSetup.myMrNOTSetup.myResetTimerAmountSmallBreak.get(Global.myVentDuration));
         }
 
         this._debugNextWave();
@@ -288,6 +347,12 @@ class Vent {
         for (let clone of this._myMrNOTClones) {
             clone.destroy();
         }
+
+        if (this._myMrNOT) {
+            this._myMrNOT.hide();
+            this._myMrNOT = null;
+        }
+
         this._myMrNOTClones = [];
     }
 
@@ -296,6 +361,11 @@ class Vent {
     }
 
     _startClean(fsm, transition, cleanDelay) {
+        this._myMrNOTCleanDelay = new PP.Timer(cleanDelay);
+        if (this._myMrNOT) {
+            this._myMrNOT.stop();
+        }
+
         this._myUnspawnList = [];
 
         let indexList = [];
@@ -319,6 +389,15 @@ class Vent {
     }
 
     _clean(dt) {
+        if (this._myMrNOTCleanDelay.isRunning()) {
+            this._myMrNOTCleanDelay.update(dt);
+            if (this._myMrNOTCleanDelay.isDone()) {
+                if (this._myMrNOT) {
+                    this._myMrNOT.disappear();
+                }
+            }
+        }
+
         if (this._myUnspawnList.length > 0) {
             let first = this._myUnspawnList[0];
             first[1].update(dt);
@@ -329,8 +408,14 @@ class Vent {
         }
 
         this._updateClones(dt);
+        if (this._myMrNOT) {
+            this._myMrNOT.update(dt);
+            if (this._myMrNOT && this._myMrNOT.isDone()) {
+                this._myMrNOT = null;
+            }
+        }
 
-        if (this._myMrNOTClones.length <= 0) {
+        if (this._myMrNOTClones.length <= 0 && this._myMrNOT == null) {
             this._myFSM.perform("end");
         }
     }
@@ -372,6 +457,14 @@ class Vent {
         }
     }
 
+    _mrNOTReachYou() {
+        if (PP.myEasyTuneVariables.get("Prevent Vent Lost")) {
+            this._mrNOTDismissed();
+        } else {
+            this._mrNOTCloneReachYou();
+        }
+    }
+
     _updateClones(dt) {
         for (let clone of this._myMrNOTClones) {
             clone.update(dt);
@@ -381,7 +474,7 @@ class Vent {
     }
 
     _isVentCompleted() {
-        return this._myVentCompleted && this._myMrNOTClones.length <= 0;
+        return this._myVentCompleted && this._myMrNOTClones.length <= 0 && this._myMrNOT == null;
     }
 
     _debugNextWave() {
@@ -398,11 +491,65 @@ class Vent {
                 console.log("   Break -", this._myBreakDelayTimer.getTimer().toFixed(3), " -", this._myBreakCloneCooldown);
                 console.log("   Small Break -", this._mySmallBreakDelayTimer.getTimer().toFixed(3), " -", this._mySmallBreakCloneCooldown);
             }
+
+            if (this._myDebugActiveMrNOT) {
+                console.log("   mr NOT -", this._myMrNOTTimer.getTimer().toFixed(3));
+            }
         }
     }
 
     _prepareVentRuntimeSetup() {
+        this._myCurrentVentRuntimeSetup = new VentRuntimeSetup();
         this._myCurrentVentRuntimeSetup.myValidAngleRanges = this._myVentSetup.myValidAngleRanges;
         this._myCurrentVentRuntimeSetup.myVentMultipliers = this._myVentSetup.myVentMultipliers;
+    }
+
+    _mrNOTAppear() {
+        let direction = Global.myPlayerForward.pp_clone();
+        let startAngle = this._myVentSetup.myMrNOTSetup.myStartAngle.get(Global.myVentDuration) * Math.pp_randomSign();
+        direction.vec3_rotateAxis(startAngle, [0, 1, 0], direction);
+
+        this._myCurrentVentRuntimeSetup = new VentRuntimeSetup();
+        this._myCurrentVentRuntimeSetup.myValidAngleRanges = [];
+        let timeToReachTarget = this._myVentSetup.myMrNOTSetup.myTimeToReachTarget.get(Global.myVentDuration);
+        this._myCurrentVentRuntimeSetup.myValidAngleRanges.push([new RangeValueOverTime([30, 180], [90, 180], (timeToReachTarget / 5) + Global.myVentDuration, timeToReachTarget + Global.myVentDuration), direction.pp_clone()]);
+        this._myCurrentVentRuntimeSetup.myValidAngleRanges.push([new RangeValueOverTime([-180, -30], [-180, -90], (timeToReachTarget / 5) + Global.myVentDuration, timeToReachTarget + Global.myVentDuration), direction.pp_clone()]);
+
+        this._myCurrentVentRuntimeSetup.myVentMultipliers = this._myVentSetup.myMrNOTSetup.myVentMultipliers;
+
+        let mrNOTSetup = new MrNOTVentSetup();
+        mrNOTSetup.myDirection = direction;
+        mrNOTSetup.myTimeToReachTarget = timeToReachTarget;
+        mrNOTSetup.myMaxPatience = this._myVentSetup.myMrNOTSetup.myMaxPatience.get(timeToReachTarget);
+
+        this._myMrNOT = new MrNOTVent(mrNOTSetup, this._myCurrentVentRuntimeSetup, this._mrNOTDismissed.bind(this), this._mrNOTReachYou.bind(this));
+
+        this._myBreakDelayTimer.start(0);
+        this._myBreakDelayTimer.update(0);
+        this._myBreakCloneCooldown = 0;
+
+        if (this._myDebugActive) {
+            console.log("mr NOT - Duration -", mrNOTSetup.myTimeToReachTarget.toFixed(3), " - Patience -", mrNOTSetup.myMaxPatience);
+        }
+    }
+
+    _mrNOTDismissed() {
+        this._prepareVentRuntimeSetup();
+
+        this._myMrNOT.disappear();
+
+        this._myBreakDelayTimer.start(0);
+        this._myBreakDelayTimer.update(0);
+        this._myBreakCloneCooldown = 0;
+
+        if (this._myFSM.isInState("break") || this._myFSM.isInState("smallBreak")) {
+            this._myFSM.perform("forceEnd");
+            this._myCurrentWave = new ZeroWave();
+        }
+    }
+
+    _mrNOTDismissedDone() {
+        this._myMrNOT = null;
+        this._myMrNOTTimer = new PP.Timer(this._myVentSetup.myMrNOTSetup.myMrNOTTimeCooldown.get(Global.myVentDuration));
     }
 }
