@@ -181,7 +181,6 @@ class MrNOTVent {
                             if (evidenceComponent.getEvidence().canHit()) {
                                 hit = true;
                                 hittingObjects.push(collidingComponent.object);
-                                break;
                             }
                         }
                     }
@@ -193,8 +192,13 @@ class MrNOTVent {
         if (usePhysx) {
             let collisionsStart = this._myCollisionsCollector.getCollisionsStart();
             if (collisionsStart.length > 0) {
-                hit = true;
-                hittingObjects.push(...collisionsStart);
+                for (let collision of collisionsStart) {
+                    let evidenceComponent = collision.pp_getComponent("evidence-component");
+                    if (evidenceComponent.getEvidence().canHit()) {
+                        hit = true;
+                        hittingObjects.push(collision);
+                    }
+                }
             }
         }
 

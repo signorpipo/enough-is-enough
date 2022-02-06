@@ -195,6 +195,12 @@ class Evidence {
             Global.myStatistics.myEvidencesThrown += 1;
         }
 
+        if (this._myBigHitExplosion) {
+            this._myPhysx.kinematic = true;
+        }
+
+        this._mySetKinematicTimer = this._myHitExplosion;
+
         this._myTimer.start(PP.myEasyTuneVariables.get("Unspawn Menu Time"));
 
         if (!this._myHitExplosion && !this._myBigHitExplosion) {
@@ -206,6 +212,11 @@ class Evidence {
 
     _unspawning(dt) {
         this._myTimer.update(dt);
+
+        if (this._mySetKinematicTimer && this._myTimer.getPercentage() >= 0.7) {
+            this._myPhysx.kinematic = true;
+            this._mySetKinematicTimer = false;
+        }
 
         let scaleMultiplier = Math.pp_interpolate(1, PP.myEasyTuneVariables.get("Unspawn Menu Scale"), this._myTimer.getPercentage());
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));

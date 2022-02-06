@@ -23887,7 +23887,8 @@
                 9.999899930335233e-7,
                 1.0
             ],
-            "font": "assets/fonts/Tourney-Black.ttf"
+            "font": "assets/fonts/Tourney-Black.ttf",
+            "useMultiDraw": true
         },
         "runtime": {
             "xrButtonColor": "white",
