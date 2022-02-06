@@ -206,7 +206,7 @@ class MrNOT {
                 this._myHitAudio.play();
 
                 let evidence = object.pp_getComponent("evidence-component");
-                evidence.hit(this._myObject);
+                evidence.bigHit(this._myObject);
 
                 patienceToRemove++;
             }

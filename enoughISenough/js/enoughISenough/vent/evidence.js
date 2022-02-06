@@ -125,6 +125,7 @@ class Evidence {
 
         this._myEvidenceComponent = this._myObject.pp_getComponentHierarchy("evidence-component");
         this._myEvidenceComponent.setCallbackOnHit(this._onHit.bind(this));
+        this._myEvidenceComponent.setCallbackOnBigHit(this._onBigHit.bind(this));
         this._myEvidenceComponent.setEvidence(this);
         this._myHasBeenThrown = false;
 
@@ -146,6 +147,7 @@ class Evidence {
 
         this._mySpawnTimer.start(1);
         this._myHitExplosion = false;
+        this._myBigHitExplosion = false;
         this._myHitFloor = false;
         this._myAvoidParticles = false;
 
@@ -189,13 +191,13 @@ class Evidence {
     }
 
     _startUnspawn() {
-        if (this._myHitFloor || this._myHitExplosion) {
+        if (this._myHitFloor || this._myHitExplosion || this._myBigHitExplosion) {
             Global.myStatistics.myEvidencesThrown += 1;
         }
 
         this._myTimer.start(PP.myEasyTuneVariables.get("Unspawn Menu Time"));
 
-        if (!this._myHitExplosion) {
+        if (!this._myHitExplosion && !this._myBigHitExplosion) {
             this._myDisappearAudio.setPosition(this._myObject.pp_getPosition());
             this._myDisappearAudio.setPitch(Math.pp_random(0.85, 1.05));
             this._myDisappearAudio.play();
@@ -212,8 +214,11 @@ class Evidence {
             let scaleMultiplier = 1;
             let radiusMultiplier = 1;
             if (this._myHitExplosion) {
-                scaleMultiplier = 2;
+                scaleMultiplier = 3;
                 radiusMultiplier = 1.5;
+            } else if (this._myBigHitExplosion) {
+                scaleMultiplier = 3.5;
+                radiusMultiplier = 2.5;
             }
 
             if (!this._myAvoidParticles) {
@@ -255,6 +260,11 @@ class Evidence {
 
     _onHit() {
         this._myHitExplosion = true;
+        this._myFSM.perform("unspawn");
+    }
+
+    _onBigHit() {
+        this._myBigHitExplosion = true;
         this._myFSM.perform("unspawn");
     }
 

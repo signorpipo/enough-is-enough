@@ -3,6 +3,7 @@ WL.registerComponent('evidence-component', {
 }, {
     init: function () {
         this._myCallbackOnHit = null;
+        this._myCallbackOnBigHit = null;
         this._myEvidence = null;
     },
     start: function () {
@@ -11,6 +12,9 @@ WL.registerComponent('evidence-component', {
     },
     setCallbackOnHit: function (callback) {
         this._myCallbackOnHit = callback;
+    },
+    setCallbackOnBigHit: function (callback) {
+        this._myCallbackOnBigHit = callback;
     },
     setEvidence: function (evidence) {
         this._myEvidence = evidence;
@@ -24,6 +28,11 @@ WL.registerComponent('evidence-component', {
     hit: function (objectHit) {
         if (this._myCallbackOnHit) {
             this._myCallbackOnHit(objectHit, this);
+        }
+    },
+    bigHit: function (objectHit) {
+        if (this._myCallbackOnBigHit) {
+            this._myCallbackOnBigHit(objectHit, this);
         }
     }
 });
