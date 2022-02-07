@@ -1816,7 +1816,7 @@
                 {
                     "type": "color-on-select",
                     "color-on-select": {
-                        "_myPhysxMaterial": "281",
+                        "_myPhysxMaterial": "286",
                         "_myIdleMaterial": "284"
                     }
                 }
@@ -1894,7 +1894,7 @@
                     "type": "color-on-select",
                     "color-on-select": {
                         "_myHandedness": "right",
-                        "_myPhysxMaterial": "281",
+                        "_myPhysxMaterial": "286",
                         "_myIdleMaterial": "284"
                     }
                 }
