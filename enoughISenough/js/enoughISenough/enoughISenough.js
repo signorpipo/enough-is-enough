@@ -123,7 +123,7 @@ class enoughISenough {
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/clone_appear.wav");
             audioSetup.myRate = 0.7;
-            audioSetup.myVolume = 0.3;
+            audioSetup.myVolume = 0.5;
             audioSetup.myReferenceDistance = 1000000;
             manager.addAudioSetup(SfxID.CLONE_APPEAR, audioSetup);
         }
