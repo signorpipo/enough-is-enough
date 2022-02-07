@@ -8,7 +8,7 @@ class GiveUsAHugSetup extends IAmHereWaveSetup {
         this.mySameHugSize = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
 
         this.myEqualDistance = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
-        this.myMinAngleBetweenClonesHugging = new RangeValueOverTime([10, 10], [10, 10], 0, 0, false);
+        this.myMinAngleBetweenClonesHugging = new RangeValueOverTime([20, 20], [20, 20], 0, 0, false);
     }
 
     createWave(ventRuntimeSetup, timeElapsed, refDirection = null) {
@@ -63,6 +63,7 @@ class GiveUsAHug extends IAmHereWave {
                 let attempts = 100;
                 let angle = 0;
 
+                let startDirection = [];
                 while (attempts > 0) {
                     angle = Math.pp_random(0, this._myHugAngle) * Math.pp_randomSign();
                     let angleValid = true;
@@ -75,7 +76,12 @@ class GiveUsAHug extends IAmHereWave {
                     }
 
                     if (angleValid) {
-                        attempts = 0;
+                        direction.vec3_rotateAxis(angle, [0, 1, 0], startDirection);
+                        angleValid = this._checkVentAngleValid(startDirection);
+
+                        if (angleValid) {
+                            attempts = 0;
+                        }
                     }
 
                     attempts--;
@@ -108,7 +114,7 @@ class GiveUsAHug extends IAmHereWave {
     _areFarEnough(cloneSetupToTest, cloneSetups) {
         let valid = true;
         for (let cloneSetup of cloneSetups) {
-            if (cloneSetup.myDirection.vec3_angle(cloneSetupToTest.myDirection) < this._myMinAngleBetweenClonesHugging) {
+            if (cloneSetup != null && cloneSetup.myDirection.vec3_angle(cloneSetupToTest.myDirection) < this._myMinAngleBetweenClonesHugging) {
                 valid = false;
                 break;
             }
