@@ -7,7 +7,7 @@ class GiveUsAHugSetup extends IAmHereWaveSetup {
         this.mySameHugAngle = new RangeValueOverTime([-1, -1], [-1, -1], 0, 0, false); // >= 0 means true
         this.mySameHugSize = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
 
-        this.myEqualDistance = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
+        this.myHugClonesSameDistance = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
         this.myMinAngleBetweenClonesHugging = new RangeValueOverTime([20, 20], [20, 20], 0, 0, false);
     }
 
@@ -28,7 +28,7 @@ class GiveUsAHug extends IAmHereWave {
         this._myHugAngle = waveSetup.myHugAngle.get(timeElapsed);
         this._mySameHugAngle = waveSetup.mySameHugAngle.get(timeElapsed) >= 0;
         this._mySameHugSize = waveSetup.mySameHugSize.get(timeElapsed) >= 0;
-        this._myEqualDistance = waveSetup.myEqualDistance.get(timeElapsed) >= 0;
+        this._myHugClonesSameDistance = waveSetup.myHugClonesSameDistance.get(timeElapsed) >= 0;
         this._myMinAngleBetweenClonesHugging = waveSetup.myMinAngleBetweenClonesHugging.get(timeElapsed);
     }
 
@@ -39,7 +39,7 @@ class GiveUsAHug extends IAmHereWave {
     _createCloneSetupsWithDirection(direction) {
         let cloneSetups = [];
 
-        if (this._myEqualDistance) {
+        if (this._myHugClonesSameDistance) {
             let totalAngle = this._myHugAngle * 2;
             let sliceAngle = totalAngle / (this._myHugSize - 1);
 
@@ -126,7 +126,7 @@ class GiveUsAHug extends IAmHereWave {
     _checkDirectionValid(direction) {
         let isValid = true;
 
-        if (this._myEqualDistance) {
+        if (this._myHugClonesSameDistance) {
             let totalAngle = this._myHugAngle * 2;
             let sliceAngle = totalAngle / (this._myHugSize - 1);
 
