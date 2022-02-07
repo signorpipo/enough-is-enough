@@ -208,7 +208,7 @@ class MrNOTVentState extends PP.State {
     }
 
     _onReach() {
-        console.log("Vent Lost - Duration -", Global.myVentDuration.toFixed(3));
+        this._myVent.ventLostDebug();
         this._myFSM.perform("defeat");
     }
 
@@ -411,9 +411,10 @@ class MrNOTVentState extends PP.State {
             nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
             nextWavesSetup.addWave("Merry_Go_Round_Left", 10);
             nextWavesSetup.addWave("I_Am_Here", 10);
-            nextWavesSetup.addWave("Give_Us_A_Hug", 10);
+            nextWavesSetup.addWave("Queue_For_You", 10);
             nextWavesSetup.addWave("I_Am_Everywhere", 10);
             nextWavesSetup.addWave("Man_In_The_Middle", 10);
+
 
             ventSetup.myWavesMap.set("Give_Us_A_Hug", wave);
             ventSetup.myNextWavesMap.set("Give_Us_A_Hug", nextWavesSetup);

@@ -128,8 +128,8 @@ class Vent {
         this._myFSM.init("init");
 
         this._myDebugActive = true;
-        this._myDebugActiveBreak = true;
-        this._myDebugActiveStats = true;
+        this._myDebugActiveBreak = false;
+        this._myDebugActiveStats = false;
         this._myDebugActiveMrNOT = false;
 
         this._myOncePerFrame = false;
@@ -204,6 +204,10 @@ class Vent {
         if (this._myFSM.isInState("wave")) {
             if (this._isVentCompleted()) {
                 if (this._myOnVentCompletedCallback) {
+                    if (this._myDebugActive) {
+                        console.log("Vent Completed - Duration -", Global.myVentDuration.toFixed(3), "- Dismissed -", this._myCloneDismissed);
+                    }
+
                     this._myOnVentCompletedCallback();
                 }
             } else if (this._myCurrentWave != null && this._myCurrentWave.isDone()) {
@@ -224,10 +228,6 @@ class Vent {
         if (!this._myVentSetup.myIsEndless && this._myVentTimer.isDone() && this._myClonesLeft <= 0) {
             this._myVentCompleted = true;
             this._myCurrentWave = null;
-
-            if (this._myDebugActive) {
-                console.log("Vent Completed - Duration -", Global.myVentDuration.toFixed(3), "- Dismissed -", this._myCloneDismissed);
-            }
         } else {
             this._myCurrentWaveID = this._myVentSetup.myNextWavesMap.get(this._myCurrentWaveID).getNextWave(Global.myVentDuration);
 
@@ -287,6 +287,10 @@ class Vent {
         if (this._myFSM.isInState("break") || this._myFSM.isInState("smallBreak")) {
             if (this._isVentCompleted()) {
                 if (this._myOnVentCompletedCallback) {
+                    if (this._myDebugActive) {
+                        console.log("Vent Completed - Duration -", Global.myVentDuration.toFixed(3), "- Dismissed -", this._myCloneDismissed);
+                    }
+
                     this._myOnVentCompletedCallback();
                 }
             } else if (this._myBreakTimer.isDone()) {
@@ -452,8 +456,18 @@ class Vent {
 
     _mrNOTCloneReachYou() {
         if (this._myOnVentLostCallback && this._myOncePerFrame && this._myFSM.isInState("wave")) {
+            if (this._myDebugActive) {
+                console.log("Vent Lost - Duration -", Global.myVentDuration.toFixed(3), "- Dismissed -", this._myCloneDismissed);
+            }
+
             this._myOnVentLostCallback();
             this._myOncePerFrame = false;
+        }
+    }
+
+    ventLostDebug() {
+        if (this._myDebugActive) {
+            console.log("Vent Lost - Duration -", Global.myVentDuration.toFixed(3), "- Dismissed -", this._myCloneDismissed);
         }
     }
 
