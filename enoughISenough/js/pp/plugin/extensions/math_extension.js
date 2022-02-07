@@ -11,6 +11,14 @@ Math.pp_clamp = function (value, start, end) {
     return Math.min(Math.max(value, min), max);
 };
 
+Math.pp_sign = function (value, zeroSign = 1) {
+    let sign = Math.sign(value);
+    if (sign == 0) {
+        sign = Math.sign(zeroSign);
+    }
+    return sign;
+};
+
 Math.pp_toDegrees = function (angle) {
     return angle * (180 / Math.PI);
 };

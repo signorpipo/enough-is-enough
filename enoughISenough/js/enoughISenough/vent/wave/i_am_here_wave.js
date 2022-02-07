@@ -54,7 +54,7 @@ class IAmHereWave {
         this._myDoneDelayTimer = new PP.Timer(this._myWaveSetup.myDoneDelay.get(this._myGameTimeElapsed) * doneTimeMultiplier, false);
 
         this._myFirst = true;
-        this._myLastSign = Math.pp_randomSign();
+        this._myLastSign = null;
 
         this._myOneCloneSetupValid = false;
         this._myLastValidSpawnTimer = this._mySpawnTimer.getDuration();
@@ -151,7 +151,11 @@ class IAmHereWave {
             let angleValid = false;
             let startDirection = [];
             while (attempts > 0) {
-                angle = Math.pp_random(0, this._mySpawnConeAngle) * -this._myLastSign;
+                if (this._myLastSign != null) {
+                    angle = Math.pp_random(0, this._mySpawnConeAngle) * -this._myLastSign;
+                } else {
+                    angle = Math.pp_random(0, this._mySpawnConeAngle) * Math.pp_randomSign();
+                }
                 if (Math.pp_angleDistance(angle, this._myPreviousAngle) >= this._myMinAngleBetweenClones || this._myFirst) {
                     this._myWaveStartDirection.vec3_rotateAxis(angle, [0, 1, 0], startDirection);
                     angleValid = this._checkDirectionValid(startDirection);
@@ -163,10 +167,15 @@ class IAmHereWave {
                 attempts--;
             }
 
+            if (this._myLastSign == null) {
+                this._myLastSign = Math.pp_sign(angle);
+            } else {
+                this._myLastSign *= -1;
+            }
+
             direction = this._myWaveStartDirection.pp_clone();
             direction.vec3_rotateAxis(angle, [0, 1, 0], direction);
             direction.vec3_normalize(direction);
-            this._myLastSign *= -1;
             this._myPreviousAngle = angle;
 
             this._myFirst = false;
