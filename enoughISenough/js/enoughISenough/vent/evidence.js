@@ -228,8 +228,8 @@ class Evidence {
                 scaleMultiplier = 3;
                 radiusMultiplier = 1.5;
             } else if (this._myBigHitExplosion) {
-                scaleMultiplier = 3.5;
-                radiusMultiplier = 2.5;
+                scaleMultiplier = 3;
+                radiusMultiplier = 2;
             }
 
             if (!this._myAvoidParticles) {

@@ -71,6 +71,7 @@ class MrNOTVentState extends PP.State {
     _prepareState(fsm, transition) {
         Global.myLightFadeInTime = 0;
         Global.myVentDuration = 0;
+        this._myNotEnough.stop();
     }
 
     _prepareVent() {
@@ -148,6 +149,7 @@ class MrNOTVentState extends PP.State {
         this._hideEvidences();
         this._myMrNOT.hide();
         this._myVent.stop();
+        this._myNotEnough.stop();
     }
 
     _hideEvidences() {
@@ -218,124 +220,106 @@ class MrNOTVentState extends PP.State {
 
         ventSetup.myIsEndless = true;
 
-        ventSetup.myBreakSetup.myBreakDuration = new RangeValue([3, 4]);
-        ventSetup.myBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([40, 45], [30, 35], 10, 30, false);
+        ventSetup.myBreakSetup.myBreakDuration = new RangeValue([2, 3]);
+        ventSetup.myBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([20, 25], [20, 25], 10, 30, false);
         ventSetup.myBreakSetup.myBreakCloneCooldown = 5;
 
-        ventSetup.mySmallBreakSetup.myBreakDuration = new RangeValueOverTime([2, 3], [1.5, 2.5], 30, 75, false);
-        ventSetup.mySmallBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([40, 50], [8, 12], 10, 45, false);
+        ventSetup.mySmallBreakSetup.myBreakDuration = new RangeValueOverTime([1, 2], [1, 2], 10, 30, false);
+        ventSetup.mySmallBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([800, 1200], [800, 1200], 10, 30, false);
         ventSetup.mySmallBreakSetup.myBreakCloneCooldown = 3;
 
         ventSetup.myCloneRotationSetup.mySpinSpeed = new RangeValue([4, 6], false);
-        ventSetup.myCloneRotationSetup.mySpinChance = new RangeValueOverTime([1, 12], [1, 4], 50, 100, true);
-        ventSetup.myCloneRotationSetup.mySpinStartTime = 50;
+        ventSetup.myCloneRotationSetup.mySpinChance = new RangeValueOverTime([1, 12], [1, 4], 25, 50, true);
+        ventSetup.myCloneRotationSetup.mySpinStartTime = 25;
 
-        ventSetup.myCloneRotationSetup.myTiltAngle = new RangeValueOverTime([0, 10], [0, 15], 30, 60, false);
-        ventSetup.myCloneRotationSetup.myTiltChance = new RangeValueOverTime([1, 6], [1, 2], 30, 80, true);
-        ventSetup.myCloneRotationSetup.myTiltStartTime = 30;
+        ventSetup.myCloneRotationSetup.myTiltAngle = new RangeValueOverTime([0, 10], [0, 15], 15, 35, false);
+        ventSetup.myCloneRotationSetup.myTiltChance = new RangeValueOverTime([1, 6], [1, 2], 15, 35, true);
+        ventSetup.myCloneRotationSetup.myTiltStartTime = 15;
 
         ventSetup.myValidAngleRanges =
             [[new RangeValueOverTime([30, 180], [90, 180], PP.myEasyTuneVariables.get("Time To Reach Target") / 5, PP.myEasyTuneVariables.get("Time To Reach Target")), [0, 0, -1]],
             [new RangeValueOverTime([-180, -30], [-180, -90], PP.myEasyTuneVariables.get("Time To Reach Target") / 5, PP.myEasyTuneVariables.get("Time To Reach Target")), [0, 0, -1]]];
 
         let multipliers = new VentRuntimeMultipliers();
-        multipliers.mySpawnTimeMultiplier = 0.3;
+
+        multipliers.mySpawnTimeMultiplier = 1;
+        multipliers.myDoneTimeMultiplier = 1;
+        multipliers.myBreakTimeMultiplier = 1;
+        multipliers.myBreakDelayTimeMultiplier = 1;
+        multipliers.mySmallBreakTimeMultiplier = 1;
+        multipliers.mySmallBreakDelayTimeMultiplier = 1;
+
         ventSetup.myVentMultipliers = multipliers;
 
-        ventSetup.myDelayBeforeStart = 4.5;
+        ventSetup.myDelayBeforeStart = 7;
+
+        let timeBetweenClones = new RangeValueOverTime([2, 3], [1.5, 2.5], 10, 30, false);
+        let doneDelay = new RangeValueOverTime([2.5, 4], [2, 3], 10, 30, false);
 
         {
             let wave = new IAmHereWaveSetup();
 
-            wave.myClonesCount = 0;
-            wave.myDoneDelay = 0;
-
-            let nextWavesSetup = new NextWavesSetup();
-            nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
-
-            ventSetup.myWavesMap.set("Zero", wave);
-            ventSetup.myNextWavesMap.set("Zero", nextWavesSetup);
-        }
-
-        {
-            let wave = new IAmHereWaveSetup();
-
-            wave.myClonesCount = new RangeValueOverTime([1, 3], [1, 5], 10, 70, true);
-            wave.myWaveStartAngle = new RangeValueOverTime([0, 30], [0, 50], 10, 70, false);
-            wave.mySpawnConeAngle = new RangeValue([20, 40]);
+            wave.myClonesCount = new RangeValue([2, 3], true);
+            wave.myWaveStartAngle = new RangeValue([35, 45]);
+            wave.mySpawnConeAngle = new RangeValue([20, 30]);
             wave.myMinAngleBetweenClones = 10;
-            wave.myTimeBetweenClones = new RangeValueOverTime([2, 3], [1, 2], 10, 70, false);
-            wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 2.75], 10, 70, false);
+            wave.myTimeBetweenClones = new RangeValue([2, 3]);
+            wave.myDoneDelay = new RangeValue([2.5, 4]);
             wave.myFirstCloneInTheMiddle = true;
 
             let nextWavesSetup = new NextWavesSetup();
             nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
             nextWavesSetup.addWave("Merry_Go_Round_Left", 10);
-            nextWavesSetup.addWave("I_Am_Here_Front", 5);
-            nextWavesSetup.addWave("I_Am_Here_Side", 10);
-            nextWavesSetup.addWave("I_Am_Everywhere", 10);
+            nextWavesSetup.addWave("I_Am_Here", 10);
             nextWavesSetup.addWave("Queue_For_You", 10);
-            nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 30, 40);
-            nextWavesSetup.addWave("Give_Us_A_Hug", new ValueOverTime(15, 25, 40, 70), 40);
-            nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 83, 93);
-            nextWavesSetup.addWave("Man_In_The_Middle", 100000, 60, 70);
-            nextWavesSetup.addWave("Man_In_The_Middle", 20, 70);
-            nextWavesSetup.addWave("Man_In_The_Middle", 100000, 100);
+            nextWavesSetup.addWave("Give_Us_A_Hug", 10);
+            nextWavesSetup.addWave("I_Am_Everywhere", 10);
+            nextWavesSetup.addWave("Man_In_The_Middle", 10);
 
-            ventSetup.myWavesMap.set("I_Am_Here_Front", wave);
-            ventSetup.myNextWavesMap.set("I_Am_Here_Front", nextWavesSetup);
+            ventSetup.myWavesMap.set("I_Am_Here_mr_NOT_Side", wave);
+            ventSetup.myNextWavesMap.set("I_Am_Here_mr_NOT_Side", nextWavesSetup);
         }
 
         {
             let wave = new IAmHereWaveSetup();
 
-            wave.myClonesCount = new RangeValueOverTime([1, 3], [1, 5], 10, 70, true);
-            wave.myWaveStartAngle = new RangeValueOverTime([60, 130], [60, 180], 10, 70, false);
+            wave.myClonesCount = new RangeValueOverTime([1, 3], [1, 5], 10, 30, true);
+            wave.myWaveStartAngle = new RangeValue([0, 180]);
             wave.mySpawnConeAngle = new RangeValue([20, 40]);
             wave.myMinAngleBetweenClones = 10;
-            wave.myTimeBetweenClones = new RangeValueOverTime([2, 3], [1, 2], 10, 70, false);
-            wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 2.75], 10, 70, false);
+            wave.myTimeBetweenClones = timeBetweenClones;
+            wave.myDoneDelay = doneDelay;
             wave.myFirstCloneInTheMiddle = true;
 
             let nextWavesSetup = new NextWavesSetup();
             nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
             nextWavesSetup.addWave("Merry_Go_Round_Left", 10);
-            nextWavesSetup.addWave("I_Am_Here_Front", 5);
-            nextWavesSetup.addWave("I_Am_Here_Side", 10);
-            nextWavesSetup.addWave("I_Am_Everywhere", 10);
+            nextWavesSetup.addWave("I_Am_Here", 10);
             nextWavesSetup.addWave("Queue_For_You", 10);
-            nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 30, 40);
-            nextWavesSetup.addWave("Give_Us_A_Hug", new ValueOverTime(15, 25, 40, 70), 40);
-            nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 83, 93);
-            nextWavesSetup.addWave("Man_In_The_Middle", 100000, 60, 70);
-            nextWavesSetup.addWave("Man_In_The_Middle", 20, 70);
-            nextWavesSetup.addWave("Man_In_The_Middle", 100000, 100);
+            nextWavesSetup.addWave("Give_Us_A_Hug", 10);
+            nextWavesSetup.addWave("I_Am_Everywhere", 10);
+            nextWavesSetup.addWave("Man_In_The_Middle", 10);
 
-            ventSetup.myWavesMap.set("I_Am_Here_Side", wave);
-            ventSetup.myNextWavesMap.set("I_Am_Here_Side", nextWavesSetup);
+            ventSetup.myWavesMap.set("I_Am_Here", wave);
+            ventSetup.myNextWavesMap.set("I_Am_Here", nextWavesSetup);
         }
 
         {
             let wave = new IAmEverywhereWaveSetup();
 
-            wave.myWavesCount = new RangeValueOverTime([3, 4], [3, 5], 10, 70, true);
-            wave.myAngleBetweenWaves = new RangeValueOverTime([70, 120], [70, 120], 10, 70, false);
-            wave.myTimeBetweenWaves = new RangeValueOverTime([2, 3], [1.5, 2.25], 10, 70, false);
-            wave.myDoneDelay = new RangeValueOverTime([3, 4], [2.5, 3], 10, 70, false);
-            wave.myWaveStartAngle = new RangeValue([70, 120]);
+            wave.myWavesCount = new RangeValueOverTime([3, 4], [3, 5], 10, 30, true);
+            wave.myAngleBetweenWaves = new RangeValueOverTime([70, 120], [70, 120], 10, 30, false);
+            wave.myTimeBetweenWaves = timeBetweenClones;
+            wave.myDoneDelay = new RangeValueOverTime([3, 4], [2.5, 3], 10, 30, false);
+            wave.myWaveStartAngle = new RangeValue([0, 180]);
 
             let nextWavesSetup = new NextWavesSetup();
             nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
             nextWavesSetup.addWave("Merry_Go_Round_Left", 10);
-            nextWavesSetup.addWave("I_Am_Here_Front", 5);
-            nextWavesSetup.addWave("I_Am_Here_Side", 10);
+            nextWavesSetup.addWave("I_Am_Here", 10);
             nextWavesSetup.addWave("Queue_For_You", 10);
-            nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 30, 40);
-            nextWavesSetup.addWave("Give_Us_A_Hug", new ValueOverTime(15, 25, 40, 70), 40);
-            nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 83, 93);
-            nextWavesSetup.addWave("Man_In_The_Middle", 100000, 60, 70);
-            nextWavesSetup.addWave("Man_In_The_Middle", 20, 70);
-            nextWavesSetup.addWave("Man_In_The_Middle", 100000, 100);
+            nextWavesSetup.addWave("Give_Us_A_Hug", 10);
+            nextWavesSetup.addWave("Man_In_The_Middle", 10);
 
             ventSetup.myWavesMap.set("I_Am_Everywhere", wave);
             ventSetup.myNextWavesMap.set("I_Am_Everywhere", nextWavesSetup);
@@ -344,16 +328,21 @@ class MrNOTVentState extends PP.State {
         {
             let wave = new MerryGoRoundSetup();
 
-            wave.myWavesCount = new RangeValueOverTime([300, 500], [400, 700], 10, 60, true);
+            wave.myWavesCount = new RangeValueOverTime([3, 5], [4, 6], 10, 30, true);
             wave.myAngleBetweenWaves = new RangeValue([15, 25]);
-            wave.myTimeBetweenWaves = new RangeValueOverTime([2, 3], [0.75, 1.25], 10, 70, false);
-            wave.myWaveStartAngle = new RangeValueOverTime([0, 60], [0, 100], 10, 70, false);
+            wave.myTimeBetweenWaves = new RangeValueOverTime([2, 3], [1.5, 2], 10, 30, false);
+            wave.myWaveStartAngle = new RangeValue([0, 180]);
             wave.mySameTimeBetweenWaves = 1;
-            wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 2.75], 10, 70, false);
+            wave.myDoneDelay = doneDelay;
             wave.myWaveDirection = 1;
 
             let nextWavesSetup = new NextWavesSetup();
             nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
+            nextWavesSetup.addWave("I_Am_Here", 10);
+            nextWavesSetup.addWave("Queue_For_You", 10);
+            nextWavesSetup.addWave("Give_Us_A_Hug", 10);
+            nextWavesSetup.addWave("I_Am_Everywhere", 10);
+            nextWavesSetup.addWave("Man_In_The_Middle", 10);
 
             ventSetup.myWavesMap.set("Merry_Go_Round_Left", wave);
             ventSetup.myNextWavesMap.set("Merry_Go_Round_Left", nextWavesSetup);
@@ -362,16 +351,21 @@ class MrNOTVentState extends PP.State {
         {
             let wave = new MerryGoRoundSetup();
 
-            wave.myWavesCount = new RangeValueOverTime([300, 500], [400, 700], 10, 60, true);
-            wave.myAngleBetweenWaves = new RangeValue([50, 50]);
-            wave.myTimeBetweenWaves = new RangeValueOverTime([2, 3], [0.75, 1.25], 10, 70, false);
-            wave.myWaveStartAngle = new RangeValueOverTime([0, 60], [0, 100], 10, 70, false);
+            wave.myWavesCount = new RangeValueOverTime([3, 5], [4, 6], 10, 30, true);
+            wave.myAngleBetweenWaves = new RangeValue([15, 25]);
+            wave.myTimeBetweenWaves = new RangeValueOverTime([2, 3], [1.5, 2], 10, 30, false);
+            wave.myWaveStartAngle = new RangeValue([0, 180]);
             wave.mySameTimeBetweenWaves = 1;
-            wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 2.75], 10, 70, false);
+            wave.myDoneDelay = doneDelay;
             wave.myWaveDirection = -1;
 
             let nextWavesSetup = new NextWavesSetup();
-            nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
+            nextWavesSetup.addWave("Merry_Go_Round_Left", 10);
+            nextWavesSetup.addWave("I_Am_Here", 10);
+            nextWavesSetup.addWave("Queue_For_You", 10);
+            nextWavesSetup.addWave("Give_Us_A_Hug", 10);
+            nextWavesSetup.addWave("I_Am_Everywhere", 10);
+            nextWavesSetup.addWave("Man_In_The_Middle", 10);
 
             ventSetup.myWavesMap.set("Merry_Go_Round_Right", wave);
             ventSetup.myNextWavesMap.set("Merry_Go_Round_Right", nextWavesSetup);
@@ -380,25 +374,20 @@ class MrNOTVentState extends PP.State {
         {
             let wave = new QueueForYouWaveSetup();
 
-            wave.myClonesCount = new RangeValueOverTime([2, 3], [2, 5], 10, 70, true);
-            wave.myWaveStartAngle = new RangeValueOverTime([0, 60], [0, 100], 10, 70, false);
-            wave.myTimeBetweenClones = new RangeValueOverTime([2, 3], [1, 2], 10, 70, false);
-            wave.myDoneDelay = new RangeValueOverTime([2, 4], [2, 2.75], 10, 70, false);
-            wave.mySameTimeBetweenClones = new RangeValueOverTime([1, 1], [-1, 1], 10, 70, false); // >= 0 means true
+            wave.myClonesCount = new RangeValueOverTime([2, 3], [2, 5], 10, 30, true);
+            wave.myWaveStartAngle = new RangeValue([0, 180]);
+            wave.myTimeBetweenClones = timeBetweenClones;
+            wave.myDoneDelay = doneDelay;
+            wave.mySameTimeBetweenClones = new RangeValueOverTime([1, 1], [-1, 1], 10, 30, false); // >= 0 means true
 
             let nextWavesSetup = new NextWavesSetup();
             nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
             nextWavesSetup.addWave("Merry_Go_Round_Left", 10);
-            nextWavesSetup.addWave("I_Am_Here_Front", 5);
-            nextWavesSetup.addWave("I_Am_Here_Side", 10);
-            nextWavesSetup.addWave("I_Am_Everywhere", 10);
+            nextWavesSetup.addWave("I_Am_Here", 10);
             nextWavesSetup.addWave("Queue_For_You", 10);
-            nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 30, 40);
-            nextWavesSetup.addWave("Give_Us_A_Hug", new ValueOverTime(15, 25, 40, 70), 40);
-            nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 83, 93);
-            nextWavesSetup.addWave("Man_In_The_Middle", 100000, 60, 70);
-            nextWavesSetup.addWave("Man_In_The_Middle", 20, 70);
-            nextWavesSetup.addWave("Man_In_The_Middle", 100000, 100);
+            nextWavesSetup.addWave("Give_Us_A_Hug", 10);
+            nextWavesSetup.addWave("I_Am_Everywhere", 10);
+            nextWavesSetup.addWave("Man_In_The_Middle", 10);
 
             ventSetup.myWavesMap.set("Queue_For_You", wave);
             ventSetup.myNextWavesMap.set("Queue_For_You", nextWavesSetup);
@@ -407,27 +396,24 @@ class MrNOTVentState extends PP.State {
         {
             let wave = new GiveUsAHugSetup();
 
-            wave.myClonesCount = new RangeValueOverTime([1, 1], [2, 3], 40, 50, true);
+            wave.myClonesCount = new RangeValueOverTime([1, 2], [2, 3], 10, 30, true);
             wave.mySpawnConeAngle = new RangeValue([20, 40]);
             wave.myMinAngleBetweenClones = 10;
-            wave.myWaveStartAngle = new RangeValueOverTime([0, 10], [0, 60], 40, 70, false);
-            wave.myTimeBetweenClones = new RangeValueOverTime([2, 3], [2, 3], 10, 70, false);
-            wave.myDoneDelay = new RangeValueOverTime([2.5, 4], [2.5, 3], 10, 70, false);
+            wave.myWaveStartAngle = new RangeValue([0, 180]);
+            wave.myTimeBetweenClones = timeBetweenClones;
+            wave.myDoneDelay = doneDelay;
             wave.myFirstCloneInTheMiddle = true;
 
-            wave.myHugSize = new RangeValueOverTime([2, 2], [2, 2], 40, 50, true);
-            wave.myHugAngle = new RangeValueOverTime([30, 40], [30, 50], 40, 60, false);
+            wave.myHugSize = new RangeValueOverTime([2, 2], [2, 2], 10, 30, true);
+            wave.myHugAngle = new RangeValueOverTime([30, 40], [30, 50], 10, 30, false);
 
             let nextWavesSetup = new NextWavesSetup();
             nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
             nextWavesSetup.addWave("Merry_Go_Round_Left", 10);
-            nextWavesSetup.addWave("I_Am_Here_Front", 5);
-            nextWavesSetup.addWave("I_Am_Here_Side", 10);
+            nextWavesSetup.addWave("I_Am_Here", 10);
+            nextWavesSetup.addWave("Give_Us_A_Hug", 10);
             nextWavesSetup.addWave("I_Am_Everywhere", 10);
-            nextWavesSetup.addWave("Queue_For_You", 10);
-            nextWavesSetup.addWave("Man_In_The_Middle", 100000, 60, 70);
-            nextWavesSetup.addWave("Man_In_The_Middle", 20, 70);
-            nextWavesSetup.addWave("Man_In_The_Middle", 100000, 100);
+            nextWavesSetup.addWave("Man_In_The_Middle", 10);
 
             ventSetup.myWavesMap.set("Give_Us_A_Hug", wave);
             ventSetup.myNextWavesMap.set("Give_Us_A_Hug", nextWavesSetup);
@@ -436,28 +422,25 @@ class MrNOTVentState extends PP.State {
         {
             let wave = new ManInTheMiddleSetup();
 
-            wave.myWavesCount = new RangeValueOverTime([3, 3], [3, 4], 70, 85, true);
-            wave.myTimeBeforeStart = new RangeValueOverTime([1.5, 2], [1.5, 2], 70, 85, false);
-            wave.myTimeBetweenWaves = new RangeValueOverTime([1.5, 2], [1, 1.5], 70, 85, false);
-            wave.myWaveStartAngle = new RangeValueOverTime([0, 100], [0, 100], 70, 85, false);
-            wave.myDoneDelay = new RangeValueOverTime([3, 4], [2.5, 3], 10, 70, false);
+            wave.myWavesCount = new RangeValueOverTime([3, 3], [2, 4], 10, 30, true);
+            wave.myTimeBeforeStart = new RangeValueOverTime([1, 1.5], [1, 1.5], 10, 30, false);
+            wave.myTimeBetweenWaves = new RangeValueOverTime([1.5, 2], [1, 2], 10, 30, false);
+            wave.myWaveStartAngle = new RangeValue([0, 180]);
+            wave.myDoneDelay = new RangeValueOverTime([3, 4], [2.5, 3], 10, 30, false);
 
             let nextWavesSetup = new NextWavesSetup();
             nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
             nextWavesSetup.addWave("Merry_Go_Round_Left", 10);
-            nextWavesSetup.addWave("I_Am_Here_Front", 5);
-            nextWavesSetup.addWave("I_Am_Here_Side", 10);
-            nextWavesSetup.addWave("I_Am_Everywhere", 10);
+            nextWavesSetup.addWave("I_Am_Here", 10);
             nextWavesSetup.addWave("Queue_For_You", 10);
-            nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 30, 40);
-            nextWavesSetup.addWave("Give_Us_A_Hug", new ValueOverTime(15, 25, 40, 70), 40);
-            nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 83, 93);
+            nextWavesSetup.addWave("Give_Us_A_Hug", 10);
+            nextWavesSetup.addWave("I_Am_Everywhere", 10);
 
             ventSetup.myWavesMap.set("Man_In_The_Middle", wave);
             ventSetup.myNextWavesMap.set("Man_In_The_Middle", nextWavesSetup);
         }
 
-        ventSetup.myFirstWave = "Zero";
+        ventSetup.myFirstWave = "I_Am_Here_mr_NOT_Side";
 
         return ventSetup;
     }

@@ -18,7 +18,7 @@ class MrNOTVent {
         this._myScale = [5, 5, 5];
 
 
-        this._myTargetPosition = [0, 0, 0];
+        this._myTargetPosition = [0, 1, 0];
         this._myDirection = this._myTargetPosition.vec3_sub(this._myStartPosition);
 
         this._myCallbackOnPatienceOver = callbackOnPatienceOver;
@@ -30,7 +30,7 @@ class MrNOTVent {
         this._myFSM.addState("init");
         this._myFSM.addState("first_wait", new PP.TimerState(0.05, "end"));
         this._myFSM.addState("move", this._move.bind(this));
-        this._myFSM.addState("stop");
+        this._myFSM.addState("stop", this._stopUpdate.bind(this));
         this._myFSM.addState("disappear", this._disappear.bind(this));
         this._myFSM.addState("inactive");
 
@@ -64,7 +64,7 @@ class MrNOTVent {
         this._myParticlesSize = 6.5;
         this._myParticlesSizeMrNot = 0.9;
         this._myMaxPatience = 1;
-        this._myPatienceRefill = 5;
+        this._myPatienceRefill = 0;
 
         this._myReachTargetDistance = this._myMrNOTSetup.myReachTargetDistance;
 
@@ -127,6 +127,8 @@ class MrNOTVent {
 
         this._myAppearAudio.setPosition(this._myObject.pp_getPosition());
         this._myAppearAudio.play();
+
+        this._myRumbleScreen.stop();
     }
 
     _startMove() {
@@ -159,6 +161,10 @@ class MrNOTVent {
             }
             */
         }
+    }
+
+    _stopUpdate() {
+        this._checkHit(true);
     }
 
     _checkHit(avoidCallbacks = false) {

@@ -62,7 +62,7 @@ class MrNOTClone {
         //this._myFSM.setDebugLogActive(true, "        Mr NOT Clone"); 
         this._myFSM.addState("init");
         this._myFSM.addState("move", this._move.bind(this));
-        this._myFSM.addState("stop");
+        this._myFSM.addState("stop", this._stopUpdate.bind(this));
         this._myFSM.addState("unspawning", this._unspawning.bind(this));
         this._myFSM.addState("inactive");
 
@@ -177,7 +177,11 @@ class MrNOTClone {
         }
     }
 
-    _checkHit() {
+    _stopUpdate() {
+        this._checkHit(true);
+    }
+
+    _checkHit(avoidCallbacks = false) {
         let hit = false;
         let hittingObject = null;
 
@@ -217,7 +221,7 @@ class MrNOTClone {
             this._myHitAudio.setPosition(this._myObject.pp_getPosition());
             this._myHitAudio.setPitch(Math.pp_random(0.85, 1.05));
             this._myHitAudio.play();
-            if (this._myCallbackOnDismiss) {
+            if (this._myCallbackOnDismiss && !avoidCallbacks) {
                 this._myCallbackOnDismiss(this, hittingObject);
             }
 

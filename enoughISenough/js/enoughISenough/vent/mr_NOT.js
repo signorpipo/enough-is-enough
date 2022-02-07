@@ -6,10 +6,10 @@ class MrNOT {
         this._myRotation = [40, 0, 0];
         this._myScale = [5, 5, 5];
 
-        this._myTargetPosition = [0, 0, 0];
+        this._myTargetPosition = [0, 1, 0];
         this._myDirection = this._myTargetPosition.vec3_sub(this._myStartPosition);
 
-        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Time To Reach Target", 65, 10, 3));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Time To Reach Target", 60, 10, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Max Patience", 15, 10));
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Reach Distance", 5, 10, 3));
 
@@ -51,12 +51,12 @@ class MrNOT {
 
         //Setup
         this._myReachTargetDistance = 5;
-        this._myMinTargetDistance = 10;
+        this._myMinTargetDistance = 7;
         this._myMinParticleDistance = this._myScale[0] * 0.55;
         this._myParticlesSize = 6.5;
         this._myParticlesSizeMrNot = 0.9;
         this._myMaxPatience = 1;
-        this._myPatienceRefill = 5;
+        this._myPatienceRefill = 2;
 
         this._myReachTargetDistance = PP.myEasyTuneVariables.get("Reach Distance");
 
@@ -65,6 +65,8 @@ class MrNOT {
 
         this._mySpeed = (this._myTargetPosition.vec3_sub(this._myStartPosition).vec3_length() - distanceToIgnore) / PP.myEasyTuneVariables.get("Time To Reach Target");
         this._myMaxPatience = PP.myEasyTuneVariables.get("Max Patience");
+
+        this._myDebugActive = true;
     }
 
     start(dt) {
@@ -119,6 +121,8 @@ class MrNOT {
 
         this._myAppearAudio.setPosition(this._myObject.pp_getPosition());
         this._myAppearAudio.play();
+
+        this._myRumbleScreen.stop();
     }
 
     _startMove() {
@@ -148,7 +152,7 @@ class MrNOT {
             if (distanceToTarget < 15) {
                 this._myCallbackOnPatienceOver();
                 this._myFSM.perform("explode");
-            }
+            } 
             */
         }
     }
@@ -225,6 +229,10 @@ class MrNOT {
                 }
 
                 if (this._myPatience <= 0) {
+                    if (this._myDebugActive) {
+                        console.log("mr NOT dismissed - Duration -", Global.myVentDuration.toFixed(3));
+                    }
+
                     Global.myStatistics.myMrNOTDismissed += 1;
                     this._myFSM.perform("explode");
                     this._myCallbackOnPatienceOver();
