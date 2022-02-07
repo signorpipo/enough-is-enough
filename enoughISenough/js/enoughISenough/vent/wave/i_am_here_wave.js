@@ -40,7 +40,11 @@ class IAmHereWave {
 
         this._myDiscardOutsideValidAngle = waveSetup.myDiscardOutsideValidAngle.get(timeElapsed) >= 0;
 
-        this._computeWaveStartDirection(refDirection);
+        if (refDirection == null) {
+            this._myRefDirectionParams = Global.myPlayerForward.pp_clone();
+        } else {
+            this._myRefDirectionParams = refDirection.pp_clone();
+        }
 
         let spawnTimeMultiplier = this._myVentRuntimeSetup.myVentMultipliers.mySpawnTimeMultiplier.get(this._myGameTimeElapsed);
         this._myTimeBetweenClones = this._myWaveSetup.myTimeBetweenClones.get(this._myGameTimeElapsed) * spawnTimeMultiplier;
@@ -54,11 +58,18 @@ class IAmHereWave {
 
         this._myOneCloneSetupValid = false;
         this._myLastValidSpawnTimer = this._mySpawnTimer.getDuration();
+
+        this._myFirstUpdate = true;
     }
 
     update(dt) {
         if (this.isDone()) {
             return [];
+        }
+
+        if (this._myFirstUpdate) {
+            this._myFirstUpdate = false;
+            this._computeWaveStartDirection(this._myRefDirectionParams);
         }
 
         let cloneSetups = [];
@@ -137,11 +148,13 @@ class IAmHereWave {
             let attempts = 100;
             let angle = 0;
 
+            let angleValid = false;
+            let startDirection = [];
             while (attempts > 0) {
                 angle = Math.pp_random(0, this._mySpawnConeAngle) * -this._myLastSign;
                 if (Math.pp_angleDistance(angle, this._myPreviousAngle) >= this._myMinAngleBetweenClones || this._myFirst) {
-                    let startDirection = this._myWaveStartDirection.vec3_rotateAxis(angle, [0, 1, 0]);
-                    let angleValid = this._checkVentAngleValid(startDirection);
+                    this._myWaveStartDirection.vec3_rotateAxis(angle, [0, 1, 0], startDirection);
+                    angleValid = this._checkDirectionValid(startDirection);
 
                     if (angleValid) {
                         attempts = 0;
@@ -196,6 +209,10 @@ class IAmHereWave {
         return angleValid;
     }
 
+    _checkDirectionValid(direction) {
+        return this._checkVentAngleValid(direction);
+    }
+
     _computeWaveStartDirection(refDirection) {
         if (this._myWaveSetup.myRefDirection != null) {
             refDirection = this._myWaveSetup.myRefDirection;
@@ -208,11 +225,11 @@ class IAmHereWave {
 
         let flatRefDirection = refDirection.vec3_removeComponentAlongAxis([0, 1, 0]);
 
+        let startDirection = [];
         while (attempts > 0 && !angleValid) {
             this._myWaveStartAngle = this._myWaveSetup.myWaveStartAngle.get(this._myGameTimeElapsed) * Math.pp_randomSign();
-            let startDirection = flatRefDirection.vec3_rotateAxis(this._myWaveStartAngle, [0, 1, 0]);
-
-            angleValid = this._checkVentAngleValid(startDirection);
+            flatRefDirection.vec3_rotateAxis(this._myWaveStartAngle, [0, 1, 0], startDirection);
+            angleValid = this._checkDirectionValid(startDirection);
 
             attempts--;
         }

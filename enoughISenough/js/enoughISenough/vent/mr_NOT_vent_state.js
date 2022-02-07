@@ -399,14 +399,13 @@ class MrNOTVentState extends PP.State {
             wave.myClonesCount = new RangeValueOverTime([1, 2], [2, 3], 10, 30, true);
             wave.mySpawnConeAngle = new RangeValue([20, 40]);
             wave.myMinAngleBetweenClones = 10;
-            wave.myWaveStartAngle = new RangeValueOverTime([90, 180], [135, 180], PP.myEasyTuneVariables.get("Time To Reach Target") / 5, PP.myEasyTuneVariables.get("Time To Reach Target"));
+            wave.myWaveStartAngle = new RangeValue([0, 180]);
             wave.myTimeBetweenClones = timeBetweenClones;
             wave.myDoneDelay = doneDelay;
             wave.myFirstCloneInTheMiddle = true;
-            wave.myRefDirection = [0, 0, -1];
 
             wave.myHugSize = new RangeValueOverTime([2, 2], [2, 2], 10, 30, true);
-            wave.myHugAngle = new RangeValueOverTime([30, 40], [30, 40], 10, 30, false);
+            wave.myHugAngle = new RangeValueOverTime([30, 40], [30, 50], 10, 30, false);
 
             let nextWavesSetup = new NextWavesSetup();
             nextWavesSetup.addWave("Merry_Go_Round_Right", 10);

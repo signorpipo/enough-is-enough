@@ -117,4 +117,30 @@ class GiveUsAHug extends IAmHereWave {
         return valid;
     }
 
+    _checkDirectionValid(direction) {
+        let isValid = true;
+
+        if (this._myEqualDistance) {
+            let totalAngle = this._myHugAngle * 2;
+            let sliceAngle = totalAngle / (this._myHugSize - 1);
+
+            let startAngle = -this._myHugAngle;
+
+            let cloneDirection = direction.pp_clone();
+            for (let i = 0; i < this._myHugSize; i++) {
+                let angle = startAngle + sliceAngle * i;
+
+                cloneDirection.pp_copy(direction);
+                cloneDirection.vec3_rotateAxis(angle, [0, 1, 0], cloneDirection);
+                if (!this._checkVentAngleValid(cloneDirection)) {
+                    isValid = false;
+                    break;
+                }
+            }
+        } else {
+            isValid = super._checkDirectionValid(direction);
+        }
+
+        return isValid;
+    }
 }

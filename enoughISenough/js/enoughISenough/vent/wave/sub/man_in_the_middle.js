@@ -84,10 +84,11 @@ class ManInTheMiddle extends WaveOfWaves {
                 let angle = 0;
                 let attempts = 100;
 
+                let startDirection = [];
                 while (attempts > 0) {
                     angle = this._myWaveSetup.myAngleBetweenWaves.get(this._myGameTimeElapsed) * Math.pp_randomSign();
-                    let direction = this._myCurrentDirection.vec3_rotateAxis(angle, [0, 1, 0]);
-                    if (this._checkVentAngleValid(direction)) {
+                    this._myCurrentDirection.vec3_rotateAxis(angle, [0, 1, 0], startDirection);
+                    if (this._checkVentAngleValid(startDirection)) {
                         attempts = 0;
                     }
 

@@ -25,10 +25,11 @@ class IAmEverywhereWave extends WaveOfWaves {
             let angle = 0;
             let attempts = 100;
 
+            let startDirection = [];
             while (attempts > 0) {
                 angle = this._myWaveSetup.myAngleBetweenWaves.get(this._myGameTimeElapsed) * Math.pp_randomSign();
 
-                let startDirection = this._myCurrentDirection.vec3_rotateAxis(angle, [0, 1, 0]);
+                this._myCurrentDirection.vec3_rotateAxis(angle, [0, 1, 0], startDirection);
                 let angleValid = this._checkVentAngleValid(startDirection);
 
                 if (angleValid) {

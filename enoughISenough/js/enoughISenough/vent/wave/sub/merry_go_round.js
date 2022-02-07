@@ -32,7 +32,6 @@ class MerryGoRound extends WaveOfWaves {
     _createNextWaves() {
         let waves = [];
 
-
         if (!this._myFirst) {
             if (!this._mySameAngleBetweenWaves) {
                 this._myAngleBetweenWaves = waveSetup.myAngleBetweenWaves.get(timeElapsed);
