@@ -399,13 +399,14 @@ class MrNOTVentState extends PP.State {
             wave.myClonesCount = new RangeValueOverTime([1, 2], [2, 3], 10, 30, true);
             wave.mySpawnConeAngle = new RangeValue([20, 40]);
             wave.myMinAngleBetweenClones = 10;
-            wave.myWaveStartAngle = new RangeValue([0, 180]);
+            wave.myWaveStartAngle = new RangeValueOverTime([90, 180], [135, 180], PP.myEasyTuneVariables.get("Time To Reach Target") / 5, PP.myEasyTuneVariables.get("Time To Reach Target"));
             wave.myTimeBetweenClones = timeBetweenClones;
             wave.myDoneDelay = doneDelay;
             wave.myFirstCloneInTheMiddle = true;
+            wave.myRefDirection = [0, 0, -1];
 
             wave.myHugSize = new RangeValueOverTime([2, 2], [2, 2], 10, 30, true);
-            wave.myHugAngle = new RangeValueOverTime([30, 40], [30, 50], 10, 30, false);
+            wave.myHugAngle = new RangeValueOverTime([30, 40], [30, 40], 10, 30, false);
 
             let nextWavesSetup = new NextWavesSetup();
             nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
@@ -414,7 +415,6 @@ class MrNOTVentState extends PP.State {
             nextWavesSetup.addWave("Queue_For_You", 10);
             nextWavesSetup.addWave("I_Am_Everywhere", 10);
             nextWavesSetup.addWave("Man_In_The_Middle", 10);
-
 
             ventSetup.myWavesMap.set("Give_Us_A_Hug", wave);
             ventSetup.myNextWavesMap.set("Give_Us_A_Hug", nextWavesSetup);
