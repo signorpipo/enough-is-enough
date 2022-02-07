@@ -129,6 +129,10 @@ class MrNOTVent {
         this._myAppearAudio.play();
 
         this._myRumbleScreen.stop();
+
+        this._myRumbleScreen.start(0.3, 1.5);
+        PP.myRightGamepad.pulse(0.6, 0.3);
+        PP.myLeftGamepad.pulse(0.6, 0.3);
     }
 
     _startMove() {

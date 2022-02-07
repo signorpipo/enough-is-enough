@@ -56,7 +56,7 @@ class MrNOT {
         this._myParticlesSize = 6.5;
         this._myParticlesSizeMrNot = 0.9;
         this._myMaxPatience = 1;
-        this._myPatienceRefill = 2;
+        this._myPatienceRefill = 1;
 
         this._myReachTargetDistance = PP.myEasyTuneVariables.get("Reach Distance");
 
@@ -123,6 +123,10 @@ class MrNOT {
         this._myAppearAudio.play();
 
         this._myRumbleScreen.stop();
+
+        this._myRumbleScreen.start(0.3, 1.5);
+        PP.myRightGamepad.pulse(0.6, 0.3);
+        PP.myLeftGamepad.pulse(0.6, 0.3);
     }
 
     _startMove() {
