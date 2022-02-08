@@ -25,20 +25,20 @@ class TrialState extends PP.State {
         this._myFSM.addTransition("init", "third_talk", "start_3");
 
         this._myFSM.addTransition("first_talk", "first_vent", "end");
-        this._myFSM.addTransition("first_vent", "first_defeat", "defeat");
-        this._myFSM.addTransition("first_vent", "second_talk", "end");
+        this._myFSM.addTransition("first_vent", "first_defeat", "lost");
+        this._myFSM.addTransition("first_vent", "second_talk", "completed");
 
         this._myFSM.addTransition("second_talk", "second_vent", "end");
-        this._myFSM.addTransition("second_vent", "second_defeat", "defeat");
-        this._myFSM.addTransition("second_vent", "third_talk", "end");
+        this._myFSM.addTransition("second_vent", "second_defeat", "lost");
+        this._myFSM.addTransition("second_vent", "third_talk", "completed");
 
         this._myFSM.addTransition("third_talk", "third_vent", "end");
-        this._myFSM.addTransition("third_vent", "third_defeat", "defeat");
-        this._myFSM.addTransition("third_vent", "MrNOT_talk", "end");
+        this._myFSM.addTransition("third_vent", "third_defeat", "lost");
+        this._myFSM.addTransition("third_vent", "MrNOT_talk", "completed");
 
         this._myFSM.addTransition("MrNOT_talk", "MrNOT_vent", "end");
-        this._myFSM.addTransition("MrNOT_vent", "MrNOT_defeat", "defeat");
-        this._myFSM.addTransition("MrNOT_vent", "it_will_always_be_not_enough", "end");
+        this._myFSM.addTransition("MrNOT_vent", "MrNOT_defeat", "lost");
+        this._myFSM.addTransition("MrNOT_vent", "it_will_always_be_not_enough", "completed");
 
         this._myFSM.addTransition("it_will_always_be_not_enough", "done", "end", this._gameCompleted.bind(this));
 

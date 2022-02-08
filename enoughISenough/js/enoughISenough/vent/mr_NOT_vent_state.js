@@ -15,8 +15,8 @@ class MrNOTVentState extends PP.State {
 
         this._myFSM.addTransition("init", "first_wait", "start", this._prepareState.bind(this));
         this._myFSM.addTransition("first_wait", "vent", "end", this._prepareVent.bind(this));
-        this._myFSM.addTransition("vent", "clean", "end", this._prepareClean.bind(this));
-        this._myFSM.addTransition("vent", "defeat", "defeat", this._prepareDefeat.bind(this));
+        this._myFSM.addTransition("vent", "clean", "completed", this._prepareClean.bind(this));
+        this._myFSM.addTransition("vent", "defeat", "lost", this._prepareDefeat.bind(this));
         this._myFSM.addTransition("clean", "second_wait_clean", "end");
         this._myFSM.addTransition("defeat", "second_wait_defeat", "end");
         this._myFSM.addTransition("second_wait_clean", "done", "end", this._ventCompleted.bind(this));
@@ -134,15 +134,11 @@ class MrNOTVentState extends PP.State {
     }
 
     _ventCompleted() {
-        this._myParentFSM.perform("end");
+        this._myParentFSM.perform("completed");
     }
 
     _ventLost(dt, fsm) {
-        this._myParentFSM.perform("defeat");
-    }
-
-    _startFight() {
-        this._myParentFSM.perform("end");
+        this._myParentFSM.perform("lost");
     }
 
     _hideVent() {
@@ -198,18 +194,19 @@ class MrNOTVentState extends PP.State {
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.MIRROR, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ALOE_VERA, 5));
 
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WAYFINDER, 30));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WAYFINDER, 25, null, null,
+            [CardinalPosition.NORTH, CardinalPosition.NORTH_EAST, CardinalPosition.NORTH_WEST, CardinalPosition.EAST, CardinalPosition.WEST]));
 
         return evidenceSetupList;
     }
 
     _onPatienceOver() {
-        this._myFSM.perform("end");
+        this._myFSM.perform("completed");
     }
 
     _onReach() {
         this._myVent.ventLostDebug();
-        this._myFSM.perform("defeat");
+        this._myFSM.perform("lost");
     }
 
     _onExplosionDone() {
@@ -229,8 +226,8 @@ class MrNOTVentState extends PP.State {
         ventSetup.mySmallBreakSetup.myBreakCloneCooldown = 3;
 
         ventSetup.myCloneRotationSetup.mySpinSpeed = new RangeValue([4, 6], false);
-        ventSetup.myCloneRotationSetup.mySpinChance = new RangeValueOverTime([1, 12], [1, 4], 25, 50, true);
-        ventSetup.myCloneRotationSetup.mySpinStartTime = 25;
+        ventSetup.myCloneRotationSetup.mySpinChance = new RangeValueOverTime([1, 10], [1, 4], 20, 40, true);
+        ventSetup.myCloneRotationSetup.mySpinStartTime = 15;
 
         ventSetup.myCloneRotationSetup.myTiltAngle = new RangeValueOverTime([0, 10], [0, 15], 15, 35, false);
         ventSetup.myCloneRotationSetup.myTiltChance = new RangeValueOverTime([1, 6], [1, 2], 15, 35, true);

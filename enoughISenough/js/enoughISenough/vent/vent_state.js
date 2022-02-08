@@ -15,8 +15,8 @@ class VentState extends PP.State {
 
         this._myFSM.addTransition("init", "first_wait", "start", this._prepareState.bind(this));
         this._myFSM.addTransition("first_wait", "vent", "end", this._prepareVent.bind(this));
-        this._myFSM.addTransition("vent", "clean", "end", this._prepareClean.bind(this));
-        this._myFSM.addTransition("vent", "defeat", "defeat", this._prepareDefeat.bind(this));
+        this._myFSM.addTransition("vent", "clean", "completed", this._prepareClean.bind(this));
+        this._myFSM.addTransition("vent", "defeat", "lost", this._prepareDefeat.bind(this));
         this._myFSM.addTransition("clean", "second_wait_clean", "end");
         this._myFSM.addTransition("defeat", "second_wait_defeat", "end");
         this._myFSM.addTransition("second_wait_clean", "done", "end", this._ventCompleted.bind(this));
@@ -114,15 +114,11 @@ class VentState extends PP.State {
     }
 
     _ventCompleted() {
-        this._myParentFSM.perform("end");
+        this._myParentFSM.perform("completed");
     }
 
     _ventLost(dt, fsm) {
-        this._myParentFSM.perform("defeat");
-    }
-
-    _startFight() {
-        this._myParentFSM.perform("end");
+        this._myParentFSM.perform("lost");
     }
 
     _hideVent() {
@@ -146,10 +142,10 @@ class VentState extends PP.State {
     }
 
     _onVentLost() {
-        this._myFSM.perform("defeat");
+        this._myFSM.perform("lost");
     }
 
     _onVentCompleted() {
-        this._myFSM.perform("end");
+        this._myFSM.perform("completed");
     }
 }

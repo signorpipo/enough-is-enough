@@ -14,8 +14,8 @@ class ArcadeState extends PP.State {
 
         this._myFSM.addTransition("init", "first_wait", "start");
         this._myFSM.addTransition("first_wait", "vent", "end");
-        this._myFSM.addTransition("vent", "defeat", "defeat");
-        this._myFSM.addTransition("vent", "defeat", "end");
+        this._myFSM.addTransition("vent", "defeat", "lost");
+        this._myFSM.addTransition("vent", "defeat", "completed");
         this._myFSM.addTransition("defeat", "done", "end", this._backToMenu.bind(this));
         this._myFSM.addTransition("done", "first_wait", "start");
 
