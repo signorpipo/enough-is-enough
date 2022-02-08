@@ -36,9 +36,9 @@ class MrNOTVentState extends PP.State {
         this._myParentFSM = null;
 
         this._myEvidenceManager = new EvidenceManager(this._buildEvidenceSetupList());
-        this._myMrNOT = new MrNOT(this._onPatienceOver.bind(this), this._onReach.bind(this), this._onExplosionDone.bind(this));
+        this._myMrNOT = new MrNOT(this._onPatienceOver.bind(this), this._onMrNOTReach.bind(this), this._onExplosionDone.bind(this));
         this._myVent = new Vent(this._buildVentSetup());
-        this._myVent.onVentLost(this._onReach.bind(this));
+        this._myVent.onVentLost(this._onVentReach.bind(this));
         this._myNotEnough = new NotEnough();
 
         this._myCleanTimer = new PP.Timer(2.75);
@@ -204,8 +204,12 @@ class MrNOTVentState extends PP.State {
         this._myFSM.perform("completed");
     }
 
-    _onReach() {
+    _onMrNOTReach() {
         this._myVent.ventLostDebug();
+        this._myFSM.perform("lost");
+    }
+
+    _onVentReach() {
         this._myFSM.perform("lost");
     }
 

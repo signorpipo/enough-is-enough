@@ -23,6 +23,7 @@ class TrialState extends PP.State {
         this._myFSM.addTransition("init", "first_talk", "start_1");
         this._myFSM.addTransition("init", "second_talk", "start_2");
         this._myFSM.addTransition("init", "third_talk", "start_3");
+        this._myFSM.addTransition("init", "MrNOT_talk", "start_4");
 
         this._myFSM.addTransition("first_talk", "first_vent", "end");
         this._myFSM.addTransition("first_vent", "first_defeat", "lost");
@@ -45,11 +46,12 @@ class TrialState extends PP.State {
         this._myFSM.addTransition("first_defeat", "done", "end", this._backToMenu.bind(this, 1));
         this._myFSM.addTransition("second_defeat", "done", "end", this._backToMenu.bind(this, 2));
         this._myFSM.addTransition("third_defeat", "done", "end", this._backToMenu.bind(this, 3));
-        this._myFSM.addTransition("MrNOT_defeat", "done", "end", this._backToMenu.bind(this, 3));
+        this._myFSM.addTransition("MrNOT_defeat", "done", "end", this._backToMenu.bind(this, 4));
 
         this._myFSM.addTransition("done", "first_talk", "start_1");
         this._myFSM.addTransition("done", "second_talk", "start_2");
         this._myFSM.addTransition("done", "third_talk", "start_3");
+        this._myFSM.addTransition("done", "MrNOT_talk", "start_4");
 
         let states = this._myFSM.getStates();
         for (let state of states) {
