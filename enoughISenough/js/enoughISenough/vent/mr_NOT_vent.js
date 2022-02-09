@@ -118,7 +118,7 @@ class MrNOTVent {
             }
         }
 
-        this._myPhysx.extents = [this._myScale[0] * 0.021, this._myScale[1] * 0.021, this._myScale[2] * 0.025];
+        this._myPhysx.extents = [this._myScale[0] * 0.018, this._myScale[1] * 0.018, this._myScale[2] * 0.025];
 
         this._myCurrentPosition = [];
         this._myObject.pp_getPosition(this._myCurrentPosition);

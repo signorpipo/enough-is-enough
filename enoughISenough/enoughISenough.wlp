@@ -2462,7 +2462,7 @@
                     "type": "collision",
                     "collision": {
                         "sphere": {
-                            "radius": 0.0799999
+                            "radius": 0.0649999
                         },
                         "groups": 1
                     }
@@ -2533,13 +2533,16 @@
                     "type": "physx",
                     "physx": {
                         "sphere": {
-                            "radius": 0.0799999
+                            "radius": 0.0649999
                         },
                         "allowSimulation": false,
                         "trigger": true,
-                        "groups": 4
+                        "groups": 4,
+                        "gravity": false,
+                        "kinematic": true,
+                        "block": 2
                     },
-                    "active": false
+                    "active": true
                 }
             ]
         },
@@ -5124,7 +5127,7 @@
                             "scaling": [
                                 0.013,
                                 0.013,
-                                0.013
+                                0.0109999
                             ]
                         },
                         "groups": 2,
@@ -6900,7 +6903,7 @@
                     "type": "collision",
                     "collision": {
                         "sphere": {
-                            "radius": 0.0799999
+                            "radius": 0.0649999
                         },
                         "groups": 1
                     }
@@ -6928,10 +6931,13 @@
                         "trigger": true,
                         "groups": 4,
                         "sphere": {
-                            "radius": 0.0799999
-                        }
+                            "radius": 0.0649999
+                        },
+                        "gravity": false,
+                        "kinematic": true,
+                        "block": 2
                     },
-                    "active": false
+                    "active": true
                 }
             ]
         },
@@ -7065,7 +7071,7 @@
                             "scaling": [
                                 0.013,
                                 0.013,
-                                0.013
+                                0.0109999
                             ]
                         },
                         "groups": 2,
@@ -18322,7 +18328,9 @@
                         "sphere": {
                             "radius": 0.0299999
                         },
-                        "gravity": false
+                        "gravity": false,
+                        "groups": 4,
+                        "block": 2
                     }
                 },
                 {
@@ -18359,7 +18367,9 @@
                         "sphere": {
                             "radius": 0.0299999
                         },
-                        "gravity": false
+                        "gravity": false,
+                        "groups": 4,
+                        "block": 2
                     }
                 },
                 {
@@ -23900,9 +23910,9 @@
                     "local-floor": false
                 }
             },
-            "visualizeColliders": false,
+            "visualizeColliders": true,
             "enableRuntimeGltf": false,
-            "visualizePhysX": false
+            "visualizePhysX": true
         },
         "physx": {
             "enable": true,
