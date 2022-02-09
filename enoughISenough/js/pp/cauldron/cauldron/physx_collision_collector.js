@@ -13,6 +13,8 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
         this._myCollisionsEndToProcess = [];
 
         this._myDebugActive = false;
+
+        this._myTriggerDesyncFixDelay = new PP.Timer(0.1);
     }
 
     getCollisions() {
@@ -40,6 +42,8 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
 
         this._myCollisionsEnd = this._myCollisionsEndToProcess;
         this._myCollisionsEndToProcess = [];
+
+        this._triggerDesyncFix(dt);
     }
 
     _onCollision(type, physxComponent) {
@@ -47,6 +51,8 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
             this._onCollisionStart(physxComponent);
         } else if (type == WL.CollisionEventType.TouchLost) {
             this._onCollisionEnd(physxComponent);
+        } else {
+            this._onTrigger(physxComponent);
         }
     }
 
@@ -108,6 +114,43 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
 
         if (this._myDebugActive) {
             console.log("Collision End -", this._myCollisions.length);
+        }
+    }
+
+    _onTrigger(physxComponent) {
+        let hasCollision = null != this._myCollisions.pp_find(function (element) {
+            return element.pp_equals(physxComponent.object);
+        });
+
+        if (!hasCollision) {
+            this._onCollisionStart(physxComponent);
+        } else {
+            this._onCollisionEnd(physxComponent);
+        }
+    }
+
+    _triggerDesyncFix(dt) {
+        this._myTriggerDesyncFixDelay.update(dt);
+        if (this._myTriggerDesyncFixDelay.isDone()) {
+            this._myTriggerDesyncFixDelay.start();
+
+            let collisionsToEnd = this._myCollisions.pp_findAll(function (element) {
+                let physx = element.pp_getComponent("physx");
+                return physx == null || !physx.active;
+            });
+
+            if (collisionsToEnd.length > 0) {
+                console.error("DESYNC RESOLVED");
+
+                for (let collision of collisionsToEnd) {
+                    let physx = collision.pp_getComponent("physx");
+                    if (physx) {
+                        this._onCollisionEnd(physx);
+                    } else {
+                        console.error("NO PHYSX, HOW?");
+                    }
+                }
+            }
         }
     }
 };
