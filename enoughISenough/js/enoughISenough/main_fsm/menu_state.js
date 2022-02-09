@@ -225,58 +225,72 @@ class MenuState extends PP.State {
 
         {
             let startTrial = new MenuItem(Global.myGameObjects.get(GameObjectType.COIN), GameObjectType.COIN, positions[0], function () {
-                this._myFSM.perform("unspawn_trial");
-                this._myResetCount = 0;
+                if (this._myFSM.isInState("ready")) {
+                    this._myFSM.perform("unspawn_trial");
+                    this._myResetCount = 0;
+                }
             }.bind(this));
             this._myStartTrial = startTrial;
         }
 
         {
             let startTrialCompleted = new MenuItem(Global.myGameObjects.get(GameObjectType.NOT_COIN), GameObjectType.NOT_COIN, positions[0], function () {
-                this._myFSM.perform("unspawn_trial");
-                this._myResetCount = 0;
+                if (this._myFSM.isInState("ready")) {
+                    this._myFSM.perform("unspawn_trial");
+                    this._myResetCount = 0;
+                }
             }.bind(this));
             this._myStartTrialCompleted = startTrialCompleted;
         }
 
         {
             let startArcadeHard = new MenuItem(Global.myGameObjects.get(GameObjectType.ARCADE_STICK_DISPUTE), GameObjectType.ARCADE_STICK_DISPUTE, positions[2], function () {
-                this._myFSM.perform("unspawn_arcade_hard");
-                this._myResetCount = 0;
+                if (this._myFSM.isInState("ready")) {
+                    this._myFSM.perform("unspawn_arcade_hard");
+                    this._myResetCount = 0;
+                }
             }.bind(this));
             this._myMenuItems.push(startArcadeHard);
         }
 
         {
             let startArcadeNormal = new MenuItem(Global.myGameObjects.get(GameObjectType.ARCADE_STICK_CHAT), GameObjectType.ARCADE_STICK_CHAT, positions[1], function () {
-                this._myFSM.perform("unspawn_arcade_normal");
-                this._myResetCount = 0;
+                if (this._myFSM.isInState("ready")) {
+                    this._myFSM.perform("unspawn_arcade_normal");
+                    this._myResetCount = 0;
+                }
             }.bind(this));
             this._myMenuItems.push(startArcadeNormal);
         }
 
         {
             let leaderboardArcadeHard = new MenuItem(Global.myGameObjects.get(GameObjectType.ARCADE_LEADERBOARD_DISPUTE), GameObjectType.ARCADE_LEADERBOARD_DISPUTE, positions[4], function () {
-                //get leaderboard object and component and ask for a refresh
-                this._myResetCount = 0;
+                if (this._myFSM.isInState("ready")) {
+                    //get leaderboard object and component and ask for a refresh
+                    this._myResetCount = 0;
+                }
             }.bind(this));
             this._myMenuItems.push(leaderboardArcadeHard);
         }
 
         {
             let leaderboardArcadeNormal = new MenuItem(Global.myGameObjects.get(GameObjectType.ARCADE_LEADERBOARD_CHAT), GameObjectType.ARCADE_LEADERBOARD_CHAT, positions[3], function () {
-                //get leaderboard object and component and ask for a refresh
-                this._myResetCount = 0;
+                if (this._myFSM.isInState("ready")) {
+                    //get leaderboard object and component and ask for a refresh
+                    this._myResetCount = 0;
+                }
             }.bind(this));
             this._myMenuItems.push(leaderboardArcadeNormal);
         }
 
         {
             let zestyMarket = new MenuItem(Global.myGameObjects.get(GameObjectType.ZESTY_MARKET), GameObjectType.ZESTY_MARKET, positions[6], function () {
-                this._myResetCount = 0;
-                let zestyComponent = this._myZestyObject.getObject().pp_getComponentHierarchy("zesty-banner");
-                if (zestyComponent) {
-                    Global.myZestyToClick = zestyComponent;
+                if (this._myFSM.isInState("ready")) {
+                    this._myResetCount = 0;
+                    let zestyComponent = this._myZestyObject.getObject().pp_getComponentHierarchy("zesty-banner");
+                    if (zestyComponent) {
+                        Global.myZestyToClick = zestyComponent;
+                    }
                 }
             }.bind(this));
             this._myMenuItems.push(zestyMarket);
@@ -285,10 +299,12 @@ class MenuState extends PP.State {
 
         {
             let floppyDisk = new MenuItem(Global.myGameObjects.get(GameObjectType.FLOPPY_DISK), GameObjectType.FLOPPY_DISK, positions[5], function () {
-                this._myResetCount++;
+                if (this._myFSM.isInState("ready")) {
+                    this._myResetCount++;
 
-                if (this._myResetCount >= 5) {
-                    this._myFSM.perform("unspawn_reset");
+                    if (this._myResetCount >= 5) {
+                        this._myFSM.perform("unspawn_reset");
+                    }
                 }
             }.bind(this));
             this._myMenuItems.push(floppyDisk);
