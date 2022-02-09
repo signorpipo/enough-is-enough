@@ -71,9 +71,9 @@ class MrNOTClone {
         this._myFSM.addTransition("move", "stop", "startStop");
         this._myFSM.addTransition("stop", "unspawning", "unspawn");
         this._myFSM.addTransition("unspawning", "inactive", "end");
-        this._myFSM.addTransition("move", "inactive", "destroy");
-        this._myFSM.addTransition("stop", "inactive", "destroy");
-        this._myFSM.addTransition("unspawning", "inactive", "destroy");
+        this._myFSM.addTransition("move", "inactive", "hide");
+        this._myFSM.addTransition("stop", "inactive", "hide");
+        this._myFSM.addTransition("unspawning", "inactive", "hide");
 
         this._myFSM.init("init");
         this._myFSM.perform("start");
@@ -125,10 +125,10 @@ class MrNOTClone {
         return this._myFSM.isInState("inactive");
     }
 
-    destroy() {
+    hide() {
         Global.myGameObjectPoolMap.releaseObject(GameObjectType.MR_NOT_CLONE, this._myObject);
         this._myObject = null;
-        this._myFSM.perform("destroy");
+        this._myFSM.perform("hide");
     }
 
     _move(dt) {
@@ -237,8 +237,7 @@ class MrNOTClone {
 
         if (this._mySpawnTimer.isDone()) {
             Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), 0.75, this._myScale.vec3_scale(PP.myEasyTuneVariables.get("mr NOT Clone Scale")), GameObjectType.MR_NOT_CLONE);
-            this.destroy();
-            this._myFSM.perform("end");
+            this.hide();
         }
     }
 }

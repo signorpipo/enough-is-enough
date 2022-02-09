@@ -349,7 +349,7 @@ class Vent {
 
     _stop() {
         for (let clone of this._myMrNOTClones) {
-            clone.destroy();
+            clone.hide();
         }
 
         if (this._myMrNOT) {

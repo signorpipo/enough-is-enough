@@ -17767,7 +17767,7 @@
             ],
             "transformation": [
                 -0.136,
-                -1.188944320773544e-8,
+                -1.1889443207735441e-8,
                 3.850477270361807e-8,
                 0.0,
                 -3.8504133215155898e-8,
@@ -23910,9 +23910,9 @@
                     "local-floor": false
                 }
             },
-            "visualizeColliders": true,
+            "visualizeColliders": false,
             "enableRuntimeGltf": false,
-            "visualizePhysX": true
+            "visualizePhysX": false
         },
         "physx": {
             "enable": true,
