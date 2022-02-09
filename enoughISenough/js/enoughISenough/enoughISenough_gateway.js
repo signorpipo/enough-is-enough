@@ -30,7 +30,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
     },
     start: function () {
         let version = PP.SaveUtils.loadNumber("game_version", 0);
-        let currentVersion = 2;
+        let currentVersion = 3;
         if (version < currentVersion) {
             PP.SaveUtils.save("game_version", currentVersion);
             PP.SaveUtils.save("trial_started_once", false);
