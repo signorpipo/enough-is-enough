@@ -49,7 +49,7 @@ class MenuState extends PP.State {
         this._myParentFSM = fsm;
 
         let trialStartedOnce = PP.SaveUtils.loadBool("trial_started_once");
-        if (trialStartedOnce) {
+        if (trialStartedOnce && false) {
             this._myCurrentMenuItems = [];
 
             let trialCompleted = PP.SaveUtils.loadBool("trial_completed");
@@ -87,7 +87,7 @@ class MenuState extends PP.State {
         this._myResetCount = 0;
 
         Global.myIsInMenu = true;
-        Global.myTrialStartedOnce = PP.SaveUtils.loadBool("trial_started_once");
+        Global.myTrialStartedOnce = false;
     }
 
     end() {
