@@ -92,6 +92,7 @@ class MrNOTVent {
     hide() {
         this._myRumbleScreen.stop();
         this._myObject.pp_setActive(false);
+        this._myCollisionsCollector.destroy();
         this._myFSM.perform("hide");
     }
 
@@ -279,6 +280,7 @@ class MrNOTVent {
             this._myDisappearEndTimer.update(dt);
             if (this._myDisappearEndTimer.isDone()) {
                 this._myRumbleScreen.stop();
+                this._myCollisionsCollector.destroy();
                 this._myFSM.perform("end");
             }
         }

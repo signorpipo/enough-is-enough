@@ -15,6 +15,7 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
         this._myDebugActive = false;
 
         this._myTriggerDesyncFixDelay = new PP.Timer(0.1);
+        this._myIsDestroyed = false;
     }
 
     getCollisions() {
@@ -29,12 +30,32 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
         return this._myCollisionsEnd.pp_clone();
     }
 
+    destroy() {
+        //physx on collision unregister
+
+        this._myIsDestroyed = true;
+
+        this._myPhysx = null;
+        this._myCollisions = null;
+        this._myCollisionsStart = null;
+        this._myCollisionsEnd = null;
+        this._myUpdateActive = null;
+        this._myCollisionsStartToProcess = null;
+        this._myCollisionsEndToProcess = null;
+        this._myDebugActive = null;
+        this._myTriggerDesyncFixDelay = null;
+    }
+
     setDebugActive(active) {
         this._myDebugActive = active;
     }
 
     //Update is not mandatory, use it only if u want to access collisions start and end
     update(dt) {
+        if (this._myIsDestroyed) {
+            return;
+        }
+
         this._myUpdateActive = true;
 
         this._myCollisionsStart = this._myCollisionsStartToProcess;
@@ -47,6 +68,10 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
     }
 
     _onCollision(type, physxComponent) {
+        if (this._myIsDestroyed) {
+            return;
+        }
+
         if (type == WL.CollisionEventType.Touch) {
             this._onCollisionStart(physxComponent);
         } else if (type == WL.CollisionEventType.TouchLost) {
@@ -140,7 +165,7 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
             });
 
             if (collisionsToEnd.length > 0) {
-                console.error("DESYNC RESOLVED");
+                //console.error("DESYNC RESOLVED");
 
                 for (let collision of collisionsToEnd) {
                     let physx = collision.pp_getComponent("physx");
