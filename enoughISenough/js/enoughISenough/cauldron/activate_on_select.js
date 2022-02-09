@@ -17,8 +17,15 @@ WL.registerComponent("activate-on-select", {
 
         this._myPhysx.active = false;
     },
+    update() {
+        if (!Global.myTrialStartedOnce) {
+            this._myPhysx.active = false;
+        }
+    },
     _selectPressStart() {
-        this._myPhysx.active = true;
+        if (Global.myTrialStartedOnce) {
+            this._myPhysx.active = true;
+        }
     },
     _selectPressEnd() {
         this._myPhysx.active = false;

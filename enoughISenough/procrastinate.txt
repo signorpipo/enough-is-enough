@@ -176,25 +176,25 @@ v title appearing/disappearing from dark (also usable for mr not appearing)
 v mr not final explosions
 
 PULSE:
-- collision (?)
+x collision (?)
 x release (?)
 v grab
 v not enough
 
 EXTRA:
-- mr NOT boss finale ha anche i cloni che arrivano dai lati
-- nell'arcade arriva anche mr not boss finale ogni tanto
-	- quando arriva cambia il vent angle
-	- spawn timer, done timer, small break e break hanno un multiplier
-	- magari il tempo che ci mette a scendere è sempre lo stesso, diventa piu difficile solo per via dei mr not clone che arrivano
-	- può esserci comunque un range di tempo, ma a quel range è associato poi un numero specifico di vita (tipo un lerp per la vita) così che ci mette meno per dare un po' di differenza
+v mr NOT boss finale ha anche i cloni che arrivano dai lati
+v nell'arcade arriva anche mr not boss finale ogni tanto
+	v quando arriva cambia il vent angle
+	v spawn timer, done timer, small break e break hanno un multiplier
+	v magari il tempo che ci mette a scendere è sempre lo stesso, diventa piu difficile solo per via dei mr not clone che arrivano
+	v può esserci comunque un range di tempo, ma a quel range è associato poi un numero specifico di vita (tipo un lerp per la vita) così che ci mette meno per dare un po' di differenza
 	  ma la quantità di colpi da dare scala con esso
-	- aggiungere vent runtime setup dove mettere la current vent angle, e i multiplier (a questo punto passare questa invece del vent setup)
-	- break forzata all'inizio e alla fine del mr not boss
-	- il boss appare ma con l'animazione del talk state? forse piu figo che appare di colpo ma vedere se funziona bene
-	- quando c'è il boss ai vent angle normali si aggiungono il vent angle del boss che è costante e calcolato a runtime (dato che l'angolo si deve ingrandire in base al tempo attuale)
-	- mettere bool per dire se la next wave è valida quanto c'è mr NOT
-	- il time elapsed passato alle vent dovrebbe essere diverso dalla vent duration e non aumentare quando c'è il boss? per evitare l'aumento di difficoltà subito dopo il boss, ma forse non importa, 
+	v aggiungere vent runtime setup dove mettere la current vent angle, e i multiplier (a questo punto passare questa invece del vent setup)
+	v break forzata all'inizio e alla fine del mr not boss
+	v il boss appare ma con l'animazione del talk state? forse piu figo che appare di colpo ma vedere se funziona bene
+	v quando c'è il boss ai vent angle normali si aggiungono il vent angle del boss che è costante e calcolato a runtime (dato che l'angolo si deve ingrandire in base al tempo attuale)
+	x mettere bool per dire se la next wave è valida quanto c'è mr NOT
+	v il time elapsed passato alle vent dovrebbe essere diverso dalla vent duration e non aumentare quando c'è il boss? per evitare l'aumento di difficoltà subito dopo il boss, ma forse non importa, 
 	  anzi ci sta come se fosse diventato il livello ulteriore dopo il boss
 v le teste si storgono piu in la nel tempo? a parte in arcade, nella trial, la prima niente, la seconda si storgono, nella terza una ogni tot tempo gira anche
 v ogni tanto un clone spinna di brutto sulla z cosi per fare piu paura?
@@ -210,6 +210,12 @@ x mr not aumenta il fog color cosi che le prime volte si vede meno nella storia 
 
 
 TO DO:
+- mesh:
+	- mr NOT occhi a punta
+	- orso piu poligoni
+- text:
+	- controllare centrato
+	- controllare distanza se troppo vicino
 - rimuovere i debug
 x randomizzare size particle esplosione mr not?
 x spostare un po' piu avanti esplosione disappear mr not?
@@ -239,9 +245,9 @@ v migliorare explosion particle / tunare mr not explosion radius
 
 BUG:
 - lag 
-- a volte le particelle spawnano vicine e non nel punto di impatto (forse legato al problema della physx quando grabbo)
-- il trigger delle collissioni non hitta bene
-- gli oggetti flickerano quando ne grabbo uno
+v a volte le particelle spawnano vicine e non nel punto di impatto (forse legato al problema della physx quando grabbo)
+v il trigger delle collissioni non hitta bene
+v gli oggetti flickerano quando ne grabbo uno
 
 Descrizione:
 My dearest puppet,

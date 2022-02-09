@@ -189,5 +189,6 @@ var Global = {
     myStartFadeOut: false,
     myStatistics: null,
     myIsInMenu: false,
-    myZestyToClick: null
+    myZestyToClick: null,
+    myTrialStartedOnce: false
 };

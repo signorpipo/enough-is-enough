@@ -87,6 +87,7 @@ class MenuState extends PP.State {
         this._myResetCount = 0;
 
         Global.myIsInMenu = true;
+        Global.myTrialStartedOnce = PP.SaveUtils.loadBool("trial_started_once");
     }
 
     end() {

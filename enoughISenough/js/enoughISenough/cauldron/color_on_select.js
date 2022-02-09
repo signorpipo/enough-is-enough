@@ -34,6 +34,9 @@ WL.registerComponent("color-on-select", {
             PP.MeshUtils.setMaterial(this.object, this._myMaterial);
         } else {
             let selectValue = Math.pp_mapToRange(this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).getValue(), 0.1, 0.85, 0, 1);
+            if (!Global.myTrialStartedOnce) {
+                selectValue = 0;
+            }
 
             if (selectValue != this._myPrevSelectValue) {
                 this._myDiffuseColor[0] = Math.pp_lerp(this._myIdleMaterialDiffuseColor[0], this._myPhysxMaterialDiffuseColor[0], selectValue);
