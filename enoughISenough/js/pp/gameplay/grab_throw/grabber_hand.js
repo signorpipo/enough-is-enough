@@ -57,7 +57,7 @@ WL.registerComponent('pp-grabber-hand', {
 
         this._myCollision = this.object.pp_getComponent('collision');
         this._myPhysx = this.object.pp_getComponent('physx');
-        this._myCollisionsCollector = new PP.PhysXCollisionCollector(this._myPhysx);
+        this._myCollisionsCollector = new PP.PhysXCollisionCollector(this._myPhysx, true);
 
         this._myHandPose.start();
 

@@ -1,8 +1,9 @@
 PP.PhysXCollisionCollector = class PhysXCollisionCollector {
-    constructor(physxComponent) {
+    constructor(physxComponent, isTrigger = false) {
         this._myPhysx = physxComponent;
 
         this._myPhysx.onCollision(this._onCollision.bind(this));
+        this._myIsTrigger = isTrigger;
 
         this._myCollisions = [];
 
@@ -36,6 +37,7 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
         this._myIsDestroyed = true;
 
         this._myPhysx = null;
+        this._myIsTrigger = null;
         this._myCollisions = null;
         this._myCollisionsStart = null;
         this._myCollisionsEnd = null;
@@ -64,7 +66,9 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
         this._myCollisionsEnd = this._myCollisionsEndToProcess;
         this._myCollisionsEndToProcess = [];
 
-        this._triggerDesyncFix(dt);
+        if (this._myIsTrigger) {
+            this._triggerDesyncFix(dt);
+        }
     }
 
     _onCollision(type, physxComponent) {
