@@ -90,8 +90,8 @@ class TrialState extends PP.State {
     }
 
     _backToMenu(trialLevel, fsm) {
-        this._myParentFSM.perform(MainTransitions.End);
         PP.SaveUtils.save("trial_level", trialLevel);
+        this._myParentFSM.perform(MainTransitions.End);
     }
 
     _gameCompleted(fsm) {
@@ -103,8 +103,8 @@ class TrialState extends PP.State {
 
         PP.SaveUtils.save("trial_level", 1);
         PP.SaveUtils.save("trial_completed", true);
-        this._myParentFSM.perform(MainTransitions.End);
         Global.myStatistics.myTrialCompletedCount += 1;
+        this._myParentFSM.perform(MainTransitions.End);
     }
 
     _firstTalkSentences() {

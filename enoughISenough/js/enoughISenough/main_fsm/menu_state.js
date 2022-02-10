@@ -49,10 +49,11 @@ class MenuState extends PP.State {
         this._myParentFSM = fsm;
 
         let trialStartedOnce = PP.SaveUtils.loadBool("trial_started_once");
-        if (trialStartedOnce) {
+        let trialLevel = PP.SaveUtils.loadNumber("trial_level");
+        let trialCompleted = PP.SaveUtils.loadBool("trial_completed");
+        if (trialCompleted || (trialStartedOnce && trialLevel >= 2)) {
             this._myCurrentMenuItems = [];
 
-            let trialCompleted = PP.SaveUtils.loadBool("trial_completed");
             if (trialCompleted) {
                 this._myCurrentMenuItems.push(this._myStartTrialCompleted);
             } else {
