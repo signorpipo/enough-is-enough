@@ -3,9 +3,9 @@ class ObjectPoolMap {
         this._myPoolMap = new Map();
     }
 
-    addPool(poolID, poolObject, initialPoolSize, cloneParams = undefined, cloneFunctionName = undefined, setActiveFunctionName = undefined, equalsFunctionName = undefined) {
+    addPool(poolID, poolObject, objectPoolParams = new ObjectPoolParams()) {
         if (!this._myPoolMap.has(poolID)) {
-            let pool = new ObjectPool(poolObject, initialPoolSize, cloneParams, cloneFunctionName, setActiveFunctionName);
+            let pool = new ObjectPool(poolObject, objectPoolParams);
             this._myPoolMap.set(poolID, pool);
         } else {
             console.error("Pool already created with this ID");
@@ -28,18 +28,25 @@ class ObjectPoolMap {
     }
 }
 
+class ObjectPoolParams {
+    constructor(initialPoolSize = 0, cloneParams = undefined, cloneFunctionName = undefined, setActiveFunctionName = undefined, equalsFunctionName = undefined) {
+        this.myInitialPoolSize = initialPoolSize;
+        this.myCloneParams = cloneParams;
+        this.myCloneFunctionName = cloneFunctionName;
+        this.mySetActiveFunctionName = setActiveFunctionName;
+        this.myEqualsFunctionName = equalsFunctionName;
+    }
+}
+
 class ObjectPool {
-    constructor(poolObject, initialPoolSize, cloneParams, cloneFunctionName, setActiveFunctionName, equalsFunctionName) {
-        this._myCloneParams = cloneParams;
-        this._myCloneFunctionName = cloneFunctionName;
-        this._mySetActiveFunctionName = setActiveFunctionName;
-        this._myEqualsFunctionName = equalsFunctionName;
+    constructor(poolObject, objectPoolParams) {
+        this._myObjectPoolParams = objectPoolParams;
         this._myPrototype = this._clone(poolObject);
 
         this._myAvailableObjects = [];
         this._myBusyObjects = [];
 
-        this._addToPool(initialPoolSize, false);
+        this._addToPool(objectPoolParams.myInitialPoolSize, false);
     }
 
     get() {
@@ -80,12 +87,12 @@ class ObjectPool {
     _clone(object) {
         let clone = null;
 
-        if (this._myCloneFunctionName != null) {
-            clone = object[this._myCloneFunctionName](this._myCloneParams);
+        if (this._myObjectPoolParams.myCloneFunctionName != null) {
+            clone = object[this._myObjectPoolParams.myCloneFunctionName](this._myObjectPoolParams.myCloneParams);
         } else if (object.pp_clone != null) {
-            clone = object.pp_clone(this._myCloneParams);
+            clone = object.pp_clone(this._myObjectPoolParams.myCloneParams);
         } else if (object.clone != null) {
-            clone = object.clone(this._myCloneParams);
+            clone = object.clone(this._myObjectPoolParams.myCloneParams);
         }
 
         if (clone == null) {
@@ -98,8 +105,8 @@ class ObjectPool {
     }
 
     _setActive(object, active) {
-        if (this._mySetActiveFunctionName != null) {
-            object[this._mySetActiveFunctionName](active);
+        if (this._myObjectPoolParams.mySetActiveFunctionName != null) {
+            object[this._myObjectPoolParams.mySetActiveFunctionName](active);
         } else if (object.pp_setActive != null) {
             object.pp_setActive(active);
         } else if (object.setActive != null) {
@@ -110,8 +117,8 @@ class ObjectPool {
     _equals(first, second) {
         let equals = false;
 
-        if (this._myEqualsFunctionName != null) {
-            equals = first[this._myEqualsFunctionName](second);
+        if (this._myObjectPoolParams.myEqualsFunctionName != null) {
+            equals = first[this._myObjectPoolParams.myEqualsFunctionName](second);
         } else if (first.pp_equals != null) {
             equals = first.pp_equals(second);
         } else if (first.equals != null) {
