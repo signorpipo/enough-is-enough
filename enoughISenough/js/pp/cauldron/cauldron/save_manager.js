@@ -4,6 +4,8 @@ PP.SaveManager = class SaveManager {
 
         this._myCommitSaveDelayTimer = new PP.Timer(0, false);
         this._myIDsToCommit = [];
+
+        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
     }
 
     setCommitSaveDelay(delay) {
@@ -14,18 +16,7 @@ PP.SaveManager = class SaveManager {
         if (this._myCommitSaveDelayTimer.isRunning()) {
             this._myCommitSaveDelayTimer.update(dt);
             if (this._myCommitSaveDelayTimer.isDone()) {
-                for (let id of this._myIDsToCommit) {
-                    if (this._mySaveCache.has(id)) {
-                        let data = this._mySaveCache.get(id);
-                        try {
-                            PP.SaveUtils.save(id, data);
-                        } catch (error) {
-                            // not managed for now
-                        }
-                    }
-                }
-
-                this._myIDsToCommit = [];
+                this._commitSave();
             }
         }
     }
@@ -91,5 +82,26 @@ PP.SaveManager = class SaveManager {
         }
 
         return item;
+    }
+
+    _commitSave() {
+        if (this._myIDsToCommit.length > 0) {
+            for (let id of this._myIDsToCommit) {
+                if (this._mySaveCache.has(id)) {
+                    let data = this._mySaveCache.get(id);
+                    try {
+                        PP.SaveUtils.save(id, data);
+                    } catch (error) {
+                        // not managed for now
+                    }
+                }
+            }
+
+            this._myIDsToCommit = [];
+        }
+    }
+
+    _onXRSessionEnd() {
+        this._commitSave();
     }
 };

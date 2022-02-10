@@ -78,8 +78,10 @@ PP.Timer = class Timer {
     _done() {
         this._myTimer = 0;
         this._myIsDone = true;
-        for (let value of this._myOnEndCallbacks.values()) {
-            value();
+        if (this._myOnEndCallbacks.size > 0) {
+            for (let value of this._myOnEndCallbacks.values()) {
+                value();
+            }
         }
     }
 };
