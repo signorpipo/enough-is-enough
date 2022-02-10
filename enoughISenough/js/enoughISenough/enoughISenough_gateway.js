@@ -9,9 +9,9 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
         Global.myAudioManager = new PP.AudioManager();
         Global.myParticlesManager = new ParticlesManager();
-        Global.myMeshObjectPoolMap = new ObjectPoolMap();
-        Global.myMeshNoFogObjectPoolMap = new ObjectPoolMap();
-        Global.myGameObjectPoolMap = new ObjectPoolMap();
+        Global.myMeshObjectPoolMap = new PP.ObjectPoolManager();
+        Global.myMeshNoFogObjectPoolMap = new PP.ObjectPoolManager();
+        Global.myGameObjectPoolMap = new PP.ObjectPoolManager();
         Global.myScene = this.object;
 
         Global.myPlayerRumbleObject = this._myPlayerRumbleObject;
@@ -90,17 +90,23 @@ WL.registerComponent("enough-IS-enough-gateway", {
             entry[1].pp_setActive(false);
         }
 
+        let meshObjectPoolParams = new PP.ObjectPoolParams();
+        meshObjectPoolParams.myInitialPoolSize = 20;
+
         for (let entry of Global.myMeshObjects.entries()) {
-            Global.myMeshObjectPoolMap.addPool(entry[0], entry[1], 20);
+            Global.myMeshObjectPoolMap.addPool(entry[0], entry[1], meshObjectPoolParams);
         }
 
         for (let entry of Global.myMeshNoFogObjects.entries()) {
-            Global.myMeshNoFogObjectPoolMap.addPool(entry[0], entry[1], 20);
+            Global.myMeshNoFogObjectPoolMap.addPool(entry[0], entry[1], meshObjectPoolParams);
         }
 
         let cloneParams = new PP.CloneParams();
         cloneParams.myDeepCloneParams.deepCloneComponentVariable("mesh", "material", true);
-        Global.myGameObjectPoolMap.addPool(GameObjectType.MR_NOT_CLONE, Global.myGameObjects.get(GameObjectType.MR_NOT_CLONE), 40, cloneParams);
+        let mrNOTCloneObjectPoolParams = new PP.ObjectPoolParams();
+        mrNOTCloneObjectPoolParams.myInitialPoolSize = 40;
+        mrNOTCloneObjectPoolParams.myCloneParams = cloneParams;
+        Global.myGameObjectPoolMap.addPool(GameObjectType.MR_NOT_CLONE, Global.myGameObjects.get(GameObjectType.MR_NOT_CLONE), mrNOTCloneObjectPoolParams);
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 1", 0, 10, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float 2", 30, 5, 3));

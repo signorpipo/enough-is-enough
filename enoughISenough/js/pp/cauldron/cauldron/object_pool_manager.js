@@ -1,11 +1,11 @@
-class ObjectPoolMap {
+PP.ObjectPoolManager = class ObjectPoolManager {
     constructor() {
         this._myPoolMap = new Map();
     }
 
-    addPool(poolID, poolObject, objectPoolParams = new ObjectPoolParams()) {
+    addPool(poolID, poolObject, objectPoolParams = new PP.ObjectPoolParams()) {
         if (!this._myPoolMap.has(poolID)) {
-            let pool = new ObjectPool(poolObject, objectPoolParams);
+            let pool = new PP.ObjectPool(poolObject, objectPoolParams);
             this._myPoolMap.set(poolID, pool);
         } else {
             console.error("Pool already created with this ID");
@@ -26,19 +26,19 @@ class ObjectPoolMap {
     releaseObject(poolID, object) {
         this._myPoolMap.get(poolID).release(object);
     }
-}
+};
 
-class ObjectPoolParams {
-    constructor(initialPoolSize = 0, cloneParams = undefined, cloneFunctionName = undefined, setActiveFunctionName = undefined, equalsFunctionName = undefined) {
-        this.myInitialPoolSize = initialPoolSize;
-        this.myCloneParams = cloneParams;
-        this.myCloneFunctionName = cloneFunctionName;
-        this.mySetActiveFunctionName = setActiveFunctionName;
-        this.myEqualsFunctionName = equalsFunctionName;
+PP.ObjectPoolParams = class ObjectPoolParams {
+    constructor() {
+        this.myInitialPoolSize = 0;
+        this.myCloneParams = undefined;
+        this.myCloneFunctionName = undefined;
+        this.mySetActiveFunctionName = undefined;
+        this.myEqualsFunctionName = undefined;
     }
-}
+};
 
-class ObjectPool {
+PP.ObjectPool = class ObjectPool {
     constructor(poolObject, objectPoolParams) {
         this._myObjectPoolParams = objectPoolParams;
         this._myPrototype = this._clone(poolObject);
@@ -127,4 +127,4 @@ class ObjectPool {
 
         return equals;
     }
-}
+};
