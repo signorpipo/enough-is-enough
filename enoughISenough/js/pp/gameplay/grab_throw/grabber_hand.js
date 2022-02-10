@@ -1,11 +1,12 @@
 WL.registerComponent('pp-grabber-hand', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
+    _myGrabButton: { type: WL.Type.Enum, values: ['select', 'squeeze', 'both'], default: 'squeeze' },
+    _mySnapOnPivot: { type: WL.Type.Bool, default: false },
+    _myGrabMultipleObjects: { type: WL.Type.Bool, default: false },
     _myThrowLinearVelocityMultiplier: { type: WL.Type.Float, default: 1 }, // multiply the overall throw speed, so slow throws will be multiplied too
     _myThrowMaxLinearSpeed: { type: WL.Type.Float, default: 15 },
     _myThrowAngularVelocityMultiplier: { type: WL.Type.Float, default: 0.5 },
     _myThrowMaxAngularSpeed: { type: WL.Type.Float, default: 1080 }, // degrees
-    _mySnapOnPivot: { type: WL.Type.Bool, default: false },
-    _myGrabButton: { type: WL.Type.Enum, values: ['select', 'squeeze', 'both'], default: 'squeeze' },
     _myThrowVelocitySource: { type: WL.Type.Enum, values: ['hand', 'grabbable'], default: 'hand' },
     _myThrowLinearVelocityBoost: { type: WL.Type.Float, default: 1.75 },   // this boost is applied from 0% to 100% based on how fast you throw, so slow throws are not affected
     _myThrowLinearVelocityBoostMinSpeedThreshold: { type: WL.Type.Float, default: 0.6 },   // 0% boost is applied if plain throw speed is under this value
@@ -14,18 +15,21 @@ WL.registerComponent('pp-grabber-hand', {
     init: function () {
         this._myHandPose = new PP.HandPose(PP.InputUtils.getHandednessByIndex(this._myHandedness));
 
-        this._myGrabbable = null;
+        this._myGrabbables = [];
 
         this._myGamepad = null;
 
-        this._myHistorySize = 5;
-        this._myHistorySpeedAverageSamplesFromStart = 1;
-        this._myHistoryDirectionAverageSamplesFromStart = 3;
-        this._myHistoryDirectionAverageSkipFromStart = 0;
-        this._myHistoryCurrentCount = 0;
+        this._myLinearVelocityHistorySize = 5;
+        this._myLinearVelocityHistorySpeedAverageSamplesFromStart = 1;
+        this._myLinearVelocityHistoryDirectionAverageSamplesFromStart = 3;
+        this._myLinearVelocityHistoryDirectionAverageSkipFromStart = 0;
 
-        this._myGrabbableLinearVelocityHistory = new Array(this._myHistorySize);
-        this._myGrabbableLinearVelocityHistory.fill([0, 0, 0]);
+        this._myHandLinearVelocityHistory = new Array(this._myLinearVelocityHistorySize);
+        this._myHandLinearVelocityHistory.fill([0, 0, 0]);
+
+        this._myAngularVelocityHistorySize = 1;
+        this._myHandAngularVelocityHistory = new Array(this._myAngularVelocityHistorySize);
+        this._myHandAngularVelocityHistory.fill([0, 0, 0]);
 
         this._myThrowMaxAngularSpeedRadians = Math.pp_toRadians(this._myThrowMaxAngularSpeed);
 
@@ -41,20 +45,6 @@ WL.registerComponent('pp-grabber-hand', {
             this._myGamepad = PP.myRightGamepad;
         }
 
-        if (this._myGrabButton == 0) {
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this));
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this));
-        } else if (this._myGrabButton == 1) {
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this));
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this));
-        } else {
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this));
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this));
-
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this));
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this));
-        }
-
         this._myCollision = this.object.pp_getComponent('collision');
         this._myPhysx = this.object.pp_getComponent('physx');
         this._myCollisionsCollector = new PP.PhysXCollisionCollector(this._myPhysx, true);
@@ -63,7 +53,7 @@ WL.registerComponent('pp-grabber-hand', {
 
         if (this._myDebugActive) {
             this._myDebugLines = [];
-            for (let i = 0; i < this._myHistorySize; i++) {
+            for (let i = 0; i < this._myLinearVelocityHistorySize; i++) {
                 let line = new PP.DebugLine();
                 line.setVisible(false);
                 this._myDebugLines.push(line);
@@ -74,8 +64,9 @@ WL.registerComponent('pp-grabber-hand', {
         this._myCollisionsCollector.update(dt);
         this._myHandPose.update(dt);
 
-        if (this._myGrabbable) {
-            this._updateVelocityHistory();
+        if (this._myGrabbables.length > 0) {
+            this._updateLinearVelocityHistory();
+            this._updateAngularVelocityHistory();
         }
     },
     grab: function () {
@@ -96,79 +87,145 @@ WL.registerComponent('pp-grabber-hand', {
     unregisterThrowEventListener(id) {
         this._myThrowCallbacks.delete(id);
     },
+    onActivate() {
+        if (this._myGrabButton == 0) {
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this));
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this));
+        } else if (this._myGrabButton == 1) {
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this));
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this));
+        } else {
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this));
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this));
+
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this));
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this));
+        }
+    },
+    onDeactivate() {
+        if (this._myGrabButton == 0) {
+            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this);
+            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this);
+        } else if (this._myGrabButton == 1) {
+            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this);
+            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this);
+        } else {
+            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this);
+            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this);
+
+            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this);
+            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this);
+        }
+    },
     _grab: function () {
-        if (!this._myGrabbable) {
+        if (!this._myGrabMultipleObjects && this._myGrabbables.length > 0) {
+            return;
+        }
 
-            let grabbables = [];
+        let grabbablesToGrab = [];
 
-            /*
-            let collidingComps = this._myCollision.queryOverlaps();
-            for (let i = 0; i < collidingComps.length; i++) {
-                let grabbable = collidingComps[i].object.getComponent("pp-grabbable");
-                if (grabbable && grabbable.active) {
-                    this._myGrabbable = grabbable;
-                    this._myGrabbable.grab(this.object);
-                    this._myGrabbable.registerReleaseEventListener(this, this._onRelease.bind(this));
+        /*
+        let collidingComps = this._myCollision.queryOverlaps();
+        for (let i = 0; i < collidingComps.length; i++) {
+            let grabbable = collidingComps[i].object.getComponent("pp-grabbable");
+            if (grabbable && grabbable.active) {
+                this._myGrabbable = grabbable;
+                this._myGrabbable.grab(this.object);
+                this._myGrabbable.registerReleaseEventListener(this, this._onRelease.bind(this));
 
-                    if (this._mySnapOnPivot) {
-                        this._myGrabbable.object.resetTranslation();
-                    }
-
-                    this._myGrabCallbacks.forEach(function (value) { value(this, this._myGrabbable); }.bind(this));
-
-                    break;
+                if (this._mySnapOnPivot) {
+                    this._myGrabbable.object.resetTranslation();
                 }
+
+                this._myGrabCallbacks.forEach(function (value) { value(this, this._myGrabbable); }.bind(this));
+
+                break;
             }
-            */
+        }
+        */
 
-            let collisions = this._myCollisionsCollector.getCollisions();
-            for (let i = 0; i < collisions.length; i++) {
-                let grabbable = collisions[i].getComponent("pp-grabbable");
-                if (grabbable && grabbable.active) {
-                    this._myGrabbable = grabbable;
-                    this._myGrabbable.grab(this.object);
-                    this._myGrabbable.registerReleaseEventListener(this, this._onRelease.bind(this));
+        let collisions = this._myCollisionsCollector.getCollisions();
+        for (let i = 0; i < collisions.length; i++) {
+            let grabbable = collisions[i].getComponent("pp-grabbable");
+            if (grabbable && grabbable.active) {
+                grabbablesToGrab.push(grabbable);
+            }
+        }
 
-                    if (this._mySnapOnPivot) {
-                        this._myGrabbable.object.resetTranslation();
-                    }
+        for (let grabbableToGrab of grabbablesToGrab) {
+            if (!this._isAlreadyGrabbed(grabbableToGrab)) {
+                let grabbableData = new PP.GrabberHandGrabbableData(grabbableToGrab, this._myThrowVelocitySource == 1, this._myLinearVelocityHistorySize, this._myAngularVelocityHistorySize);
+                this._myGrabbables.push(grabbableData);
+                grabbableToGrab.grab(this.object);
+                grabbableToGrab.registerReleaseEventListener(this, this._onRelease.bind(this));
 
-                    this._myGrabCallbacks.forEach(function (value) { value(this, this._myGrabbable); }.bind(this));
-
-                    break;
+                if (this._mySnapOnPivot) {
+                    grabbableToGrab.object.resetTranslation();
                 }
+
+                this._myGrabCallbacks.forEach(function (value) { value(this, grabbableToGrab); }.bind(this));
+            }
+
+            if (!this._myGrabMultipleObjects && this._myGrabbables.length > 0) {
+                break;
             }
         }
     },
     _throw: function () {
-        if (this._myGrabbable) {
-            this._myGrabbable.unregisterReleaseEventListener(this);
+        if (this._myGrabbables.length > 0) {
+            let linearVelocity = null;
+            let angularVelocity = null;
 
-            let linearVelocity = this._computeReleaseLinearVelocity();
-            let angularVelocity = this._computeReleaseAngularVelocity();
+            if (this._myThrowVelocitySource == 0) {
+                linearVelocity = this._computeReleaseLinearVelocity(this._myHandLinearVelocityHistory);
+                angularVelocity = this._computeReleaseAngularVelocity(this._myHandAngularVelocityHistory);
+            }
 
-            this._myGrabbable.throw(linearVelocity, angularVelocity);
+            for (let grabbableData of this._myGrabbables) {
+                let grabbable = grabbableData.getGrabbable();
 
-            this._myThrowCallbacks.forEach(function (value) { value(this, this._myGrabbable, linearVelocity, angularVelocity); }.bind(this));
+                grabbable.unregisterReleaseEventListener(this);
 
-            this._myGrabbable = null;
+                if (this._myThrowVelocitySource == 1) {
+                    linearVelocity = this._computeReleaseLinearVelocity(grabbableData.getLinearVelocityHistory());
+                    angularVelocity = this._computeReleaseAngularVelocity(grabbableData.getAngularVelocityHistory());
+                }
+
+                grabbable.throw(linearVelocity, angularVelocity);
+
+                this._myThrowCallbacks.forEach(function (value) { value(this, grabbable, linearVelocity, angularVelocity); }.bind(this));
+            }
+
+            this._myGrabbables = [];
         }
     },
-    _onRelease() {
-        this._myGrabbable.unregisterReleaseEventListener(this);
-        this._myGrabbable = null;
+    _onRelease(grabbable) {
+        grabbable.unregisterReleaseEventListener(this);
+        this._myGrabbables.pp_remove(element => element.getGrabbable() == grabbable);
     },
-    _updateVelocityHistory() {
-        this._myGrabbableLinearVelocityHistory.unshift(this._retrieveLinearVelocity());
-        this._myGrabbableLinearVelocityHistory.pop();
+    _updateLinearVelocityHistory() {
+        this._myHandLinearVelocityHistory.unshift(this._myHandPose.getLinearVelocity());
+        this._myHandLinearVelocityHistory.pop();
+
+        for (let grabbable of this._myGrabbables) {
+            grabbable.updateLinearVelocityHistory();
+        }
     },
-    _computeReleaseLinearVelocity() {
+    _updateAngularVelocityHistory() {
+        this._myHandAngularVelocityHistory.unshift(this._myHandPose.getAngularVelocityRadians());
+        this._myHandAngularVelocityHistory.pop();
+
+        for (let grabbable of this._myGrabbables) {
+            grabbable.updateAngularVelocityHistory();
+        }
+    },
+    _computeReleaseLinearVelocity(linearVelocityHistory) {
         //speed
-        let speed = glMatrix.vec3.length(this._myGrabbableLinearVelocityHistory[0]);
-        for (let i = 1; i < this._myHistorySpeedAverageSamplesFromStart; i++) {
-            speed += glMatrix.vec3.length(this._myGrabbableLinearVelocityHistory[i]);
+        let speed = glMatrix.vec3.length(linearVelocityHistory[0]);
+        for (let i = 1; i < this._myLinearVelocityHistorySpeedAverageSamplesFromStart; i++) {
+            speed += glMatrix.vec3.length(linearVelocityHistory[i]);
         }
-        speed /= this._myHistorySpeedAverageSamplesFromStart;
+        speed /= this._myLinearVelocityHistorySpeedAverageSamplesFromStart;
 
         // This way I give an increasing and smooth boost to the throw so that when u want to perform a weak throw, the value is not changed, but if u put more speed
         // it will be boosted to make it easier and still feel good and natural (value does not increase suddenly)
@@ -182,15 +239,15 @@ WL.registerComponent('pp-grabber-hand', {
         speed = Math.pp_clamp(speed, 0, this._myThrowMaxLinearSpeed);
 
         if (this._myDebugActive) {
-            this._debugDirectionLines();
+            this._debugDirectionLines(linearVelocityHistory);
         }
 
         //direction
-        let directionCurrentWeight = this._myHistoryDirectionAverageSamplesFromStart;
-        let lastDirectionIndex = this._myHistoryDirectionAverageSkipFromStart + this._myHistoryDirectionAverageSamplesFromStart;
+        let directionCurrentWeight = this._myLinearVelocityHistoryDirectionAverageSamplesFromStart;
+        let lastDirectionIndex = this._myLinearVelocityHistoryDirectionAverageSkipFromStart + this._myLinearVelocityHistoryDirectionAverageSamplesFromStart;
         let direction = [0, 0, 0];
-        for (let i = this._myHistoryDirectionAverageSkipFromStart; i < lastDirectionIndex; i++) {
-            let currentDirection = this._myGrabbableLinearVelocityHistory[i];
+        for (let i = this._myLinearVelocityHistoryDirectionAverageSkipFromStart; i < lastDirectionIndex; i++) {
+            let currentDirection = linearVelocityHistory[i];
             glMatrix.vec3.scale(currentDirection, currentDirection, directionCurrentWeight);
             glMatrix.vec3.add(direction, direction, currentDirection);
 
@@ -202,8 +259,8 @@ WL.registerComponent('pp-grabber-hand', {
 
         return direction;
     },
-    _computeReleaseAngularVelocity() {
-        let angularVelocity = this._retrieveAngularVelocity();
+    _computeReleaseAngularVelocity(angularVelocityHistory) {
+        let angularVelocity = angularVelocityHistory[0];
 
         //speed
         let speed = glMatrix.vec3.length(angularVelocity);
@@ -218,36 +275,14 @@ WL.registerComponent('pp-grabber-hand', {
 
         return direction;
     },
-    _retrieveLinearVelocity() {
-        let velocity = null;
+    _debugDirectionLines(linearVelocityHistory) {
+        for (let j = this._myLinearVelocityHistoryDirectionAverageSkipFromStart + this._myLinearVelocityHistoryDirectionAverageSamplesFromStart; j > this._myLinearVelocityHistoryDirectionAverageSkipFromStart; j--) {
 
-        if (this._myThrowVelocitySource == 0) {
-            velocity = this._myHandPose.getLinearVelocity();
-        } else {
-            velocity = this._myGrabbable.getLinearVelocity();
-        }
-
-        return velocity;
-    },
-    _retrieveAngularVelocity() {
-        let velocity = null;
-
-        if (this._myThrowVelocitySource == 0) {
-            velocity = this._myHandPose.getAngularVelocityRadians();
-        } else {
-            velocity = this._myGrabbable.getAngularVelocityRadians();
-        }
-
-        return velocity;
-    },
-    _debugDirectionLines() {
-        for (let j = this._myHistoryDirectionAverageSkipFromStart + this._myHistoryDirectionAverageSamplesFromStart; j > this._myHistoryDirectionAverageSkipFromStart; j--) {
-
-            let directionCurrentWeight = j - this._myHistoryDirectionAverageSkipFromStart;
-            let lastDirectionIndex = j - this._myHistoryDirectionAverageSkipFromStart;
+            let directionCurrentWeight = j - this._myLinearVelocityHistoryDirectionAverageSkipFromStart;
+            let lastDirectionIndex = j - this._myLinearVelocityHistoryDirectionAverageSkipFromStart;
             let direction = [0, 0, 0];
-            for (let i = this._myHistoryDirectionAverageSkipFromStart; i < lastDirectionIndex; i++) {
-                let currentDirection = this._myGrabbableLinearVelocityHistory[i].pp_clone();
+            for (let i = this._myLinearVelocityHistoryDirectionAverageSkipFromStart; i < lastDirectionIndex; i++) {
+                let currentDirection = linearVelocityHistory[i].pp_clone();
                 glMatrix.vec3.scale(currentDirection, currentDirection, directionCurrentWeight);
                 glMatrix.vec3.add(direction, direction, currentDirection);
 
@@ -260,5 +295,50 @@ WL.registerComponent('pp-grabber-hand', {
             this._myDebugLines[j - 1].setColor([color, color, color, 1]);
             this._myDebugLines[j - 1].setVisible(true);
         }
+    },
+    _isAlreadyGrabbed(grabbable) {
+        let found = this._myGrabbables.pp_find(element => element.getGrabbable() == grabbable);
+        return found != null;
     }
 });
+
+PP.GrabberHandGrabbableData = class GrabberHandGrabbableData {
+    constructor(grabbable, useGrabbableAsVelocitySource, linearVelocityHistorySize, angularVelocityHistorySize) {
+        this._myGrabbable = grabbable;
+        this._myUseGrabbableAsVelocitySource = useGrabbableAsVelocitySource;
+
+        if (this._myUseGrabbableAsVelocitySource) {
+            this._myLinearVelocityHistory = new Array(linearVelocityHistorySize);
+            this._myLinearVelocityHistory.fill([0, 0, 0]);
+
+            this._myAngularVelocityHistory = new Array(angularVelocityHistorySize);
+            this._myAngularVelocityHistory.fill([0, 0, 0]);
+        }
+    }
+
+    getGrabbable() {
+        return this._myGrabbable;
+    }
+
+    getLinearVelocityHistory() {
+        return this._myLinearVelocityHistory;
+    }
+
+    getAngularVelocityHistory() {
+        return this._myAngularVelocityHistory;
+    }
+
+    updateLinearVelocityHistory() {
+        if (this._myUseGrabbableAsVelocitySource) {
+            this._myLinearVelocityHistory.unshift(this._myGrabbable.getLinearVelocity());
+            this._myLinearVelocityHistory.pop();
+        }
+    }
+
+    updateAngularVelocityHistory() {
+        if (this._myUseGrabbableAsVelocitySource) {
+            this._myAngularVelocityHistory.unshift(this._myGrabbable.getAngularVelocityRadians());
+            this._myAngularVelocityHistory.pop();
+        }
+    }
+};
