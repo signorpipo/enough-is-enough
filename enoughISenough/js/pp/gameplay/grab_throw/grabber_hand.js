@@ -2,7 +2,7 @@ WL.registerComponent('pp-grabber-hand', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
     _myGrabButton: { type: WL.Type.Enum, values: ['select', 'squeeze', 'both'], default: 'squeeze' },
     _mySnapOnPivot: { type: WL.Type.Bool, default: false },
-    _myGrabMultipleObjects: { type: WL.Type.Bool, default: false },
+    _myMaxNumberOfObjects: { type: WL.Type.Int, default: 1 }, // how many objects you can grab at the same time
     _myThrowLinearVelocityMultiplier: { type: WL.Type.Float, default: 1 }, // multiply the overall throw speed, so slow throws will be multiplied too
     _myThrowMaxLinearSpeed: { type: WL.Type.Float, default: 15 },
     _myThrowAngularVelocityMultiplier: { type: WL.Type.Float, default: 0.5 },
@@ -118,7 +118,7 @@ WL.registerComponent('pp-grabber-hand', {
         }
     },
     _grab: function () {
-        if (!this._myGrabMultipleObjects && this._myGrabbables.length > 0) {
+        if (this._myGrabbables.length >= this._myMaxNumberOfObjects) {
             return;
         }
 
@@ -166,7 +166,7 @@ WL.registerComponent('pp-grabber-hand', {
                 this._myGrabCallbacks.forEach(function (value) { value(this, grabbableToGrab); }.bind(this));
             }
 
-            if (!this._myGrabMultipleObjects && this._myGrabbables.length > 0) {
+            if (this._myGrabbables.length >= this._myMaxNumberOfObjects) {
                 break;
             }
         }
