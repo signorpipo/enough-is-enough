@@ -48,9 +48,9 @@ class MenuState extends PP.State {
     start(fsm, transitionID) {
         this._myParentFSM = fsm;
 
-        let trialStartedOnce = PP.SaveUtils.loadBool("trial_started_once");
-        let trialLevel = PP.SaveUtils.loadNumber("trial_level");
-        let trialCompleted = PP.SaveUtils.loadBool("trial_completed");
+        let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once");
+        let trialLevel = Global.mySaveManager.loadNumber("trial_level");
+        let trialCompleted = Global.mySaveManager.loadBool("trial_completed");
         if (trialCompleted || (trialStartedOnce && trialLevel >= 2)) {
             this._myCurrentMenuItems = [];
 
@@ -88,7 +88,7 @@ class MenuState extends PP.State {
         this._myResetCount = 0;
 
         Global.myIsInMenu = true;
-        Global.myTrialStartedOnce = PP.SaveUtils.loadBool("trial_started_once");
+        Global.myTrialStartedOnce = Global.mySaveManager.loadBool("trial_started_once");
     }
 
     end() {
@@ -151,9 +151,9 @@ class MenuState extends PP.State {
 
     _startUnspawningReset(fsm) {
         this._myResetCount = 0;
-        PP.SaveUtils.save("trial_started_once", false);
-        PP.SaveUtils.save("trial_completed", false);
-        PP.SaveUtils.save("trial_level", 1);
+        Global.mySaveManager.save("trial_started_once", false);
+        Global.mySaveManager.save("trial_completed", false);
+        Global.mySaveManager.save("trial_level", 1);
         this._myNotEnough.start();
 
         this._startUnspawning();

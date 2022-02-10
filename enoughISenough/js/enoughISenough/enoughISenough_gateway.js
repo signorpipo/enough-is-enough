@@ -5,13 +5,13 @@ WL.registerComponent("enough-IS-enough-gateway", {
     _myRightHandAnimator: { type: WL.Type.Object },
 }, {
     init: function () {
-        //PP.SaveUtils.clear();
-
         Global.myAudioManager = new PP.AudioManager();
         Global.myParticlesManager = new ParticlesManager();
         Global.myMeshObjectPoolMap = new PP.ObjectPoolManager();
         Global.myMeshNoFogObjectPoolMap = new PP.ObjectPoolManager();
         Global.myGameObjectPoolMap = new PP.ObjectPoolManager();
+        Global.mySaveManager = new PP.SaveManager();
+        //Global.mySaveManager.clear();
         Global.myScene = this.object;
 
         Global.myPlayerRumbleObject = this._myPlayerRumbleObject;
@@ -29,13 +29,13 @@ WL.registerComponent("enough-IS-enough-gateway", {
         this._myGameObjectPoolSize = 40;
     },
     start: function () {
-        let version = PP.SaveUtils.loadNumber("game_version", 0);
+        let version = Global.mySaveManager.loadNumber("game_version", 0);
         let currentVersion = 3;
         if (version < currentVersion) {
-            PP.SaveUtils.save("game_version", currentVersion);
-            PP.SaveUtils.save("trial_started_once", false);
-            PP.SaveUtils.save("trial_completed", false);
-            PP.SaveUtils.save("trial_level", 1);
+            Global.mySaveManager.save("game_version", currentVersion);
+            Global.mySaveManager.save("trial_started_once", false);
+            Global.mySaveManager.save("trial_completed", false);
+            Global.mySaveManager.save("trial_level", 1);
         }
     },
     update: function (dt) {
@@ -196,5 +196,6 @@ var Global = {
     myStatistics: null,
     myIsInMenu: false,
     myZestyToClick: null,
-    myTrialStartedOnce: false
+    myTrialStartedOnce: false,
+    mySaveManager: null
 };

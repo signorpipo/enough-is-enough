@@ -47,8 +47,10 @@
             - mat4_fromPositionRotation     / mat4_fromPositionRotationScale
 
         ARRAY:
-            - pp_find       / pp_findAll
+            - pp_has        / pp_hasEqual
+            - pp_find       / pp_findAll        / pp_findEquals / pp_findAllEqual
             ○ pp_remove     / pp_removeIndex    / pp_removeAll  / pp_removeEqual    / pp_removeAllEqual
+            ○ pp_pushUnique / pp_unshiftUnique
             ○ pp_copy    
             - pp_clone      
 
@@ -119,6 +121,14 @@
 
 //ARRAY
 
+Array.prototype.pp_has = function (callback) {
+    return this.pp_find(callback) != undefined;
+};
+
+Array.prototype.pp_hasEquals = function (elementToFind) {
+    return this.pp_findEqual(elementToFind) != undefined;
+};
+
 Array.prototype.pp_find = function (callback) {
     let elementFound = undefined;
 
@@ -188,6 +198,40 @@ Array.prototype.pp_removeEqual = function (elementToRemove) {
 
 Array.prototype.pp_removeAllEqual = function (elementToRemove) {
     return this.pp_removeAll(element => element === elementToRemove);
+};
+
+Array.prototype.pp_pushUnique = function (element, hasElementCallback = null) {
+    let length = this.length;
+
+    let hasElement = false;
+    if (hasElementCallback != null) {
+        hasElement = this.pp_has(hasElementCallback);
+    } else {
+        hasElement = this.pp_hasEquals(element);
+    }
+
+    if (!hasElement) {
+        length = this.push(element);
+    }
+
+    return length;
+};
+
+Array.prototype.pp_unshiftUnique = function (element, hasElementCallback = null) {
+    let length = this.length;
+
+    let hasElement = false;
+    if (hasElementCallback != null) {
+        hasElement = this.pp_has(hasElementCallback);
+    } else {
+        hasElement = this.pp_hasEquals(element);
+    }
+
+    if (!hasElement) {
+        length = this.unshift(element);
+    }
+
+    return length;
 };
 
 Array.prototype.pp_clone = function () {

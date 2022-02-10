@@ -11,6 +11,9 @@ PP.SaveUtils = {
     clear: function () {
         return localStorage.clear();
     },
+    load: function (id, defaultValue = null) {
+        return PP.SaveUtils.load(id, defaultValue);
+    },
     loadString: function (id, defaultValue = null) {
         let item = localStorage.getItem(id);
 

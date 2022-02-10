@@ -31,7 +31,7 @@ class IntroState extends PP.State {
         this._myFSM.update(dt);
 
         //TEMP MORE PRESS
-        if (PP.SaveUtils.loadBool("trial_started_once")) {
+        if (Global.mySaveManager.loadBool("trial_started_once")) {
             if (!this._myFSM.isInState("wait_session") && PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd((PP.XRUtils.isDeviceEmulated()) ? 1 : 3)) {
                 while (!this._myFSM.isInState("done") && !this._myFSM.isInState("test")) {
                     this._myFSM.perform("skip");
@@ -47,7 +47,7 @@ class IntroState extends PP.State {
 
     waitSession(dt, fsm) {
         if (WL.xrSession) {
-            let currentVersion = PP.SaveUtils.loadNumber("game_version", 0);
+            let currentVersion = Global.mySaveManager.loadNumber("game_version", 0);
             console.log("Game Version:", currentVersion);
 
             fsm.perform("end");

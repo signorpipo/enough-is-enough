@@ -79,18 +79,18 @@ class TrialState extends PP.State {
         this._myTrialStartedFromBegin = true;
         Global.myStatistics.myTrialPlayCount += 1;
 
-        let trialLevel = PP.SaveUtils.loadNumber("trial_level", 1);
+        let trialLevel = Global.mySaveManager.loadNumber("trial_level", 1);
         let transition = "start_".concat(trialLevel);
         this._myFSM.perform(transition);
 
     }
 
     end(fsm, transitionID) {
-        PP.SaveUtils.save("trial_started_once", true);
+        Global.mySaveManager.save("trial_started_once", true);
     }
 
     _backToMenu(trialLevel, fsm) {
-        PP.SaveUtils.save("trial_level", trialLevel);
+        Global.mySaveManager.save("trial_level", trialLevel);
         this._myParentFSM.perform(MainTransitions.End);
     }
 
@@ -101,8 +101,8 @@ class TrialState extends PP.State {
             }
         }
 
-        PP.SaveUtils.save("trial_level", 1);
-        PP.SaveUtils.save("trial_completed", true);
+        Global.mySaveManager.save("trial_level", 1);
+        Global.mySaveManager.save("trial_completed", true);
         Global.myStatistics.myTrialCompletedCount += 1;
         this._myParentFSM.perform(MainTransitions.End);
     }
