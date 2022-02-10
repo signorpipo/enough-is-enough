@@ -2,8 +2,8 @@ PP.SaveManager = class SaveManager {
     constructor() {
         this._mySaveCache = new Map();
 
-        this._myCommitSaveDelayTimer = new PP.Timer(0);
-        this._myIDToCommit = [];
+        this._myCommitSaveDelayTimer = new PP.Timer(0, false);
+        this._myIDsToCommit = [];
     }
 
     setCommitSaveDelay(delay) {
@@ -14,7 +14,7 @@ PP.SaveManager = class SaveManager {
         if (this._myCommitSaveDelayTimer.isRunning()) {
             this._myCommitSaveDelayTimer.update(dt);
             if (this._myCommitSaveDelayTimer.isDone()) {
-                for (let id of this._myIDToCommit) {
+                for (let id of this._myIDsToCommit) {
                     if (this._mySaveCache.has(id)) {
                         let data = this._mySaveCache.get(id);
                         try {
@@ -25,16 +25,23 @@ PP.SaveManager = class SaveManager {
                     }
                 }
 
-                this._myIDToCommit = [];
+                this._myIDsToCommit = [];
             }
         }
     }
 
     save(id, data) {
-        this._mySaveCache.set(id, data);
-        this._myIDToCommit.pp_pushUnique(id);
-        if (!this._myCommitSaveDelayTimer.isRunning()) {
-            this._myCommitSaveDelayTimer.start();
+        let sameData = false;
+        if (this._mySaveCache.has(id)) {
+            sameData = this._mySaveCache.get(id) === data;
+        }
+
+        if (!sameData) {
+            this._mySaveCache.set(id, data);
+            this._myIDsToCommit.pp_pushUnique(id);
+            if (!this._myCommitSaveDelayTimer.isRunning()) {
+                this._myCommitSaveDelayTimer.start();
+            }
         }
     }
 

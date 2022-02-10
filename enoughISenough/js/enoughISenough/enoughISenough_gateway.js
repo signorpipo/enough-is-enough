@@ -52,6 +52,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         } else {
             this.enoughISenough.update(dt * Global.myDeltaTimeSpeed);
             Global.myParticlesManager.update(dt * Global.myDeltaTimeSpeed);
+            Global.mySaveManager.update(dt * Global.myDeltaTimeSpeed);
         }
 
         if (Global.myZestyToClick != null) {
