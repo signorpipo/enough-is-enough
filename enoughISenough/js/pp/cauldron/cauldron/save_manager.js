@@ -16,7 +16,7 @@ PP.SaveManager = class SaveManager {
         if (this._myCommitSaveDelayTimer.isRunning()) {
             this._myCommitSaveDelayTimer.update(dt);
             if (this._myCommitSaveDelayTimer.isDone()) {
-                this._commitSave();
+                this.commitSave();
             }
         }
     }
@@ -33,6 +33,23 @@ PP.SaveManager = class SaveManager {
             if (!this._myCommitSaveDelayTimer.isRunning()) {
                 this._myCommitSaveDelayTimer.start();
             }
+        }
+    }
+
+    commitSave() {
+        if (this._myIDsToCommit.length > 0) {
+            for (let id of this._myIDsToCommit) {
+                if (this._mySaveCache.has(id)) {
+                    let data = this._mySaveCache.get(id);
+                    try {
+                        PP.SaveUtils.save(id, data);
+                    } catch (error) {
+                        // not managed for now
+                    }
+                }
+            }
+
+            this._myIDsToCommit = [];
         }
     }
 
@@ -84,24 +101,7 @@ PP.SaveManager = class SaveManager {
         return item;
     }
 
-    _commitSave() {
-        if (this._myIDsToCommit.length > 0) {
-            for (let id of this._myIDsToCommit) {
-                if (this._mySaveCache.has(id)) {
-                    let data = this._mySaveCache.get(id);
-                    try {
-                        PP.SaveUtils.save(id, data);
-                    } catch (error) {
-                        // not managed for now
-                    }
-                }
-            }
-
-            this._myIDsToCommit = [];
-        }
-    }
-
     _onXRSessionEnd() {
-        this._commitSave();
+        this.commitSave();
     }
 };
