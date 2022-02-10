@@ -3,16 +3,12 @@ class ObjectPoolMap {
         this._myPoolMap = new Map();
     }
 
-    addPool(poolID, poolObject, initialPoolSize, cloneParams = new PP.CloneParams()) {
-        if (poolObject.pp_isCloneable()) {
-            if (!this._myPoolMap.has(poolID)) {
-                let pool = new ObjectPool(poolObject, initialPoolSize, cloneParams);
-                this._myPoolMap.set(poolID, pool);
-            } else {
-                console.error("Pool already created with this ID");
-            }
+    addPool(poolID, poolObject, initialPoolSize, cloneParams = undefined, cloneFunctionName = undefined, setActiveFunctionName = undefined, equalsFunctionName = undefined) {
+        if (!this._myPoolMap.has(poolID)) {
+            let pool = new ObjectPool(poolObject, initialPoolSize, cloneParams, cloneFunctionName, setActiveFunctionName);
+            this._myPoolMap.set(poolID, pool);
         } else {
-            console.error("Object not cloneable, can't create a pool");
+            console.error("Pool already created with this ID");
         }
     }
 
@@ -33,9 +29,12 @@ class ObjectPoolMap {
 }
 
 class ObjectPool {
-    constructor(poolObject, initialPoolSize, cloneParams) {
+    constructor(poolObject, initialPoolSize, cloneParams, cloneFunctionName, setActiveFunctionName, equalsFunctionName) {
         this._myCloneParams = cloneParams;
-        this._myPrototype = poolObject.pp_clone(cloneParams);
+        this._myCloneFunctionName = cloneFunctionName;
+        this._mySetActiveFunctionName = setActiveFunctionName;
+        this._myEqualsFunctionName = equalsFunctionName;
+        this._myPrototype = this._clone(poolObject);
 
         this._myAvailableObjects = [];
         this._myBusyObjects = [];
@@ -57,9 +56,9 @@ class ObjectPool {
     }
 
     release(object) {
-        let released = this._myBusyObjects.pp_remove(item => item.pp_equals(object));
+        let released = this._myBusyObjects.pp_remove(this._equals.bind(this, object));
         if (released) {
-            released.pp_setActive(false);
+            this._setActive(released, false);
             this._myAvailableObjects.push(released);
         }
     }
@@ -70,7 +69,7 @@ class ObjectPool {
 
     _addToPool(size, log) {
         for (let i = 0; i < size; i++) {
-            this._myAvailableObjects.push(this._myPrototype.pp_clone(this._myCloneParams));
+            this._myAvailableObjects.push(this._clone(this._myPrototype));
         }
 
         if (log) {
@@ -78,5 +77,47 @@ class ObjectPool {
         }
     }
 
+    _clone(object) {
+        let clone = null;
 
+        if (this._myCloneFunctionName != null) {
+            clone = object[this._myCloneFunctionName](this._myCloneParams);
+        } else if (object.pp_clone != null) {
+            clone = object.pp_clone(this._myCloneParams);
+        } else if (object.clone != null) {
+            clone = object.clone(this._myCloneParams);
+        }
+
+        if (clone == null) {
+            console.error("Object not cloneable, pool will return null");
+        } else {
+            this._setActive(clone, false);
+        }
+
+        return clone;
+    }
+
+    _setActive(object, active) {
+        if (this._mySetActiveFunctionName != null) {
+            object[this._mySetActiveFunctionName](active);
+        } else if (object.pp_setActive != null) {
+            object.pp_setActive(active);
+        } else if (object.setActive != null) {
+            object.setActive(active);
+        }
+    }
+
+    _equals(first, second) {
+        let equals = false;
+
+        if (this._myEqualsFunctionName != null) {
+            equals = first[this._myEqualsFunctionName](second);
+        } else if (first.pp_equals != null) {
+            equals = first.pp_equals(second);
+        } else if (first.equals != null) {
+            equals = first.equals(second);
+        }
+
+        return equals;
+    }
 }
