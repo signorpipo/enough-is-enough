@@ -28,6 +28,7 @@ class MenuState extends PP.State {
         this._myMenuItems = [];
         this._myStartTrial = null;
         this._myStartTrialCompleted = null;
+        this._myFloppyDisk = null;
         this._myCurrentMenuItems = [];
 
         this._myMenuTitle = new MenuTitle(Global.myTitlesObject, Global.myTitleObject, Global.mySubtitleObject);
@@ -123,6 +124,11 @@ class MenuState extends PP.State {
     }
 
     _startUnspawning(fsm) {
+        this._startUnspawningInternal();
+    }
+
+
+    _startUnspawningInternal(evidenceMinDelay = 0.2, evidenceMaxDelay = 0.25, titleMinDelay = 0.35, titleMaxDelay = 0.7) {
         this._myUnspawnList = [];
 
         let indexList = [];
@@ -138,36 +144,55 @@ class MenuState extends PP.State {
             let randomIndex = Math.pp_randomInt(0, indexList.length - 1);
             let index = indexList.pp_removeIndex(randomIndex);
 
-            let randomTimer = Math.pp_random(0.20, 0.25);
+            let randomTimer = Math.pp_random(evidenceMinDelay, evidenceMaxDelay);
             this._myUnspawnList.push([index, new PP.Timer(randomTimer)]);
         }
 
-        this._myMenuTitle.unspawn(Math.pp_random(0.35, 0.7));
+        this._myMenuTitle.unspawn(Math.pp_random(titleMinDelay, titleMaxDelay));
     }
 
     _startUnspawningRestart(fsm) {
-        this._startUnspawning();
+        this._startUnspawningInternal();
     }
 
     _startUnspawningReset(fsm) {
         this._myResetCount = 0;
-        Global.mySaveManager.save("trial_started_once", false);
-        Global.mySaveManager.save("trial_completed", false);
-        Global.mySaveManager.save("trial_level", 1);
-        this._myNotEnough.start();
 
-        this._startUnspawning();
+        let fullReset = this._myFloppyDisk.getGrabTime() >= 5;
+        if (!fullReset) {
+            Global.mySaveManager.save("trial_started_once", false);
+            Global.mySaveManager.save("trial_completed", false);
+            Global.mySaveManager.save("trial_level", 1);
+            this._myNotEnough.start();
+        } else {
+            Global.mySaveManager.clear();
+            this._myNotEnough.start();
+            Global.myParticlesManager.mrNOTParticles(Global.myPlayerPosition);
+        }
+
+        this._startUnspawningInternal(0, 0, 0, 0);
     }
 
     _unspawn(dt, fsm) {
-        this._myNotEnough.update(dt);
-
         if (this._myUnspawnList.length > 0) {
             let first = this._myUnspawnList[0];
             first[1].update(dt);
             if (first[1].isDone()) {
                 this._myCurrentMenuItems[first[0]].unspawn();
                 this._myUnspawnList.shift();
+            }
+
+            let moreDeleted = false;
+            for (let element of this._myUnspawnList) {
+                element[1].update(0);
+                if (element[1].isDone()) {
+                    moreDeleted = true;
+                    this._myCurrentMenuItems[element[0]].unspawn();
+                }
+            }
+
+            if (moreDeleted) {
+                this._myUnspawnList.pp_removeAll(element => element[1].isDone());
             }
         }
 
@@ -309,6 +334,7 @@ class MenuState extends PP.State {
                 }
             }.bind(this));
             this._myMenuItems.push(floppyDisk);
+            this._myFloppyDisk = floppyDisk;
         }
 
         {
@@ -370,6 +396,8 @@ class MenuItem {
 
         this._myAppearAudio = null;
         this._myDisappearAudio = null;
+
+        this._myGrabTime = 0;
     }
 
     init(timeBeforeFirstSpawn) {
@@ -379,6 +407,10 @@ class MenuItem {
     update(dt) {
         this._myFSM.update(dt);
         this._myThrowTimer.update(dt);
+
+        if (this._myGrabbable.isGrabbed()) {
+            this._myGrabTime += dt;
+        }
     }
 
     setAutoSpawn(autoSpawn) {
@@ -399,6 +431,10 @@ class MenuItem {
 
     isInactive() {
         return this._myFSM.isInState("inactive");
+    }
+
+    getGrabTime() {
+        return this._myGrabTime;
     }
 
     _reset(fsm, transition, timeBeforeFirstSpawn) {
@@ -448,6 +484,7 @@ class MenuItem {
         this._myAppearAudio.setPitch(Math.pp_random(0.85, 1.05));
 
         this._myHitFloor = false;
+        this._myGrabTime = 0;
     }
 
     _spawning(dt) {
@@ -519,6 +556,7 @@ class MenuItem {
     }
 
     _onGrab() {
+        this._myGrabTime = 0;
         this._myThrowTimer.reset();
     }
 
