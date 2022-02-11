@@ -2478,7 +2478,9 @@
                         "_myThrowLinearSpeedBoost": 1.75,
                         "_myThrowAngularVelocityMultiplier": 0.5,
                         "_myThrowLinearVelocityMultiplier": 1.0,
-                        "_myThrowLinearVelocityBoost": 3.0
+                        "_myThrowLinearVelocityBoost": 3.0,
+                        "_myGrabMultipleObjects": false,
+                        "_myMaxNumberOfObjects": 9999
                     }
                 },
                 {
@@ -6918,7 +6920,8 @@
                         "_myThrowMaxAngularSpeed": 1080.0,
                         "_myThrowLinearSpeedBoost": 1.75,
                         "_myThrowLinearVelocityMultiplier": 1.0,
-                        "_myThrowLinearVelocityBoost": 3.0
+                        "_myThrowLinearVelocityBoost": 3.0,
+                        "_myMaxNumberOfObjects": 9999
                     }
                 },
                 {
