@@ -49,7 +49,7 @@ class MrNOTVent {
 
         this._myCollisions = this._myObject.pp_getComponentsHierarchy("collision");
         this._myPhysx = this._myObject.pp_getComponentHierarchy("physx");
-        this._myCollisionsCollector = new PP.PhysXCollisionCollector(this._myPhysx);
+        this._myCollisionsCollector = this._myObject.pp_getComponentHierarchy("physx-collector-component").getCollisionsCollector();
 
         this._myExplodeAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_EXPLODE);
         this._myHitAudio = Global.myAudioManager.createAudioPlayer(SfxID.CLONE_EXPLODE);
@@ -92,7 +92,6 @@ class MrNOTVent {
     hide() {
         this._myRumbleScreen.stop();
         this._myObject.pp_setActive(false);
-        this._myCollisionsCollector.destroy();
         this._myFSM.perform("hide");
     }
 
@@ -280,7 +279,6 @@ class MrNOTVent {
             this._myDisappearEndTimer.update(dt);
             if (this._myDisappearEndTimer.isDone()) {
                 this._myRumbleScreen.stop();
-                this._myCollisionsCollector.destroy();
                 this._myFSM.perform("end");
             }
         }

@@ -127,7 +127,7 @@ class Vent {
 
         this._myFSM.init("init");
 
-        this._myDebugActive = true;
+        this._myDebugActive = false;
         this._myDebugActiveBreak = false;
         this._myDebugActiveStats = false;
         this._myDebugActiveMrNOT = false;

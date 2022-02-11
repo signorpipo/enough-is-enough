@@ -13,6 +13,9 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
         this._myCollisionsStartToProcess = [];
         this._myCollisionsEndToProcess = [];
 
+        this._myIsActive = false;
+        this.setActive(true);
+
         this._myDebugActive = false;
 
         this._myTriggerDesyncFixDelay = new PP.Timer(0.1);
@@ -29,6 +32,41 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
 
     getCollisionsEnd() {
         return this._myCollisionsEnd.pp_clone();
+    }
+
+    setActive(active) {
+        this._myIsActive = active;
+
+        this._myCollisions = [];
+        this._myCollisionsStart = [];
+        this._myCollisionsEnd = [];
+        this._myUpdateActive = false;
+        this._myCollisionsStartToProcess = [];
+        this._myCollisionsEndToProcess = [];
+    }
+
+    //Set to true only if u are going to actually update this object and don't want to lose any collision start/end events prior to updating the first time after activation
+    setUpdateActive(active) {
+        this._myUpdateActive = active;
+    }
+
+    //Update is not mandatory, use it only if u want to access collisions start and end
+    update(dt) {
+        if (this._myIsDestroyed || !this._myIsActive) {
+            return;
+        }
+
+        this._myUpdateActive = true;
+
+        this._myCollisionsStart = this._myCollisionsStartToProcess;
+        this._myCollisionsStartToProcess = [];
+
+        this._myCollisionsEnd = this._myCollisionsEndToProcess;
+        this._myCollisionsEndToProcess = [];
+
+        if (this._myIsTrigger) {
+            this._triggerDesyncFix(dt);
+        }
     }
 
     destroy() {
@@ -52,27 +90,8 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
         this._myDebugActive = active;
     }
 
-    //Update is not mandatory, use it only if u want to access collisions start and end
-    update(dt) {
-        if (this._myIsDestroyed) {
-            return;
-        }
-
-        this._myUpdateActive = true;
-
-        this._myCollisionsStart = this._myCollisionsStartToProcess;
-        this._myCollisionsStartToProcess = [];
-
-        this._myCollisionsEnd = this._myCollisionsEndToProcess;
-        this._myCollisionsEndToProcess = [];
-
-        if (this._myIsTrigger) {
-            this._triggerDesyncFix(dt);
-        }
-    }
-
     _onCollision(type, physxComponent) {
-        if (this._myIsDestroyed) {
+        if (this._myIsDestroyed || !this._myIsActive) {
             return;
         }
 
