@@ -10,6 +10,8 @@ class StatisticsManager {
         WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
 
         this._myTimer = new PP.Timer(5);
+
+        Global.mySaveManager.registerClearEventListener(this, this._onClear.bind(this));
     }
 
     update(dt) {
@@ -22,6 +24,10 @@ class StatisticsManager {
 
     _onXRSessionEnd() {
         Global.myStatistics.save();
+    }
+
+    _onClear() {
+        Global.myStatistics.load();
     }
 }
 
