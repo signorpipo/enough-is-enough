@@ -13,13 +13,11 @@ WL.registerComponent('physx-collector-component', {
         return this._myCollisionsCollector;
     },
     onActivate() {
-        console.error("collector activate");
         if (this._myCollisionsCollector) {
             this._myCollisionsCollector.setActive(true);
         }
     },
     onDeactivate() {
-        console.error("collector deactivate");
         if (this._myCollisionsCollector) {
             this._myCollisionsCollector.setActive(false);
         }
