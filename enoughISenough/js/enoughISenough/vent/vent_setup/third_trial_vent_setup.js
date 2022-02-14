@@ -14,11 +14,11 @@ TrialState.prototype._thirdVentSetup = function () {
     ventSetup.mySmallBreakSetup.myBreakCloneCooldown = 3;
 
     ventSetup.myCloneRotationSetup.mySpinSpeed = new RangeValue([4, 6], false);
-    ventSetup.myCloneRotationSetup.mySpinChance = new RangeValueOverTime([1, 12], [1, 4], 50, 100, true);
+    ventSetup.myCloneRotationSetup.mySpinChance = new RangeValueOverTime([1, 12], [1, 4], 50, 95, true);
     ventSetup.myCloneRotationSetup.mySpinStartTime = 50;
 
     ventSetup.myCloneRotationSetup.myTiltAngle = new RangeValueOverTime([0, 10], [0, 15], 30, 60, false);
-    ventSetup.myCloneRotationSetup.myTiltChance = new RangeValueOverTime([1, 6], [1, 2], 30, 80, true);
+    ventSetup.myCloneRotationSetup.myTiltChance = new RangeValueOverTime([1, 5], [1, 2], 30, 70, true);
     ventSetup.myCloneRotationSetup.myTiltStartTime = 30;
 
     {

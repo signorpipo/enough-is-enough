@@ -230,11 +230,11 @@ class MrNOTVentState extends PP.State {
         ventSetup.mySmallBreakSetup.myBreakCloneCooldown = 3;
 
         ventSetup.myCloneRotationSetup.mySpinSpeed = new RangeValue([4, 6], false);
-        ventSetup.myCloneRotationSetup.mySpinChance = new RangeValueOverTime([1, 10], [1, 4], 20, 40, true);
-        ventSetup.myCloneRotationSetup.mySpinStartTime = 15;
+        ventSetup.myCloneRotationSetup.mySpinChance = new RangeValueOverTime([1, 8], [1, 4], 20, 40, true);
+        ventSetup.myCloneRotationSetup.mySpinStartTime = 20;
 
         ventSetup.myCloneRotationSetup.myTiltAngle = new RangeValueOverTime([0, 10], [0, 15], 15, 35, false);
-        ventSetup.myCloneRotationSetup.myTiltChance = new RangeValueOverTime([1, 6], [1, 2], 15, 35, true);
+        ventSetup.myCloneRotationSetup.myTiltChance = new RangeValueOverTime([1, 5], [1, 2], 15, 35, true);
         ventSetup.myCloneRotationSetup.myTiltStartTime = 15;
 
         ventSetup.myValidAngleRanges =
