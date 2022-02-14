@@ -1,21 +1,21 @@
 ArcadeState.prototype._disputeVentSetup = function () {
     let ventSetup = new VentSetup();
 
-    ventSetup.myBreakSetup.myBreakDuration = new RangeValue([3, 4]);
-    ventSetup.myBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([40, 45], [30, 35], 10, 30, false);
+    ventSetup.myBreakSetup.myBreakDuration = new RangeValueOverTime([3, 4], [1.5, 2.5], 100, 300, false);
+    ventSetup.myBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([35, 45], [25, 35], 10, 100, false);
     ventSetup.myBreakSetup.myBreakCloneCooldown = 5;
 
-    ventSetup.mySmallBreakSetup.myBreakDuration = new RangeValueOverTime([2, 3], [1.5, 2.5], 30, 75, false);
-    ventSetup.mySmallBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([40, 50], [8, 12], 10, 45, false);
+    ventSetup.mySmallBreakSetup.myBreakDuration = new RangeValueOverTime([2, 3], [0.5, 1], 50, 250, false);
+    ventSetup.mySmallBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([50, 50], [8, 12], 10, 100, false);
     ventSetup.mySmallBreakSetup.myBreakCloneCooldown = 3;
 
     ventSetup.myCloneRotationSetup.mySpinSpeed = new RangeValue([4, 6], false);
-    ventSetup.myCloneRotationSetup.mySpinChance = new RangeValueOverTime([1, 12], [1, 4], 50, 100, true);
-    ventSetup.myCloneRotationSetup.mySpinStartTime = 50;
+    ventSetup.myCloneRotationSetup.mySpinChance = new RangeValueOverTime([1, 10], [1, 4], 160, 300, true);
+    ventSetup.myCloneRotationSetup.mySpinStartTime = 150;
 
-    ventSetup.myCloneRotationSetup.myTiltAngle = new RangeValueOverTime([0, 10], [0, 15], 30, 60, false);
-    ventSetup.myCloneRotationSetup.myTiltChance = new RangeValueOverTime([1, 6], [1, 2], 30, 80, true);
-    ventSetup.myCloneRotationSetup.myTiltStartTime = 30;
+    ventSetup.myCloneRotationSetup.myTiltAngle = new RangeValueOverTime([0, 5], [0, 15], 60, 200, false);
+    ventSetup.myCloneRotationSetup.myTiltChance = new RangeValueOverTime([1, 6], [1, 2], 60, 200, true);
+    ventSetup.myCloneRotationSetup.myTiltStartTime = 60;
 
     ventSetup.myVentMultipliers = new VentRuntimeMultipliers();
     ventSetup.myVentMultipliers.mySpawnTimeMultiplier = 1;
@@ -28,9 +28,9 @@ ArcadeState.prototype._disputeVentSetup = function () {
     ventSetup.myMrNOTSetup = new VentMrNOTSetup();
 
     ventSetup.myMrNOTSetup.myMrNOTAppearenceEnabled = true;
-    ventSetup.myMrNOTSetup.myMrNOTTimeCooldown = new RangeValueOverTime([100, 110], [90, 110], 120, 260, false);
-    ventSetup.myMrNOTSetup.myVentMultipliers = new VentRuntimeMultipliers();
+    ventSetup.myMrNOTSetup.myMrNOTTimeCooldown = new RangeValueOverTime([100, 110], [50, 70], 120, 350, false);
 
+    ventSetup.myMrNOTSetup.myVentMultipliers = new VentRuntimeMultipliers();
     ventSetup.myMrNOTSetup.myVentMultipliers.mySpawnTimeMultiplier = 2;
     ventSetup.myMrNOTSetup.myVentMultipliers.myDoneTimeMultiplier = 2;
     ventSetup.myMrNOTSetup.myVentMultipliers.myBreakTimeMultiplier = 1;
@@ -38,9 +38,9 @@ ArcadeState.prototype._disputeVentSetup = function () {
     ventSetup.myMrNOTSetup.myVentMultipliers.mySmallBreakTimeMultiplier = 1;
     ventSetup.myMrNOTSetup.myVentMultipliers.mySmallBreakDelayTimeMultiplier = 1;
 
-    ventSetup.myMrNOTSetup.myStartAngle = new RangeValueOverTime([0, 180], [0, 180], 0, 0, false);
-    ventSetup.myMrNOTSetup.myTimeToReachTarget = new RangeValueOverTime([40, 55], [30, 45], 120, 500, false);
-    ventSetup.myMrNOTSetup.myMaxPatience = new ValueOverTime(7, 15, 30, 60, true);
+    ventSetup.myMrNOTSetup.myStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+    ventSetup.myMrNOTSetup.myTimeToReachTarget = new RangeValueOverTime([35, 45], [25, 35], 120, 300, false);
+    ventSetup.myMrNOTSetup.myMaxPatience = new ValueOverTime(7, 15, 25, 45, true);
 
     {
         let wave = new IAmHereWaveSetup();
