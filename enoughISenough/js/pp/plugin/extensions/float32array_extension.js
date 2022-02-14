@@ -1543,3 +1543,19 @@ Float32Array.prototype._vec_prepareOut = function (out) {
 
     return out;
 };
+
+for (let key in Float32Array.prototype) {
+    let prefixes = ["pp_", "vec_", "vec3_", "vec4_", "quat_", "quat2_", "mat3_", "mat4_", "_pp_", "_vec_",];
+
+    let found = false;
+    for (let prefix of prefixes) {
+        if (key.startsWith(prefix)) {
+            found = true;
+            break;
+        }
+    }
+
+    if (found) {
+        Object.defineProperty(Float32Array.prototype, key, { enumerable: false });
+    }
+}

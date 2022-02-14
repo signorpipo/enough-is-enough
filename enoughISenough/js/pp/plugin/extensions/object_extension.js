@@ -2068,3 +2068,19 @@ WL.Object.prototype._pp_toDegrees = function (angle) {
 WL.Object.prototype._pp_clamp = function (value, min, max) {
     return Math.min(Math.max(value, min), max);
 };
+
+for (let key in WL.Object.prototype) {
+    let prefixes = ["pp_", "_pp_"];
+
+    let found = false;
+    for (let prefix of prefixes) {
+        if (key.startsWith(prefix)) {
+            found = true;
+            break;
+        }
+    }
+
+    if (found) {
+        Object.defineProperty(WL.Object.prototype, key, { enumerable: false });
+    }
+}

@@ -27,7 +27,7 @@ _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.hoverBehaviour = 
         if (!this.hoveringObject || !this.hoveringObject.equals(rayHit.objects[0])) {
             /* Unhover previous, if exists */
             if (this.hoveringObject) {
-                const cursorTarget = this.hoveringObject.getComponent("cursor-target");
+                let cursorTarget = this.hoveringObject.getComponent("cursor-target");
 
                 /* Cursor up */
                 if (this.isDown && this.isDown == this.lastIsDown) {
@@ -56,7 +56,7 @@ _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.hoverBehaviour = 
             this.hoveringObjectTarget.onMove(this.hoveringObject, this);
         }
 
-        const cursorTarget = this.hoveringObject.getComponent("cursor-target");
+        let cursorTarget = this.hoveringObject.getComponent("cursor-target");
 
         /* Cursor down */
         if (this.isDown !== this.lastIsDown) {
@@ -97,7 +97,7 @@ _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.hoverBehaviour = 
             }
         }
     } else if (this.hoveringObject && rayHit.hitCount == 0) {
-        const cursorTarget = this.hoveringObject.getComponent("cursor-target");
+        let cursorTarget = this.hoveringObject.getComponent("cursor-target");
 
         /* Cursor up */
         if (this.isDown && this.isDown == this.lastIsDown) {

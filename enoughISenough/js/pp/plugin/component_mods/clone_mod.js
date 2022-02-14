@@ -53,3 +53,8 @@ WL.PhysXComponent.prototype.pp_clone = function (clone, deepCloneParams, extraDa
     clone.static = this.static;
     clone.staticFriction = this.staticFriction;
 };
+
+Object.defineProperty(WL.MeshComponent.prototype, "pp_clone", { enumerable: false });
+Object.defineProperty(WL.CollisionComponent.prototype, "pp_clone", { enumerable: false });
+Object.defineProperty(WL.TextComponent.prototype, "pp_clone", { enumerable: false });
+Object.defineProperty(WL.PhysXComponent.prototype, "pp_clone", { enumerable: false });

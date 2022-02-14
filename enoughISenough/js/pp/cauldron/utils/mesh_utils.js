@@ -1,7 +1,7 @@
 PP.MeshUtils = {
     createPlaneMesh: function () {
-        const vertexCount = 4;
-        const vertexDataSize = WL.Mesh.VERTEX_FLOAT_SIZE; // vertex is like a class with x,y,z,u,v,normal unwrapped in an array
+        let vertexCount = 4;
+        let vertexDataSize = WL.Mesh.VERTEX_FLOAT_SIZE; // vertex is like a class with x,y,z,u,v,normal unwrapped in an array
 
         let vertexData = new Float32Array(vertexCount * vertexDataSize);
         let indexData = new Uint32Array(vertexCount + 2); // +2 repeated vertexes
