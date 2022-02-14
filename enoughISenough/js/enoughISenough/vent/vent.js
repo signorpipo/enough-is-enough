@@ -46,10 +46,10 @@ class VentMrNOTSetup {
         this.myMrNOTTimeCooldown = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
         this.myVentMultipliers = new VentRuntimeMultipliers();
 
-        this.myResetMrNOTTimerWhenBelowBreak = 4;
-        this.myResetTimerAmountBreak = new RangeValue([6, 8]);
-        this.myResetMrNOTTimerWhenBelowSmallBreak = 2;
-        this.myResetTimerAmountSmallBreak = new RangeValue([3, 5]);
+        this.myResetMrNOTTimerWhenBelowBreak = 8;
+        this.myResetTimerAmountBreak = new RangeValue([8, 10]);
+        this.myResetMrNOTTimerWhenBelowSmallBreak = 4;
+        this.myResetTimerAmountSmallBreak = new RangeValue([4, 6]);
 
         this.myStartAngle = new RangeValueOverTime([180, 180], [180, 180], 0, 0, false);
         this.myTimeToReachTarget = new RangeValueOverTime([50, 50], [50, 50], 0, 0, false);
@@ -172,7 +172,7 @@ class Vent {
         this._myCloneDismissed = 0;
 
         this._myMrNOT = null;
-        this._myMrNOTTimer = new PP.Timer(this._myVentSetup.myMrNOTSetup.myMrNOTTimeCooldown.get(Global.myVentDuration) - Global.myVentDuration);
+        this._myMrNOTTimer = new PP.Timer(this._myVentSetup.myMrNOTSetup.myMrNOTTimeCooldown.get(Global.myVentDuration) - Global.myVentDuration, this._myVentSetup.myMrNOTSetup.myMrNOTAppearenceEnabled);
 
         this._debugNextWave();
     }
@@ -313,8 +313,15 @@ class Vent {
         this._mySmallBreakDelayTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration) * smallBreakDelayMultiplier);
         this._mySmallBreakCloneCooldown = this._myVentSetup.mySmallBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
 
-        if (this._myMrNOTTimer.isStarted() && this._myMrNOTTimer.getTimer() <= this._myVentSetup.myMrNOTSetup.myResetMrNOTTimerWhenBelowBreak.get(Global.myVentDuration)) {
+        if (this._myVentSetup.myMrNOTSetup.myMrNOTAppearenceEnabled && this._myMrNOTTimer.isStarted() &&
+            this._myMrNOTTimer.getTimer() <= this._myVentSetup.myMrNOTSetup.myResetMrNOTTimerWhenBelowBreak.get(Global.myVentDuration)) {
             this._myMrNOTTimer = new PP.Timer(this._myVentSetup.myMrNOTSetup.myResetTimerAmountBreak.get(Global.myVentDuration));
+
+            this._mySmallBreakDelayTimer = new PP.Timer(0, false);
+            this._mySmallBreakCloneCooldown = 0;
+
+            this._myBreakDelayTimer = new PP.Timer(0, false);
+            this._mySmallBreakCloneCooldown = 0;
         }
 
         this._debugNextWave();
@@ -328,12 +335,19 @@ class Vent {
         if (this._myBreakDelayTimer.getTimer() < this._myVentSetup.myResetBreakWhenBreakTimerBelow.get(Global.myVentDuration)) {
             this._myBreakDelayTimer = new PP.Timer(this._myVentSetup.myResetBreakAmount.get(Global.myVentDuration));
 
-            this._mySmallBreakTimer = new PP.Timer(0, false);
+            this._mySmallBreakDelayTimer = new PP.Timer(0, false);
             this._mySmallBreakCloneCooldown = 0;
         }
 
-        if (this._myMrNOTTimer.isStarted() && this._myMrNOTTimer.getTimer() <= this._myVentSetup.myMrNOTSetup.myResetMrNOTTimerWhenBelowSmallBreak.get(Global.myVentDuration)) {
+        if (this._myVentSetup.myMrNOTSetup.myMrNOTAppearenceEnabled && this._myMrNOTTimer.isStarted() &&
+            this._myMrNOTTimer.getTimer() <= this._myVentSetup.myMrNOTSetup.myResetMrNOTTimerWhenBelowSmallBreak.get(Global.myVentDuration)) {
             this._myMrNOTTimer = new PP.Timer(this._myVentSetup.myMrNOTSetup.myResetTimerAmountSmallBreak.get(Global.myVentDuration));
+
+            this._mySmallBreakDelayTimer = new PP.Timer(0, false);
+            this._mySmallBreakCloneCooldown = 0;
+
+            this._myBreakDelayTimer = new PP.Timer(0, false);
+            this._mySmallBreakCloneCooldown = 0;
         }
 
         this._debugNextWave();

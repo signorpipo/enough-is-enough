@@ -8,6 +8,8 @@ PP.Timer = class Timer {
 
         if (autoStart) {
             this.start();
+        } else {
+            this.reset();
         }
     }
 
