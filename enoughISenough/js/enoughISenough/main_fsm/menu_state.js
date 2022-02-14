@@ -9,18 +9,18 @@ class MenuState extends PP.State {
         this._myFSM.addState("ready", this._readyUpdate.bind(this));
         this._myFSM.addState("unspawning_reset", this._unspawn.bind(this));
         this._myFSM.addState("unspawning_restart", this._unspawn.bind(this));
-        this._myFSM.addState("unspawning_arcade_hard", this._unspawn.bind(this));
-        this._myFSM.addState("unspawning_arcade_normal", this._unspawn.bind(this));
+        this._myFSM.addState("unspawning_arcade_dispute", this._unspawn.bind(this));
+        this._myFSM.addState("unspawning_arcade_chat", this._unspawn.bind(this));
         this._myFSM.addState("unspawning_trial", this._unspawn.bind(this));
         this._myFSM.addState("done");
 
-        this._myFSM.addTransition("ready", "unspawning_arcade_hard", "unspawn_arcade_hard", this._startUnspawning.bind(this));
-        this._myFSM.addTransition("ready", "unspawning_arcade_normal", "unspawn_arcade_normal", this._startUnspawning.bind(this));
+        this._myFSM.addTransition("ready", "unspawning_arcade_dispute", "unspawn_arcade_dispute", this._startUnspawning.bind(this));
+        this._myFSM.addTransition("ready", "unspawning_arcade_chat", "unspawn_arcade_chat", this._startUnspawning.bind(this));
         this._myFSM.addTransition("ready", "unspawning_trial", "unspawn_trial", this._startUnspawning.bind(this));
         this._myFSM.addTransition("ready", "unspawning_reset", "unspawn_reset", this._startUnspawningReset.bind(this));
         this._myFSM.addTransition("ready", "unspawning_restart", "unspawn_restart", this._startUnspawningRestart.bind(this));
-        this._myFSM.addTransition("unspawning_arcade_hard", "done", "end", this._endArcadeHard.bind(this));
-        this._myFSM.addTransition("unspawning_arcade_normal", "done", "end", this._endArcadeNormal.bind(this));
+        this._myFSM.addTransition("unspawning_arcade_dispute", "done", "end", this._endArcadeHard.bind(this));
+        this._myFSM.addTransition("unspawning_arcade_chat", "done", "end", this._endArcadeNormal.bind(this));
         this._myFSM.addTransition("unspawning_trial", "done", "end", this._endTrial.bind(this));
         this._myFSM.addTransition("unspawning_reset", "done", "end", this._endReset.bind(this));
         this._myFSM.addTransition("unspawning_restart", "done", "end", this._endRestart.bind(this));
@@ -111,7 +111,7 @@ class MenuState extends PP.State {
 
             //TEMP REMOVE THIS
             if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(Global.myDebugShortcutsPress)) {
-                this._myFSM.perform("unspawn_arcade_hard");
+                this._myFSM.perform("unspawn_arcade_dispute");
                 //this._myNotEnough.start();
                 //Global.myParticlesManager.mrNOTParticles(Global.myPlayerPosition);
             }
@@ -272,7 +272,7 @@ class MenuState extends PP.State {
         {
             let startArcadeHard = new MenuItem(Global.myGameObjects.get(GameObjectType.ARCADE_STICK_DISPUTE), GameObjectType.ARCADE_STICK_DISPUTE, positions[2], function () {
                 if (this._myFSM.isInState("ready")) {
-                    this._myFSM.perform("unspawn_arcade_hard");
+                    this._myFSM.perform("unspawn_arcade_dispute");
                     this._myResetCount = 0;
                 }
             }.bind(this));
@@ -282,7 +282,7 @@ class MenuState extends PP.State {
         {
             let startArcadeNormal = new MenuItem(Global.myGameObjects.get(GameObjectType.ARCADE_STICK_CHAT), GameObjectType.ARCADE_STICK_CHAT, positions[1], function () {
                 if (this._myFSM.isInState("ready")) {
-                    this._myFSM.perform("unspawn_arcade_normal");
+                    this._myFSM.perform("unspawn_arcade_chat");
                     this._myResetCount = 0;
                 }
             }.bind(this));
