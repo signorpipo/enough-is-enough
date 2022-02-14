@@ -44,6 +44,14 @@ PP.EasyTuneVariables = class EasyTuneVariables {
     _getInternalMap() {
         return this._myMap;
     }
+
+    registerValueChangedEventListener(variableName, callbackID, callback) {
+        this._myMap.get(variableName).registerValueChangedEventListener(callbackID, callback);
+    }
+
+    unregisterValueChangedEventListener(variableName, callbackID, callback) {
+        this._myMap.get(variableName).unregisterValueChangedEventListener(callbackID);
+    }
 };
 
 //Variable Types
@@ -63,6 +71,8 @@ PP.EasyTuneVariable = class EasyTuneVariable {
         this.myInitialValue = null;
 
         this.myIsActive = false;
+
+        this._myValueChangedCallbacks = new Map();
     }
 
     getValue() {
@@ -70,6 +80,7 @@ PP.EasyTuneVariable = class EasyTuneVariable {
     }
 
     setValue(value, resetInitialValue = false) {
+        let oldValue = this.myValue;
         this.myValue = value;
 
         if (resetInitialValue) {
@@ -77,10 +88,28 @@ PP.EasyTuneVariable = class EasyTuneVariable {
         }
 
         PP.refreshEasyTuneWidget();
+
+        if (oldValue != value) {
+            this._triggerValueChangedCallback();
+        }
     }
 
     setInitialValue(value) {
         this.myInitialValue = value;
+    }
+
+    registerValueChangedEventListener(id, callback) {
+        this._myValueChangedCallbacks.set(id, callback);
+    }
+
+    unregisterValueChangedEventListener(id) {
+        this._myValueChangedCallbacks.delete(id);
+    }
+
+    _triggerValueChangedCallback() {
+        if (this._myValueChangedCallbacks.size > 0) {
+            this._myValueChangedCallbacks.forEach(function (value) { value(this.myName, this.getValue()); }.bind(this));
+        }
     }
 };
 
@@ -96,6 +125,7 @@ PP.EasyTuneVariableArray = class EasyTuneVariableArray extends PP.EasyTuneVariab
     }
 
     setValue(value, resetInitialValue = false) {
+        let oldValue = this.myValue;
         this.myValue = value.slice(0);
 
         if (resetInitialValue) {
@@ -103,6 +133,10 @@ PP.EasyTuneVariableArray = class EasyTuneVariableArray extends PP.EasyTuneVariab
         }
 
         PP.refreshEasyTuneWidget();
+
+        if (oldValue == null || !oldValue.pp_equals(value)) {
+            this._triggerValueChangedCallback();
+        }
     }
 
     setInitialValue(value) {
@@ -248,6 +282,9 @@ PP.EasyTuneSimpleTransform = class EasyTuneSimpleTransform extends PP.EasyTuneVa
         this.myInitialScaleStepPerSecond = this.myScaleStepPerSecond;
 
         this.myTransform = mat4_create();
+        this.myTransform.mat4_setPositionRotationDegreesScale(this.myPosition, this.myRotation, this.myScale);
+
+        this.myTempTransform = mat4_create();
     }
 
     getValue() {
@@ -256,15 +293,23 @@ PP.EasyTuneSimpleTransform = class EasyTuneSimpleTransform extends PP.EasyTuneVa
     }
 
     setValue(value, resetInitialValue = false) {
-        this.myPosition = value.mat4_getPosition();
-        this.myRotation = value.mat4_getRotationDegrees();
-        this.myScale = value.mat4_getScale();
+        this.myTempTransform.mat4_setPositionRotationDegreesScale(this.myPosition, this.myRotation, this.myScale);
+
+        value.mat4_getPosition(this.myPosition);
+        value.mat4_getRotationDegrees(this.myRotation);
+        value.mat4_getScale(this.myScale);
+
+        this.myTransform.mat4_setPositionRotationDegreesScale(this.myPosition, this.myRotation, this.myScale);
 
         if (resetInitialValue) {
             PP.EasyTuneSimpleTransform.prototype.setInitialValue.call(this, value);
         }
 
         PP.refreshEasyTuneWidget();
+
+        if (!this.myTempTransform.pp_equals(this.myTransform)) {
+            this._triggerValueChangedCallback();
+        }
     }
 
     setInitialValue(value) {

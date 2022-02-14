@@ -53,6 +53,7 @@
             ○ pp_pushUnique / pp_unshiftUnique
             ○ pp_copy    
             - pp_clone      
+            - pp_equals      
 
         GENERIC VECTOR (array with only numbers):
             - vec_scale
@@ -234,10 +235,6 @@ Float32Array.prototype.pp_unshiftUnique = function (element, hasElementCallback 
     return length;
 };
 
-Float32Array.prototype.pp_clone = function () {
-    return this.slice(0);
-};
-
 Float32Array.prototype.pp_copy = function (array) {
     while (this.length > array.length) {
         this.pop();
@@ -248,6 +245,28 @@ Float32Array.prototype.pp_copy = function (array) {
     }
 
     return this;
+};
+
+Float32Array.prototype.pp_clone = function () {
+    return this.slice(0);
+};
+
+Float32Array.prototype.pp_equals = function (array, elementEqualsCallback = null) {
+    let equals = true;
+
+    if (array != null && this.length == array.length) {
+        for (let i = 0; i < this.length; i++) {
+            if ((elementEqualsCallback != null && !elementEqualsCallback(this[i], array[i])) ||
+                (elementEqualsCallback == null && this[i] != array[i])) {
+                equals = false;
+                break;
+            }
+        }
+    } else {
+        equals = false;
+    }
+
+    return equals;
 };
 
 // GENERIC VECTOR
