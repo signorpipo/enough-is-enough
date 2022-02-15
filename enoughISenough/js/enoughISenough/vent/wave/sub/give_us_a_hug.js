@@ -8,7 +8,7 @@ class GiveUsAHugSetup extends IAmHereWaveSetup {
         this.mySameHugSize = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
 
         this.myHugClonesSameDistance = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
-        this.myMinAngleBetweenClonesHugging = new RangeValueOverTime([20, 20], [20, 20], 0, 0, false);
+        this.myMinAngleBetweenClonesHugging = new RangeValueOverTime([30, 30], [30, 30], 0, 0, false);
     }
 
     createWave(ventRuntimeSetup, timeElapsed, refDirection = null) {
