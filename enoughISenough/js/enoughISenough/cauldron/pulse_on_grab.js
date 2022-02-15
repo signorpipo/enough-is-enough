@@ -14,6 +14,6 @@ WL.registerComponent("pulse-on-grab", {
         grab.registerGrabEventListener(this, this._onGrab.bind(this));
     },
     _onGrab() {
-        this._myGamepad.pulse(0.125, 0.1);
+        this._myGamepad.pulse(0.15, 0.1);
     },
 });
