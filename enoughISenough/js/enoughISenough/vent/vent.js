@@ -37,6 +37,8 @@ class VentSetup {
         this.myDelayBeforeStart = 4.5;
 
         this.myMrNOTSetup = new VentMrNOTSetup();
+
+        this.myNextWaveChanceBoosterSetupMap = new Map();
     }
 }
 
@@ -127,7 +129,7 @@ class Vent {
 
         this._myFSM.init("init");
 
-        this._myDebugActive = false;
+        this._myDebugActive = true;
         this._myDebugActiveBreak = false;
         this._myDebugActiveStats = false;
         this._myDebugActiveMrNOT = false;
@@ -137,6 +139,11 @@ class Vent {
         this._myCurrentVentRuntimeSetup = new VentRuntimeSetup();
 
         this._myMrNOT = null;
+
+        this._myNextWaveChanceBooster = new NextWaveChanceBooster();
+        for (let entry of this._myVentSetup.myNextWaveChanceBoosterSetupMap.entries()) {
+            this._myNextWaveChanceBooster.addSetup(entry[0], entry[1]);
+        }
     }
 
     start() {
@@ -174,6 +181,8 @@ class Vent {
         this._myMrNOT = null;
         this._myMrNOTTimer = new PP.Timer(this._myVentSetup.myMrNOTSetup.myMrNOTTimeCooldown.get(Global.myVentDuration) - Global.myVentDuration, this._myVentSetup.myMrNOTSetup.myMrNOTAppearenceEnabled);
 
+        this._myNextWaveChanceBooster.reset();
+
         this._debugNextWave();
     }
 
@@ -184,6 +193,7 @@ class Vent {
         this._myBreakDelayTimer.update(dt);
         this._mySmallBreakDelayTimer.update(dt);
         this._myMrNOTTimer.update(dt);
+        this._myNextWaveChanceBooster.update(dt);
 
         if (this._myCurrentWave != null) {
             let cloneSetups = this._myCurrentWave.update(dt);
@@ -229,7 +239,8 @@ class Vent {
             this._myVentCompleted = true;
             this._myCurrentWave = null;
         } else {
-            this._myCurrentWaveID = this._myVentSetup.myNextWavesMap.get(this._myCurrentWaveID).getNextWave(Global.myVentDuration);
+            this._myCurrentWaveID = this._myVentSetup.myNextWavesMap.get(this._myCurrentWaveID).getNextWave(Global.myVentDuration, this._myNextWaveChanceBooster);
+            this._myNextWaveChanceBooster.nextWaveSelected(this._myCurrentWaveID);
 
             let refDirection = Global.myPlayerForward;
             if (this._myVentSetup.myRefDirection != null) {
@@ -277,6 +288,7 @@ class Vent {
         this._myBreakTimer.update(dt);
         this._myBreakDelayTimer.update(dt);
         this._myMrNOTTimer.update(dt);
+        this._myNextWaveChanceBooster.update(dt);
 
         this._myPulseRadar.update(dt);
         this._updateClones(dt);

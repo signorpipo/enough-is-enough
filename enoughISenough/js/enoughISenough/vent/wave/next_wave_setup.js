@@ -8,13 +8,14 @@ class NextWavesSetup {
         this._myNextWaves.push(wave);
     }
 
-    getNextWave(timeElapsed) {
+    getNextWave(timeElapsed, booster) {
         let validWaves = [];
         let totalChance = 0;
-        for (let nextWave of this._myNextWaves) {
-            if (nextWave.myStartTime <= timeElapsed && (nextWave.myEndTime == null || nextWave.myEndTime > timeElapsed)) {
-                validWaves.push(nextWave);
-                totalChance += nextWave.myChance.get(timeElapsed);
+        for (let i = 0; i < this._myNextWaves.length; i++) {
+            let waveToCheck = this._myNextWaves[i];
+            if (waveToCheck.myStartTime <= timeElapsed && (waveToCheck.myEndTime == null || waveToCheck.myEndTime > timeElapsed)) {
+                validWaves.push(waveToCheck);
+                totalChance += waveToCheck.myChance.get(timeElapsed) + booster.getChanceBoost(waveToCheck.myWaveID);
             }
         }
 
@@ -23,12 +24,13 @@ class NextWavesSetup {
             console.error("No valid next wave found, how?");
         }
 
-        let nextWave = validWaves[0];
-        let randomChance = Math.pp_randomInt(1, totalChance);
+        let nextWave = validWaves[validWaves.length - 1];
+        let randomChance = Math.pp_random(0, totalChance);
         let currentChance = 0;
-        for (let validWave of validWaves) {
-            currentChance += validWave.myChance.get(timeElapsed);
-            if (randomChance <= currentChance) {
+        for (let i = 0; i < validWaves.length; i++) {
+            let validWave = validWaves[i];
+            currentChance += validWave.myChance.get(timeElapsed) + booster.getChanceBoost(validWave.myWaveID);
+            if (randomChance < currentChance) {
                 nextWave = validWave;
                 break;
             }

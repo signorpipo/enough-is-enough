@@ -3,11 +3,12 @@ WL.registerComponent('pp-grabber-hand', {
     _myGrabButton: { type: WL.Type.Enum, values: ['select', 'squeeze', 'both'], default: 'squeeze' },
     _mySnapOnPivot: { type: WL.Type.Bool, default: false },
     _myMaxNumberOfObjects: { type: WL.Type.Int, default: 1 }, // how many objects you can grab at the same time
+    // ADVANCED SETTINGS
+    _myThrowVelocitySource: { type: WL.Type.Enum, values: ['hand', 'grabbable'], default: 'hand' },
     _myThrowLinearVelocityMultiplier: { type: WL.Type.Float, default: 1 }, // multiply the overall throw speed, so slow throws will be multiplied too
     _myThrowMaxLinearSpeed: { type: WL.Type.Float, default: 15 },
     _myThrowAngularVelocityMultiplier: { type: WL.Type.Float, default: 0.5 },
     _myThrowMaxAngularSpeed: { type: WL.Type.Float, default: 1080 }, // degrees
-    _myThrowVelocitySource: { type: WL.Type.Enum, values: ['hand', 'grabbable'], default: 'hand' },
     _myThrowLinearVelocityBoost: { type: WL.Type.Float, default: 1.75 },   // this boost is applied from 0% to 100% based on how fast you throw, so slow throws are not affected
     _myThrowLinearVelocityBoostMinSpeedThreshold: { type: WL.Type.Float, default: 0.6 },   // 0% boost is applied if plain throw speed is under this value
     _myThrowLinearVelocityBoostMaxSpeedThreshold: { type: WL.Type.Float, default: 2.5 },   // 100% boost is applied if plain throw speed is over this value
