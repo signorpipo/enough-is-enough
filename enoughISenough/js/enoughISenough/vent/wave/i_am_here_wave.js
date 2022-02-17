@@ -60,12 +60,17 @@ class IAmHereWave {
         this._myLastValidSpawnTimer = this._mySpawnTimer.getDuration();
 
         this._myFirstUpdate = true;
+
+        this._myDuration = 0;
+        this._myActualClonesCount = 0;
     }
 
     update(dt) {
         if (this.isDone()) {
             return [];
         }
+
+        this._myDuration += dt;
 
         if (this._myFirstUpdate) {
             this._myFirstUpdate = false;
@@ -121,7 +126,17 @@ class IAmHereWave {
             this._myDoneDelayTimer.update(dt);
         }
 
+        this._myActualClonesCount += cloneSetups.length;
+
         return cloneSetups;
+    }
+
+    getDuration() {
+        return this._myDuration;
+    }
+
+    getActualClonesCount() {
+        return this._myActualClonesCount;
     }
 
     getAverageClonesCount() {

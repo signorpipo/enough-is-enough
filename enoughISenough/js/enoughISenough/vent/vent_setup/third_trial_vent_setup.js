@@ -22,10 +22,7 @@ TrialState.prototype._thirdVentSetup = function () {
     ventSetup.myCloneRotationSetup.myTiltStartTime = 30;
 
     {
-        let wave = new IAmHereWaveSetup();
-
-        wave.myClonesCount = 0;
-        wave.myDoneDelay = 0;
+        let wave = new ZeroWaveSetup();
 
         let nextWavesSetup = new NextWavesSetup();
         nextWavesSetup.addWave("Merry_Go_Round_Right", 10);

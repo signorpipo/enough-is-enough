@@ -51,12 +51,17 @@ class WaveOfWaves {
         this._myOneCloneSetupValid = false;
         this._myOneCloneSetupValidCurrentWave = false;
         this._myLastValidSpawnTimer = this._mySpawnTimer.getDuration();
+
+        this._myDuration = 0;
+        this._myActualClonesCount = 0;
     }
 
     update(dt) {
         if (this.isDone()) {
             return [];
         }
+
+        this._myDuration += dt;
 
         let cloneSetups = [];
 
@@ -108,11 +113,21 @@ class WaveOfWaves {
             this._myDoneDelayTimer.update(dt);
         }
 
+        this._myActualClonesCount += cloneSetups.length;
+
         return cloneSetups;
     }
 
     isDone() {
         return this._myDoneDelayTimer.isDone();
+    }
+
+    getActualClonesCount() {
+        return this._myActualClonesCount;
+    }
+
+    getDuration() {
+        return this._myDuration;
     }
 
     getAverageClonesCount() {

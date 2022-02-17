@@ -24,7 +24,7 @@ class NextWavesSetup {
             console.error("No valid next wave found, how?");
         }
 
-        let nextWave = validWaves[validWaves.length - 1];
+        let nextWave = null;
         let randomChance = Math.pp_random(0, totalChance);
         let currentChance = 0;
         for (let i = 0; i < validWaves.length; i++) {
@@ -35,6 +35,13 @@ class NextWavesSetup {
                 break;
             }
         }
+
+        if (nextWave == null) {
+            nextWave = validWaves[validWaves.length - 1];
+            console.error("No random wave found, how?");
+        }
+
+        //console.error(booster.getBoostGroupName(nextWave.myWaveID), "-", booster.getChanceBoost(nextWave.myWaveID).toFixed(3), "-", booster.getTimeSinceLastPick(nextWave.myWaveID).toFixed(3), "-", nextWave.myWaveID);
 
         return nextWave.myWaveID;
     }

@@ -198,5 +198,6 @@ var Global = {
     myIsInMenu: false,
     myZestyToClick: null,
     myTrialStartedOnce: false,
-    mySaveManager: null
+    mySaveManager: null,
+    myDebugCurrentVentObject: null
 };
