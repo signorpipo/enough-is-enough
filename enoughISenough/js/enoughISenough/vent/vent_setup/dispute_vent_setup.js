@@ -72,8 +72,8 @@ ArcadeState.prototype._disputeVentSetup = function () {
     let boosterGroupName1 = "1";
     let boosterGroupName2 = "2";
 
-
-    let boostInterpolatorOverLastPick = new ValueOverTime(-5, 1, 0, 30);
+    let dampingOverLastPick1 = new ValueOverTime(-90, 0, 0, 30);
+    let dampingOverLastPick2 = new ValueOverTime(-90, 0, 0, 30);
 
     let boostMultiplier1 = 1;
     let boostMultiplier2 = 1;
@@ -103,7 +103,7 @@ ArcadeState.prototype._disputeVentSetup = function () {
         ventSetup.myWavesMap.set("I_Am_Here", wave);
         ventSetup.myNextWavesMap.set("I_Am_Here", nextWavesSetup);
         ventSetup.myNextWaveChanceBoosterSetupMap.set("I_Am_Here",
-            new NextWaveChanceBoosterSetup(0, boosterGroup1, boosterGroupName1, boostInterpolatorOverLastPick, boostMultiplier1, boostDivider));
+            new NextWaveChanceBoosterSetup(0, boosterGroup1, boosterGroupName1, dampingOverLastPick1, boostMultiplier1, boostDivider));
     }
 
     {
@@ -118,7 +118,7 @@ ArcadeState.prototype._disputeVentSetup = function () {
         ventSetup.myWavesMap.set("Queue_For_You", wave);
         ventSetup.myNextWavesMap.set("Queue_For_You", nextWavesSetup);
         ventSetup.myNextWaveChanceBoosterSetupMap.set("Queue_For_You",
-            new NextWaveChanceBoosterSetup(15, boosterGroup1, boosterGroupName1, boostInterpolatorOverLastPick, boostMultiplier1, boostDivider));
+            new NextWaveChanceBoosterSetup(15, boosterGroup1, boosterGroupName1, dampingOverLastPick1, boostMultiplier1, boostDivider));
     }
 
     {
@@ -134,7 +134,7 @@ ArcadeState.prototype._disputeVentSetup = function () {
         ventSetup.myWavesMap.set("Merry_Go_Round", wave);
         ventSetup.myNextWavesMap.set("Merry_Go_Round", nextWavesSetup);
         ventSetup.myNextWaveChanceBoosterSetupMap.set("Merry_Go_Round",
-            new NextWaveChanceBoosterSetup(15, boosterGroup1, boosterGroupName1, boostInterpolatorOverLastPick, boostMultiplier1, boostDivider));
+            new NextWaveChanceBoosterSetup(15, boosterGroup1, boosterGroupName1, dampingOverLastPick1, boostMultiplier1, boostDivider));
     }
 
     {
@@ -149,7 +149,7 @@ ArcadeState.prototype._disputeVentSetup = function () {
         ventSetup.myWavesMap.set("I_Am_Everywhere", wave);
         ventSetup.myNextWavesMap.set("I_Am_Everywhere", nextWavesSetup);
         ventSetup.myNextWaveChanceBoosterSetupMap.set("I_Am_Everywhere",
-            new NextWaveChanceBoosterSetup(45, boosterGroup2, boosterGroupName2, boostInterpolatorOverLastPick, boostMultiplier2, boostDivider));
+            new NextWaveChanceBoosterSetup(45, boosterGroup2, boosterGroupName2, dampingOverLastPick2, boostMultiplier2, boostDivider));
     }
 
     {
@@ -171,7 +171,7 @@ ArcadeState.prototype._disputeVentSetup = function () {
         ventSetup.myWavesMap.set("Give_Us_A_Hug_2", wave);
         ventSetup.myNextWavesMap.set("Give_Us_A_Hug_2", nextWavesSetup);
         ventSetup.myNextWaveChanceBoosterSetupMap.set("Give_Us_A_Hug_2",
-            new NextWaveChanceBoosterSetup(60, boosterGroup2, boosterGroupName2, boostInterpolatorOverLastPick, boostMultiplier2, boostDivider));
+            new NextWaveChanceBoosterSetup(60, boosterGroup2, boosterGroupName2, dampingOverLastPick2, boostMultiplier2, boostDivider));
     }
 
     {
@@ -193,7 +193,7 @@ ArcadeState.prototype._disputeVentSetup = function () {
         ventSetup.myWavesMap.set("Give_Us_A_Hug_3", wave);
         ventSetup.myNextWavesMap.set("Give_Us_A_Hug_3", nextWavesSetup);
         ventSetup.myNextWaveChanceBoosterSetupMap.set("Give_Us_A_Hug_3",
-            new NextWaveChanceBoosterSetup(60, boosterGroup2, boosterGroupName2, boostInterpolatorOverLastPick, boostMultiplier2, boostDivider));
+            new NextWaveChanceBoosterSetup(60, boosterGroup2, boosterGroupName2, dampingOverLastPick2, boostMultiplier2, boostDivider));
     }
 
     {
@@ -207,7 +207,7 @@ ArcadeState.prototype._disputeVentSetup = function () {
         ventSetup.myWavesMap.set("Man_In_The_Middle", wave);
         ventSetup.myNextWavesMap.set("Man_In_The_Middle", nextWavesSetup);
         ventSetup.myNextWaveChanceBoosterSetupMap.set("Man_In_The_Middle",
-            new NextWaveChanceBoosterSetup(75, boosterGroup2, boosterGroupName2, boostInterpolatorOverLastPick, boostMultiplier2, boostDivider));
+            new NextWaveChanceBoosterSetup(75, boosterGroup2, boosterGroupName2, dampingOverLastPick2, boostMultiplier2, boostDivider));
     }
 
     ventSetup.myFirstWave = "Zero";

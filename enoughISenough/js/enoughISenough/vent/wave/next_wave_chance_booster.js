@@ -85,8 +85,12 @@ class NextWaveChanceBoosterData {
     }
 
     getChanceBoost() {
-        let interpolator = this._mySetup.myBoostInterpolatorOverLastPick.get(this._myTimeSinceLastPick);
-        let chanceBoost = this._myChanceBoost * this._mySetup.myBoostMultiplier * interpolator;
+        let damping = this._mySetup.myDampingOverLastPick.get(this._myTimeSinceLastPick);
+        let chanceBoost = this._myChanceBoost + damping;
+
+        if (chanceBoost >= 0) {
+            chanceBoost = this._myChanceBoost * this._mySetup.myBoostMultiplier;
+        }
 
         return chanceBoost;
     }
@@ -109,11 +113,11 @@ class NextWaveChanceBoosterData {
 }
 
 class NextWaveChanceBoosterSetup {
-    constructor(startTime, boostGroup, boostGroupName, boostInterpolatorOverLastPick, boostMultiplier, boostDivider) {
+    constructor(startTime, boostGroup, boostGroupName, dampingOverLastPick, boostMultiplier, boostDivider) {
         this.myStartTime = startTime;
         this.myBoostGroup = boostGroup;
         this.myBoostGroupName = boostGroupName;
-        this.myBoostInterpolatorOverLastPick = boostInterpolatorOverLastPick;
+        this.myDampingOverLastPick = dampingOverLastPick;
         this.myBoostMultiplier = boostMultiplier;
         this.myBoostDivider = boostDivider;
     }
