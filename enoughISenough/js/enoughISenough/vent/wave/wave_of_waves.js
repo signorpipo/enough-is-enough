@@ -9,16 +9,22 @@ class WaveOfWavesSetup {
         this.myWaveStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
 
         this.myWavesSetup = []; // every item is an array, 0 is a wave setup, 1 is the chance, 2 is the debug name
+        this.myWavesSetupPickOne = new RangeValueOverTime([-1, -1], [-1, -1], 0, 0, false); // >= 0 means true
+        this.myWavesSetupPrecompute = new RangeValueOverTime([-1, -1], [-1, -1], 0, 0, false); // >= 0 means true
     }
 
     getAverageClonesCount(timeElapsed) {
         let average = 0;
-        for (let waveSetup of this._myWaveSetup.myWavesSetup) {
+        for (let waveSetup of this.myWavesSetup) {
             average += waveSetup[0].getAverageClonesCount(timeElapsed);
         }
-        average = average / this._myWaveSetup.myWavesSetup.length;
+        average = average / this.myWavesSetup.length;
 
         return Math.round(this.myWavesCount.getAverage(timeElapsed) * average);
+    }
+
+    getPrecomputed(timeElapsed) {
+        return this;
     }
 }
 
@@ -27,9 +33,22 @@ class WaveOfWaves {
         this._myGameTimeElapsed = timeElapsed;
         this._myWaveSetup = waveSetup;
         this._myVentRuntimeSetup = ventRuntimeSetup;
+        this._mySpawnWavesSetup = waveSetup.myWavesSetup.pp_clone();
 
-        if (waveSetup.myWavesSetup.length == 0) {
-            waveSetup.myWavesSetup.push([new IAmHereWaveSetup(), 1, "I_Am_Here"]);
+        if (this._mySpawnWavesSetup.length == 0) {
+            this._mySpawnWavesSetup.push([new IAmHereWaveSetup(), 1, "I_Am_Here"]);
+        }
+
+        if (waveSetup.myWavesSetupPickOne.get(timeElapsed) >= 0) {
+            this._getWaveSetup(true);
+        }
+
+        if (waveSetup.myWavesSetupPrecompute.get(timeElapsed) >= 0) {
+            let wavesSetup = this._mySpawnWavesSetup;
+            this._mySpawnWavesSetup = [];
+            for (let setup of wavesSetup) {
+                this._mySpawnWavesSetup.push([setup[0].getPrecomputed(this._myGameTimeElapsed), setup[1], setup[2]]);
+            }
         }
 
         this._myTotalWavesCount = this._myWaveSetup.myWavesCount.get(timeElapsed);
@@ -132,10 +151,10 @@ class WaveOfWaves {
 
     getAverageClonesCount() {
         let average = 0;
-        for (let waveSetup of this._myWaveSetup.myWavesSetup) {
+        for (let waveSetup of this._mySpawnWavesSetup) {
             average += waveSetup[0].getAverageClonesCount(this._myGameTimeElapsed);
         }
-        average = average / this._myWaveSetup.myWavesSetup.length;
+        average = average / this._mySpawnWavesSetup.length;
 
         return Math.round(this._myTotalWavesCount * average);
     }
@@ -155,18 +174,18 @@ class WaveOfWaves {
         return this._myTimeBetweenWaves;
     }
 
-    _getWaveSetup() {
-        let wave = this._myWaveSetup.myWavesSetup[0][0];
-        let name = this._myWaveSetup.myWavesSetup[0][2];
+    _getWaveSetup(setWaveSetup = false) {
+        let wave = this._mySpawnWavesSetup[0][0];
+        let name = this._mySpawnWavesSetup[0][2];
 
         let totalChance = 0;
-        for (let waveSetup of this._myWaveSetup.myWavesSetup) {
+        for (let waveSetup of this._mySpawnWavesSetup) {
             totalChance += waveSetup[1].get(this._myGameTimeElapsed);
         }
 
         let randomChance = Math.pp_randomInt(1, totalChance);
         let currentChance = 0;
-        for (let waveSetup of this._myWaveSetup.myWavesSetup) {
+        for (let waveSetup of this._mySpawnWavesSetup) {
             currentChance += waveSetup[1].get(this._myGameTimeElapsed);
             if (randomChance <= currentChance) {
                 wave = waveSetup[0];
@@ -175,7 +194,10 @@ class WaveOfWaves {
             }
         }
 
-        if (this._myDebugActive && this._myWaveSetup.myWavesSetup.length > 1) {
+        if (setWaveSetup) {
+            this._mySpawnWavesSetup = [];
+            this._mySpawnWavesSetup.push([wave, 1, name]);
+        } else if (this._myDebugActive && this._mySpawnWavesSetup.length > 1) {
             console.log("   Wave -", name);
         }
 

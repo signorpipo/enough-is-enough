@@ -53,8 +53,7 @@ ArcadeState.prototype._disputeVentSetup = function () {
     nextWavesSetup.addWave("Give_Us_A_Hug_2", 70, 60);
     nextWavesSetup.addWave("Give_Us_A_Hug_3", 30, 60);
     nextWavesSetup.addWave("Man_In_The_Middle", 100, 75);
-    nextWavesSetup.addWave("I_Am_Everywhere_Queue", 100, 45);
-    nextWavesSetup.addWave("I_Am_Everywhere_Here", 100, 45);
+    nextWavesSetup.addWave("I_Am_Everywhere_Waves", 11111, 1);
 
     nextWavesSetup.addWave("Give_Us_A_Hug_Distance", 1, 0);
     nextWavesSetup.addWave("Man_In_The_Middle_Everywhere", 1, 0);
@@ -249,6 +248,7 @@ ArcadeState.prototype._disputeVentSetup = function () {
         wave.myDoneDelay = doneDelay;
 
         wave.myWavesSetup.push([subQueueWave, 1, "Queue_For_You"]);
+        wave.myWavesSetupPrecompute = randomTrue;
 
         ventSetup.myWavesMap.set("Merry_Go_Round_Queue", wave);
         ventSetup.myNextWavesMap.set("Merry_Go_Round_Queue", nextWavesSetup);
@@ -267,6 +267,7 @@ ArcadeState.prototype._disputeVentSetup = function () {
         wave.myDoneDelay = doneDelay;
 
         wave.myWavesSetup.push([subHereWave, 1, "I_Am_Here"]);
+        wave.myWavesSetupPrecompute = randomTrue;
 
         ventSetup.myWavesMap.set("Merry_Go_Round_Here", wave);
         ventSetup.myNextWavesMap.set("Merry_Go_Round_Here", nextWavesSetup);
@@ -294,34 +295,20 @@ ArcadeState.prototype._disputeVentSetup = function () {
     {
         let wave = new IAmEverywhereWaveSetup();
 
-        wave.myWavesCount = new RangeValueOverTime([3, 4], [3, 6], 10, 100, true);
+        wave.myWavesCount = new RangeValueOverTime([2, 3], [3, 4], 10, 100, true);
         wave.myAngleBetweenWaves = new RangeValue([70, 180]);
         wave.myWaveStartAngle = waveStartAngle;
         wave.myTimeBetweenWaves = timeBetweenClonesHard;
         wave.myDoneDelay = doneDelayHard;
 
+        wave.myWavesSetup.push([subHereWave, 1, "I_Am_Here"]);
         wave.myWavesSetup.push([subQueueWave, 1, "Queue_For_You"]);
+        wave.myWavesSetupPickOne = randomVeryTrue;
+        wave.myWavesSetupPrecompute = randomTrue;
 
-        ventSetup.myWavesMap.set("I_Am_Everywhere_Queue", wave);
-        ventSetup.myNextWavesMap.set("I_Am_Everywhere_Queue", nextWavesSetup);
-        ventSetup.myNextWaveChanceBoosterSetupMap.set("I_Am_Everywhere_Queue",
-            new NextWaveChanceBoosterSetup(160, boosterGroup3, boosterGroupName3, dampingOverLastPick3, boostMultiplier3, boostDivider));
-    }
-
-    {
-        let wave = new IAmEverywhereWaveSetup();
-
-        wave.myWavesCount = new RangeValueOverTime([3, 4], [3, 6], 10, 100, true);
-        wave.myAngleBetweenWaves = new RangeValue([70, 180]);
-        wave.myWaveStartAngle = waveStartAngle;
-        wave.myTimeBetweenWaves = timeBetweenClonesHard;
-        wave.myDoneDelay = doneDelayHard;
-
-        wave.myWavesSetup.push([subQueueWave, 1, "Queue_For_You"]);
-
-        ventSetup.myWavesMap.set("I_Am_Everywhere_Here", wave);
-        ventSetup.myNextWavesMap.set("I_Am_Everywhere_Here", nextWavesSetup);
-        ventSetup.myNextWaveChanceBoosterSetupMap.set("I_Am_Everywhere_Here",
+        ventSetup.myWavesMap.set("I_Am_Everywhere_Waves", wave);
+        ventSetup.myNextWavesMap.set("I_Am_Everywhere_Waves", nextWavesSetup);
+        ventSetup.myNextWaveChanceBoosterSetupMap.set("I_Am_Everywhere_Waves",
             new NextWaveChanceBoosterSetup(160, boosterGroup3, boosterGroupName3, dampingOverLastPick3, boostMultiplier3, boostDivider));
     }
 

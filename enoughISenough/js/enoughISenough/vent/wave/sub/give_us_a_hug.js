@@ -18,6 +18,10 @@ class GiveUsAHugSetup extends IAmHereWaveSetup {
     getAverageClonesCount(timeElapsed) {
         return this.myClonesCount.getAverage(timeElapsed) * this.myHugSize.getAverage(timeElapsed);
     }
+
+    getPrecomputed(timeElapsed) {
+        return this;
+    }
 }
 
 class GiveUsAHug extends IAmHereWave {
