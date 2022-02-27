@@ -629,11 +629,15 @@ class Vent {
         let startAngle = this._myVentSetup.myMrNOTSetup.myStartAngle.get(Global.myVentDuration) * Math.pp_randomSign();
         direction.vec3_rotateAxis(startAngle, [0, 1, 0], direction);
 
+        let oldVentSetup = this._myCurrentVentRuntimeSetup;
+
         this._myCurrentVentRuntimeSetup = new VentRuntimeSetup();
         this._myCurrentVentRuntimeSetup.myValidAngleRanges = [];
         let timeToReachTarget = this._myVentSetup.myMrNOTSetup.myTimeToReachTarget.get(Global.myVentDuration);
         this._myCurrentVentRuntimeSetup.myValidAngleRanges.push([new RangeValueOverTime([30, 180], [90, 180], (timeToReachTarget / 5) + Global.myVentDuration, timeToReachTarget + Global.myVentDuration), direction.pp_clone()]);
         this._myCurrentVentRuntimeSetup.myValidAngleRanges.push([new RangeValueOverTime([-180, -30], [-180, -90], (timeToReachTarget / 5) + Global.myVentDuration, timeToReachTarget + Global.myVentDuration), direction.pp_clone()]);
+
+        oldVentSetup.myValidAngleRanges = this._myCurrentVentRuntimeSetup.myValidAngleRanges;
 
         this._myCurrentVentRuntimeSetup.myVentMultipliers = this._myVentSetup.myMrNOTSetup.myVentMultipliers;
 
@@ -654,7 +658,9 @@ class Vent {
     }
 
     _mrNOTDismissed() {
+        let oldVentSetup = this._myCurrentVentRuntimeSetup;
         this._prepareVentRuntimeSetup();
+        oldVentSetup.myValidAngleRanges = this._myCurrentVentRuntimeSetup.myValidAngleRanges;
 
         this._myMrNOT.disappear();
 
