@@ -20,7 +20,44 @@ class GiveUsAHugSetup extends IAmHereWaveSetup {
     }
 
     getPrecomputed(timeElapsed) {
-        return this;
+        let setup = new GiveUsAHugSetup();
+
+        setup.myClonesCount = this.myClonesCount.get(timeElapsed);
+        setup.mySpawnConeAngle = this.mySpawnConeAngle.get(timeElapsed);
+        setup.myMinAngleBetweenClones = this.myMinAngleBetweenClones.get(timeElapsed);
+        setup.myWaveStartAngle = this.myWaveStartAngle.get(timeElapsed);
+        setup.mySameTimeBetweenClones = this.mySameTimeBetweenClones.get(timeElapsed);
+        if (setup.mySameTimeBetweenClones >= 0) {
+            setup.myTimeBetweenClones = this.myTimeBetweenClones.get(timeElapsed);
+        } else {
+            setup.myTimeBetweenClones = this.myTimeBetweenClones;
+        }
+
+        setup.myFirstCloneInTheMiddle = this.myFirstCloneInTheMiddle;
+        setup.myDoneDelay = this.myDoneDelay.get(timeElapsed);
+        setup.myTimeBeforeStart = this.myTimeBeforeStart.get(timeElapsed);
+
+        setup.myDiscardOutsideValidAngle = this.myDiscardOutsideValidAngle.get(timeElapsed);
+
+        setup.myRefDirection = this.myRefDirection;
+
+        setup.mySameHugAngle = this.mySameHugAngle.get(timeElapsed);
+        if (setup.mySameHugAngle >= 0) {
+            setup.myHugAngle = this.myHugAngle.get(timeElapsed);
+        } else {
+            setup.myHugAngle = this.myHugAngle;
+        }
+        setup.mySameHugSize = this.mySameHugSize.get(timeElapsed);
+        if (setup.mySameHugSize >= 0) {
+            setup.myHugSize = this.myHugSize.get(timeElapsed);
+        } else {
+            setup.myHugSize = this.myHugSize;
+        }
+
+        setup.myHugClonesSameDistance = this.myHugClonesSameDistance.get(timeElapsed);
+        setup.myMinAngleBetweenClonesHugging = this.myMinAngleBetweenClonesHugging.get(timeElapsed);
+
+        return setup;
     }
 }
 

@@ -14,6 +14,69 @@ class ManInTheMiddleSetup extends WaveOfWavesSetup {
     createWave(ventRuntimeSetup, timeElapsed, refDirection = null) {
         return new ManInTheMiddle(ventRuntimeSetup, this, timeElapsed, refDirection);
     }
+
+    getPrecomputed(timeElapsed) {
+        let setup = new ManInTheMiddleSetup();
+
+        setup.myWavesCount = this.myWavesCount.get(timeElapsed);
+        setup.mySameTimeBetweenWaves = this.mySameTimeBetweenWaves.get(timeElapsed);
+        setup.myDoneDelay = this.myDoneDelay.get(timeElapsed);
+        setup.myTimeBeforeStart = this.myTimeBeforeStart.get(timeElapsed);
+
+        setup.myWaveStartAngle = this.myWaveStartAngle.get(timeElapsed);
+
+        setup.myWavesSetup = this.myWavesSetup.pp_clone();
+        setup.myWavesSetupPickOne = this.myWavesSetupPickOne.get(timeElapsed);
+        setup.myWavesSetupPrecompute = this.myWavesSetupPrecompute.get(timeElapsed);
+
+        setup.myAngleBetweenWaves = this.myAngleBetweenWaves.get(timeElapsed);
+        setup.mySameOppositeTimeBetweenWaves = this.mySameOppositeTimeBetweenWaves.get(timeElapsed);
+        setup.myOppositeTimeAsTimeBetweenWaves = this.myOppositeTimeAsTimeBetweenWaves.get(timeElapsed);
+
+        setup.myAllSameTimes = this.myAllSameTimes;
+        if (setup.myAllSameTimes != null) {
+            setup.myAllSameTimes = setup.myAllSameTimes.get(timeElapsed);
+            if (setup.myAllSameTimes >= 0) {
+                setup.myOppositeTimeAsTimeBetweenWaves = 1;
+                setup.mySameOppositeTimeBetweenWaves = 1;
+                setup.mySameTimeBetweenWaves = 1;
+            } else {
+                setup.myOppositeTimeAsTimeBetweenWaves = -1;
+                setup.mySameOppositeTimeBetweenWaves = -1;
+                setup.mySameTimeBetweenWaves = -1;
+            }
+        }
+
+        if (setup.mySameTimeBetweenWaves >= 0) {
+            setup.myTimeBetweenWaves = this.myTimeBetweenWaves.get(timeElapsed);
+        } else {
+            setup.myTimeBetweenWaves = this.myTimeBetweenWaves;
+        }
+
+        if (setup.mySameOppositeTimeBetweenWaves >= 0) {
+            setup.myTimeBeforeOpposite = this.myTimeBeforeOpposite.get(timeElapsed);
+        } else {
+            setup.myTimeBeforeOpposite = this.myTimeBeforeOpposite;
+        }
+
+        if (setup.myWavesSetup.length == 0) {
+            setup.myWavesSetup.push([new IAmHereWaveSetup(), 1, "I_Am_Here"]);
+        }
+
+        if (setup.myWavesSetupPickOne >= 0) {
+            setup._pickOneWave(timeElapsed);
+        }
+
+        if (setup.myWavesSetupPrecompute >= 0) {
+            let wavesSetup = setup.myWavesSetup;
+            setup.myWavesSetup = [];
+            for (let setup of wavesSetup) {
+                setup.myWavesSetup.push([setup[0].getPrecomputed(timeElapsed), setup[1], setup[2]]);
+            }
+        }
+
+        return setup;
+    }
 }
 
 class ManInTheMiddle extends WaveOfWaves {

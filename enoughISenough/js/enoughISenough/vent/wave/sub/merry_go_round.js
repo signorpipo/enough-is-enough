@@ -4,11 +4,64 @@ class MerryGoRoundSetup extends WaveOfWavesSetup {
 
         this.myAngleBetweenWaves = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
         this.mySameAngleBetweenWaves = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
-        this.myWaveDirection = null;
+        this.myWaveDirection = new RangeValueOverTime([-1, 1], [-1, 1], 0, 0, false); // >= 0 means right
+        this.myPrecomputeWaveDirection = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
     }
 
     createWave(ventRuntimeSetup, timeElapsed, refDirection = null) {
         return new MerryGoRound(ventRuntimeSetup, this, timeElapsed, refDirection);
+    }
+
+    getPrecomputed(timeElapsed) {
+        let setup = new MerryGoRoundSetup();
+
+        setup.myWavesCount = this.myWavesCount.get(timeElapsed);
+        setup.mySameTimeBetweenWaves = this.mySameTimeBetweenWaves.get(timeElapsed);
+        if (setup.mySameTimeBetweenWaves >= 0) {
+            setup.myTimeBetweenWaves = this.myTimeBetweenWaves.get(timeElapsed);
+        } else {
+            setup.myTimeBetweenWaves = this.myTimeBetweenWaves;
+        }
+        setup.myDoneDelay = this.myDoneDelay.get(timeElapsed);
+        setup.myTimeBeforeStart = this.myTimeBeforeStart.get(timeElapsed);
+
+        setup.myWaveStartAngle = this.myWaveStartAngle.get(timeElapsed);
+
+        setup.myWavesSetup = this.myWavesSetup.pp_clone();
+        setup.myWavesSetupPickOne = this.myWavesSetupPickOne.get(timeElapsed);
+        setup.myWavesSetupPrecompute = this.myWavesSetupPrecompute.get(timeElapsed);
+
+        setup.mySameAngleBetweenWaves = this.mySameAngleBetweenWaves.get(timeElapsed);
+        if (setup.mySameAngleBetweenWaves >= 0) {
+            setup.myAngleBetweenWaves = this.myAngleBetweenWaves.get(timeElapsed);
+        } else {
+            setup.myAngleBetweenWaves = this.myAngleBetweenWaves;
+        }
+
+        setup.myPrecomputeWaveDirection = this.myPrecomputeWaveDirection.get(timeElapsed);
+        if (setup.myPrecomputeWaveDirection >= 0) {
+            setup.myWaveDirection = this.myWaveDirection.get(timeElapsed);
+        } else {
+            setup.myWaveDirection = this.myWaveDirection;
+        }
+
+        if (setup.myWavesSetup.length == 0) {
+            setup.myWavesSetup.push([new IAmHereWaveSetup(), 1, "I_Am_Here"]);
+        }
+
+        if (setup.myWavesSetupPickOne >= 0) {
+            setup._pickOneWave(timeElapsed);
+        }
+
+        if (setup.myWavesSetupPrecompute >= 0) {
+            let wavesSetup = setup.myWavesSetup;
+            setup.myWavesSetup = [];
+            for (let setup of wavesSetup) {
+                setup.myWavesSetup.push([setup[0].getPrecomputed(timeElapsed), setup[1], setup[2]]);
+            }
+        }
+
+        return setup;
     }
 }
 
@@ -16,11 +69,7 @@ class MerryGoRound extends WaveOfWaves {
     constructor(ventRuntimeSetup, waveSetup, timeElapsed, refDirection) {
         super(ventRuntimeSetup, waveSetup, timeElapsed, refDirection);
 
-        this._myWaveDirection = Math.pp_randomSign();
-        if (this._myWaveSetup.myWaveDirection != null) {
-            this._myWaveDirection = (this._myWaveSetup.myWaveDirection >= 0) ? 1 : -1;
-        }
-
+        this._myWaveDirection = (this._myWaveSetup.myWaveDirection.get(timeElapsed) >= 0) ? 1 : -1;
 
         this._myAngleBetweenWaves = waveSetup.myAngleBetweenWaves.get(timeElapsed);
         this._mySameAngleBetweenWaves = waveSetup.mySameAngleBetweenWaves.get(timeElapsed) >= 0;

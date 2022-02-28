@@ -55,12 +55,14 @@ class VentState extends PP.State {
             //TEMP REMOVE THIS
             if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(Global.myDebugShortcutsPress)) {
                 this._myFSM.perform("skip");
+                this._myVent.ventCompletedDebug();
                 this._ventCompleted();
             }
 
             //TEMP REMOVE THIS
             if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(Global.myDebugShortcutsPress)) {
                 this._myFSM.perform("skip");
+                this._myVent.ventLostDebug();
                 this._ventLost();
             }
         }

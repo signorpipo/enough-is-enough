@@ -24,7 +24,65 @@ class WaveOfWavesSetup {
     }
 
     getPrecomputed(timeElapsed) {
-        return this;
+        let setup = new WaveOfWavesSetup();
+
+        setup.myWavesCount = this.myWavesCount.get(timeElapsed);
+        setup.mySameTimeBetweenWaves = this.mySameTimeBetweenWaves.get(timeElapsed);
+        if (setup.mySameTimeBetweenWaves >= 0) {
+            setup.myTimeBetweenWaves = this.myTimeBetweenWaves.get(timeElapsed);
+        } else {
+            setup.myTimeBetweenWaves = this.myTimeBetweenWaves;
+        }
+        setup.myDoneDelay = this.myDoneDelay.get(timeElapsed);
+        setup.myTimeBeforeStart = this.myTimeBeforeStart.get(timeElapsed);
+
+        setup.myWaveStartAngle = this.myWaveStartAngle.get(timeElapsed);
+
+        setup.myWavesSetup = this.myWavesSetup.pp_clone();
+        setup.myWavesSetupPickOne = this.myWavesSetupPickOne.get(timeElapsed);
+        setup.myWavesSetupPrecompute = this.myWavesSetupPrecompute.get(timeElapsed);
+
+        if (setup.myWavesSetup.length == 0) {
+            setup.myWavesSetup.push([new IAmHereWaveSetup(), 1, "I_Am_Here"]);
+        }
+
+        if (setup.myWavesSetupPickOne >= 0) {
+            setup._pickOneWave(timeElapsed);
+        }
+
+        if (setup.myWavesSetupPrecompute >= 0) {
+            let wavesSetup = setup.myWavesSetup;
+            setup.myWavesSetup = [];
+            for (let setup of wavesSetup) {
+                setup.myWavesSetup.push([setup[0].getPrecomputed(timeElapsed), setup[1], setup[2]]);
+            }
+        }
+
+        return setup;
+    }
+
+    _pickOneWave(timeElapsed) {
+        let wave = this.myWavesSetup[0][0];
+        let name = this.myWavesSetup[0][2];
+
+        let totalChance = 0;
+        for (let waveSetup of this.myWavesSetup) {
+            totalChance += waveSetup[1].get(timeElapsed);
+        }
+
+        let randomChance = Math.pp_randomInt(1, totalChance);
+        let currentChance = 0;
+        for (let waveSetup of this.myWavesSetup) {
+            currentChance += waveSetup[1].get(timeElapsed);
+            if (randomChance <= currentChance) {
+                wave = waveSetup[0];
+                name = waveSetup[2];
+                break;
+            }
+        }
+
+        this.myWavesSetup = [];
+        this.myWavesSetup.push([wave, 1, name]);
     }
 }
 
@@ -65,7 +123,7 @@ class WaveOfWaves {
 
         this._myCurrentWaves = [];
 
-        this._myDebugActive = true;
+        this._myDebugActive = false;
 
         this._myOneCloneSetupValid = false;
         this._myOneCloneSetupValidCurrentWave = false;

@@ -559,6 +559,7 @@ class Vent {
 
                 console.log("   ", entry[0], "-", entry[1], "-", (entry[1] / total).toFixed(3), "-", averageDistance.toFixed(3));
             }
+            //console.log("   ", Global.myVentDuration.toFixed(3));
         }
     }
 
