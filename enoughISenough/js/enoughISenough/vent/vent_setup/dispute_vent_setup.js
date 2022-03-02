@@ -29,17 +29,18 @@ ArcadeState.prototype._disputeVentSetup = function () {
 
     ventSetup.myMrNOTSetup.myMrNOTAppearenceEnabled = true;
     ventSetup.myMrNOTSetup.myMrNOTTimeCooldown = new RangeValueOverTime([100, 110], [50, 70], 120, 350, false);
+    ventSetup.myMrNOTSetup.myBreakDuration = new RangeValueOverTime([4, 5], [2.5, 3.5], 100, 300, false);
 
     ventSetup.myMrNOTSetup.myVentMultipliers = new VentRuntimeMultipliers();
-    ventSetup.myMrNOTSetup.myVentMultipliers.mySpawnTimeMultiplier = 2;
+    ventSetup.myMrNOTSetup.myVentMultipliers.mySpawnTimeMultiplier = 1.5;
     ventSetup.myMrNOTSetup.myVentMultipliers.myDoneTimeMultiplier = 2;
     ventSetup.myMrNOTSetup.myVentMultipliers.myBreakTimeMultiplier = 1;
     ventSetup.myMrNOTSetup.myVentMultipliers.myBreakDelayTimeMultiplier = 1;
-    ventSetup.myMrNOTSetup.myVentMultipliers.mySmallBreakTimeMultiplier = 1;
+    ventSetup.myMrNOTSetup.myVentMultipliers.mySmallBreakTimeMultiplier = 1.5;
     ventSetup.myMrNOTSetup.myVentMultipliers.mySmallBreakDelayTimeMultiplier = 1;
 
     ventSetup.myMrNOTSetup.myStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
-    ventSetup.myMrNOTSetup.myTimeToReachTarget = new RangeValueOverTime([35, 45], [25, 35], 120, 300, false);
+    ventSetup.myMrNOTSetup.myTimeToReachTarget = new RangeValueOverTime([35, 45], [25, 40], 120, 300, false);
     ventSetup.myMrNOTSetup.myMaxPatience = new ValueOverTime(7, 15, 25, 45, true);
 
     let nextWavesSetup = new NextWavesSetup();

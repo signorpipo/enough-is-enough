@@ -48,6 +48,8 @@ class VentMrNOTSetup {
         this.myMrNOTTimeCooldown = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
         this.myVentMultipliers = new VentRuntimeMultipliers();
 
+        this.myBreakDuration = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
+
         this.myResetMrNOTTimerWhenBelowBreak = 8;
         this.myResetTimerAmountBreak = new RangeValue([8, 10]);
         this.myResetMrNOTTimerWhenBelowSmallBreak = 4;
@@ -195,6 +197,9 @@ class Vent {
 
         this._myBoosterGroupCountMap = new Map();
         this._myBoosterGroupDistanceCountMap = new Map();
+
+        this._myMrNOTBreak = false;
+
         Global.myDebugCurrentVentObject = this;
 
         this._debugNextWave();
@@ -303,7 +308,12 @@ class Vent {
 
     _startBreak() {
         let multiplier = this._myCurrentVentRuntimeSetup.myVentMultipliers.myBreakTimeMultiplier.get(Global.myVentDuration);
-        this._myBreakTimer = new PP.Timer(this._myVentSetup.myBreakSetup.myBreakDuration.get(Global.myVentDuration) * multiplier);
+        if (!this._myMrNOTBreak) {
+            this._myBreakTimer = new PP.Timer(this._myVentSetup.myBreakSetup.myBreakDuration.get(Global.myVentDuration) * multiplier);
+        } else {
+            this._myBreakTimer = new PP.Timer(this._myVentSetup.myMrNOTSetup.myBreakDuration.get(Global.myVentDuration));
+            this._myMrNOTBreak = false;
+        }
         this._myIsSmallBreak = false;
 
         if (this._myDebugActive && this._myDebugActiveNextWave) {
@@ -652,6 +662,7 @@ class Vent {
         this._myBreakDelayTimer.start(0);
         this._myBreakDelayTimer.update(0);
         this._myBreakCloneCooldown = 0;
+        this._myMrNOTBreak = true;
 
         if (this._myDebugActive && this._myDebugActiveMrNOT) {
             console.log("mr NOT - Duration -", mrNOTSetup.myTimeToReachTarget.toFixed(3), " - Patience -", mrNOTSetup.myMaxPatience);
@@ -668,6 +679,7 @@ class Vent {
         this._myBreakDelayTimer.start(0);
         this._myBreakDelayTimer.update(0);
         this._myBreakCloneCooldown = 0;
+        this._myMrNOTBreak = true;
 
         if (this._myFSM.isInState("break") || this._myFSM.isInState("smallBreak")) {
             this._myFSM.perform("forceEnd");
