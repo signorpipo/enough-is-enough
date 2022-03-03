@@ -104,7 +104,9 @@ class NextWaveChanceBoosterData {
     }
 
     divide(divider) {
-        this._myChanceBoost /= divider;
+        if (this._myChanceBoost > 0) {
+            this._myChanceBoost /= divider;
+        }
     }
 
     getDivider(timeElapsed) {
