@@ -49,11 +49,15 @@ class NextWavesSetup {
             console.error("No random wave found, how?");
         }
 
+        //validWavesGlobal = validWaves;
+
         //console.warn(booster.getBoostGroupName(nextWave.myWaveID), "-", booster.getChanceBoost(nextWave.myWaveID).toFixed(3), "-", booster.getTimeSinceLastPick(nextWave.myWaveID).toFixed(3), "-", nextWave.myWaveID);
 
         return nextWave.myWaveID;
     }
 }
+
+//var validWavesGlobal = null;
 
 class NextWaveSetup {
     constructor(waveID, chance, startTime, endTime) {

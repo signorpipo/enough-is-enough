@@ -153,9 +153,12 @@ class Vent {
 
         this._myBoosterGroupCountMap = new Map();
         this._myBoosterGroupDistanceCountMap = new Map();
+
+        this._myIsTesting = false;
     }
 
     start() {
+        this._myIsTesting = false;
         this._myFSM.perform("start");
     }
 
@@ -232,7 +235,7 @@ class Vent {
 
         if (this._myFSM.isInState("wave")) {
             if (this._isVentCompleted()) {
-                if (this._myOnVentCompletedCallback) {
+                if (!this._myIsTesting && this._myOnVentCompletedCallback) {
                     this.ventCompletedDebug();
 
                     this._myOnVentCompletedCallback();
@@ -346,7 +349,7 @@ class Vent {
 
         if (this._myFSM.isInState("break") || this._myFSM.isInState("smallBreak")) {
             if (this._isVentCompleted()) {
-                if (this._myOnVentCompletedCallback) {
+                if (!this._myIsTesting && this._myOnVentCompletedCallback) {
                     this.ventCompletedDebug();
 
                     this._myOnVentCompletedCallback();
@@ -514,8 +517,12 @@ class Vent {
 
         this._myPulseRadar.addSignal(startPosition);
 
-        let mrNOTClone = new MrNOTClone(startPosition, endPosition, cloneSetup.myTimeToReachTarget, this._myVentSetup.myCloneRotationSetup, this._mrNOTCloneDismissed.bind(this), this._mrNOTCloneReachYou.bind(this));
-        this._myMrNOTClones.push(mrNOTClone);
+        if (!this._myIsTesting) {
+            let mrNOTClone = new MrNOTClone(startPosition, endPosition, cloneSetup.myTimeToReachTarget, this._myVentSetup.myCloneRotationSetup, this._mrNOTCloneDismissed.bind(this), this._mrNOTCloneReachYou.bind(this));
+            this._myMrNOTClones.push(mrNOTClone);
+        } else {
+            this._mrNOTCloneDismissed();
+        }
     }
 
     _mrNOTCloneDismissed() {
@@ -527,7 +534,7 @@ class Vent {
     }
 
     _mrNOTCloneReachYou() {
-        if (this._myOnVentLostCallback && this._myOncePerFrame && this._myFSM.isInState("wave")) {
+        if (!this._myIsTesting && this._myOnVentLostCallback && this._myOncePerFrame && this._myFSM.isInState("wave")) {
             this.ventLostDebug();
 
             this._myOnVentLostCallback();
@@ -667,6 +674,8 @@ class Vent {
         if (this._myDebugActive && this._myDebugActiveMrNOT) {
             console.log("mr NOT - Duration -", mrNOTSetup.myTimeToReachTarget.toFixed(3), " - Patience -", mrNOTSetup.myMaxPatience);
         }
+
+        //this._boosterGroupDebug();
     }
 
     _mrNOTDismissed() {
@@ -690,5 +699,82 @@ class Vent {
     _mrNOTDismissedDone() {
         this._myMrNOT = null;
         this._myMrNOTTimer = new PP.Timer(this._myVentSetup.myMrNOTSetup.myMrNOTTimeCooldown.get(Global.myVentDuration));
+    }
+
+    _test(duration = 550, startDuration = 0, numberOfTest = 100) {
+        this._myIsTesting = true;
+        let dt = 1 / 72;
+
+        let boosterGroupCountMaps = [];
+        let boosterGroupDistanceCountMaps = [];
+
+        //console.clear();
+
+        while (numberOfTest > 0) {
+            //console.log("Test Count -", numberOfTest);
+            numberOfTest--;
+            this._myFSM.perform("start");
+            Global.myVentDuration = startDuration;
+            while (Global.myVentDuration < duration) {
+                this.update(dt);
+                Global.myVentDuration += dt;
+                //console.log(Global.myVentDuration.toFixed(3));
+            }
+
+            boosterGroupCountMaps.push(this._myBoosterGroupCountMap);
+            boosterGroupDistanceCountMaps.push(this._myBoosterGroupDistanceCountMap);
+
+            this.stop();
+        }
+
+        //console.clear();
+
+        let resultMapGroupCount = new Map();
+        let resultMapGroupCountPercentage = new Map();
+        let resultMapGroupCountDistance = new Map();
+        let groups = ["1", "2", "3", "4", "5"];
+        for (let key of groups) {
+            resultMapGroupCount.set(key, 0);
+            resultMapGroupCountPercentage.set(key, 0);
+            resultMapGroupCountDistance.set(key, 0);
+        }
+
+        for (let i = 0; i < boosterGroupCountMaps.length; i++) {
+            let groupCountMap = boosterGroupCountMaps[i];
+            let groupCountDistanceMap = boosterGroupDistanceCountMaps[i];
+
+            let total = 0;
+            for (let entry of groupCountMap.entries()) {
+                total += entry[1];
+            }
+            for (let entry of groupCountMap.entries()) {
+                let distance = groupCountDistanceMap.get(entry[0]);
+                let distanceSum = 0;
+                for (let value of distance) {
+                    distanceSum += value;
+                }
+
+                let averageDistance = distanceSum / distance.length;
+
+                resultMapGroupCount.set(entry[0], resultMapGroupCount.get(entry[0]) + entry[1]);
+                resultMapGroupCountPercentage.set(entry[0], resultMapGroupCountPercentage.get(entry[0]) + entry[1] / total);
+                resultMapGroupCountDistance.set(entry[0], resultMapGroupCountDistance.get(entry[0]) + averageDistance);
+            }
+        }
+
+        for (let key of groups) {
+            resultMapGroupCount.set(key, resultMapGroupCount.get(key) / boosterGroupCountMaps.length);
+            resultMapGroupCountPercentage.set(key, resultMapGroupCountPercentage.get(key) / boosterGroupCountMaps.length);
+            resultMapGroupCountDistance.set(key, resultMapGroupCountDistance.get(key) / boosterGroupCountMaps.length);
+        }
+
+        console.log("TEST");
+        console.log("Booster Group Stats");
+        for (let entry of resultMapGroupCount.entries()) {
+            console.log("   ", entry[0], "-", entry[1], "-", resultMapGroupCountPercentage.get(entry[0]).toFixed(3), "-", resultMapGroupCountDistance.get(entry[0]).toFixed(3));
+        }
+        console.log("   ", Global.myVentDuration.toFixed(3));
+
+
     }
 }

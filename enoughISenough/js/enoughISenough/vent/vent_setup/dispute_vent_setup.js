@@ -50,11 +50,11 @@ ArcadeState.prototype._disputeVentSetup = function () {
     let thirdWavesStartTime = 250;
     let fourthWavesStartTime = 350;
 
-    let firstGroupChance = 300;
+    let firstGroupChance = 350;
     let secondGroupChance = 200;
-    let thirdGroupChance = 100;
-    let fourthGroupChance = 50;
-    let fifthGroupChance = 25;
+    let thirdGroupChance = 130;
+    let fourthGroupChance = 70;
+    let fifthGroupChance = 40;
 
     // FIRST
     nextWavesSetup.addWave("I_Am_Here", firstGroupChance, 0, secondWavesStartTime);
@@ -204,17 +204,35 @@ ArcadeState.prototype._disputeVentSetup = function () {
     let dampingOverLastPick4 = new ValueOverTime(-60, 0, 0, 30);
     let dampingOverLastPick5 = new ValueOverTime(-50, 0, 0, 30);
 
-    let boostMultiplier1 = 1.5;
-    let boostMultiplier2 = new ValueOverTime(4, 2.5, 100, 500);
-    let boostMultiplier3 = new ValueOverTime(4, 2.5, secondWavesStartTime, 500);
-    let boostMultiplier4 = new ValueOverTime(4, 2.5, secondWavesStartTime, 500);
-    let boostMultiplier5 = new ValueOverTime(6, 2.5, thirdWavesStartTime, 500);
+    dampingOverLastPick1 = new ValueOverTime(-90, 0, 0, 30);
+    dampingOverLastPick2 = new ValueOverTime(-90, 0, 0, 30);
+    dampingOverLastPick3 = new ValueOverTime(-90, 0, 0, 30);
+    dampingOverLastPick4 = new ValueOverTime(-90, 0, 0, 30);
+    dampingOverLastPick5 = new ValueOverTime(-90, 0, 0, 30);
 
-    let boostDivider1 = 3;
-    let boostDivider2 = new ValueOverTime(1.5, 2, 100, 250);
+    let boostMultiplier1 = new ValueOverTime(1.5, 2, 400, 600);
+    let boostMultiplier2 = new ValueOverTime(6, 2, 50, 450);
+    let boostMultiplier3 = new ValueOverTime(10, 1.75, secondWavesStartTime, 550);
+    let boostMultiplier4 = new ValueOverTime(6, 1.5, secondWavesStartTime, 600);
+    let boostMultiplier5 = new ValueOverTime(8, 1.25, thirdWavesStartTime, 650);
+
+    boostMultiplier1 = 2;
+    boostMultiplier2 = 2;
+    boostMultiplier3 = 1.75;
+    boostMultiplier4 = 1.25;
+    boostMultiplier5 = 1;
+
+    let boostDivider1 = new ValueOverTime(3, 2, 400, 600);
+    let boostDivider2 = new ValueOverTime(1.5, 2, 50, 200);
     let boostDivider3 = new ValueOverTime(1.5, 2, secondWavesStartTime, secondWavesStartTime + 150);
     let boostDivider4 = new ValueOverTime(1.5, 2, secondWavesStartTime, secondWavesStartTime + 150);
     let boostDivider5 = new ValueOverTime(1.5, 2, thirdWavesStartTime, thirdWavesStartTime + 150);
+
+    boostDivider1 = 2;
+    boostDivider2 = 2;
+    boostDivider3 = 2;
+    boostDivider4 = 2;
+    boostDivider5 = 2;
 
     // Waves
 
