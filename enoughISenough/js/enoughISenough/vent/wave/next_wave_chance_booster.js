@@ -77,7 +77,7 @@ class NextWaveChanceBoosterData {
 
     reset() {
         this._myTimeSinceLastPick = 0;
-        this._myChanceBoost = 0;
+        this._myChanceBoost = this._mySetup.myBoostValueOnReset;
     }
 
     getTimeSinceLastPick() {
@@ -113,12 +113,13 @@ class NextWaveChanceBoosterData {
 }
 
 class NextWaveChanceBoosterSetup {
-    constructor(startTime, boostGroup, boostGroupName, dampingOverLastPick, boostMultiplier, boostDivider) {
+    constructor(startTime, boostGroup, boostGroupName, dampingOverLastPick, boostMultiplier, boostDivider, boostValueOnReset) {
         this.myStartTime = startTime;
         this.myBoostGroup = boostGroup;
         this.myBoostGroupName = boostGroupName;
         this.myDampingOverLastPick = dampingOverLastPick;
         this.myBoostMultiplier = boostMultiplier;
         this.myBoostDivider = boostDivider;
+        this.myBoostValueOnReset = boostValueOnReset;
     }
 }
