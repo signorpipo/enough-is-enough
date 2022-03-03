@@ -8,12 +8,12 @@ class NextWaveChanceBooster {
         this._myWavesDataMap.set(id, data);
     }
 
-    nextWaveSelected(selectedID) {
+    nextWaveSelected(selectedID, timeElapsed) {
         let selectedData = this._myWavesDataMap.get(selectedID);
         if (selectedData) {
 
             let group = selectedData.getBoostGroup();
-            let divider = selectedData.getDivider();
+            let divider = selectedData.getDivider(timeElapsed);
 
             for (let currentID of group) {
                 let data = this._myWavesDataMap.get(currentID);
@@ -24,10 +24,10 @@ class NextWaveChanceBooster {
         }
     }
 
-    getChanceBoost(id) {
+    getChanceBoost(id, timeElapsed) {
         let data = this._myWavesDataMap.get(id);
         if (data) {
-            return data.getChanceBoost();
+            return data.getChanceBoost(timeElapsed);
         }
 
         return 0;
@@ -84,12 +84,12 @@ class NextWaveChanceBoosterData {
         return this._myTimeSinceLastPick;
     }
 
-    getChanceBoost() {
+    getChanceBoost(timeElapsed) {
         let damping = this._mySetup.myDampingOverLastPick.get(this._myTimeSinceLastPick);
         let chanceBoost = this._myChanceBoost + damping;
 
         if (chanceBoost >= 0) {
-            chanceBoost = this._myChanceBoost * this._mySetup.myBoostMultiplier;
+            chanceBoost = this._myChanceBoost * this._mySetup.myBoostMultiplier.get(timeElapsed);
         }
 
         return chanceBoost;
@@ -107,8 +107,8 @@ class NextWaveChanceBoosterData {
         this._myChanceBoost /= divider;
     }
 
-    getDivider() {
-        return this._mySetup.myBoostDivider;
+    getDivider(timeElapsed) {
+        return this._mySetup.myBoostDivider.get(timeElapsed);
     }
 }
 

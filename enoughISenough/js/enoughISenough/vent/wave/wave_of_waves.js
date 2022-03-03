@@ -67,13 +67,13 @@ class WaveOfWavesSetup {
 
         let totalChance = 0;
         for (let waveSetup of this.myWavesSetup) {
-            totalChance += waveSetup[1].get(timeElapsed);
+            totalChance += Math.floor(waveSetup[1].get(timeElapsed));
         }
 
         let randomChance = Math.pp_randomInt(1, totalChance);
         let currentChance = 0;
         for (let waveSetup of this.myWavesSetup) {
-            currentChance += waveSetup[1].get(timeElapsed);
+            currentChance += Math.floor(waveSetup[1].get(timeElapsed));
             if (randomChance <= currentChance) {
                 wave = waveSetup[0];
                 name = waveSetup[2];
@@ -238,13 +238,13 @@ class WaveOfWaves {
 
         let totalChance = 0;
         for (let waveSetup of this._mySpawnWavesSetup) {
-            totalChance += waveSetup[1].get(this._myGameTimeElapsed);
+            totalChance += Math.floor(waveSetup[1].get(this._myGameTimeElapsed));
         }
 
         let randomChance = Math.pp_randomInt(1, totalChance);
         let currentChance = 0;
         for (let waveSetup of this._mySpawnWavesSetup) {
-            currentChance += waveSetup[1].get(this._myGameTimeElapsed);
+            currentChance += Math.floor(waveSetup[1].get(this._myGameTimeElapsed));
             if (randomChance <= currentChance) {
                 wave = waveSetup[0];
                 name = waveSetup[2];

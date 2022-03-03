@@ -260,7 +260,7 @@ class Vent {
             this._myPreviousWaveID = this._myCurrentWaveID;
 
             this._myCurrentWaveID = this._myVentSetup.myNextWavesMap.get(this._myCurrentWaveID).getNextWave(Global.myVentDuration, this._myNextWaveChanceBooster);
-            this._myNextWaveChanceBooster.nextWaveSelected(this._myCurrentWaveID);
+            this._myNextWaveChanceBooster.nextWaveSelected(this._myCurrentWaveID, Global.myVentDuration);
 
             if (this._myDebugActive && this._myDebugActiveBoosterGroup) {
                 let name = this._myNextWaveChanceBooster.getBoostGroupName(this._myCurrentWaveID);

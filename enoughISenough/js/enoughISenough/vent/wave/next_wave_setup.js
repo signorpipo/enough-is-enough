@@ -15,7 +15,11 @@ class NextWavesSetup {
             let waveToCheck = this._myNextWaves[i];
             if (waveToCheck.myStartTime <= timeElapsed && (waveToCheck.myEndTime == null || waveToCheck.myEndTime > timeElapsed)) {
                 validWaves.push(waveToCheck);
-                totalChance += Math.max(10, waveToCheck.myChance.get(timeElapsed) + booster.getChanceBoost(waveToCheck.myWaveID));
+                let max = 10;
+                if (waveToCheck.myChance.get(timeElapsed) < 1) {
+                    max = 0;
+                }
+                totalChance += Math.max(max, Math.floor(waveToCheck.myChance.get(timeElapsed) + booster.getChanceBoost(waveToCheck.myWaveID, timeElapsed)));
             }
         }
 
@@ -29,7 +33,11 @@ class NextWavesSetup {
         let currentChance = 0;
         for (let i = 0; i < validWaves.length; i++) {
             let validWave = validWaves[i];
-            currentChance += Math.max(10, validWave.myChance.get(timeElapsed) + booster.getChanceBoost(validWave.myWaveID));
+            let max = 10;
+            if (validWave.myChance.get(timeElapsed) < 1) {
+                max = 0;
+            }
+            currentChance += Math.max(max, Math.floor(validWave.myChance.get(timeElapsed) + booster.getChanceBoost(validWave.myWaveID, timeElapsed)));
             if (randomChance < currentChance) {
                 nextWave = validWave;
                 break;
