@@ -51,8 +51,8 @@ ArcadeState.prototype._disputeVentSetup = function () {
     let fourthWavesStartTime = 350;
 
     let firstGroupChance = 350;
-    let secondGroupChance = 200;
-    let thirdGroupChance = 130;
+    let secondGroupChance = 215;
+    let thirdGroupChance = 135;
     let fourthGroupChance = 70;
     let fifthGroupChance = 40;
 

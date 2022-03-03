@@ -774,7 +774,15 @@ class Vent {
             console.log("   ", entry[0], "-", entry[1], "-", resultMapGroupCountPercentage.get(entry[0]).toFixed(3), "-", resultMapGroupCountDistance.get(entry[0]).toFixed(3));
         }
         console.log("   ", Global.myVentDuration.toFixed(3));
+    }
 
+    _testOfTest() {
+        this._test(1600, 600);
+        this._test(1600, 600);
+        this._test(1600, 600);
+        this._test(1600, 600);
 
+        this._test(600, 150);
+        this._test(600, 150);
     }
 }
