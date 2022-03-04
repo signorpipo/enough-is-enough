@@ -66,7 +66,6 @@ class VentRuntimeSetup {
         this.myValidAngleRanges = [[new RangeValue([-180, 180]), [0, 0, -1]]];
 
         this.myVentMultipliers = new VentRuntimeMultipliers();
-
     }
 }
 
@@ -200,6 +199,7 @@ class Vent {
 
         this._myBoosterGroupCountMap = new Map();
         this._myBoosterGroupDistanceCountMap = new Map();
+        this._myWavesCountMap = new Map();
 
         this._myMrNOTBreak = false;
 
@@ -285,6 +285,12 @@ class Vent {
                         entry[1][entry[1].length - 1] = entry[1][entry[1].length - 1] + 1;
                     }
                 }
+
+                let waveCount = this._myWavesCountMap.get(this._myCurrentWaveID);
+                if (waveCount == null) {
+                    waveCount = 0;
+                }
+                this._myWavesCountMap.set(this._myCurrentWaveID, waveCount + 1);
             }
 
             let refDirection = Global.myPlayerForward;
@@ -560,7 +566,7 @@ class Vent {
 
     _boosterGroupDebug() {
         if (this._myDebugActiveBoosterGroup) {
-            console.log("Booster Group Stats");
+            console.log("\nBooster Group Stats");
             let total = 0;
             for (let entry of this._myBoosterGroupCountMap.entries()) {
                 total += entry[1];
@@ -574,8 +580,33 @@ class Vent {
 
                 let averageDistance = distanceSum / distance.length;
 
-                console.log("   ", entry[0], "-", entry[1], "-", (entry[1] / total).toFixed(3), "-", averageDistance.toFixed(3));
+                console.log("   ", entry[0], "-", entry[1].toFixed(2), "-", (entry[1] / total).toFixed(3), "-", averageDistance.toFixed(3));
             }
+
+            console.log("\nWaves Stats");
+
+            total = 0;
+            for (let entry of this._myWavesCountMap.entries()) {
+                total += entry[1];
+            }
+
+            let longestName = 0;
+            for (let entry of this._myWavesCountMap.entries()) {
+                if (entry[0].length > longestName) {
+                    longestName = entry[0].length;
+                }
+            }
+
+            for (let entry of this._myWavesCountMap.entries()) {
+                let name = entry[0];
+                while (name.length < longestName) {
+                    name = name.concat(" ");
+                }
+                console.log("   ", name, "-", entry[1].toFixed(2), "-", (entry[1] * 100 / total).toFixed(1));
+            }
+
+            console.log("");
+
             //console.log("   ", Global.myVentDuration.toFixed(3));
         }
     }
@@ -701,12 +732,13 @@ class Vent {
         this._myMrNOTTimer = new PP.Timer(this._myVentSetup.myMrNOTSetup.myMrNOTTimeCooldown.get(Global.myVentDuration));
     }
 
-    _test(duration = 550, startDuration = 0, numberOfTest = 100) {
+    _test(duration = 550, startDuration = 0, isBoost = true, isWave = false, numberOfTest = 100) {
         this._myIsTesting = true;
         let dt = 1 / 72;
 
         let boosterGroupCountMaps = [];
         let boosterGroupDistanceCountMaps = [];
+        let wavesCountMaps = [];
 
         //console.clear();
 
@@ -723,6 +755,7 @@ class Vent {
 
             boosterGroupCountMaps.push(this._myBoosterGroupCountMap);
             boosterGroupDistanceCountMaps.push(this._myBoosterGroupDistanceCountMap);
+            wavesCountMaps.push(this._myWavesCountMap);
 
             this.stop();
         }
@@ -732,51 +765,206 @@ class Vent {
         let resultMapGroupCount = new Map();
         let resultMapGroupCountPercentage = new Map();
         let resultMapGroupCountDistance = new Map();
-        let groups = ["1", "2", "3", "4", "5"];
-        for (let key of groups) {
-            resultMapGroupCount.set(key, 0);
-            resultMapGroupCountPercentage.set(key, 0);
-            resultMapGroupCountDistance.set(key, 0);
+        if (isBoost) {
+            let groups = ["1", "2", "3", "4", "5"];
+            for (let key of groups) {
+                resultMapGroupCount.set(key, -1);
+                resultMapGroupCountPercentage.set(key, -1);
+                resultMapGroupCountDistance.set(key, -1);
+            }
+
+            for (let i = 0; i < boosterGroupCountMaps.length; i++) {
+                let groupCountMap = boosterGroupCountMaps[i];
+                let groupCountDistanceMap = boosterGroupDistanceCountMaps[i];
+
+                let total = 0;
+                for (let entry of groupCountMap.entries()) {
+                    total += entry[1];
+                }
+                for (let entry of groupCountMap.entries()) {
+                    let distance = groupCountDistanceMap.get(entry[0]);
+                    let distanceSum = 0;
+                    for (let value of distance) {
+                        distanceSum += value;
+                    }
+
+                    let averageDistance = distanceSum / distance.length;
+
+                    if (resultMapGroupCount.get(entry[0]) == -1) {
+                        resultMapGroupCount.set(entry[0], 0);
+                        resultMapGroupCountPercentage.set(entry[0], 0);
+                        resultMapGroupCountDistance.set(entry[0], 0);
+                    }
+
+                    if (!resultMapGroupCount.has(entry[0])) {
+                        resultMapGroupCount.set(entry[0], 0);
+                        resultMapGroupCountPercentage.set(entry[0], 0);
+                        resultMapGroupCountDistance.set(entry[0], 0);
+                    }
+
+                    resultMapGroupCount.set(entry[0], resultMapGroupCount.get(entry[0]) + entry[1]);
+                    resultMapGroupCountPercentage.set(entry[0], resultMapGroupCountPercentage.get(entry[0]) + entry[1] / total);
+                    resultMapGroupCountDistance.set(entry[0], resultMapGroupCountDistance.get(entry[0]) + averageDistance);
+                }
+            }
+
+            for (let entry of resultMapGroupCount.entries()) {
+                let key = entry[0];
+                resultMapGroupCount.set(key, resultMapGroupCount.get(key) / boosterGroupCountMaps.length);
+                resultMapGroupCountPercentage.set(key, resultMapGroupCountPercentage.get(key) / boosterGroupCountMaps.length);
+                resultMapGroupCountDistance.set(key, resultMapGroupCountDistance.get(key) / boosterGroupCountMaps.length);
+            }
         }
 
-        for (let i = 0; i < boosterGroupCountMaps.length; i++) {
-            let groupCountMap = boosterGroupCountMaps[i];
-            let groupCountDistanceMap = boosterGroupDistanceCountMaps[i];
+        let resultMapWaveCount = new Map();
+        let resultMapWaveCountPercentage = new Map();
 
-            let total = 0;
-            for (let entry of groupCountMap.entries()) {
-                total += entry[1];
+        let boosterGroup1 = ["I_Am_Here", "I_Am_Here_2", "Queue_For_You", "Queue_For_You_2", "Merry_Go_Round", "Merry_Go_Round_Waves"];
+        let boosterGroup2 = ["I_Am_Everywhere", "I_Am_Everywhere_2", "Give_Us_A_Hug_2", "Give_Us_A_Hug_3", "Man_In_The_Middle", "Merry_Go_Round_MITM"];
+        let boosterGroup3 = ["I_Am_Everywhere_Waves", "I_Am_Here_Rain", "Queue_For_You_Rain", "Man_In_The_Middle_Waves", "Merry_Go_Round_Rain"];
+        let boosterGroup4 = ["Man_In_The_Middle_Everywhere", "I_Am_Everywhere_GUAH2", "Merry_Go_Round_GUAH2", "Man_In_The_Middle_Everywhere_Waves", "I_Am_Everywhere_GUAH3", "Merry_Go_Round_GUAH3"];
+        let boosterGroup5 = ["Give_Us_A_Hug_4", "Man_In_The_Middle_GUAH2", "Man_In_The_Middle_Everywhere_GUAH2", "Man_In_The_Middle_GUAH3", "Man_In_The_Middle_Everywhere_GUAH3", "Give_Us_A_Hug_Cross"];
+
+        if (isWave) {
+            for (let key of boosterGroup1) {
+                resultMapWaveCount.set(key, -1);
+                resultMapWaveCountPercentage.set(key, -1);
             }
-            for (let entry of groupCountMap.entries()) {
-                let distance = groupCountDistanceMap.get(entry[0]);
-                let distanceSum = 0;
-                for (let value of distance) {
-                    distanceSum += value;
+            for (let key of boosterGroup2) {
+                resultMapWaveCount.set(key, -1);
+                resultMapWaveCountPercentage.set(key, -1);
+            }
+            for (let key of boosterGroup3) {
+                resultMapWaveCount.set(key, -1);
+                resultMapWaveCountPercentage.set(key, -1);
+            }
+            for (let key of boosterGroup4) {
+                resultMapWaveCount.set(key, -1);
+                resultMapWaveCountPercentage.set(key, -1);
+            }
+            for (let key of boosterGroup5) {
+                resultMapWaveCount.set(key, -1);
+                resultMapWaveCountPercentage.set(key, -1);
+            }
+
+            for (let i = 0; i < wavesCountMaps.length; i++) {
+                let waveCountMap = wavesCountMaps[i];
+
+                let total = 0;
+                for (let entry of waveCountMap.entries()) {
+                    if (entry[1] >= 0) {
+                        total += entry[1];
+                    }
                 }
 
-                let averageDistance = distanceSum / distance.length;
+                for (let entry of waveCountMap.entries()) {
+                    if (resultMapWaveCount.get(entry[0]) == -1) {
+                        resultMapWaveCount.set(entry[0], 0);
+                        resultMapWaveCountPercentage.set(entry[0], 0);
+                    }
 
-                resultMapGroupCount.set(entry[0], resultMapGroupCount.get(entry[0]) + entry[1]);
-                resultMapGroupCountPercentage.set(entry[0], resultMapGroupCountPercentage.get(entry[0]) + entry[1] / total);
-                resultMapGroupCountDistance.set(entry[0], resultMapGroupCountDistance.get(entry[0]) + averageDistance);
+                    if (!resultMapWaveCount.has(entry[0])) {
+                        resultMapWaveCount.set(entry[0], 0);
+                        resultMapWaveCountPercentage.set(entry[0], 0);
+                    }
+
+                    resultMapWaveCount.set(entry[0], resultMapWaveCount.get(entry[0]) + entry[1]);
+                    resultMapWaveCountPercentage.set(entry[0], resultMapWaveCountPercentage.get(entry[0]) + entry[1] / total);
+                }
+            }
+
+            for (let entry of resultMapWaveCount.entries()) {
+                let key = entry[0];
+                if (entry[1] >= 0) {
+                    resultMapWaveCount.set(key, resultMapWaveCount.get(key) / wavesCountMaps.length);
+                    resultMapWaveCountPercentage.set(key, resultMapWaveCountPercentage.get(key) / wavesCountMaps.length);
+                }
             }
         }
 
-        for (let key of groups) {
-            resultMapGroupCount.set(key, resultMapGroupCount.get(key) / boosterGroupCountMaps.length);
-            resultMapGroupCountPercentage.set(key, resultMapGroupCountPercentage.get(key) / boosterGroupCountMaps.length);
-            resultMapGroupCountDistance.set(key, resultMapGroupCountDistance.get(key) / boosterGroupCountMaps.length);
+        console.log("\nTEST");
+
+        if (isBoost) {
+            console.log("Booster Group Stats");
+            for (let entry of resultMapGroupCount.entries()) {
+                if (entry[1] >= 0) {
+                    console.log("   ", entry[0], "-", entry[1].toFixed(2), "-", resultMapGroupCountPercentage.get(entry[0]).toFixed(3), "-", resultMapGroupCountDistance.get(entry[0]).toFixed(3));
+                }
+            }
         }
 
-        console.log("TEST");
-        console.log("Booster Group Stats");
-        for (let entry of resultMapGroupCount.entries()) {
-            console.log("   ", entry[0], "-", entry[1], "-", resultMapGroupCountPercentage.get(entry[0]).toFixed(3), "-", resultMapGroupCountDistance.get(entry[0]).toFixed(3));
+        if (isBoost && isWave) {
+            console.log("");
         }
-        console.log("   ", Global.myVentDuration.toFixed(3));
+
+        if (isWave) {
+            console.log("Waves Stats");
+
+            let longestName = 0;
+            for (let entry of resultMapWaveCount.entries()) {
+                if (entry[0].length > longestName && entry[1] != -1) {
+                    longestName = entry[0].length;
+                }
+            }
+
+            let everyBoostGroup = true;
+
+            for (let key of boosterGroup1) {
+                if (!resultMapWaveCount.has(key) || resultMapWaveCount.get(key) == -1) {
+                    everyBoostGroup = false;
+                }
+            }
+            for (let key of boosterGroup2) {
+                if (!resultMapWaveCount.has(key) || resultMapWaveCount.get(key) == -1) {
+                    everyBoostGroup = false;
+                }
+            }
+            for (let key of boosterGroup3) {
+                if (!resultMapWaveCount.has(key) || resultMapWaveCount.get(key) == -1) {
+                    everyBoostGroup = false;
+                }
+            }
+            for (let key of boosterGroup4) {
+                if (!resultMapWaveCount.has(key) || resultMapWaveCount.get(key) == -1) {
+                    everyBoostGroup = false;
+                }
+            }
+            for (let key of boosterGroup5) {
+                if (!resultMapWaveCount.has(key) || resultMapWaveCount.get(key) == -1) {
+                    everyBoostGroup = false;
+                }
+            }
+
+            everyBoostGroup = everyBoostGroup && (resultMapWaveCount.size == (boosterGroup1.length + boosterGroup2.length + boosterGroup3.length + boosterGroup4.length + boosterGroup5.length));
+
+            let newLineCounters = [boosterGroup1.length, boosterGroup2.length, boosterGroup3.length, boosterGroup4.length];
+            let newLineIndex = 0;
+            let newLineCount = newLineCounters[newLineIndex];
+
+            for (let entry of resultMapWaveCount.entries()) {
+                if (entry[1] >= 0) {
+                    let name = entry[0];
+                    while (name.length < longestName) {
+                        name = name.concat(" ");
+                    }
+                    console.log("   ", name, "-", entry[1].toFixed(2), "-", (resultMapWaveCountPercentage.get(entry[0]) * 100).toFixed(1));
+
+                    newLineCount--;
+                    if (newLineCount == 0 && everyBoostGroup) {
+                        console.log("");
+                        newLineIndex++;
+                        if (newLineIndex < newLineCounters.length) {
+                            newLineCount = newLineCounters[newLineIndex];
+                        }
+                    }
+                }
+            }
+        }
+
+        console.log("\n   ", Global.myVentDuration.toFixed(3));
     }
 
-    _testOfTest() {
+    _testOfTestBoost() {
         this._test(1600, 600);
         this._test(1600, 600);
         this._test(1600, 600);
@@ -784,5 +972,15 @@ class Vent {
 
         this._test(600, 150);
         this._test(600, 150);
+    }
+
+    _testOfTestWaves() {
+        this._test(1600, 600, false, true);
+        this._test(1600, 600, false, true);
+        this._test(1600, 600, false, true);
+        this._test(1600, 600, false, true);
+
+        this._test(600, 150, false, true);
+        this._test(600, 150, false, true);
     }
 }

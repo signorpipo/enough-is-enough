@@ -266,8 +266,8 @@ class MrNOTVentState extends PP.State {
             wave.myWaveStartAngle = new RangeValue([45, 55]);
             wave.mySpawnConeAngle = new RangeValue([20, 30]);
             wave.myMinAngleBetweenClones = 10;
-            wave.myTimeBetweenClones = new RangeValue([2, 3]);
-            wave.myDoneDelay = new RangeValue([2.5, 4]);
+            wave.myTimeBetweenClones = timeBetweenClones;
+            wave.myDoneDelay = doneDelay;
             wave.myFirstCloneInTheMiddle = true;
             wave.myRefDirection = [0, 0, -1];
 
