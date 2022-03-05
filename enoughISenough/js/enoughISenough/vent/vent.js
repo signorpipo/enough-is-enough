@@ -540,7 +540,8 @@ class Vent {
     }
 
     _mrNOTCloneReachYou() {
-        if (!this._myIsTesting && this._myOnVentLostCallback && this._myOncePerFrame && this._myFSM.isInState("wave")) {
+        if (!this._myIsTesting && this._myOnVentLostCallback && this._myOncePerFrame &&
+            (this._myFSM.isInState("wave") || this._myFSM.isInState("break") || this._myFSM.isInState("smallBreak"))) {
             this.ventLostDebug();
 
             this._myOnVentLostCallback();
@@ -614,6 +615,7 @@ class Vent {
     _mrNOTReachYou() {
         if (PP.myEasyTuneVariables.get("Prevent Vent Lost")) {
             this._mrNOTDismissed();
+            //this._mrNOTCloneReachYou();
         } else {
             this._mrNOTCloneReachYou();
         }

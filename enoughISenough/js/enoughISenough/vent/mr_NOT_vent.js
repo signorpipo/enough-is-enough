@@ -133,6 +133,8 @@ class MrNOTVent {
         this._myRumbleScreen.start(0.3, 1.5);
         PP.myRightGamepad.pulse(0.6, 0.3);
         PP.myLeftGamepad.pulse(0.6, 0.3);
+
+        this._myHitsReceived = 0;
     }
 
     _startMove() {
@@ -151,6 +153,7 @@ class MrNOTVent {
         let distanceToCurrentFromStart = this._myStartPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myCurrentPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
 
         if (distanceToTarget < this._myReachTargetDistance || distanceToTargetFromStart < distanceToCurrentFromStart) {
+            //console.log("mr NOT Hits Received -", this._myHitsReceived);
             if (this._myCallbackOnReach) {
                 this._myCallbackOnReach(this);
             }
@@ -232,6 +235,9 @@ class MrNOTVent {
 
                 patienceToRemove++;
             }
+
+
+            this._myHitsReceived += patienceToRemove;
 
             if (!avoidCallbacks) {
                 this._myPatience -= patienceToRemove;
