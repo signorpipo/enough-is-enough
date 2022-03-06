@@ -152,6 +152,7 @@ class Vent {
 
         this._myBoosterGroupCountMap = new Map();
         this._myBoosterGroupDistanceCountMap = new Map();
+        this._myWavesCountMap = new Map();
 
         this._myIsTesting = false;
     }
@@ -184,7 +185,7 @@ class Vent {
         this._myBreakCloneCooldown = this._myVentSetup.myBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
 
         let smallBreakDelayMultiplier = this._myCurrentVentRuntimeSetup.myVentMultipliers.mySmallBreakDelayTimeMultiplier.get(Global.myVentDuration);
-        this._mySmallBreakDelayTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration) * smallBreakDelayMultiplier);
+        this._mySmallBreakDelayTimer = new PP.Timer(this._myVentSetup.mySmallBreakSetup.myBreakTimeCooldown.get(Global.myVentDuration) * smallBreakDelayMultiplier, false);
         this._mySmallBreakCloneCooldown = this._myVentSetup.mySmallBreakSetup.myBreakCloneCooldown.get(Global.myVentDuration);
 
         this._myVentTimer = new PP.Timer(this._myVentSetup.myVentDuration - Global.myVentDuration);
@@ -967,32 +968,32 @@ class Vent {
     }
 
     _testOfTest() {
-        this._test(1600, 600, true, true);
-        this._test(1600, 600, true, true);
-        this._test(1600, 600, true, true);
-        this._test(1600, 600, true, true);
+        this._test(1700, 700, true, true);
+        this._test(1700, 700, true, true);
+        this._test(1700, 700, true, true);
+        this._test(1700, 700, true, true);
 
-        this._test(600, 150, true, true);
-        this._test(600, 150, true, true);
+        this._test(700, 150, true, true);
+        this._test(700, 150, true, true);
     }
 
     _testOfTestBoost() {
-        this._test(1600, 600);
-        this._test(1600, 600);
-        this._test(1600, 600);
-        this._test(1600, 600);
+        this._test(1700, 700);
+        this._test(1700, 700);
+        this._test(1700, 700);
+        this._test(1700, 700);
 
-        this._test(600, 150);
-        this._test(600, 150);
+        this._test(700, 150);
+        this._test(700, 150);
     }
 
     _testOfTestWaves() {
-        this._test(1600, 600, false, true);
-        this._test(1600, 600, false, true);
-        this._test(1600, 600, false, true);
-        this._test(1600, 600, false, true);
+        this._test(1700, 700, false, true);
+        this._test(1700, 700, false, true);
+        this._test(1700, 700, false, true);
+        this._test(1700, 700, false, true);
 
-        this._test(600, 150, false, true);
-        this._test(600, 150, false, true);
+        this._test(700, 150, false, true);
+        this._test(700, 150, false, true);
     }
 }

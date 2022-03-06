@@ -1,25 +1,25 @@
 ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
     let ventSetup = new VentSetup();
 
-    ventSetup.myBreakSetup.myBreakDuration = new RangeValueOverTime([3, 4], [1.5, 2.5], 100, 300, false);
-    ventSetup.myBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([35, 45], [25, 35], 10, 100, false);
+    ventSetup.myBreakSetup.myBreakDuration = new RangeValueOverTime([3, 4], [1.5, 2.5], 10, 200, false);
+    ventSetup.myBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([40, 60], [35, 45], 10, 150, false);
     ventSetup.myBreakSetup.myBreakCloneCooldown = 5;
 
-    ventSetup.mySmallBreakSetup.myBreakDuration = new RangeValueOverTime([2, 3], [0.5, 1], 50, 250, false);
-    ventSetup.mySmallBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([50, 50], [8, 12], 10, 100, false);
+    ventSetup.mySmallBreakSetup.myBreakDuration = new RangeValueOverTime([1.5, 2.5], [0.5, 1], 50, 200, false);
+    ventSetup.mySmallBreakSetup.myBreakTimeCooldown = new RangeValueOverTime([18, 22], [12, 16], 50, 150, false);
     ventSetup.mySmallBreakSetup.myBreakCloneCooldown = 3;
 
     ventSetup.myCloneRotationSetup.mySpinSpeed = new RangeValue([4, 6], false);
-    ventSetup.myCloneRotationSetup.mySpinChance = new RangeValueOverTime([1, 10], [1, 4], 160, 300, true);
-    ventSetup.myCloneRotationSetup.mySpinStartTime = 150;
+    ventSetup.myCloneRotationSetup.mySpinChance = new RangeValueOverTime([1, 12], [1, 6], 135, 300, true);
+    ventSetup.myCloneRotationSetup.mySpinStartTime = 135;
 
-    ventSetup.myCloneRotationSetup.myTiltAngle = new RangeValueOverTime([0, 5], [0, 15], 60, 200, false);
-    ventSetup.myCloneRotationSetup.myTiltChance = new RangeValueOverTime([1, 6], [1, 2], 60, 200, true);
-    ventSetup.myCloneRotationSetup.myTiltStartTime = 60;
+    ventSetup.myCloneRotationSetup.myTiltAngle = new RangeValueOverTime([0, 5], [0, 15], 65, 200, false);
+    ventSetup.myCloneRotationSetup.myTiltChance = new RangeValueOverTime([1, 6], [1, 2], 65, 200, true);
+    ventSetup.myCloneRotationSetup.myTiltStartTime = 65;
 
     ventSetup.myVentMultipliers = new VentRuntimeMultipliers();
-    ventSetup.myVentMultipliers.mySpawnTimeMultiplier = 1;
-    ventSetup.myVentMultipliers.myDoneTimeMultiplier = 1;
+    ventSetup.myVentMultipliers.mySpawnTimeMultiplier = 0.9;
+    ventSetup.myVentMultipliers.myDoneTimeMultiplier = 0.9;
     ventSetup.myVentMultipliers.myBreakTimeMultiplier = 1;
     ventSetup.myVentMultipliers.myBreakDelayTimeMultiplier = 1;
     ventSetup.myVentMultipliers.mySmallBreakTimeMultiplier = 1;
@@ -28,33 +28,30 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
     ventSetup.myMrNOTSetup = new VentMrNOTSetup();
 
     ventSetup.myMrNOTSetup.myMrNOTAppearenceEnabled = true;
-    ventSetup.myMrNOTSetup.myMrNOTTimeCooldown = new RangeValueOverTime([100, 110], [60, 80], 120, 300, false);
+    ventSetup.myMrNOTSetup.myMrNOTTimeCooldown = new RangeValueOverTime([90, 100], [60, 80], 10, 300, false);
     //ventSetup.myMrNOTSetup.myMrNOTTimeCooldown = 255;
-    ventSetup.myMrNOTSetup.myBreakDuration = new RangeValueOverTime([4, 5], [2.5, 3.5], 120, 300, false);
+    ventSetup.myMrNOTSetup.myBreakDuration = new RangeValueOverTime([4, 5], [2.5, 3.5], 10, 300, false);
 
     ventSetup.myMrNOTSetup.myVentMultipliers = new VentRuntimeMultipliers();
-    ventSetup.myMrNOTSetup.myVentMultipliers.mySpawnTimeMultiplier = 1.5;
-    ventSetup.myMrNOTSetup.myVentMultipliers.myDoneTimeMultiplier = 1.5;
+    ventSetup.myMrNOTSetup.myVentMultipliers.mySpawnTimeMultiplier = ventSetup.myVentMultipliers.mySpawnTimeMultiplier * 1.5;
+    ventSetup.myMrNOTSetup.myVentMultipliers.myDoneTimeMultiplier = ventSetup.myVentMultipliers.mySpawnTimeMultiplier * 1.5;
     ventSetup.myMrNOTSetup.myVentMultipliers.myBreakTimeMultiplier = 0;
     ventSetup.myMrNOTSetup.myVentMultipliers.myBreakDelayTimeMultiplier = 100;
     ventSetup.myMrNOTSetup.myVentMultipliers.mySmallBreakTimeMultiplier = 1.5;
-    ventSetup.myMrNOTSetup.myVentMultipliers.mySmallBreakDelayTimeMultiplier = 1;
+    ventSetup.myMrNOTSetup.myVentMultipliers.mySmallBreakDelayTimeMultiplier = 0.75;
 
     ventSetup.myMrNOTSetup.myStartAngle = new RangeValueOverTime([0, 0], [0, 0], 0, 0, false);
-    ventSetup.myMrNOTSetup.myTimeToReachTarget = new RangeValueOverTime([35, 45], [25, 40], 120, 300, false);
+    ventSetup.myMrNOTSetup.myTimeToReachTarget = new RangeValueOverTime([35, 45], [25, 40], 10, 300, false);
     ventSetup.myMrNOTSetup.myMaxPatience = new ValueOverTime(13, 26, 25, 45, true);
 
-    //25-> 31 - 45 -> 60 NO CLONES
-    //25-> 18 - 45 -> 36
-    //25-> 13 - 45 -> 26
     //ventSetup.myMrNOTSetup.myTimeToReachTarget = 45;
     //ventSetup.myMrNOTSetup.myMaxPatience = 100;
 
     let nextWavesSetup = new NextWavesSetup();
 
     let firstWavesStartTime = 15;
-    let secondWavesStartTime = 140;
-    let thirdWavesStartTime = 250;
+    let secondWavesStartTime = 130;
+    let thirdWavesStartTime = 245;
     let fourthWavesStartTime = 350;
 
     let firstGroupChance = 350;
@@ -180,13 +177,13 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
 
     // Wave Data
 
-    let waveStartAngle = new RangeValue([30, 180]);
+    let waveStartAngle = new RangeValue([25, 175]);
 
-    let timeBetweenClones = new RangeValueOverTime([2, 3], [1, 1.5], 10, 150, false);
-    let doneDelay = new RangeValueOverTime([2, 4], [1.5, 2.5], 10, 200, false);
+    let timeBetweenClones = new RangeValueOverTime([2, 3], [1, 1.5], 10, 100, false);
+    let doneDelay = new RangeValueOverTime([2, 4], [1.5, 2.5], 10, 100, false);
 
     let timeBetweenClonesHard = new RangeValueOverTime([2, 3], [1.5, 2], 50, 200, false);
-    let doneDelayHard = new RangeValueOverTime([3, 4], [2, 3], 10, 200, false);
+    let doneDelayHard = new RangeValueOverTime([3, 4], [2, 3], 50, 200, false);
 
     let timeBetweenClonesVeryHard = new RangeValueOverTime([2.5, 3], [2, 2.5], secondWavesStartTime, secondWavesStartTime + 150, false);
     let doneDelayVeryHard = new RangeValueOverTime([3, 4], [2.5, 3.5], secondWavesStartTime, secondWavesStartTime + 150, false);
@@ -194,9 +191,9 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
     let timeBetweenClonesMegaHard = new RangeValueOverTime([3, 3.5], [2.5, 3], fourthWavesStartTime, fourthWavesStartTime + 150, false);
     let doneDelayMegaHard = new RangeValueOverTime([4, 4.5], [3, 4], fourthWavesStartTime, fourthWavesStartTime + 150, false);
 
-    let randomTrue = new RangeValueOverTime([1, 1], [-0.5, 1], 150, 160, false); // >= 0 means true
-    let randomVeryTrue = new RangeValueOverTime([1, 1], [-0.75, 1], 150, 160, false); // >= 0 means true
-    let randomFalse = new RangeValueOverTime([-1, -1], [-1, 0.5], 150, 160, false); // >= 0 means true
+    let randomTrue = new RangeValueOverTime([1, 1], [-0.5, 1], secondWavesStartTime, secondWavesStartTime + 5, false); // >= 0 means true
+    let randomVeryTrue = new RangeValueOverTime([1, 1], [-0.75, 1], secondWavesStartTime, secondWavesStartTime + 5, false); // >= 0 means true
+    let randomFalse = new RangeValueOverTime([-1, -1], [-1, 0.5], secondWavesStartTime, secondWavesStartTime + 5, false); // >= 0 means true
     let randomRandom = new RangeValue([-1, 1]); // >= 0 means true
 
     // Booster Data   
@@ -429,7 +426,7 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
         wave.myWaveStartAngle = waveStartAngle;
         wave.myAngleBetweenWaves = new RangeValueOverTime([15, 25], [15, 35], 10, 100, false);
         wave.mySameTimeBetweenWaves = randomTrue;
-        wave.myTimeBetweenWaves = new RangeValueOverTime([2, 3], [0.75, 1.25], 10, 150, false);
+        wave.myTimeBetweenWaves = new RangeValueOverTime([2, 3], [0.75, 1.25], 10, 100, false);
         wave.myDoneDelay = doneDelay;
 
         ventSetup.myWavesMap.set("Merry_Go_Round", wave);
@@ -519,7 +516,7 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
         wave.myWaveStartAngle = waveStartAngle;
         wave.myAngleBetweenWaves = new RangeValueOverTime([15, 25], [15, 35], 10, 100, false);
         wave.mySameTimeBetweenWaves = randomTrue;
-        wave.myTimeBetweenWaves = new RangeValueOverTime([1.5, 2], [1, 1.5], 10, 150, false);
+        wave.myTimeBetweenWaves = new RangeValueOverTime([1.5, 2], [1, 1.5], 10, 100, false);
         wave.myDoneDelay = doneDelayHard;
 
         wave.myWavesSetup.push([subMITMWave, 1, "Man_In_The_Middle"]);
@@ -617,7 +614,7 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
     {
         let wave = new GiveUsAHugSetup();
 
-        wave.myClonesCount = new RangeValueOverTime([1, 1], [1, 5], 10, 200, true);
+        wave.myClonesCount = new RangeValueOverTime([1, 1], [1, 5], 10, 150, true);
         wave.myWaveStartAngle = waveStartAngle;
         wave.mySpawnConeAngle = new RangeValue([20, 40]);
         wave.myFirstCloneInTheMiddle = true;
@@ -625,7 +622,7 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
         wave.myDoneDelay = doneDelayHard;
 
         wave.myHugSize = 2;
-        wave.myHugAngle = new RangeValueOverTime([20, 30], [20, 35], 10, 150, false);
+        wave.myHugAngle = new RangeValueOverTime([20, 30], [20, 35], 10, 100, false);
         wave.mySameHugAngle = randomTrue;
         wave.mySameHugSize = randomTrue;
 
@@ -638,7 +635,7 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
     {
         let wave = new GiveUsAHugSetup();
 
-        wave.myClonesCount = new RangeValueOverTime([1, 1], [1, 3], 10, 200, true);
+        wave.myClonesCount = new RangeValueOverTime([1, 1], [1, 3], 10, 150, true);
         wave.myWaveStartAngle = waveStartAngle;
         wave.mySpawnConeAngle = new RangeValue([20, 40]);
         wave.myFirstCloneInTheMiddle = true;
@@ -646,7 +643,7 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
         wave.myDoneDelay = doneDelayVeryHard;
 
         wave.myHugSize = 3;
-        wave.myHugAngle = new RangeValueOverTime([40, 50], [40, 60], 10, 150, false);
+        wave.myHugAngle = new RangeValueOverTime([40, 50], [40, 60], 10, 100, false);
         wave.mySameHugAngle = randomTrue;
         wave.mySameHugSize = randomTrue;
 
@@ -742,7 +739,7 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
 
         wave.myWavesCount = new RangeValueOverTime([2, 3], [2, 4], secondWavesStartTime, secondWavesStartTime + 100, true);
         wave.myWaveStartAngle = waveStartAngle;
-        wave.myTimeBeforeOpposite = new RangeValueOverTime([1, 1.5], [0.8, 1.2], secondWavesStartTime, secondWavesStartTime + 150, false);
+        wave.myTimeBeforeOpposite = new RangeValueOverTime([1, 1.5], [0.7, 1], secondWavesStartTime, secondWavesStartTime + 150, false);
         wave.myTimeBetweenWaves = new RangeValueOverTime([1.5, 2], [1, 1.5], 10, 150, false);
         wave.myOppositeTimeAsTimeBetweenWaves = -1;
         wave.mySameOppositeTimeBetweenWaves = randomVeryTrue;
@@ -761,8 +758,8 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
 
         wave.myWavesCount = new RangeValueOverTime([2, 2], [2, 3], thirdWavesStartTime, thirdWavesStartTime + 100, true);
         wave.myWaveStartAngle = waveStartAngle;
-        wave.myTimeBetweenWaves = new RangeValueOverTime([1, 1.5], [0.8, 1.2], secondWavesStartTime, secondWavesStartTime + 150, false);
-        wave.myTimeBeforeOpposite = new RangeValueOverTime([1, 1.5], [0.8, 1.2], secondWavesStartTime, secondWavesStartTime + 150, false);
+        wave.myTimeBetweenWaves = new RangeValueOverTime([1, 1.5], [0.7, 1], secondWavesStartTime, secondWavesStartTime + 150, false);
+        wave.myTimeBeforeOpposite = new RangeValueOverTime([1, 1.5], [0.7, 1], secondWavesStartTime, secondWavesStartTime + 150, false);
         wave.myAllSameTimes = randomVeryTrue;
         wave.myDoneDelay = doneDelayVeryHard;
 
@@ -783,7 +780,7 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
 
         wave.myWavesCount = new RangeValueOverTime([2, 2], [2, 3], thirdWavesStartTime, thirdWavesStartTime + 100, true);
         wave.myWaveStartAngle = waveStartAngle;
-        wave.myTimeBeforeOpposite = new RangeValueOverTime([1, 1.5], [0.8, 1.2], secondWavesStartTime, secondWavesStartTime + 150, false);
+        wave.myTimeBeforeOpposite = new RangeValueOverTime([1, 1.5], [0.7, 1], secondWavesStartTime, secondWavesStartTime + 150, false);
         wave.myTimeBetweenWaves = new RangeValueOverTime([1.5, 2], [1, 1.5], 10, 150, false);
         wave.myOppositeTimeAsTimeBetweenWaves = -1;
         wave.mySameOppositeTimeBetweenWaves = randomVeryTrue;
