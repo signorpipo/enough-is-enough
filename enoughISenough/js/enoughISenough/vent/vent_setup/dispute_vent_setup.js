@@ -1,4 +1,4 @@
-ArcadeState.prototype._disputeVentSetup = function () {
+ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
     let ventSetup = new VentSetup();
 
     ventSetup.myBreakSetup.myBreakDuration = new RangeValueOverTime([3, 4], [1.5, 2.5], 100, 300, false);
@@ -30,7 +30,7 @@ ArcadeState.prototype._disputeVentSetup = function () {
     ventSetup.myMrNOTSetup.myMrNOTAppearenceEnabled = true;
     ventSetup.myMrNOTSetup.myMrNOTTimeCooldown = new RangeValueOverTime([100, 110], [60, 80], 120, 300, false);
     //ventSetup.myMrNOTSetup.myMrNOTTimeCooldown = 255;
-    ventSetup.myMrNOTSetup.myBreakDuration = new RangeValueOverTime([4, 5], [2.5, 3.5], 100, 300, false);
+    ventSetup.myMrNOTSetup.myBreakDuration = new RangeValueOverTime([4, 5], [2.5, 3.5], 120, 300, false);
 
     ventSetup.myMrNOTSetup.myVentMultipliers = new VentRuntimeMultipliers();
     ventSetup.myMrNOTSetup.myVentMultipliers.mySpawnTimeMultiplier = 1.5;
@@ -65,13 +65,13 @@ ArcadeState.prototype._disputeVentSetup = function () {
 
     // FIRST
     nextWavesSetup.addWave("I_Am_Here", firstGroupChance, 0, secondWavesStartTime);
-    nextWavesSetup.addWave("Queue_For_You", firstGroupChance, 15, secondWavesStartTime);
-    nextWavesSetup.addWave("Merry_Go_Round", firstGroupChance, 15, secondWavesStartTime);
+    nextWavesSetup.addWave("Queue_For_You", firstGroupChance, 10, secondWavesStartTime);
+    nextWavesSetup.addWave("Merry_Go_Round", firstGroupChance, 10, secondWavesStartTime);
 
     nextWavesSetup.addWave("I_Am_Everywhere", secondGroupChance, 45, secondWavesStartTime);
-    nextWavesSetup.addWave("Give_Us_A_Hug_2", Math.floor(secondGroupChance * 2 / 3), 60, secondWavesStartTime);
-    nextWavesSetup.addWave("Give_Us_A_Hug_3", Math.floor(secondGroupChance * 1 / 3), 60, secondWavesStartTime);
-    nextWavesSetup.addWave("Man_In_The_Middle", secondGroupChance, 75, secondWavesStartTime);
+    nextWavesSetup.addWave("Give_Us_A_Hug_2", Math.floor(secondGroupChance * 2 / 3), 45, secondWavesStartTime);
+    nextWavesSetup.addWave("Give_Us_A_Hug_3", Math.floor(secondGroupChance * 1 / 3), 45, secondWavesStartTime);
+    nextWavesSetup.addWave("Man_In_The_Middle", secondGroupChance, 45, secondWavesStartTime);
 
     //
 
@@ -102,13 +102,16 @@ ArcadeState.prototype._disputeVentSetup = function () {
     nextWavesSetup.addWave("I_Am_Here_Rain", thirdGroupSecondWaveChance, secondWavesStartTime, thirdWavesStartTime);
     nextWavesSetup.addWave("Queue_For_You_Rain", thirdGroupSecondWaveChance, secondWavesStartTime, thirdWavesStartTime);
 
-    let fourthGroupSecondWaveChance = fourthGroupChance;
-    nextWavesSetup.addWave("Man_In_The_Middle_Everywhere", fourthGroupSecondWaveChance, secondWavesStartTime, thirdWavesStartTime);
-    nextWavesSetup.addWave("I_Am_Everywhere_GUAH2", fourthGroupSecondWaveChance, secondWavesStartTime, thirdWavesStartTime);
-    nextWavesSetup.addWave("Merry_Go_Round_GUAH2", fourthGroupSecondWaveChance, secondWavesStartTime, thirdWavesStartTime);
-    nextWavesSetup.addWave("Man_In_The_Middle_Everywhere", fourthGroupSecondWaveChance, secondWavesStartTime, thirdWavesStartTime);
-    nextWavesSetup.addWave("I_Am_Everywhere_GUAH2", fourthGroupSecondWaveChance, secondWavesStartTime, thirdWavesStartTime);
-    nextWavesSetup.addWave("Merry_Go_Round_GUAH2", fourthGroupSecondWaveChance, secondWavesStartTime, thirdWavesStartTime);
+    if (!avoidHarderGroups) {
+        let fourthGroupSecondWaveChance = fourthGroupChance;
+        nextWavesSetup.addWave("Man_In_The_Middle_Everywhere", fourthGroupSecondWaveChance, secondWavesStartTime, thirdWavesStartTime);
+        nextWavesSetup.addWave("I_Am_Everywhere_GUAH2", fourthGroupSecondWaveChance, secondWavesStartTime, thirdWavesStartTime);
+        nextWavesSetup.addWave("Merry_Go_Round_GUAH2", fourthGroupSecondWaveChance, secondWavesStartTime, thirdWavesStartTime);
+        nextWavesSetup.addWave("Man_In_The_Middle_Everywhere", fourthGroupSecondWaveChance, secondWavesStartTime, thirdWavesStartTime);
+        nextWavesSetup.addWave("I_Am_Everywhere_GUAH2", fourthGroupSecondWaveChance, secondWavesStartTime, thirdWavesStartTime);
+        nextWavesSetup.addWave("Merry_Go_Round_GUAH2", fourthGroupSecondWaveChance, secondWavesStartTime, thirdWavesStartTime);
+
+    }
 
     //
 
@@ -131,21 +134,23 @@ ArcadeState.prototype._disputeVentSetup = function () {
     nextWavesSetup.addWave("Merry_Go_Round_Rain", thirdGroupThirdWaveChance, thirdWavesStartTime);
     nextWavesSetup.addWave("Man_In_The_Middle_Waves", thirdGroupThirdWaveChance, thirdWavesStartTime);
 
-    let fourthGroupThirdWaveChance = fourthGroupChance * 2;
-    nextWavesSetup.addWave("Man_In_The_Middle_Everywhere", Math.floor(fourthGroupThirdWaveChance * 1 / 2), thirdWavesStartTime);
-    nextWavesSetup.addWave("I_Am_Everywhere_GUAH2", Math.floor(fourthGroupThirdWaveChance * 3 / 5), thirdWavesStartTime);
-    nextWavesSetup.addWave("Merry_Go_Round_GUAH2", Math.floor(fourthGroupThirdWaveChance * 3 / 5), thirdWavesStartTime);
-    nextWavesSetup.addWave("Man_In_The_Middle_Everywhere_Waves", Math.floor(fourthGroupThirdWaveChance * 1 / 2), thirdWavesStartTime);
-    nextWavesSetup.addWave("I_Am_Everywhere_GUAH3", Math.floor(fourthGroupThirdWaveChance * 2 / 5), thirdWavesStartTime);
-    nextWavesSetup.addWave("Merry_Go_Round_GUAH3", Math.floor(fourthGroupThirdWaveChance * 2 / 5), thirdWavesStartTime);
+    if (!avoidHarderGroups) {
+        let fourthGroupThirdWaveChance = fourthGroupChance * 2;
+        nextWavesSetup.addWave("Man_In_The_Middle_Everywhere", Math.floor(fourthGroupThirdWaveChance * 1 / 2), thirdWavesStartTime);
+        nextWavesSetup.addWave("I_Am_Everywhere_GUAH2", Math.floor(fourthGroupThirdWaveChance * 3 / 5), thirdWavesStartTime);
+        nextWavesSetup.addWave("Merry_Go_Round_GUAH2", Math.floor(fourthGroupThirdWaveChance * 3 / 5), thirdWavesStartTime);
+        nextWavesSetup.addWave("Man_In_The_Middle_Everywhere_Waves", Math.floor(fourthGroupThirdWaveChance * 1 / 2), thirdWavesStartTime);
+        nextWavesSetup.addWave("I_Am_Everywhere_GUAH3", Math.floor(fourthGroupThirdWaveChance * 2 / 5), thirdWavesStartTime);
+        nextWavesSetup.addWave("Merry_Go_Round_GUAH3", Math.floor(fourthGroupThirdWaveChance * 2 / 5), thirdWavesStartTime);
 
-    let fifthGroupThirdWaveChance = fifthGroupChance * 2;
-    nextWavesSetup.addWave("Give_Us_A_Hug_4", Math.floor(fifthGroupThirdWaveChance * 1 / 2), thirdWavesStartTime, fourthWavesStartTime);
-    nextWavesSetup.addWave("Man_In_The_Middle_GUAH2", Math.floor(fifthGroupThirdWaveChance * 1 / 2), thirdWavesStartTime, fourthWavesStartTime);
-    nextWavesSetup.addWave("Man_In_The_Middle_Everywhere_GUAH2", Math.floor(fifthGroupThirdWaveChance * 1 / 2), thirdWavesStartTime, fourthWavesStartTime);
-    nextWavesSetup.addWave("Give_Us_A_Hug_4", Math.floor(fifthGroupThirdWaveChance * 1 / 2), thirdWavesStartTime, fourthWavesStartTime);
-    nextWavesSetup.addWave("Man_In_The_Middle_GUAH2", Math.floor(fifthGroupThirdWaveChance * 1 / 2), thirdWavesStartTime, fourthWavesStartTime);
-    nextWavesSetup.addWave("Man_In_The_Middle_Everywhere_GUAH2", Math.floor(fifthGroupThirdWaveChance * 1 / 2), thirdWavesStartTime, fourthWavesStartTime);
+        let fifthGroupThirdWaveChance = fifthGroupChance * 2;
+        nextWavesSetup.addWave("Give_Us_A_Hug_4", Math.floor(fifthGroupThirdWaveChance * 1 / 2), thirdWavesStartTime, fourthWavesStartTime);
+        nextWavesSetup.addWave("Man_In_The_Middle_GUAH2", Math.floor(fifthGroupThirdWaveChance * 1 / 2), thirdWavesStartTime, fourthWavesStartTime);
+        nextWavesSetup.addWave("Man_In_The_Middle_Everywhere_GUAH2", Math.floor(fifthGroupThirdWaveChance * 1 / 2), thirdWavesStartTime, fourthWavesStartTime);
+        nextWavesSetup.addWave("Give_Us_A_Hug_4", Math.floor(fifthGroupThirdWaveChance * 1 / 2), thirdWavesStartTime, fourthWavesStartTime);
+        nextWavesSetup.addWave("Man_In_The_Middle_GUAH2", Math.floor(fifthGroupThirdWaveChance * 1 / 2), thirdWavesStartTime, fourthWavesStartTime);
+        nextWavesSetup.addWave("Man_In_The_Middle_Everywhere_GUAH2", Math.floor(fifthGroupThirdWaveChance * 1 / 2), thirdWavesStartTime, fourthWavesStartTime);
+    }
 
     //FOURTH
 
@@ -157,13 +162,15 @@ ArcadeState.prototype._disputeVentSetup = function () {
 
     //
 
-    let fifthGroupFourthWaveChance = fifthGroupChance * 2;
-    nextWavesSetup.addWave("Give_Us_A_Hug_4", Math.floor(fifthGroupFourthWaveChance * 3 / 5), fourthWavesStartTime);
-    nextWavesSetup.addWave("Man_In_The_Middle_GUAH2", Math.floor(fifthGroupFourthWaveChance * 3 / 5), fourthWavesStartTime);
-    nextWavesSetup.addWave("Man_In_The_Middle_Everywhere_GUAH2", Math.floor(fifthGroupFourthWaveChance * 3 / 5), fourthWavesStartTime);
-    nextWavesSetup.addWave("Man_In_The_Middle_GUAH3", Math.floor(fifthGroupFourthWaveChance * 2 / 5), fourthWavesStartTime);
-    nextWavesSetup.addWave("Man_In_The_Middle_Everywhere_GUAH3", Math.floor(fifthGroupFourthWaveChance * 2 / 5), fourthWavesStartTime);
-    nextWavesSetup.addWave("Give_Us_A_Hug_Cross", Math.floor(fifthGroupFourthWaveChance * 2 / 5), fourthWavesStartTime);
+    if (!avoidHarderGroups) {
+        let fifthGroupFourthWaveChance = fifthGroupChance * 2;
+        nextWavesSetup.addWave("Give_Us_A_Hug_4", Math.floor(fifthGroupFourthWaveChance * 3 / 5), fourthWavesStartTime);
+        nextWavesSetup.addWave("Man_In_The_Middle_GUAH2", Math.floor(fifthGroupFourthWaveChance * 3 / 5), fourthWavesStartTime);
+        nextWavesSetup.addWave("Man_In_The_Middle_Everywhere_GUAH2", Math.floor(fifthGroupFourthWaveChance * 3 / 5), fourthWavesStartTime);
+        nextWavesSetup.addWave("Man_In_The_Middle_GUAH3", Math.floor(fifthGroupFourthWaveChance * 2 / 5), fourthWavesStartTime);
+        nextWavesSetup.addWave("Man_In_The_Middle_Everywhere_GUAH3", Math.floor(fifthGroupFourthWaveChance * 2 / 5), fourthWavesStartTime);
+        nextWavesSetup.addWave("Give_Us_A_Hug_Cross", Math.floor(fifthGroupFourthWaveChance * 2 / 5), fourthWavesStartTime);
+    }
 
     //nextWavesSetup.addWave("Give_Us_A_Hug_Distance", 0, 0);
 

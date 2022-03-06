@@ -8,6 +8,10 @@ class NextWavesSetup {
         this._myNextWaves.push(wave);
     }
 
+    removeWave(waveID) {
+        this._myNextWaves.pp_removeAll(element => element.myWaveID == waveID);
+    }
+
     getNextWave(timeElapsed, booster) {
         let validWaves = [];
         let totalChance = 0;

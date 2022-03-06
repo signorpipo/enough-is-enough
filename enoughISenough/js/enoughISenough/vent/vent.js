@@ -966,6 +966,16 @@ class Vent {
         console.log("\n   ", Global.myVentDuration.toFixed(3));
     }
 
+    _testOfTest() {
+        this._test(1600, 600, true, true);
+        this._test(1600, 600, true, true);
+        this._test(1600, 600, true, true);
+        this._test(1600, 600, true, true);
+
+        this._test(600, 150, true, true);
+        this._test(600, 150, true, true);
+    }
+
     _testOfTestBoost() {
         this._test(1600, 600);
         this._test(1600, 600);
