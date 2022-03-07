@@ -24,7 +24,7 @@ class IntroState extends PP.State {
         this._myFSM.addTransition("show_title", "done", "skip", this.skipIntro.bind(this));
         //this._myFSM.addTransition("move_ring", "test", "skip", this.skipRing.bind(this));
 
-        this._myTimer = new PP.Timer(2);
+        this._myTimer = new PP.Timer(2.5);
     }
 
     update(dt, fsm) {
