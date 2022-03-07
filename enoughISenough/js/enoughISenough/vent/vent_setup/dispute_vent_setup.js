@@ -548,7 +548,7 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
         let wave = new IAmEverywhereWaveSetup();
 
         wave.myWavesCount = new RangeValueOverTime([3, 4], [3, 6], 10, 150, true);
-        wave.myAngleBetweenWaves = new RangeValue([70, 180]);
+        wave.myAngleBetweenWaves = new RangeValue([55, 175]);
         wave.myWaveStartAngle = waveStartAngle;
         wave.myTimeBetweenWaves = timeBetweenClonesHard;
         wave.myDoneDelay = doneDelayHard;
@@ -568,7 +568,7 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
         let wave = new IAmEverywhereWaveSetup();
 
         wave.myWavesCount = new RangeValueOverTime([2, 3], [2, 5], secondWavesStartTime, secondWavesStartTime + 150, true);
-        wave.myAngleBetweenWaves = new RangeValue([70, 180]);
+        wave.myAngleBetweenWaves = new RangeValue([55, 175]);
         wave.myWaveStartAngle = waveStartAngle;
         wave.myTimeBetweenWaves = timeBetweenClones;
         wave.myDoneDelay = doneDelayVeryHard;
@@ -590,7 +590,7 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
         let wave = new IAmEverywhereWaveSetup();
 
         wave.myWavesCount = new RangeValueOverTime([2, 3], [2, 5], secondWavesStartTime, secondWavesStartTime + 150, true);
-        wave.myAngleBetweenWaves = new RangeValue([70, 180]);
+        wave.myAngleBetweenWaves = new RangeValue([55, 175]);
         wave.myWaveStartAngle = waveStartAngle;
         wave.myTimeBetweenWaves = timeBetweenClonesHard;
         wave.myDoneDelay = doneDelayHard;
@@ -610,7 +610,7 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
         let wave = new IAmEverywhereWaveSetup();
 
         wave.myWavesCount = new RangeValueOverTime([2, 3], [2, 4], secondWavesStartTime, secondWavesStartTime + 100, true);
-        wave.myAngleBetweenWaves = new RangeValue([70, 180]);
+        wave.myAngleBetweenWaves = new RangeValue([55, 175]);
         wave.myWaveStartAngle = waveStartAngle;
         wave.myTimeBetweenWaves = timeBetweenClonesVeryHard;
         wave.myDoneDelay = doneDelayVeryHard;

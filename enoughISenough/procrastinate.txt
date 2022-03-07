@@ -212,10 +212,10 @@ x mr not aumenta il fog color cosi che le prime volte si vede meno nella storia 
 TO DO:
 - mesh:
 	- mr NOT occhi a punta
-	- orso piu poligoni
+	x orso piu poligoni
 - text:
 	- controllare centrato
-	- controllare distanza se troppo vicino
+	x controllare distanza se troppo vicino
 - rimuovere i debug
 x randomizzare size particle esplosione mr not?
 x spostare un po' piu avanti esplosione disappear mr not?
@@ -244,7 +244,7 @@ v aggiustare posizione spawn evidence raggio per centrarlo meglio sul ring
 v migliorare explosion particle / tunare mr not explosion radius
 
 BUG:
-- lag 
+x lag 
 v a volte le particelle spawnano vicine e non nel punto di impatto (forse legato al problema della physx quando grabbo)
 v il trigger delle collissioni non hitta bene
 v gli oggetti flickerano quando ne grabbo uno
