@@ -350,8 +350,12 @@ class Blather {
 
         let sentenceLength = this._mySentences[this._myCurrentSenteceIndex].mySentence.length;
         let displacement = sentenceLength * 0.0945;
-        if (this._mySentences[this._myCurrentSenteceIndex].mySentence.includes("...")) {
+        if (this._mySentences[this._myCurrentSenteceIndex].mySentence.includes("enough IS enough")) {
+            displacement = sentenceLength * 0.096;
+        } else if (this._mySentences[this._myCurrentSenteceIndex].mySentence.includes("it will always be...")) {
             displacement = sentenceLength * 0.0905;
+        } else if (this._mySentences[this._myCurrentSenteceIndex].mySentence.includes("...")) {
+            displacement = (sentenceLength - 1.5) * 0.0945;
         }
         this._myBlatherTextObject.translateObject([-displacement, 0, 0]);
     }
