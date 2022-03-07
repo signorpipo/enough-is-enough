@@ -83,7 +83,7 @@ class MerryGoRound extends WaveOfWaves {
 
         if (!this._myFirst) {
             if (!this._mySameAngleBetweenWaves) {
-                this._myAngleBetweenWaves = waveSetup.myAngleBetweenWaves.get(timeElapsed);
+                this._myAngleBetweenWaves = this._myWaveSetup.myAngleBetweenWaves.get(this._myGameTimeElapsed);
             }
             let angle = this._myAngleBetweenWaves * this._myWaveDirection;
 

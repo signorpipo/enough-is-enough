@@ -7,8 +7,10 @@ class ManInTheMiddleSetup extends WaveOfWavesSetup {
         this.mySameOppositeTimeBetweenWaves = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
         this.myOppositeTimeAsTimeBetweenWaves = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
 
-        this.mySameTimeBetweenWaves = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
+        this.myOppositeTimeLessThanTimeBetweenWaves = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
         this.myAllSameTimes = null;
+
+        this.mySameTimeBetweenWaves = new RangeValueOverTime([1, 1], [1, 1], 0, 0, false); // >= 0 means true
     }
 
     createWave(ventRuntimeSetup, timeElapsed, refDirection = null) {
@@ -32,6 +34,8 @@ class ManInTheMiddleSetup extends WaveOfWavesSetup {
         setup.myAngleBetweenWaves = this.myAngleBetweenWaves.get(timeElapsed);
         setup.mySameOppositeTimeBetweenWaves = this.mySameOppositeTimeBetweenWaves.get(timeElapsed);
         setup.myOppositeTimeAsTimeBetweenWaves = this.myOppositeTimeAsTimeBetweenWaves.get(timeElapsed);
+
+        setup.myOppositeTimeLessThanTimeBetweenWaves = this.myOppositeTimeLessThanTimeBetweenWaves.get(timeElapsed);
 
         setup.myAllSameTimes = this.myAllSameTimes;
         if (setup.myAllSameTimes != null) {
@@ -88,9 +92,12 @@ class ManInTheMiddle extends WaveOfWaves {
         this._mySameOppositeTimeBetweenWaves = waveSetup.mySameOppositeTimeBetweenWaves.get(timeElapsed) >= 0;
         let spawnTimeMultiplier = this._myVentRuntimeSetup.myVentMultipliers.mySpawnTimeMultiplier.get(this._myGameTimeElapsed);
         this._myTimeBeforeOpposite = this._myWaveSetup.myTimeBeforeOpposite.get(this._myGameTimeElapsed) * spawnTimeMultiplier;
+        this._myOppositeTimeLessThanTimeBetweenWaves = waveSetup.myOppositeTimeLessThanTimeBetweenWaves.get(timeElapsed) >= 0;
 
+        this._myAllSameTimes = null;
         if (waveSetup.myAllSameTimes != null) {
-            if (waveSetup.myAllSameTimes.get(timeElapsed) >= 0) {
+            this._myAllSameTimes = waveSetup.myAllSameTimes.get(timeElapsed) >= 0;
+            if (this._myAllSameTimes) {
                 this._myOppositeTimeAsTimeBetweenWaves = true;
                 this._mySameOppositeTimeBetweenWaves = true;
                 this._mySameTimeBetweenWaves = true;
@@ -116,13 +123,23 @@ class ManInTheMiddle extends WaveOfWaves {
             return super._getSpawnTimer();
         }
 
-        if (!this._mySameOppositeTimeBetweenWaves) {
-            if (this._myOppositeTimeAsTimeBetweenWaves) {
-                this._myTimeBeforeOpposite = this._myTimeBetweenWaves;
-            } else {
-                let spawnTimeMultiplier = this._myVentRuntimeSetup.myVentMultipliers.mySpawnTimeMultiplier.get(this._myGameTimeElapsed);
+        if (this._myOppositeTimeAsTimeBetweenWaves) {
+            this._myTimeBeforeOpposite = this._myTimeBetweenWaves;
+        } else if (!this._mySameOppositeTimeBetweenWaves) {
+            let spawnTimeMultiplier = this._myVentRuntimeSetup.myVentMultipliers.mySpawnTimeMultiplier.get(this._myGameTimeElapsed);
+
+            let attempts = 100;
+            while (attempts > 0) {
                 this._myTimeBeforeOpposite = this._myWaveSetup.myTimeBeforeOpposite.get(this._myGameTimeElapsed) * spawnTimeMultiplier;
+                if (this._myTimeBeforeOpposite <= this._myTimeBetweenWaves || !this._myOppositeTimeLessThanTimeBetweenWaves) {
+                    attempts = 0;
+                }
+                attempts--;
             }
+        }
+
+        if (this._myTimeBeforeOpposite > this._myTimeBetweenWaves && this._myOppositeTimeLessThanTimeBetweenWaves) {
+            this._myTimeBeforeOpposite = this._myTimeBetweenWaves;
         }
 
         return this._myTimeBeforeOpposite;
