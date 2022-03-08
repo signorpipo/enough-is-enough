@@ -95,12 +95,10 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
             return;
         }
 
-        if (type == WL.CollisionEventType.Touch) {
+        if (type == WL.CollisionEventType.Touch || type == WL.CollisionEventType.TriggerTouch) {
             this._onCollisionStart(physxComponent);
-        } else if (type == WL.CollisionEventType.TouchLost) {
+        } else if (type == WL.CollisionEventType.TouchLost || type == WL.CollisionEventType.TriggerTouchLost) {
             this._onCollisionEnd(physxComponent);
-        } else {
-            this._onTrigger(physxComponent);
         }
     }
 
@@ -162,18 +160,6 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
 
         if (this._myDebugActive) {
             console.log("Collision End -", this._myCollisions.length);
-        }
-    }
-
-    _onTrigger(physxComponent) {
-        let hasCollision = null != this._myCollisions.pp_find(function (element) {
-            return element.pp_equals(physxComponent.object);
-        });
-
-        if (!hasCollision) {
-            this._onCollisionStart(physxComponent);
-        } else {
-            this._onCollisionEnd(physxComponent);
         }
     }
 
