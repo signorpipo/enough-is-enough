@@ -81,7 +81,7 @@ class ArcadeState extends PP.State {
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, new ValueOverTime(1, 3, 60, 120, true)));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.TROPHY, 5));
 
-        let secondStarTime = 25;
+        let secondStarTime = 40;
         let secondEndTime = 80;
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERMELON, new ValueOverTime(0, 5, secondStarTime, secondEndTime, true)));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.PSI, new ValueOverTime(0, 5, secondStarTime, secondEndTime, true)));
@@ -91,8 +91,8 @@ class ArcadeState extends PP.State {
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.PICO_8, new ValueOverTime(0, 5, secondStarTime, secondEndTime, true)));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.EVERYEYE, new ValueOverTime(0, 5, secondStarTime, secondEndTime, true)));
 
-        let thirdStarTime = 80;
-        let thirdEndTime = 135;
+        let thirdStarTime = 90;
+        let thirdEndTime = 130;
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ANT_MAIN_CHARACTER, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.HEART, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.HALO_SWORD, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
@@ -101,8 +101,8 @@ class ArcadeState extends PP.State {
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.MIRROR, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ALOE_VERA, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
 
-        let lastStarTime = 135;
-        let lastEndTime = 190;
+        let lastStarTime = 140;
+        let lastEndTime = 180;
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.WAYFINDER, new ValueOverTime(0, 5, lastStarTime, lastEndTime, true)));
 
         return evidenceSetupList;
