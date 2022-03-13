@@ -6,8 +6,8 @@ class MainFSM {
         this._buildFSM();
 
         this._myMusic = Global.myAudioManager.createAudioPlayer(SfxID.YOU_KNOW);
-        this._myStartMusicTimer = new PP.Timer(2.4, false);
-        this._myStartMusicTimerAfterLoad = new PP.Timer(0.1, false);
+        this._myStartMusicTimer = new PP.Timer(1.8, false);
+        this._myStartMusicTimerAfterLoad = new PP.Timer(0.2, false);
     }
 
     init() {

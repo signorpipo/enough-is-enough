@@ -153,7 +153,7 @@ class MrNOT {
 
             /*
             let distanceToTarget = this._myTargetPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myCurrentPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
-            if (distanceToTarget < 15) {
+            if (distanceToTarget < 7) {
                 this._myCallbackOnPatienceOver();
                 this._myFSM.perform("explode");
             } 

@@ -28,7 +28,7 @@ class enoughISenough {
             let audioSetup = new PP.AudioSetup("assets/audio/music/you_KNOW_22Hz.wav");
             audioSetup.myLoop = true;
             audioSetup.mySpatial = false;
-            audioSetup.myVolume = 0.7;
+            audioSetup.myVolume = 0.45;
             manager.addAudioSetup(SfxID.YOU_KNOW, audioSetup);
         }
 
@@ -40,14 +40,14 @@ class enoughISenough {
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/blabla_1.wav");
-            audioSetup.myVolume = 0.5;
+            audioSetup.myVolume = 0.4;
             audioSetup.myReferenceDistance = 1000000;
             manager.addAudioSetup(SfxID.BLABLA_1, audioSetup);
         }
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/blabla_2.wav");
-            audioSetup.myVolume = 0.5;
+            audioSetup.myVolume = 0.4;
             audioSetup.myReferenceDistance = 1000000;
             manager.addAudioSetup(SfxID.BLABLA_2, audioSetup);
         }
@@ -69,6 +69,7 @@ class enoughISenough {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_appear.wav");
             audioSetup.myReferenceDistance = 1000000;
             audioSetup.myPitch = 0.8;
+            audioSetup.myVolume = 0.85;
             manager.addAudioSetup(SfxID.MR_NOT_APPEAR, audioSetup);
         }
 
@@ -76,7 +77,7 @@ class enoughISenough {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_disappear.wav");
             audioSetup.myReferenceDistance = 1000000;
             audioSetup.myPitch = 0.8;
-            audioSetup.myVolume = 0.5;
+            audioSetup.myVolume = 0.45;
             manager.addAudioSetup(SfxID.MR_NOT_DISAPPEAR, audioSetup);
         }
 
@@ -84,7 +85,7 @@ class enoughISenough {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/title_appear.wav");
             audioSetup.myReferenceDistance = 1000000;
             audioSetup.myPitch = 0.8;
-            audioSetup.myVolume = 0.6;
+            audioSetup.myVolume = 0.85;
             manager.addAudioSetup(SfxID.TITLE_APPEAR, audioSetup);
         }
 
@@ -92,14 +93,14 @@ class enoughISenough {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/title_disappear.wav");
             audioSetup.myReferenceDistance = 1000000;
             audioSetup.myPitch = 0.8;
-            audioSetup.myVolume = 0.5;
+            audioSetup.myVolume = 0.85;
             manager.addAudioSetup(SfxID.TITLE_DISAPPEAR, audioSetup);
         }
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_explode.wav");
             audioSetup.myPitch = 1;
-            audioSetup.myVolume = 1;
+            audioSetup.myVolume = 0.95;
             audioSetup.myReferenceDistance = 3;
             manager.addAudioSetup(SfxID.CLONE_EXPLODE, audioSetup);
         }
@@ -107,7 +108,7 @@ class enoughISenough {
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_explode.wav");
             audioSetup.myPitch = 1;
-            audioSetup.myVolume = 1;
+            audioSetup.myVolume = 0.95;
             audioSetup.myReferenceDistance = 3;
             manager.addAudioSetup(SfxID.MR_NOT_EXPLODE, audioSetup);
         }
@@ -131,7 +132,7 @@ class enoughISenough {
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/clone_appear.wav");
             audioSetup.myRate = 0.7;
-            audioSetup.myVolume = 0.5;
+            audioSetup.myVolume = 0.55;
             audioSetup.myReferenceDistance = 1000000;
             manager.addAudioSetup(SfxID.CLONE_APPEAR, audioSetup);
         }
@@ -139,7 +140,7 @@ class enoughISenough {
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_fast_appear.wav");
             audioSetup.myRate = 1.5;
-            audioSetup.myVolume = 0.7;
+            audioSetup.myVolume = 0.6;
             audioSetup.myReferenceDistance = 1000000;
             manager.addAudioSetup(SfxID.MR_NOT_FAST_APPEAR, audioSetup);
         }
@@ -148,6 +149,12 @@ class enoughISenough {
         for (let i = 0; i <= SfxID.YOU_KNOW; i++) {
             manager.createAudioPlayer(i);
         }
+
+        //This MAY avoid some crackle on first play with position
+        let ringRise = manager.createAudioPlayer(SfxID.RING_RISE);
+        ringRise.setVolume(0);
+        ringRise.play();
+        ringRise.updatePosition([0, 0, 0]);
     }
 }
 

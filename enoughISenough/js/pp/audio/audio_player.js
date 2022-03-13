@@ -74,7 +74,7 @@ PP.AudioPlayer = class AudioPlayer {
     fade(fromVolumePercentage, toVolumePercentage, duration, updateOnlyLast = false) {
         let fromVolume = Math.pp_mapToRange(fromVolumePercentage, 0, 1, 0, this._myAudioSetup.myVolume);
         let toVolume = Math.pp_mapToRange(toVolumePercentage, 0, 1, 0, this._myAudioSetup.myVolume);
-        console.error(fromVolume, toVolume);
+
         if (updateOnlyLast) {
             this._myAudio.fade(fromVolume, toVolume, duration * 1000, this._myLastAudioID);
         } else {
