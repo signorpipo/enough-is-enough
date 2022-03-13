@@ -25,10 +25,10 @@ class enoughISenough {
         let manager = Global.myAudioManager;
 
         {
-            let audioSetup = new PP.AudioSetup("assets/audio/music/you_KNOW.wav");
+            let audioSetup = new PP.AudioSetup("assets/audio/music/you_KNOW_22Hz.wav");
             audioSetup.myLoop = true;
             audioSetup.mySpatial = false;
-            audioSetup.myVolume = 1;
+            audioSetup.myVolume = 0.7;
             manager.addAudioSetup(SfxID.YOU_KNOW, audioSetup);
         }
 
@@ -144,7 +144,8 @@ class enoughISenough {
             manager.addAudioSetup(SfxID.MR_NOT_FAST_APPEAR, audioSetup);
         }
 
-        for (let i = 0; i < SfxID.MR_NOT_FAST_APPEAR; i++) {
+        manager.createAudioPlayer(SfxID.RING_RISE);
+        for (let i = 0; i <= SfxID.YOU_KNOW; i++) {
             manager.createAudioPlayer(i);
         }
     }
