@@ -25,6 +25,14 @@ class enoughISenough {
         let manager = Global.myAudioManager;
 
         {
+            let audioSetup = new PP.AudioSetup("assets/audio/music/you_KNOW.wav");
+            audioSetup.myLoop = true;
+            audioSetup.mySpatial = false;
+            audioSetup.myVolume = 1;
+            manager.addAudioSetup(SfxID.YOU_KNOW, audioSetup);
+        }
+
+        {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/NOT_ENOUGH.wav");
             audioSetup.myReferenceDistance = 1000000;
             manager.addAudioSetup(SfxID.NOT_ENOUGH, audioSetup);
@@ -157,5 +165,6 @@ var SfxID = {
     EVIDENCE_APPEAR: 11,
     EVIDENCE_DISAPPEAR: 12,
     CLONE_APPEAR: 13,
-    MR_NOT_FAST_APPEAR: 14
+    MR_NOT_FAST_APPEAR: 14,
+    YOU_KNOW: 15,
 };
