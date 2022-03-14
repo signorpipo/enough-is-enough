@@ -61,6 +61,11 @@ WL.registerComponent("enough-IS-enough-gateway", {
         }
     },
     _start() {
+        //let componentAmountMapBeforeLoad = Global.myScene.pp_getComponentAmountMapHierarchy();
+        //console.error(componentAmountMapBeforeLoad);
+
+        WL.scene.reserveObjects(8500, { "mesh": 4500, "text": 800, "collision": 70, "text-color-fog": 140 });
+
         {
             let staringCube = Global.myGameObjects.get(GameObjectType.STARING_CUBE);
             PP.MeshUtils.setClonedMaterials(staringCube);
@@ -129,6 +134,22 @@ WL.registerComponent("enough-IS-enough-gateway", {
         PP.CAUtils.setUseDummyServerOnError(true);
 
         this.enoughISenough.start();
+
+        /*
+        let componentAmountMapAfterLoad = Global.myScene.pp_getComponentAmountMapHierarchy();
+        //console.error(componentAmountMapAfterLoad);
+
+        let componentAmountMapDifference = new Map();
+        for (let entry of componentAmountMapAfterLoad.entries()) {
+            valueBefore = componentAmountMapBeforeLoad.get(entry[0]);
+            valueBefore = valueBefore == null ? 0 : valueBefore;
+            let result = entry[1] - valueBefore;
+            if (result > 0) {
+                componentAmountMapDifference.set(entry[0], result);
+            }
+        }
+        console.error(componentAmountMapDifference);
+        */
     },
     _increasePools() {
         let amountToIncrease = 5;
