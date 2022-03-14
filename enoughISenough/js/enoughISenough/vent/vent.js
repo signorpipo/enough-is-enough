@@ -130,7 +130,7 @@ class Vent {
 
         this._myFSM.init("init");
 
-        this._myDebugActive = true;
+        this._myDebugActive = false;
         this._myDebugActiveNextWave = false;
         this._myDebugActiveBreak = false;
         this._myDebugActivePreviousWaveStats = false;

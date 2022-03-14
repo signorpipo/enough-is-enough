@@ -2,7 +2,7 @@ class IntroState extends PP.State {
     constructor() {
         super();
         this._myFSM = new PP.FSM();
-        this._myFSM.setDebugLogActive(true, "    Intro");
+        //this._myFSM.setDebugLogActive(true, "    Intro");
         this._myFSM.addState("wait_session", this.waitSession.bind(this));
         this._myFSM.addState("wait_start", this.waitStart.bind(this));
         this._myFSM.addState("move_ring", this.checkRingCompleted.bind(this));

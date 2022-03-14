@@ -3,7 +3,7 @@ class ArcadeResultState extends PP.State {
         super();
 
         this._myFSM = new PP.FSM();
-        this._myFSM.setDebugLogActive(true, "        Result");
+        //this._myFSM.setDebugLogActive(true, "        Result");
         this._myFSM.addState("init");
         this._myFSM.addState("first_wait", new PP.TimerState(1.5, "end"));
         this._myFSM.addState("result");

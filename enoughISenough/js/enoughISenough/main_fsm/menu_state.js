@@ -5,7 +5,7 @@ class MenuState extends PP.State {
         this._myResetCount = 0;
 
         this._myFSM = new PP.FSM();
-        this._myFSM.setDebugLogActive(true, "    Menu");
+        //this._myFSM.setDebugLogActive(true, "    Menu");
         this._myFSM.addState("ready", this._readyUpdate.bind(this));
         this._myFSM.addState("unspawning_reset", this._unspawn.bind(this));
         this._myFSM.addState("unspawning_restart", this._unspawn.bind(this));

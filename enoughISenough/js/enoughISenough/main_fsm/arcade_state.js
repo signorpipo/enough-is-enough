@@ -5,7 +5,7 @@ class ArcadeState extends PP.State {
         this._myIsDispute = isDispute;
 
         this._myFSM = new PP.FSM();
-        this._myFSM.setDebugLogActive(true, "    Arcade");
+        //this._myFSM.setDebugLogActive(true, "    Arcade");
         this._myFSM.addState("init");
         this._myFSM.addState("first_wait", new PP.TimerState(1.5, "end"));
         this._myFSM.addState("vent", new VentState(this._buildVentSetup(), this._buildEvidenceSetupList()));
