@@ -60,10 +60,10 @@
 
         - pp_hasUniformScale
 
-        - pp_addComponent  /  pp_getComponent  / pp_getComponentHierarchy / pp_getComponentChildren
-        - pp_getComponents  / pp_getComponentsHierarchy / pp_getComponentsChildren
+        - pp_addComponent  /  pp_getComponent  / pp_getComponentHierarchy / pp_getComponentDescendants / pp_getComponentChildren
+        - pp_getComponents  / pp_getComponentsHierarchy / pp_getComponentsDescendants / pp_getComponentsChildren
 
-        - pp_setActive  / pp_setActiveHierarchy     / pp_setActiveChildren
+        - pp_setActive  / pp_setActiveHierarchy / pp_setActiveDescendants / pp_setActiveChildren
 
         - pp_clone      / pp_isCloneable
 
@@ -1678,23 +1678,36 @@ WL.Object.prototype.pp_getComponentHierarchy = function (type, index) {
     let component = this.getComponent(type, index);
 
     if (!component) {
-        component = this.pp_getComponentChildren(type, index);
+        component = this.pp_getComponentDescendants(type, index);
     }
 
     return component;
 };
 
+WL.Object.prototype.pp_getComponentDescendants = function (type, index) {
+    let component = null;
+
+    let descendants = this.children;
+    while (!component && descendants.length > 0) {
+        let descendant = descendants.shift();
+        component = descendant.getComponent(type, index);
+        if (!component) {
+            for (let object of descendant.children) {
+                descendants.push(object);
+            }
+        }
+    }
+
+    return component;
+};
 WL.Object.prototype.pp_getComponentChildren = function (type, index) {
     let component = null;
 
     let children = this.children;
-    while (!component && children.length > 0) {
-        let child = children.shift();
+    for (let child of children) {
         component = child.getComponent(type, index);
-        if (!component) {
-            for (let object of child.children) {
-                children.push(object);
-            }
+        if (component) {
+            break;
         }
     }
 
@@ -1704,9 +1717,27 @@ WL.Object.prototype.pp_getComponentChildren = function (type, index) {
 WL.Object.prototype.pp_getComponentsHierarchy = function (type) {
     let components = this.getComponents(type);
 
-    let childrenComponents = this.pp_getComponentsChildren(type);
-    for (let component of childrenComponents) {
+    let descendantsComponents = this.pp_getComponentsDescendants(type);
+    for (let component of descendantsComponents) {
         components.push(component);
+    }
+
+    return components;
+};
+
+WL.Object.prototype.pp_getComponentsDescendants = function (type) {
+    let components = [];
+
+    let descendants = this.children;
+    while (descendants.length > 0) {
+        let descendant = descendants.shift();
+        let descendantComponents = descendant.getComponents(type);
+        for (let component of descendantComponents) {
+            components.push(component);
+        }
+        for (let object of descendant.children) {
+            descendants.push(object);
+        }
     }
 
     return components;
@@ -1716,14 +1747,10 @@ WL.Object.prototype.pp_getComponentsChildren = function (type) {
     let components = [];
 
     let children = this.children;
-    while (children.length > 0) {
-        let child = children.shift();
-        let childrenComponents = child.getComponents(type);
-        for (let component of childrenComponents) {
+    for (let child of children) {
+        let childComponents = child.getComponents(type);
+        for (let component of childComponents) {
             components.push(component);
-        }
-        for (let object of child.children) {
-            children.push(object);
         }
     }
 
@@ -1742,17 +1769,24 @@ WL.Object.prototype.pp_setActive = function (active, applyToHierarchy = true) {
 
 WL.Object.prototype.pp_setActiveHierarchy = function (active) {
     this.active = active;
-    this.pp_setActiveChildren(active);
+    this.pp_setActiveDescendants(active);
+};
+
+WL.Object.prototype.pp_setActiveDescendants = function (active) {
+    let descendants = this.children;
+    while (descendants.length > 0) {
+        let descendant = descendants.shift();
+        descendant.active = active;
+        for (let object of descendant.children) {
+            descendants.push(object);
+        }
+    }
 };
 
 WL.Object.prototype.pp_setActiveChildren = function (active) {
     let children = this.children;
-    while (children.length > 0) {
-        let child = children.shift();
+    for (let child of children) {
         child.active = active;
-        for (let object of child.children) {
-            children.push(object);
-        }
     }
 };
 
@@ -2031,13 +2065,13 @@ WL.Object.prototype.pp_getHierarchy = function () {
 WL.Object.prototype.pp_getDescendants = function () {
     let descendants = [];
 
-    let children = this.children;
+    let descendantsQueue = this.children;
 
-    while (children.length > 0) {
-        let child = children.shift();
-        descendants.push(child);
-        for (let object of child.children) {
-            children.push(object);
+    while (descendantsQueue.length > 0) {
+        let descendant = descendantsQueue.shift();
+        descendants.push(descendant);
+        for (let object of descendant.children) {
+            descendantsQueue.push(object);
         }
     }
 
