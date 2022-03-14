@@ -93,7 +93,7 @@ class enoughISenough {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/title_disappear.wav");
             audioSetup.myReferenceDistance = 1000000;
             audioSetup.myPitch = 0.8;
-            audioSetup.myVolume = 0.85;
+            audioSetup.myVolume = 0.8;
             manager.addAudioSetup(SfxID.TITLE_DISAPPEAR, audioSetup);
         }
 

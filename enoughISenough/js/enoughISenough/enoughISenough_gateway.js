@@ -64,7 +64,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         //let componentAmountMapBeforeLoad = Global.myScene.pp_getComponentAmountMapHierarchy();
         //console.error(componentAmountMapBeforeLoad);
 
-        WL.scene.reserveObjects(8500, { "mesh": 4500, "text": 800, "collision": 70, "text-color-fog": 140 });
+        WL.scene.reserveObjects(10700, { "mesh": 5850, "text": 800, "collision": 70, "text-color-fog": 140 });
 
         {
             let staringCube = Global.myGameObjects.get(GameObjectType.STARING_CUBE);
