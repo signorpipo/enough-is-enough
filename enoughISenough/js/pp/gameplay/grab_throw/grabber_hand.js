@@ -46,7 +46,6 @@ WL.registerComponent('pp-grabber-hand', {
             this._myGamepad = PP.myRightGamepad;
         }
 
-        this._myCollision = this.object.pp_getComponent('collision');
         this._myPhysx = this.object.pp_getComponent('physx');
         this._myCollisionsCollector = new PP.PhysXCollisionCollector(this._myPhysx, true);
 
@@ -124,26 +123,6 @@ WL.registerComponent('pp-grabber-hand', {
         }
 
         let grabbablesToGrab = [];
-
-        /*
-        let collidingComps = this._myCollision.queryOverlaps();
-        for (let i = 0; i < collidingComps.length; i++) {
-            let grabbable = collidingComps[i].object.getComponent("pp-grabbable");
-            if (grabbable && grabbable.active) {
-                this._myGrabbable = grabbable;
-                this._myGrabbable.grab(this.object);
-                this._myGrabbable.registerReleaseEventListener(this, this._onRelease.bind(this));
-
-                if (this._mySnapOnPivot) {
-                    this._myGrabbable.object.resetTranslation();
-                }
-
-                this._myGrabCallbacks.forEach(function (value) { value(this, this._myGrabbable); }.bind(this));
-
-                break;
-            }
-        }
-        */
 
         let collisions = this._myCollisionsCollector.getCollisions();
         for (let i = 0; i < collisions.length; i++) {

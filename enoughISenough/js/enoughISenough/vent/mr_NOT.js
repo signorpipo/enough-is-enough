@@ -41,7 +41,7 @@ class MrNOT {
 
         this._myCollisions = this._myObject.pp_getComponentsHierarchy("collision");
         this._myPhysx = this._myObject.pp_getComponentHierarchy("physx");
-        this._myCollisionsCollector = new PP.PhysXCollisionCollector(this._myPhysx);
+        this._myCollisionsCollector = this._myObject.pp_getComponentHierarchy("physx-collector-component").getCollisionsCollector();
 
         this._myExplodeAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_EXPLODE);
         this._myHitAudio = Global.myAudioManager.createAudioPlayer(SfxID.CLONE_EXPLODE);
