@@ -17,6 +17,16 @@
     For transform u can add a suffix like Quat/Matrix to use a specific version, example:
         - pp_getTransformQuat
         - pp_setTransformWorldMatrix
+        
+    Some methods let you specify if u want them to work on the Hierarchy/Descendants/Children where:
+        - Children: direct children of the object
+        - Descendants: all the children of the object, including child of child and so on 
+        - Hierarchy: Descendants plus the current object
+    By default the methods work on the current object alone:
+        - pp_getComponent
+        - pp_getComponentHierarchy
+        - pp_getComponentAmountMapDescendants
+        - pp_setActiveChildren
 
     The methods leave u the choice of forwarding an out parameter or just get the return value, example:
         - let position = this.object.pp_getPosition()
@@ -59,7 +69,8 @@
 
         - pp_getName    / pp_setName
         - pp_getID
-        - pp_getChildren
+        - pp_getHierarchy / pp_getDescendants / pp_getChildren
+        - pp_getComponentAmountMap / pp_getComponentAmountMapHierarchy / pp_getComponentAmountMapDescendants / pp_getComponentAmountMapChildren
         - pp_markDirty
         - pp_equals
         - pp_destroy
@@ -1663,10 +1674,6 @@ WL.Object.prototype.pp_getComponents = function (type) {
     return this.getComponents(type);
 };
 
-WL.Object.prototype.pp_getAllComponents = function () {
-    return this.getComponents(null);
-};
-
 WL.Object.prototype.pp_getComponentHierarchy = function (type, index) {
     let component = this.getComponent(type, index);
 
@@ -1907,7 +1914,7 @@ WL.Object.prototype.pp_clone = function (params = new PP.CloneParams()) {
             let objectToClone = cloneData[0];
             let currentClonedObject = cloneData[1];
 
-            let components = objectToClone.pp_getAllComponents();
+            let components = objectToClone.pp_getComponents();
             for (let component of components) {
                 if (component.pp_clone != null) {
                     let cloneComponent = false;
@@ -1957,7 +1964,7 @@ WL.Object.prototype.pp_isCloneable = function (params = new PP.CloneParams()) {
     while (isCloneable && objects.length > 0) {
         let object = objects.shift();
 
-        let components = this.pp_getAllComponents();
+        let components = this.pp_getComponents();
         for (let component of components) {
             let cloneComponent = false;
             if (params.myComponentsToInclude.length > 0) {
@@ -2013,6 +2020,30 @@ WL.Object.prototype.pp_getID = function () {
     return this.objectId;
 };
 
+WL.Object.prototype.pp_getHierarchy = function () {
+    let hierarchy = this.pp_getDescendants();
+
+    hierarchy.unshift(this);
+
+    return hierarchy;
+};
+
+WL.Object.prototype.pp_getDescendants = function () {
+    let descendants = [];
+
+    let children = this.children;
+
+    while (children.length > 0) {
+        let child = children.shift();
+        descendants.push(child);
+        for (let object of child.children) {
+            children.push(object);
+        }
+    }
+
+    return descendants;
+};
+
 WL.Object.prototype.pp_getChildren = function () {
     return this.children;
 };
@@ -2027,6 +2058,58 @@ WL.Object.prototype.pp_equals = function (otherObject) {
 
 WL.Object.prototype.pp_destroy = function () {
     return this.destroy();
+};
+
+WL.Object.prototype.pp_getComponentAmountMap = function (amountMap = new Map()) {
+    let objectAmount = amountMap.get("object");
+    if (objectAmount == null) {
+        objectAmount = 0;
+    }
+    objectAmount += 1;
+    amountMap.set("object", objectAmount);
+
+    let components = this.pp_getComponents();
+    for (let component of components) {
+        let type = component.type;
+        let typeAmount = amountMap.get(type);
+        if (typeAmount == null) {
+            typeAmount = 0;
+        }
+        typeAmount += 1;
+        amountMap.set(type, typeAmount);
+    }
+
+    return amountMap;
+};
+
+WL.Object.prototype.pp_getComponentAmountMapHierarchy = function (amountMap = new Map()) {
+    let hierarchy = this.pp_getHierarchy();
+
+    for (let object of hierarchy) {
+        object.pp_getComponentAmountMap(amountMap);
+    }
+
+    return amountMap;
+};
+
+WL.Object.prototype.pp_getComponentAmountMapDescendants = function (amountMap = new Map()) {
+    let descendants = this.pp_getDescendants();
+
+    for (let object of descendants) {
+        object.pp_getComponentAmountMap(amountMap);
+    }
+
+    return amountMap;
+};
+
+WL.Object.prototype.pp_getComponentAmountMapChildren = function (amountMap = new Map()) {
+    let children = this.children;
+
+    for (let object of children) {
+        object.pp_getComponentAmountMap(amountMap);
+    }
+
+    return amountMap;
 };
 
 //Private Utils
