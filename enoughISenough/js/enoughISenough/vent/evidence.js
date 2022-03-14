@@ -18,7 +18,6 @@ class Evidence {
         this._myObjectType = this._myEvidenceSetup.myObjectType;
         this._myPhysx = this._myObject.pp_getComponentHierarchy("physx");
         this._myGrabbable = this._myObject.pp_getComponentHierarchy("pp-grabbable");
-        this._myGrabbable.registerThrowEventListener(this, this._onThrow.bind(this));
         this._myScale = this._myObject.pp_getScale();
 
         this._myCurrentCardinalPosition = null;
@@ -49,7 +48,6 @@ class Evidence {
         this._myFSM.init("init");
         this.init();
 
-        this._myPhysx.onCollision(this._onCollision.bind(this));
         this._myCollisionCount = 0;
         this._myHasBeenThrown = false;
 
@@ -58,6 +56,8 @@ class Evidence {
         this._myAudioTimer = new PP.Timer(0);
         this._myAppearAudio = null;
         this._myDisappearAudio = null;
+
+        this._myCollisionCallbackID = null;
     }
 
     getEvidenceSetup() {
@@ -128,6 +128,7 @@ class Evidence {
         this._myEvidenceComponent.setCallbackOnBigHit(this._onBigHit.bind(this));
         this._myEvidenceComponent.setEvidence(this);
         this._myHasBeenThrown = false;
+        this._myThrowTimer.reset();
 
         let position = this._myPosition.pp_clone();
         let heightDisplacement = this._myEvidenceComponent.getHeightDisplacement();
@@ -154,6 +155,9 @@ class Evidence {
         this._myAudioTimer.start(0.2);
         this._myAppearAudio.setPosition(position);
         this._myAppearAudio.setPitch(Math.pp_random(0.85, 1.05));
+
+        this._myGrabbable.registerThrowEventListener(this, this._onThrow.bind(this));
+        this._myCollisionCallbackID = this._myPhysx.onCollision(this._onCollision.bind(this));
     }
 
     _spawning(dt) {
@@ -254,6 +258,11 @@ class Evidence {
             this._myObject.pp_setPosition([0, -10, 0]);
         }
         this._myObject.pp_setActive(false);
+        this._myGrabbable.unregisterThrowEventListener(this);
+        if (this._myCollisionCallbackID != null) {
+            this._myPhysx.removeCollisionCallback(this._myCollisionCallbackID);
+            this._myCollisionCallbackID = null;
+        }
     }
 
     _onCollision(type) {
@@ -262,10 +271,10 @@ class Evidence {
             this._myPhysx.kinematic = false;
         }
 
-        if (type == WL.CollisionEventType.TouchLost) {
-            this._myCollisionCount -= 1;
-        } else {
+        if (type == WL.CollisionEventType.Touch || type == WL.CollisionEventType.TriggerTouch) {
             this._myCollisionCount += 1;
+        } else if (type == WL.CollisionEventType.TouchLost || type == WL.CollisionEventType.TriggerTouchLost) {
+            this._myCollisionCount -= 1;
         }
     }
 

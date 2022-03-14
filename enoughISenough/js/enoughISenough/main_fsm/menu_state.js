@@ -368,8 +368,6 @@ class MenuItem {
         this._myAutoSpawn = true;
 
         this._myThrowTimer = new PP.Timer(5, false);
-        this._myGrabbable.registerGrabEventListener(this, this._onGrab.bind(this));
-        this._myGrabbable.registerThrowEventListener(this, this._onThrow.bind(this));
         WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
 
         this._myFSM = new PP.FSM();
@@ -391,14 +389,13 @@ class MenuItem {
 
         this._myFSM.init("init");
 
-        this._myPhysx.onCollision(this._onCollision.bind(this));
-
         this._myParticlesRadius = 0.225;
 
         this._myAppearAudio = null;
         this._myDisappearAudio = null;
 
         this._myGrabTime = 0;
+        this._myCollisionCallbackID = null;
     }
 
     init(timeBeforeFirstSpawn) {
@@ -486,6 +483,11 @@ class MenuItem {
 
         this._myHitFloor = false;
         this._myGrabTime = 0;
+
+        this._myGrabbable.registerGrabEventListener(this, this._onGrab.bind(this));
+        this._myGrabbable.registerThrowEventListener(this, this._onThrow.bind(this));
+
+        this._myCollisionCallbackID = this._myPhysx.onCollision(this._onCollision.bind(this));
     }
 
     _spawning(dt) {
@@ -576,6 +578,12 @@ class MenuItem {
             this._myObject.pp_setPosition([0, -10, 0]);
         }
         this._myObject.pp_setActive(false);
+        this._myGrabbable.unregisterGrabEventListener(this);
+        this._myGrabbable.unregisterThrowEventListener(this);
+        if (this._myCollisionCallbackID != null) {
+            this._myPhysx.removeCollisionCallback(this._myCollisionCallbackID);
+            this._myCollisionCallbackID = null;
+        }
     }
 
     _onCollision() {
