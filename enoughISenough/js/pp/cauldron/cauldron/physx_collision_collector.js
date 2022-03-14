@@ -2,7 +2,6 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
     constructor(physxComponent, isTrigger = false) {
         this._myPhysx = physxComponent;
 
-        this._myPhysx.onCollision(this._onCollision.bind(this));
         this._myIsTrigger = isTrigger;
 
         this._myCollisions = [];
@@ -13,13 +12,18 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
         this._myCollisionsStartToProcess = [];
         this._myCollisionsEndToProcess = [];
 
+        this._myCollisionCallbackID = null;
+
         this._myIsActive = false;
         this.setActive(true);
 
         this._myDebugActive = false;
 
         this._myTriggerDesyncFixDelay = new PP.Timer(0.1);
-        this._myIsDestroyed = false;
+    }
+
+    getPhysX() {
+        return this._myPhysx;
     }
 
     getCollisions() {
@@ -35,14 +39,24 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
     }
 
     setActive(active) {
-        this._myIsActive = active;
+        if (this._myIsActive != active) {
+            this._myIsActive = active;
 
-        this._myCollisions = [];
-        this._myCollisionsStart = [];
-        this._myCollisionsEnd = [];
-        this._myUpdateActive = false;
-        this._myCollisionsStartToProcess = [];
-        this._myCollisionsEndToProcess = [];
+            this._myCollisions = [];
+
+            this._myCollisionsStart = [];
+            this._myCollisionsEnd = [];
+            this._myUpdateActive = false;
+            this._myCollisionsStartToProcess = [];
+            this._myCollisionsEndToProcess = [];
+
+            if (this._myIsActive) {
+                this._myCollisionCallbackID = this._myPhysx.onCollision(this._onCollision.bind(this));
+            } else if (this._myCollisionCallbackID != null) {
+                this._myPhysx.removeCollisionCallback(this._myCollisionCallbackID);
+                this._myCollisionCallbackID = null;
+            }
+        }
     }
 
     //Set to true only if u are going to actually update this object and don't want to lose any collision start/end events prior to updating the first time after activation
@@ -52,7 +66,7 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
 
     //Update is not mandatory, use it only if u want to access collisions start and end
     update(dt) {
-        if (this._myIsDestroyed || !this._myIsActive) {
+        if (!this._myIsActive) {
             return;
         }
 
@@ -70,20 +84,10 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
     }
 
     destroy() {
-        //physx on collision unregister
-
-        this._myIsDestroyed = true;
-
-        this._myPhysx = null;
-        this._myIsTrigger = null;
-        this._myCollisions = null;
-        this._myCollisionsStart = null;
-        this._myCollisionsEnd = null;
-        this._myUpdateActive = null;
-        this._myCollisionsStartToProcess = null;
-        this._myCollisionsEndToProcess = null;
-        this._myDebugActive = null;
-        this._myTriggerDesyncFixDelay = null;
+        if (this._myCollisionCallbackID != null) {
+            this._myPhysx.removeCollisionCallback(this._myCollisionCallbackID);
+            this._myCollisionCallbackID = null;
+        }
     }
 
     setDebugActive(active) {
@@ -91,10 +95,6 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
     }
 
     _onCollision(type, physxComponent) {
-        if (this._myIsDestroyed || !this._myIsActive) {
-            return;
-        }
-
         if (type == WL.CollisionEventType.Touch || type == WL.CollisionEventType.TriggerTouch) {
             this._onCollisionStart(physxComponent);
         } else if (type == WL.CollisionEventType.TouchLost || type == WL.CollisionEventType.TriggerTouchLost) {
