@@ -349,13 +349,13 @@ class Blather {
         this._myCharAudios[1].setPosition(this._myBlatherTextObject.pp_getPosition());
 
         let sentenceLength = this._mySentences[this._myCurrentSenteceIndex].mySentence.length;
-        let displacement = sentenceLength * 0.0945;
+        let displacement = sentenceLength * 0.094;
         if (this._mySentences[this._myCurrentSenteceIndex].mySentence.includes("enough IS enough")) {
             displacement = sentenceLength * 0.096;
         } else if (this._mySentences[this._myCurrentSenteceIndex].mySentence.includes("it will always be...")) {
-            displacement = sentenceLength * 0.0905;
+            displacement = sentenceLength * 0.09;
         } else if (this._mySentences[this._myCurrentSenteceIndex].mySentence.includes("...")) {
-            displacement = (sentenceLength - 1.5) * 0.0945;
+            displacement = (sentenceLength - 1.5) * 0.094;
         }
         this._myBlatherTextObject.translateObject([-displacement, 0, 0]);
     }
