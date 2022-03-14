@@ -98,6 +98,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
         let meshObjectPoolParams = new PP.ObjectPoolParams();
         meshObjectPoolParams.myInitialPoolSize = 20;
+        meshObjectPoolParams.myPercentageToAddWhenEmpty = 0.2;
 
         for (let entry of Global.myMeshObjects.entries()) {
             Global.myMeshObjectPoolMap.addPool(entry[0], entry[1], meshObjectPoolParams);
@@ -107,10 +108,16 @@ WL.registerComponent("enough-IS-enough-gateway", {
             Global.myMeshNoFogObjectPoolMap.addPool(entry[0], entry[1], meshObjectPoolParams);
         }
 
+        Global.myMeshObjectPoolMap.increasePoolPercentage(GameObjectType.MR_NOT, 1.2);
+        Global.myMeshNoFogObjectPoolMap.increasePoolPercentage(GameObjectType.MR_NOT, 1.2);
+        Global.myMeshObjectPoolMap.increasePoolPercentage(GameObjectType.MR_NOT_CLONE, 1.2);
+        Global.myMeshNoFogObjectPoolMap.increasePoolPercentage(GameObjectType.MR_NOT_CLONE, 1.2);
+
         let cloneParams = new PP.CloneParams();
         cloneParams.myDeepCloneParams.deepCloneComponentVariable("mesh", "material", true);
         let mrNOTCloneObjectPoolParams = new PP.ObjectPoolParams();
         mrNOTCloneObjectPoolParams.myInitialPoolSize = 40;
+        mrNOTCloneObjectPoolParams.myPercentageToAddWhenEmpty = 0.2;
         mrNOTCloneObjectPoolParams.myCloneParams = cloneParams;
         Global.myGameObjectPoolMap.addPool(GameObjectType.MR_NOT_CLONE, Global.myGameObjects.get(GameObjectType.MR_NOT_CLONE), mrNOTCloneObjectPoolParams);
 

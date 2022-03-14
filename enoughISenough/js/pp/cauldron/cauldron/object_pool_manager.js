@@ -19,6 +19,17 @@ PP.ObjectPoolManager = class ObjectPoolManager {
         }
     }
 
+    increasePoolPercentage(poolID, percentage) {
+        let pool = this._myPoolMap.get(poolID);
+        if (pool) {
+            pool.increasePercentage(percentage);
+        }
+    }
+
+    getPool(poolID) {
+        return this._myPoolMap.get(poolID);
+    }
+
     getObject(poolID) {
         return this._myPoolMap.get(poolID).get();
     }
@@ -31,6 +42,9 @@ PP.ObjectPoolManager = class ObjectPoolManager {
 PP.ObjectPoolParams = class ObjectPoolParams {
     constructor() {
         this.myInitialPoolSize = 0;
+        this.myAmountToAddWhenEmpty = 1;  //If all the objects are busy, this amount will be added to the pool
+        this.myPercentageToAddWhenEmpty = 0.5;  //If all the objects are busy, this percentage of the current pool size will be added to the pool
+
         this.myCloneParams = undefined;
         this.myCloneFunctionName = undefined;
         this.mySetActiveFunctionName = undefined;
@@ -52,8 +66,10 @@ PP.ObjectPool = class ObjectPool {
     get() {
         let object = this._myAvailableObjects.shift();
 
-        if (!object) {
-            this._addToPool(Math.floor(this._myBusyObjects.length * 0.2 + 1), true);
+        if (object == null) {
+            let amountToAdd = Math.ceil(this._myBusyObjects.length * this._myObjectPoolParams.myPercentageToAddWhenEmpty);
+            amountToAdd += this._myObjectPoolParams.myAmountToAddWhenEmpty;
+            this._addToPool(amountToAdd, true);
             object = this._myAvailableObjects.shift();
         }
 
@@ -71,6 +87,11 @@ PP.ObjectPool = class ObjectPool {
     }
 
     increase(amount) {
+        this._addToPool(amount, false);
+    }
+
+    increasePercentage(percentage) {
+        let amount = Math.ceil((this._myBusyObjects.length + this._myAvailableObjects.length) * percentage);
         this._addToPool(amount, false);
     }
 
