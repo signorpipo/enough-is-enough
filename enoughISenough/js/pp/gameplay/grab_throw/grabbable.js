@@ -15,21 +15,19 @@ WL.registerComponent('pp-grabbable', {
     start: function () {
         this._myOldParent = this.object.parent;
         this._myPhysX = this.object.pp_getComponent('physx');
-        this._myKinematicValueToKeep = null;
+        this._myOldKinematicValue = null;
     },
     onDeactivate: function () {
         this.release();
     },
     grab: function (grabber) {
         if (!this.isGrabbed()) {
-            this._myKinematicValueToKeep = this._myPhysX.kinematic;
+            this._myOldKinematicValue = this._myPhysX.kinematic;
         }
 
         this.release();
 
-        if (this._myPhysX) {
-            this._myPhysX.kinematic = true;
-        }
+        this._myPhysX.kinematic = true;
 
         this._myOldParent = this.object.parent;
         this.object.pp_setParent(grabber);
@@ -44,10 +42,8 @@ WL.registerComponent('pp-grabbable', {
 
             this._release();
 
-            if (this._myPhysX) {
-                this._myPhysX.linearVelocity = linearVelocity.vec3_scale(this._myThrowLinearVelocityMultiplier);
-                this._myPhysX.angularVelocity = angularVelocity.vec3_scale(this._myThrowAngularVelocityMultiplier);
-            }
+            this._myPhysX.linearVelocity = linearVelocity.vec3_scale(this._myThrowLinearVelocityMultiplier);
+            this._myPhysX.angularVelocity = angularVelocity.vec3_scale(this._myThrowAngularVelocityMultiplier);
 
             this._myThrowCallbacks.forEach(function (value) { value(this, grabber); }.bind(this));
             this._myReleaseCallbacks.forEach(function (value) { value(this, grabber, true); }.bind(this));
@@ -65,9 +61,7 @@ WL.registerComponent('pp-grabbable', {
     getLinearVelocity() {
         let linearVelocity = vec3_create();
 
-        if (this._myPhysX) {
-            this._myPhysX.linearVelocity.vec3_clone(linearVelocity);
-        }
+        this._myPhysX.linearVelocity.vec3_clone(linearVelocity);
 
         return linearVelocity;
     },
@@ -77,18 +71,14 @@ WL.registerComponent('pp-grabbable', {
     getAngularVelocityDegrees() {
         let angularVelocityDegrees = vec3_create();
 
-        if (this._myPhysX) {
-            this._myPhysX.angularVelocity.vec3_toDegrees(angularVelocityDegrees);
-        }
+        this._myPhysX.angularVelocity.vec3_toDegrees(angularVelocityDegrees);
 
         return angularVelocityDegrees;
     },
     getAngularVelocityRadians() {
         let angularVelocityRadians = vec3_create();
 
-        if (this._myPhysX) {
-            this._myPhysX.angularVelocity.vec3_clone(angularVelocityRadians);
-        }
+        this._myPhysX.angularVelocity.vec3_clone(angularVelocityRadians);
 
         return angularVelocityRadians;
     },
@@ -121,21 +111,17 @@ WL.registerComponent('pp-grabbable', {
         this._myIsGrabbed = false;
         this._myGrabber = null;
 
-        //TEMP u can't set kinematic if physX is inactive because it will crash
-        if (this._myPhysX && this._myPhysX.active) {
-            if (this._myKinematicValueOnRelease == 0) {
-                this._myPhysX.kinematic = true;
-            } else if (this._myKinematicValueOnRelease == 1) {
-                this._myPhysX.kinematic = false;
-            } else if (this._myKinematicValueToKeep != null) {
-                this._myPhysX.kinematic = this._myKinematicValueToKeep;
-            }
+        if (this._myKinematicValueOnRelease == 0) {
+            this._myPhysX.kinematic = true;
+        } else if (this._myKinematicValueOnRelease == 1) {
+            this._myPhysX.kinematic = false;
+        } else if (this._myOldKinematicValue != null) {
+            this._myPhysX.kinematic = this._myOldKinematicValue;
+        }
 
-            if (this._myPhysX.kinematic) {
-                this._myPhysX.linearVelocity = [0, 0, 0];
-                this._myPhysX.angularVelocity = [0, 0, 0];
-
-            }
+        if (this._myPhysX.kinematic) {
+            this._myPhysX.linearVelocity = [0, 0, 0];
+            this._myPhysX.angularVelocity = [0, 0, 0];
         }
     }
 });
