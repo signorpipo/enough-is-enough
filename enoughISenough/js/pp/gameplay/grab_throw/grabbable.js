@@ -14,7 +14,7 @@ WL.registerComponent('pp-grabbable', {
     },
     start: function () {
         this._myOldParent = this.object.parent;
-        this._myPhysx = this.object.pp_getComponent('physx');
+        this._myPhysX = this.object.pp_getComponent('physx');
         this._myKinematicValueToKeep = null;
     },
     onDeactivate: function () {
@@ -22,13 +22,13 @@ WL.registerComponent('pp-grabbable', {
     },
     grab: function (grabber) {
         if (!this.isGrabbed()) {
-            this._myKinematicValueToKeep = this._myPhysx.kinematic;
+            this._myKinematicValueToKeep = this._myPhysX.kinematic;
         }
 
         this.release();
 
-        if (this._myPhysx) {
-            this._myPhysx.kinematic = true;
+        if (this._myPhysX) {
+            this._myPhysX.kinematic = true;
         }
 
         this._myOldParent = this.object.parent;
@@ -44,9 +44,9 @@ WL.registerComponent('pp-grabbable', {
 
             this._release();
 
-            if (this._myPhysx) {
-                this._myPhysx.linearVelocity = linearVelocity.vec3_scale(this._myThrowLinearVelocityMultiplier);
-                this._myPhysx.angularVelocity = angularVelocity.vec3_scale(this._myThrowAngularVelocityMultiplier);
+            if (this._myPhysX) {
+                this._myPhysX.linearVelocity = linearVelocity.vec3_scale(this._myThrowLinearVelocityMultiplier);
+                this._myPhysX.angularVelocity = angularVelocity.vec3_scale(this._myThrowAngularVelocityMultiplier);
             }
 
             this._myThrowCallbacks.forEach(function (value) { value(this, grabber); }.bind(this));
@@ -65,8 +65,8 @@ WL.registerComponent('pp-grabbable', {
     getLinearVelocity() {
         let linearVelocity = vec3_create();
 
-        if (this._myPhysx) {
-            this._myPhysx.linearVelocity.vec3_clone(linearVelocity);
+        if (this._myPhysX) {
+            this._myPhysX.linearVelocity.vec3_clone(linearVelocity);
         }
 
         return linearVelocity;
@@ -77,8 +77,8 @@ WL.registerComponent('pp-grabbable', {
     getAngularVelocityDegrees() {
         let angularVelocityDegrees = vec3_create();
 
-        if (this._myPhysx) {
-            this._myPhysx.angularVelocity.vec3_toDegrees(angularVelocityDegrees);
+        if (this._myPhysX) {
+            this._myPhysX.angularVelocity.vec3_toDegrees(angularVelocityDegrees);
         }
 
         return angularVelocityDegrees;
@@ -86,8 +86,8 @@ WL.registerComponent('pp-grabbable', {
     getAngularVelocityRadians() {
         let angularVelocityRadians = vec3_create();
 
-        if (this._myPhysx) {
-            this._myPhysx.angularVelocity.vec3_clone(angularVelocityRadians);
+        if (this._myPhysX) {
+            this._myPhysX.angularVelocity.vec3_clone(angularVelocityRadians);
         }
 
         return angularVelocityRadians;
@@ -121,19 +121,19 @@ WL.registerComponent('pp-grabbable', {
         this._myIsGrabbed = false;
         this._myGrabber = null;
 
-        //TEMP u can't set kinematic if physx is inactive because it will crash
-        if (this._myPhysx && this._myPhysx.active) {
+        //TEMP u can't set kinematic if physX is inactive because it will crash
+        if (this._myPhysX && this._myPhysX.active) {
             if (this._myKinematicValueOnRelease == 0) {
-                this._myPhysx.kinematic = true;
+                this._myPhysX.kinematic = true;
             } else if (this._myKinematicValueOnRelease == 1) {
-                this._myPhysx.kinematic = false;
+                this._myPhysX.kinematic = false;
             } else if (this._myKinematicValueToKeep != null) {
-                this._myPhysx.kinematic = this._myKinematicValueToKeep;
+                this._myPhysX.kinematic = this._myKinematicValueToKeep;
             }
 
-            if (this._myPhysx.kinematic) {
-                this._myPhysx.linearVelocity = [0, 0, 0];
-                this._myPhysx.angularVelocity = [0, 0, 0];
+            if (this._myPhysX.kinematic) {
+                this._myPhysX.linearVelocity = [0, 0, 0];
+                this._myPhysX.angularVelocity = [0, 0, 0];
 
             }
         }

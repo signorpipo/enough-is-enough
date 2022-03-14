@@ -1,6 +1,6 @@
 PP.PhysXCollisionCollector = class PhysXCollisionCollector {
-    constructor(physxComponent, isTrigger = false) {
-        this._myPhysx = physxComponent;
+    constructor(physXComponent, isTrigger = false) {
+        this._myPhysX = physXComponent;
 
         this._myIsTrigger = isTrigger;
 
@@ -23,7 +23,7 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
     }
 
     getPhysX() {
-        return this._myPhysx;
+        return this._myPhysX;
     }
 
     getCollisions() {
@@ -51,9 +51,9 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
             this._myCollisionsEndToProcess = [];
 
             if (this._myIsActive) {
-                this._myCollisionCallbackID = this._myPhysx.onCollision(this._onCollision.bind(this));
+                this._myCollisionCallbackID = this._myPhysX.onCollision(this._onCollision.bind(this));
             } else if (this._myCollisionCallbackID != null) {
-                this._myPhysx.removeCollisionCallback(this._myCollisionCallbackID);
+                this._myPhysX.removeCollisionCallback(this._myCollisionCallbackID);
                 this._myCollisionCallbackID = null;
             }
         }
@@ -85,7 +85,7 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
 
     destroy() {
         if (this._myCollisionCallbackID != null) {
-            this._myPhysx.removeCollisionCallback(this._myCollisionCallbackID);
+            this._myPhysX.removeCollisionCallback(this._myCollisionCallbackID);
             this._myCollisionCallbackID = null;
         }
     }
@@ -94,19 +94,19 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
         this._myDebugActive = active;
     }
 
-    _onCollision(type, physxComponent) {
+    _onCollision(type, physXComponent) {
         if (type == WL.CollisionEventType.Touch || type == WL.CollisionEventType.TriggerTouch) {
-            this._onCollisionStart(physxComponent);
+            this._onCollisionStart(physXComponent);
         } else if (type == WL.CollisionEventType.TouchLost || type == WL.CollisionEventType.TriggerTouchLost) {
-            this._onCollisionEnd(physxComponent);
+            this._onCollisionEnd(physXComponent);
         }
     }
 
-    _onCollisionStart(physxComponent) {
+    _onCollisionStart(physXComponent) {
         if (this._myDebugActive) {
             let objectFound = false;
             for (let object of this._myCollisions) {
-                if (object.pp_equals(physxComponent.object)) {
+                if (object.pp_equals(physXComponent.object)) {
                     objectFound = true;
                     break;
                 }
@@ -117,12 +117,12 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
             }
         }
 
-        this._myCollisions.push(physxComponent.object);
+        this._myCollisions.push(physXComponent.object);
 
         if (this._myUpdateActive) {
-            this._myCollisionsStartToProcess.push(physxComponent.object);
+            this._myCollisionsStartToProcess.push(physXComponent.object);
             this._myCollisionsEndToProcess.pp_removeAll(function (element) {
-                return element.pp_equals(physxComponent.object);
+                return element.pp_equals(physXComponent.object);
             });
         }
 
@@ -131,11 +131,11 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
         }
     }
 
-    _onCollisionEnd(physxComponent) {
+    _onCollisionEnd(physXComponent) {
         if (this._myDebugActive) {
             let objectFound = false;
             for (let object of this._myCollisions) {
-                if (object.pp_equals(physxComponent.object)) {
+                if (object.pp_equals(physXComponent.object)) {
                     objectFound = true;
                     break;
                 }
@@ -148,13 +148,13 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
 
 
         this._myCollisions.pp_removeAll(function (element) {
-            return element.pp_equals(physxComponent.object);
+            return element.pp_equals(physXComponent.object);
         });
 
         if (this._myUpdateActive) {
-            this._myCollisionsEndToProcess.push(physxComponent.object);
+            this._myCollisionsEndToProcess.push(physXComponent.object);
             this._myCollisionsStartToProcess.pp_removeAll(function (element) {
-                return element.pp_equals(physxComponent.object);
+                return element.pp_equals(physXComponent.object);
             });
         }
 
@@ -169,17 +169,17 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
             this._myTriggerDesyncFixDelay.start();
 
             let collisionsToEnd = this._myCollisions.pp_findAll(function (element) {
-                let physx = element.pp_getComponent("physx");
-                return physx == null || !physx.active;
+                let physX = element.pp_getComponent("physx");
+                return physX == null || !physX.active;
             });
 
             if (collisionsToEnd.length > 0) {
                 //console.error("DESYNC RESOLVED");
 
                 for (let collision of collisionsToEnd) {
-                    let physx = collision.pp_getComponent("physx");
-                    if (physx) {
-                        this._onCollisionEnd(physx);
+                    let physX = collision.pp_getComponent("physx");
+                    if (physX) {
+                        this._onCollisionEnd(physX);
                     } else {
                         console.error("NO PHYSX, HOW?");
                     }
