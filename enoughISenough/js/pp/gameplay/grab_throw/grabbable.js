@@ -42,8 +42,11 @@ WL.registerComponent('pp-grabbable', {
 
             this._release();
 
+            //#TODO for now kinematic is not updated instantly, add the if as soon as it is
+            //if (!this._myPhysX.kinematic) {
             this._myPhysX.linearVelocity = linearVelocity.vec3_scale(this._myThrowLinearVelocityMultiplier);
             this._myPhysX.angularVelocity = angularVelocity.vec3_scale(this._myThrowAngularVelocityMultiplier);
+            //}
 
             this._myThrowCallbacks.forEach(function (value) { value(this, grabber); }.bind(this));
             this._myReleaseCallbacks.forEach(function (value) { value(this, grabber, true); }.bind(this));

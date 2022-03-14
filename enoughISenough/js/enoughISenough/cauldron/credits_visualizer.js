@@ -33,6 +33,8 @@ WL.registerComponent("credits-visualizer", {
         this._myDisappearAudio = Global.myAudioManager.createAudioPlayer(SfxID.TITLE_DISAPPEAR);
         this._myAppearAudio.setPosition(this.object.pp_getPosition());
         this._myDisappearAudio.setPosition(this.object.pp_getPosition());
+        this._myAppearAudio.setVolume(1);
+        this._myDisappearAudio.setVolume(1);
 
         this._myFSM.init("hide");
     },
