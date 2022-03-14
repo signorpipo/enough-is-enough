@@ -197,7 +197,7 @@ var Global = {
     myStatistics: null,
     myIsInMenu: false,
     myZestyToClick: null,
-    myTrialStartedOnce: false,
+    myEnableSelectPhysx: false,
     mySaveManager: null,
     myDebugCurrentVentObject: null
 };

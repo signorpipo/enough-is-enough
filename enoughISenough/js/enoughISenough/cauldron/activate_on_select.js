@@ -18,12 +18,12 @@ WL.registerComponent("activate-on-select", {
         this._myPhysx.active = false;
     },
     update() {
-        if (!Global.myTrialStartedOnce) {
+        if (!Global.myEnableSelectPhysx) {
             this._myPhysx.active = false;
         }
     },
     _selectPressStart() {
-        if (Global.myTrialStartedOnce) {
+        if (Global.myEnableSelectPhysx) {
             this._myPhysx.active = true;
         }
     },

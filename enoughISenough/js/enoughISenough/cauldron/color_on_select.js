@@ -34,7 +34,7 @@ WL.registerComponent("color-on-select", {
             PP.MeshUtils.setMaterial(this.object, this._myMaterial);
         } else {
             let selectValue = Math.pp_mapToRange(this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).getValue(), 0.1, 0.85, 0, 1);
-            if (!Global.myTrialStartedOnce) {
+            if (!Global.myEnableSelectPhysx) {
                 selectValue = 0;
             }
 
