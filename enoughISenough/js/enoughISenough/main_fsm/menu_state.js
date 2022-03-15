@@ -91,6 +91,8 @@ class MenuState extends PP.State {
         Global.myIsInMenu = true;
 
         Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialLevel >= 2);
+
+        Global.myPlayMusic = true;
     }
 
     end() {
@@ -606,6 +608,7 @@ class MenuTitle {
         this._mySubtitleTextColor = this._mySubtitleText.material.outlineColor.pp_clone();
 
         this._myStartTimer = new PP.Timer(1, false);
+        this._myStartAppearAudioTimer = new PP.Timer(0.3, false);
         this._myTimer = new PP.Timer(1, false);
 
         this._myFSM = new PP.FSM();
@@ -636,12 +639,11 @@ class MenuTitle {
             this._myAppearAudio.setPosition(this._myTitleCenterPosition);
             this._myDisappearAudio.setPosition(this._myTitleCenterPosition);
 
-            this._myAppearAudio.play();
-
             this._myTimer.start(this._mySpawnTime);
+            this._myStartAppearAudioTimer.start(0.4);
         }
 
-        this._myStartTimer.start(timeToStart);
+        this._myStartTimer.start(timeToStart + 0.4);
         this._myFSM.perform("spawn");
     }
 
@@ -662,6 +664,13 @@ class MenuTitle {
     }
 
     _spawnUpdate(dt) {
+        if (this._myStartAppearAudioTimer.isRunning()) {
+            this._myStartAppearAudioTimer.update(dt);
+            if (this._myStartAppearAudioTimer.isDone()) {
+                this._myAppearAudio.play();
+            }
+        }
+
         this._myStartTimer.update(dt);
         if (this._myStartTimer.isDone()) {
             if (this._myTimer.isRunning()) {

@@ -56,6 +56,7 @@ class MrNOTVentState extends PP.State {
         if (Global.myDebugShortcutsEnabled) {
             //TEMP REMOVE THIS
             if (PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(Global.myDebugShortcutsPress)) {
+                Global.myStopMusic = true;
                 this._myFSM.perform("skip");
                 this._myVent.ventCompletedDebug();
                 this._ventCompleted();
@@ -63,6 +64,7 @@ class MrNOTVentState extends PP.State {
 
             //TEMP REMOVE THIS
             if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(Global.myDebugShortcutsPress)) {
+                Global.myStopMusic = true;
                 this._myFSM.perform("skip");
                 this._myVent.ventLostDebug();
                 this._ventLost();
@@ -95,6 +97,8 @@ class MrNOTVentState extends PP.State {
     _prepareClean() {
         this._myCleanTimer.start();
         this._myVent.clean(this._myCleanTimer.getDuration());
+
+        Global.myStopMusic = true;
     }
 
     _updateClean(dt, fsm) {
@@ -125,6 +129,8 @@ class MrNOTVentState extends PP.State {
         this._myMrNOT.hide();
         this._myNotEnough.start();
         Global.myParticlesManager.mrNOTParticles(Global.myPlayerPosition);
+
+        Global.myStopMusic = true;
     }
 
     _updateDefeat(dt, fsm) {

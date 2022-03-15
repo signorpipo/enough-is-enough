@@ -67,13 +67,25 @@ PP.AudioPlayer = class AudioPlayer {
         this._myAudio.play();
     }
 
+    isPlaying(checkOnlyLast = false) {
+        let isPlaying = false;
+
+        if (checkOnlyLast) {
+            isPlaying = this._myAudio.playing(this._myLastAudioID);
+        }
+        else {
+            isPlaying = this._myAudio.playing();
+        }
+
+        return isPlaying;
+    }
+
     isLoaded() {
         return this._myAudio.state() == "loaded";
     }
 
-    fade(fromVolumePercentage, toVolumePercentage, duration, updateOnlyLast = false) {
-        let fromVolume = Math.pp_mapToRange(fromVolumePercentage, 0, 1, 0, this._myAudioSetup.myVolume);
-        let toVolume = Math.pp_mapToRange(toVolumePercentage, 0, 1, 0, this._myAudioSetup.myVolume);
+    fade(fromVolume, toVolume, duration, updateOnlyLast = false) {
+        this.setVolume(toVolume);
 
         if (updateOnlyLast) {
             this._myAudio.fade(fromVolume, toVolume, duration * 1000, this._myLastAudioID);
@@ -144,6 +156,10 @@ PP.AudioPlayer = class AudioPlayer {
 
     getDuration() {
         return this._myAudio.duration();
+    }
+
+    getVolume() {
+        return this._myAudioSetup.myVolume;
     }
 
     registerAudioEventListener(audioEvent, listenerID, callback) {

@@ -61,6 +61,7 @@ class VentState extends PP.State {
 
             //TEMP REMOVE THIS
             if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd(Global.myDebugShortcutsPress)) {
+                Global.myStopMusic = true;
                 this._myFSM.perform("skip");
                 this._myVent.ventLostDebug();
                 this._ventLost();
@@ -105,6 +106,8 @@ class VentState extends PP.State {
         this._myVent.stop();
         this._myNotEnough.start();
         Global.myParticlesManager.mrNOTParticles(Global.myPlayerPosition);
+
+        Global.myStopMusic = true;
     }
 
     _updateDefeat(dt, fsm) {

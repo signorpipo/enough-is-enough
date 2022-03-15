@@ -227,5 +227,7 @@ var Global = {
     myZestyToClick: null,
     myEnableSelectPhysx: false,
     mySaveManager: null,
-    myDebugCurrentVentObject: null
+    myDebugCurrentVentObject: null,
+    myPlayMusic: false,
+    myStopMusic: false,
 };
