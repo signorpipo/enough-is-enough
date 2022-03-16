@@ -20,7 +20,10 @@ WL.registerComponent("ring-sfx-on-collision", {
     },
     _onCollision(type, physx) {
         if (type == WL.CollisionEventType.Touch) {
-            if (physx.object.pp_getComponent("evidence-component") != null) {
+            let evidence = physx.object.pp_getComponent("evidence-component");
+            let timeActive = 1.5;
+            //timeActive = 0;
+            if (evidence != null && evidence.getTimeActive() >= timeActive) {
                 if (!this._myPhysxToIgnore.pp_has(element => element[0].pp_equals(physx.object))) {
                     this._myCollisionAudio.setPosition(physx.object.pp_getPosition());
                     this._myCollisionAudio.setPitch(Math.pp_random(this._myCollisionPitch - 0.15, this._myCollisionPitch + 0.05));

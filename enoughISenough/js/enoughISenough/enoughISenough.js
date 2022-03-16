@@ -142,7 +142,7 @@ class enoughISenough {
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/grab.wav");
-            audioSetup.myVolume = 0.6;
+            audioSetup.myVolume = 0.55;
             audioSetup.myReferenceDistance = 0.3;
             manager.addAudioSetup(SfxID.GRAB, audioSetup);
         }
@@ -156,7 +156,7 @@ class enoughISenough {
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/collision.wav");
-            audioSetup.myVolume = 0.4;
+            audioSetup.myVolume = 0.35;
             audioSetup.myReferenceDistance = 0.3;
             manager.addAudioSetup(SfxID.COLLISION, audioSetup);
         }

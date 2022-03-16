@@ -7,8 +7,10 @@ WL.registerComponent('evidence-component', {
         this._myEvidence = null;
     },
     start: function () {
+        this._myTimeActive = 0;
     },
     update: function (dt) {
+        this._myTimeActive += dt;
     },
     setCallbackOnHit: function (callback) {
         this._myCallbackOnHit = callback;
@@ -34,6 +36,15 @@ WL.registerComponent('evidence-component', {
         if (this._myCallbackOnBigHit) {
             this._myCallbackOnBigHit(objectHit, this);
         }
+    },
+    getTimeActive() {
+        return this._myTimeActive;
+    },
+    onActivate() {
+        this._myTimeActive = 0;
+    },
+    onDeactivate() {
+        this._myTimeActive = 0;
     }
 });
 
