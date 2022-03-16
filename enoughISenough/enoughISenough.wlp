@@ -13246,7 +13246,10 @@
             ],
             "components": [
                 {
-                    "type": "evidence-component"
+                    "type": "evidence-component",
+                    "evidence-component": {
+                        "_myHeightDisplacement": 0.025
+                    }
                 },
                 {
                     "type": "pp-grabbable"
@@ -19113,7 +19116,8 @@
         },
         "1394": {
             "name": "Empty.016",
-            "parent": "32"
+            "parent": "32",
+            "deleted": true
         }
     },
     "meshes": {
