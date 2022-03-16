@@ -127,7 +127,7 @@ class enoughISenough {
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/clone_appear.wav");
-            audioSetup.myVolume = 0.55;
+            audioSetup.myVolume = 0.65;
             audioSetup.myReferenceDistance = 1000000;
             manager.addAudioSetup(SfxID.CLONE_APPEAR, audioSetup);
         }
@@ -141,9 +141,9 @@ class enoughISenough {
         }
 
         {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blabla_1.wav");
-            audioSetup.myRate = 0.5;
-            audioSetup.myVolume = 0.5;
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/grab.wav");
+            audioSetup.myVolume = 0.6;
+            audioSetup.myReferenceDistance = 0.3;
             manager.addAudioSetup(SfxID.GRAB, audioSetup);
         }
 
@@ -155,9 +155,9 @@ class enoughISenough {
         }
 
         {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blabla_1.wav");
-            audioSetup.myRate = 0.5;
-            audioSetup.myVolume = 0.5;
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/collision.wav");
+            audioSetup.myVolume = 0.4;
+            audioSetup.myReferenceDistance = 0.3;
             manager.addAudioSetup(SfxID.COLLISION, audioSetup);
         }
 
