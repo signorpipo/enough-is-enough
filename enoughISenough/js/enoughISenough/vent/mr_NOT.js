@@ -350,6 +350,8 @@ class MrNOT {
                 this._myObject.pp_setActive(false);
                 Global.myParticlesManager.explosion(this._myCurrentPosition, 1.6, [this._myParticlesSizeMrNot, this._myParticlesSizeMrNot, this._myParticlesSizeMrNot], GameObjectType.MR_NOT, true);
                 this._myDisappearEndTimer.start();
+                this._myExplodeAudio.setPosition(this._myCurrentPosition);
+                this._myExplodeAudio.setPitch(1);
                 this._myExplodeAudio.play();
 
                 this._myRumbleScreen.start(Math.pp_random(0.4, 0.6), 1);

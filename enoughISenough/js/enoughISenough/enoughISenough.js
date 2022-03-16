@@ -99,7 +99,6 @@ class enoughISenough {
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_explode.wav");
-            audioSetup.myPitch = 1;
             audioSetup.myVolume = 0.95;
             audioSetup.myReferenceDistance = 3;
             manager.addAudioSetup(SfxID.CLONE_EXPLODE, audioSetup);
@@ -107,7 +106,6 @@ class enoughISenough {
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_explode.wav");
-            audioSetup.myPitch = 1;
             audioSetup.myVolume = 0.95;
             audioSetup.myReferenceDistance = 3;
             manager.addAudioSetup(SfxID.MR_NOT_EXPLODE, audioSetup);
@@ -115,7 +113,6 @@ class enoughISenough {
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/evidence_appear.wav");
-            audioSetup.myPitch = 0.8;
             audioSetup.myVolume = 0.2;
             audioSetup.myReferenceDistance = 3;
             manager.addAudioSetup(SfxID.EVIDENCE_APPEAR, audioSetup);
@@ -123,7 +120,6 @@ class enoughISenough {
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/evidence_disappear.wav");
-            audioSetup.myPitch = 1;
             audioSetup.myVolume = 0.5;
             audioSetup.myReferenceDistance = 3;
             manager.addAudioSetup(SfxID.EVIDENCE_DISAPPEAR, audioSetup);
@@ -131,7 +127,6 @@ class enoughISenough {
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/clone_appear.wav");
-            audioSetup.myRate = 0.7;
             audioSetup.myVolume = 0.55;
             audioSetup.myReferenceDistance = 1000000;
             manager.addAudioSetup(SfxID.CLONE_APPEAR, audioSetup);
@@ -145,8 +140,29 @@ class enoughISenough {
             manager.addAudioSetup(SfxID.MR_NOT_FAST_APPEAR, audioSetup);
         }
 
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blabla_1.wav");
+            audioSetup.myRate = 0.5;
+            audioSetup.myVolume = 0.5;
+            manager.addAudioSetup(SfxID.GRAB, audioSetup);
+        }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blabla_2.wav");
+            audioSetup.myRate = 0.5;
+            audioSetup.myVolume = 0.5;
+            manager.addAudioSetup(SfxID.THROW, audioSetup);
+        }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blabla_1.wav");
+            audioSetup.myRate = 0.5;
+            audioSetup.myVolume = 0.5;
+            manager.addAudioSetup(SfxID.COLLISION, audioSetup);
+        }
+
         manager.createAudioPlayer(SfxID.RING_RISE);
-        for (let i = 0; i <= SfxID.YOU_KNOW; i++) {
+        for (let i = 0; i <= SfxID.COLLISION; i++) {
             manager.createAudioPlayer(i);
         }
 
@@ -175,4 +191,7 @@ var SfxID = {
     CLONE_APPEAR: 13,
     MR_NOT_FAST_APPEAR: 14,
     YOU_KNOW: 15,
+    GRAB: 16,
+    THROW: 17,
+    COLLISION: 18,
 };

@@ -21,6 +21,9 @@ WL.registerComponent("activate-on-select", {
 
         this._myPhysx.active = false;
         this._myTriggerPhysx.active = false;
+
+        this._myCollisionAudio = Global.myAudioManager.createAudioPlayer(SfxID.COLLISION);
+        this._myCollisionPitch = this._myCollisionAudio.getPitch();
     },
     update() {
         if (!Global.myEnableSelectPhysx) {
@@ -42,6 +45,10 @@ WL.registerComponent("activate-on-select", {
         if (type == WL.CollisionEventType.TriggerTouch) {
             if (physx.object.pp_getComponent("evidence-component") != null) {
                 this._myGamepad.pulse(0.1, 0.1);
+
+                /* this._myCollisionAudio.setPosition(this.object.pp_getPosition());
+                this._myCollisionAudio.setPitch(Math.pp_random(this._myCollisionPitch - 0.15, this._myCollisionPitch + 0.05));
+                this._myCollisionAudio.play(); */
             }
         }
     }

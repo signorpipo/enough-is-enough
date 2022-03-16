@@ -162,6 +162,14 @@ PP.AudioPlayer = class AudioPlayer {
         return this._myAudioSetup.myVolume;
     }
 
+    getPitch() {
+        return this._myAudioSetup.myPitch;
+    }
+
+    getRate() {
+        return this._myAudioSetup.myRate;
+    }
+
     registerAudioEventListener(audioEvent, listenerID, callback) {
         this._myCallbackMap.get(audioEvent).set(listenerID, callback);
     }
