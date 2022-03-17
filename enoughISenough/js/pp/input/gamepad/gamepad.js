@@ -149,14 +149,14 @@ PP.PulseInfo = class PulseInfo {
         this.myIntensity = 0.0;
         this.myDuration = 0.0;
 
-        this.myIsPulsing = false;
+        this.myIsDevicePulsing = false; // true if the gamepad actually sent a request to pulse to the device
     }
 
     clone() {
         let value = new PulseInfo();
         value.myIntensity = this.myIntensity;
         value.myDuration = this.myDuration;
-        value.myIsPulsing = this.myIsPulsing;
+        value.myIsDevicePulsing = this.myIsDevicePulsing;
 
         return value;
     }
@@ -293,7 +293,7 @@ PP.Gamepad = class Gamepad {
     }
 
     isPulsing() {
-        return this._myPulseInfo.myIsPulsing;
+        return this._myPulseInfo.myIntensity > 0 || this._myPulseInfo.myDuration > 0;
     }
 
     getPulseInfo() {
@@ -604,10 +604,10 @@ PP.Gamepad = class Gamepad {
         if (hapticActuator) {
             if (this._myPulseInfo.myIntensity > 0) {
                 hapticActuator.pulse(this._myPulseInfo.myIntensity, 1000); //duration is managed by this class
-                this._myPulseInfo.myIsPulsing = true;
-            } else if (this._myPulseInfo.myIsPulsing) {
+                this._myPulseInfo.myIsDevicePulsing = true;
+            } else if (this._myPulseInfo.myIsDevicePulsing) {
                 hapticActuator.reset();
-                this._myPulseInfo.myIsPulsing = false;
+                this._myPulseInfo.myIsDevicePulsing = false;
             }
         }
 

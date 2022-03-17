@@ -21,14 +21,23 @@ WL.registerComponent("pulse-on-grab", {
         this._myThrowPitch = this._myThrowAudio.getPitch();
     },
     _onGrab() {
-        this._myGamepad.pulse(0.2, 0.1);
+        let intensity = 0.2;
+        let pulseInfo = this._myGamepad.getPulseInfo();
+        if (pulseInfo.myIntensity <= intensity) {
+            this._myGamepad.pulse(intensity, 0.1);
+        }
 
         this._myGrabAudio.setPosition(this.object.pp_getPosition());
         this._myGrabAudio.setPitch(Math.pp_random(this._myGrabPitch - 0.15, this._myGrabPitch + 0.05));
         this._myGrabAudio.play();
     },
     _onThrow() {
-        this._myGamepad.pulse(0.09, 0.1);
+        let intensity = 0.09;
+        let pulseInfo = this._myGamepad.getPulseInfo();
+        if (pulseInfo.myIntensity <= intensity) {
+            this._myGamepad.pulse(intensity, 0.1);
+        }
+
         this._myThrowAudio.setPosition(this.object.pp_getPosition());
         this._myThrowAudio.setPitch(Math.pp_random(this._myThrowPitch - 0.15, this._myThrowPitch));
         this._myThrowAudio.play();

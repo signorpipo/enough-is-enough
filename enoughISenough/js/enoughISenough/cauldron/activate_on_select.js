@@ -44,7 +44,11 @@ WL.registerComponent("activate-on-select", {
     _onCollision(type, physx) {
         if (type == WL.CollisionEventType.TriggerTouch) {
             if (physx.object.pp_getComponent("evidence-component") != null) {
-                this._myGamepad.pulse(0.1, 0.1);
+                let intensity = 0.1;
+                let pulseInfo = this._myGamepad.getPulseInfo();
+                if (pulseInfo.myIntensity <= intensity) {
+                    this._myGamepad.pulse(intensity, 0.1);
+                }
 
                 this._myCollisionAudio.setPosition(this.object.pp_getPosition());
                 this._myCollisionAudio.setPitch(Math.pp_random(this._myCollisionPitch - 0.15, this._myCollisionPitch + 0.05));
