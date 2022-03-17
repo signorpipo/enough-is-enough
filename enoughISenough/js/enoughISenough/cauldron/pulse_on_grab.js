@@ -29,7 +29,7 @@ WL.registerComponent("pulse-on-grab", {
     },
     _onThrow() {
         this._myThrowAudio.setPosition(this.object.pp_getPosition());
-        this._myThrowAudio.setPitch(Math.pp_random(this._myThrowPitch - 0.15, this._myThrowPitch + 0.1));
+        this._myThrowAudio.setPitch(Math.pp_random(this._myThrowPitch - 0.15, this._myThrowPitch));
         this._myThrowAudio.play();
     },
 });

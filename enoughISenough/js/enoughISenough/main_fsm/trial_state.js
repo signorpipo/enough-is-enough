@@ -183,7 +183,7 @@ class TrialState extends PP.State {
         sentences.push(new Sentence("You may think you are stronger now"));
         sentences.push(new Sentence("You may feel free from others' judgment", 2, 0));
         sentences.push(new Sentence("and from your own"));
-        sentences.push(new Sentence("You may fool yourself into believing this..."));
+        sentences.push(new Sentence("You may fool yourself into believing this...", 1.75, 0.75));
         sentences.push(new Sentence("But after all has been said and done", 0.75, 0));
         sentences.push(new Sentence("you KNOW", 0.75, 0));
         sentences.push(new Sentence("it will always be...", 1.75, 0.75));

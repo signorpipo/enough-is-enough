@@ -17,8 +17,10 @@ class ShowTitleState extends PP.State {
         this._myTitleTextComponent.material = Global.myMaterials.myTitle.clone();
         this._myTitleTextComponent.text = " ";
         //this._myTitle.addComponent('pp-easy-transform');
+        //this._myTitle.addComponent('pp-easy-text-color', { "_myColorType": 1, "_mySetAsDefault": true });
 
         //this._mySubtitle.addComponent('pp-easy-transform');
+        //this._mySubtitle.addComponent('pp-easy-text-color', { "_myColorType": 1, "_mySetAsDefault": true });
         this._mySubtitleTextComponent = this._mySubtitle.addComponent('text');
         this._mySubtitleTextComponent.alignment = WL.Alignment.Left;
         this._mySubtitleTextComponent.justification = WL.Justification.Line;

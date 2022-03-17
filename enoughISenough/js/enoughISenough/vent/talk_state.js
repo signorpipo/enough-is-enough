@@ -193,7 +193,7 @@ class Blather {
         this._myBigBlatherTextComponent.text = "";
         this._myBigBlatherTextComponent.alignment = WL.Alignment.Left;
         this._myBigBlatherTextComponent.justification = WL.Justification.Line;
-        this._myBigBlatherTextComponent.material = Global.myMaterials.myBigText.clone();
+        this._myBigBlatherTextComponent.material = Global.myMaterials.myTitle.clone();
         //this._myBigBlatherTextComponent.material.outlineRange = [0.5, 0.375];
         //this._myBigBlatherTextComponent.material.outlineColor = this._myBigBlatherTextComponent.material.color;
         //this._myBigBlatherTextComponent.material.color = [0, 0, 0, 0];
