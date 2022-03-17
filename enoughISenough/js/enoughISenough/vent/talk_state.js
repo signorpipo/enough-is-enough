@@ -178,7 +178,8 @@ class Blather {
         this._myBlatherTextComponent.alignment = WL.Alignment.Left;
         this._myBlatherTextComponent.justification = WL.Justification.Line;
         this._myBlatherTextComponent.material = Global.myMaterials.myText.clone();
-        this._myBlatherTextComponent.material.outlineRange = [0.5, 0.5];
+        //this._myBlatherTextComponent.material.outlineRange = [0.5, 0.5];
+        //this._myBlatherTextComponent.material.color = Global.myMaterials.myBigText.color;
         //this._myBlatherTextObject.pp_addComponent("pp-easy-text-color", { "_myVariableName": "ciao", "_myColorType": 0, "_myColorModel": 1 });
 
 
@@ -193,7 +194,9 @@ class Blather {
         this._myBigBlatherTextComponent.alignment = WL.Alignment.Left;
         this._myBigBlatherTextComponent.justification = WL.Justification.Line;
         this._myBigBlatherTextComponent.material = Global.myMaterials.myBigText.clone();
-        this._myBigBlatherTextComponent.material.outlineRange = [0.5, 0.5];
+        //this._myBigBlatherTextComponent.material.outlineRange = [0.5, 0.375];
+        //this._myBigBlatherTextComponent.material.outlineColor = this._myBigBlatherTextComponent.material.color;
+        //this._myBigBlatherTextComponent.material.color = [0, 0, 0, 0];
         //this._myBigBlatherTextObject.pp_addComponent("pp-easy-text-color", { "_myVariableName": "ciao2", "_myColorType": 0, "_myColorModel": 1 });
         //this._myBigBlatherTextComponent.material.color = [90 / 255, 90 / 255, 100 / 255, 1];
         //this._myBigBlatherTextComponent.material.outlineColor = [90 / 255, 90 / 255, 100 / 255, 1];
@@ -369,7 +372,7 @@ class Blather {
         this._myCharAudios[1].setPosition(this._myBigBlatherTextObject.pp_getPosition());
 
         let sentenceLength = this._mySentences[this._myCurrentSenteceIndex].mySentence.length;
-        let displacement = sentenceLength * 0.585;
+        let displacement = sentenceLength * 0.6;
         this._myBigBlatherTextObject.translateObject([-displacement, 0, 0]);
     }
 }
