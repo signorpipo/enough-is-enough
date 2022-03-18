@@ -283,7 +283,7 @@ class MrNOT {
             GameObjectType.FAMILY,
             GameObjectType.MIRROR,
             GameObjectType.WAYFINDER,
-            GameObjectType.ETHEREUM,
+            //GameObjectType.ETHEREUM,
             GameObjectType.EVERYEYE,
             GameObjectType.ALOE_VERA,
             //GameObjectType.STARING_CUBE,
@@ -348,9 +348,13 @@ class MrNOT {
             this._myDisappearTimer.update(dt);
             if (this._myDisappearTimer.isDone()) {
                 this._myObject.pp_setActive(false);
+
                 Global.myParticlesManager.explosion(this._myCurrentPosition, 1.6, [this._myParticlesSizeMrNot, this._myParticlesSizeMrNot, this._myParticlesSizeMrNot], GameObjectType.MR_NOT, true);
                 this._myDisappearEndTimer.start();
-                this._myExplodeAudio.setPosition(this._myCurrentPosition);
+
+                let audioPosition = this._myMrNotForward.vec3_scale(this._myScale[2] * 0.675).vec3_add(this._myCurrentPosition);
+                //this._myMrNotUp.vec3_scale(1.35).vec3_add(audioPosition, audioPosition);
+                this._myExplodeAudio.setPosition(audioPosition);
                 this._myExplodeAudio.setPitch(1);
                 this._myExplodeAudio.play();
 

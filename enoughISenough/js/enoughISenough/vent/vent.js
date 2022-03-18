@@ -122,6 +122,7 @@ class Vent {
         this._myFSM.addTransition("smallBreak", "done", "stop", this._stop.bind(this));
         this._myFSM.addTransition("clean", "done", "stop", this._stop.bind(this));
 
+        this._myFSM.addTransition("first_wait", "clean", "startClean", this._startClean.bind(this));
         this._myFSM.addTransition("wave", "clean", "startClean", this._startClean.bind(this));
         this._myFSM.addTransition("break", "clean", "startClean", this._startClean.bind(this));
         this._myFSM.addTransition("smallBreak", "clean", "startClean", this._startClean.bind(this));
