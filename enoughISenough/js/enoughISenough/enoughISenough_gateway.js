@@ -30,9 +30,9 @@ WL.registerComponent("enough-IS-enough-gateway", {
     },
     start: function () {
         let version = Global.mySaveManager.loadNumber("game_version", 0);
-        let currentVersion = 3;
-        if (version < currentVersion) {
-            Global.mySaveManager.save("game_version", currentVersion);
+        Global.myGameVersion = 3;
+        if (version < Global.myGameVersion) {
+            Global.mySaveManager.save("game_version", Global.myGameVersion);
             Global.mySaveManager.save("trial_started_once", false);
             Global.mySaveManager.save("trial_completed", false);
             Global.mySaveManager.save("trial_level", 1);
@@ -230,4 +230,5 @@ var Global = {
     myDebugCurrentVentObject: null,
     myPlayMusic: false,
     myStopMusic: false,
+    myGameVersion: 0
 };

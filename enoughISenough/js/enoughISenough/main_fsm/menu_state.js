@@ -49,9 +49,9 @@ class MenuState extends PP.State {
     start(fsm, transitionID) {
         this._myParentFSM = fsm;
 
-        let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once");
-        let trialLevel = Global.mySaveManager.loadNumber("trial_level");
-        let trialCompleted = Global.mySaveManager.loadBool("trial_completed");
+        let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false);
+        let trialLevel = Global.mySaveManager.loadNumber("trial_level", 1);
+        let trialCompleted = Global.mySaveManager.loadBool("trial_completed", false);
         if (trialCompleted || (trialStartedOnce && trialLevel >= 2)) {
             this._myCurrentMenuItems = [];
 
@@ -169,6 +169,7 @@ class MenuState extends PP.State {
             this._myNotEnough.start();
         } else {
             Global.mySaveManager.clear();
+            Global.mySaveManager.save("game_version", Global.myGameVersion);
             this._myNotEnough.start();
             Global.myParticlesManager.mrNOTParticles(Global.myPlayerPosition);
         }
