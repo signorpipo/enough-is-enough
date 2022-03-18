@@ -124,6 +124,6 @@ Number.prototype.get = function () {
     return this.valueOf();
 };
 
-Number.prototype.average = function () {
+Number.prototype.getAverage = function () {
     return this.valueOf();
 };

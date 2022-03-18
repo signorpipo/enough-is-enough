@@ -552,7 +552,7 @@ class Vent {
 
     ventCompletedDebug() {
         if (this._myDebugActive) {
-            console.log("Vent Completed - Duration -", Global.myVentDuration.toFixed(3), "- Dismissed -", this._myCloneDismissed);
+            console.log("\nVent Completed - Duration -", Global.myVentDuration.toFixed(3), "- Dismissed -", this._myCloneDismissed);
 
             this._boosterGroupDebug();
         }
@@ -560,7 +560,7 @@ class Vent {
 
     ventLostDebug() {
         if (this._myDebugActive) {
-            console.log("Vent Lost - Duration -", Global.myVentDuration.toFixed(3), "- Dismissed -", this._myCloneDismissed);
+            console.log("\nVent Lost - Duration -", Global.myVentDuration.toFixed(3), "- Dismissed -", this._myCloneDismissed);
 
             this._boosterGroupDebug();
         }
