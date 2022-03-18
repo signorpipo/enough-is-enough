@@ -149,8 +149,8 @@ class enoughISenough {
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/throw.wav");
-            audioSetup.myRate = 0.8;
-            audioSetup.myVolume = 0.25;
+            audioSetup.myRate = 0.7;
+            audioSetup.myVolume = 0.225;
             audioSetup.myReferenceDistance = 0.3;
             manager.addAudioSetup(SfxID.THROW, audioSetup);
         }

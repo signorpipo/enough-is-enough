@@ -10,7 +10,7 @@ class MrNOT {
         this._myDirection = this._myTargetPosition.vec3_sub(this._myStartPosition);
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Time To Reach Target", 60, 10, 3));
-        PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Max Patience", 15, 10));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Max Patience", 25, 10));
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Reach Distance", 5, 10, 3));
 
         this._myCallbackOnPatienceOver = callbackOnPatienceOver;
