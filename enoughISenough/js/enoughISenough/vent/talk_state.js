@@ -6,10 +6,12 @@ class TalkState extends PP.State {
         //this._myFSM.setDebugLogActive(true, "        Talk");
         this._myFSM.addState("init");
         this._myFSM.addState("first_wait", new PP.TimerState(1.5, "end"));
+        //this._myFSM.addState("first_wait", new PP.TimerState(5, "end")); // for trailer, emulator distance 1.7, speaker monitor volume 0.5
         this._myFSM.addState("mr_not_appear", this._updateMrNOTAppear.bind(this));
         this._myFSM.addState("talk", this._updateTalk.bind(this));
         this._myFSM.addState("mr_not_disappear", this._updateMrNOTDisappear.bind(this));
         this._myFSM.addState("second_wait", new PP.TimerState(0, "end"));
+        //this._myFSM.addState("second_wait", new PP.TimerState(5, "end")); // for trailer
         this._myFSM.addState("done");
 
         if (isDefeat) {
@@ -347,18 +349,21 @@ class Blather {
         this._myBlatherTextObject.pp_setPosition([0, 2.074, -9]);
         this._myBlatherTextObject.pp_setRotation([0, 0, 0]);
         this._myBlatherTextObject.pp_setScale([3.5, 3.5, 3.5]);
+        //this._myBlatherTextObject.pp_setScale([5, 5, 5]); // for trailer
 
         this._myCharAudios[0].setPosition(this._myBlatherTextObject.pp_getPosition());
         this._myCharAudios[1].setPosition(this._myBlatherTextObject.pp_getPosition());
 
+        let multiplier = 1;
+        //multiplier = 5 / 3.5; // for trailer
         let sentenceLength = this._mySentences[this._myCurrentSenteceIndex].mySentence.length;
-        let displacement = sentenceLength * 0.094;
+        let displacement = sentenceLength * 0.094 * multiplier;
         if (this._mySentences[this._myCurrentSenteceIndex].mySentence.includes("enough IS enough")) {
-            displacement = sentenceLength * 0.096;
+            displacement = sentenceLength * 0.096 * multiplier;
         } else if (this._mySentences[this._myCurrentSenteceIndex].mySentence.includes("it will always be...")) {
-            displacement = sentenceLength * 0.09;
+            displacement = sentenceLength * 0.09 * multiplier;
         } else if (this._mySentences[this._myCurrentSenteceIndex].mySentence.includes("...")) {
-            displacement = (sentenceLength - 1.5) * 0.094;
+            displacement = (sentenceLength - 1.5) * 0.094 * multiplier;
         }
         this._myBlatherTextObject.translateObject([-displacement, 0, 0]);
     }
