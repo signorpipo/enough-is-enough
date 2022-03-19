@@ -169,15 +169,15 @@ v suono rapido per quando appare mr not boss di colpo
 v object explode
 v object appear
 v mr not laughing (per capire da dove arriva)
-x grab (?)
+v grab (?)
 x on object collision? like sound of something falling on the table (?)
 v mr not die
 v title appearing/disappearing from dark (also usable for mr not appearing)
 v mr not final explosions
 
 PULSE:
-x collision (?)
-x release (?)
+v collision (?)
+v release (?)
 v grab
 v not enough
 
