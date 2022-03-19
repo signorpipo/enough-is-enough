@@ -111,7 +111,7 @@ class TrialState extends PP.State {
         let sentences = [];
 
         sentences.push(new Sentence("Glad to see you again"));
-        sentences.push(new Sentence("Maybe we can have a little conversation"));
+        sentences.push(new Sentence("Maybe we could have a little conversation"));
         sentences.push(new Sentence("Why don't you show me what you have learned so far?", 2.5, 1.5));
 
         return sentences;

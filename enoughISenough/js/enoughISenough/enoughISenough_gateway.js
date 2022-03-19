@@ -37,6 +37,11 @@ WL.registerComponent("enough-IS-enough-gateway", {
             Global.mySaveManager.save("trial_completed", false);
             Global.mySaveManager.save("trial_level", 1);
         }
+
+        let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false);
+        let trialLevel = Global.mySaveManager.loadNumber("trial_level", 1);
+        let trialCompleted = Global.mySaveManager.loadBool("trial_completed", false);
+        Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialLevel >= 2);
     },
     update: function (dt) {
         if (this._myFirstUpdate) {
