@@ -18415,27 +18415,24 @@
             "name": "Credits",
             "parent": "32",
             "transformation": [
-                -0.6000034,
-                -9.059800731847645e-8,
+                -0.6999998,
+                -1.0569703334795122e-7,
+                -0.0,
+                0.0,
+                -1.0569709729679744e-7,
+                0.7000002,
+                -6.119596207554423e-8,
                 0.0,
                 0.0,
-                -8.992189037826395e-8,
-                0.5955256,
-                -0.0731213,
+                -6.119594786468952e-8,
+                -0.7,
                 0.0,
-                1.1041059622129982e-8,
-                -0.0731217,
-                -0.595529,
-                0.0,
-                1.3411099075710809e-7,
-                1.9999991,
-                3.2999942,
+                1.3411190025180987e-7,
+                1.55,
+                3.3000001,
                 1.0
             ],
             "components": [
-                {
-                    "type": "pp-easy-transform"
-                },
                 {
                     "type": "credits-visualizer",
                     "credits-visualizer": {
@@ -18543,7 +18540,7 @@
                     "type": "text",
                     "text": {
                         "material": "441",
-                        "text": "Proud to say that I made this all by myself, as my stupid ego asked me to.\n\nI still would like to thank the ones who were with me during this journey \nand that helped me with their support and feedbacks.\n\nFirst I would like to thank Florian for believing in this project way more than me. \nYou really made me feel like I could do it and that it would have been amazing.\nIt was so nice having a friend like you a part of this journey from the beginning!\n\nThank you Jonathan for helping me with all the bugs and feature requests I had for you, and I had plenty.\nI know how annoying I can be so thank you for putting up with me.\n\nI'm so glad I had you, Yinch, as my first customer.\nI could have never asked for a better one, honestly.\nYour kindness reaches another level, working with you was fun and not stressful at all, it was a pleasure!\nYou helped me believe again I can do it.\n\nThank you Zesties! Your support and excitement for this project were such a boost for me! \nI'm glad you guys are out there trying to find a way to let us devs on WebXR get a way to fund ourselves!\n\nI would also like to thank the Wonderland community. \nEven before getting into the discord server, I knew something was waiting for me and I was right.\nThis engine helped me recover from a bad fall, helped me get back on my feet, helped me to start again developing \nand to believe I still have something to say and that I know how to do it.\nThank you so much, I honestly will never be able to pay my debt for what you have done to me.\n\nThank you Marco for being always with me, for being there every time I needed to blather about this fucking game, \nevery time I slightly changed a triangle in a mesh and wanted you to see it, and for all the feedbacks.\nYour creativity and the way you look at the world are inspiring to me \nand I always look at you and try to learn from you those things that for you are just living.\n\nThanks to all the people that I love and that have helped me in a way or another, \nbeing through some feedbacks, or even just a laugh together.\n\nAs last, I would also like to thank those who hurt me. \nThanks to you, I've grown so much and I've learned so many things about myself that I would have not otherwise.\nIt's a weird thing to say, but I'm glad you did what you did to me, because now I feel better than ever."
+                        "text": "Proud to say that I made this all by myself, as my stupid ego asked me to.\n\nBut, after all, this would have not been possible without those who were with me throughout this journey, \nand that helped me with their support and feedbacks.\n\nFirst, I would like to thank you, Florian, for believing in this project way more than me. \nYou really made me feel like I could do it and that it would have been amazing.\nIt was so nice to have a friend like you be a part of this journey since the beginning!\n\nThank you, Jonathan, for helping me with all the bugs and feature requests I had for you, and I had plenty.\nI know how annoying I can be so thank you for putting up with me.\n\nI'm so glad I had you, Yinch, as my first customer.\nI could have never asked for a better one, honestly.\nYour kindness reaches another level, working with you was fun and not stressful at all, it was a pleasure!\nYou helped me believe again I can do it.\n\nThank you Zesties! Your support and excitement for this project were such a boost for me! \nI'm glad you are out there trying to find a way to let us devs on WebXR get a way to fund ourselves.\n\nI would also like to thank the Wonderland community. \nEven before getting into the discord server, I knew something was waiting for me and I was right.\nThis engine helped me recover from a bad fall, helped me get back on my feet, helped me start developing again \nand believe I still have something to say and that I know how to do it.\nThank you so much, I honestly will never be able to pay my debt for what you have done to me.\n\nThank you Marco for being always with me, for being there every time I needed to blather about this fucking game, \nevery time I slightly changed a triangle in a mesh and wanted you to see it, and for all the feedbacks.\nYour creativity and the way you look at the world are inspiring to me \nand I always look at you and try to learn from you those things that for you are just living.\n\nThanks to all the people that I love and that have helped me in a way or another, \nbeing through some feedbacks, or even just a laugh together.\n\nAs last, I would also like to thank those who hurt me. \nThanks to you, I've grown so much and I've learned so many things about myself that I would have not otherwise.\nIt's a weird thing to say, but I'm glad you did what you did to me, because now I feel better than ever."
                     },
                     "active": false
                 }

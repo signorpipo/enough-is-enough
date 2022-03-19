@@ -34,7 +34,7 @@ WL.registerComponent("credits-visualizer", {
         this._myAppearAudio.setPosition(this.object.pp_getPosition());
         this._myDisappearAudio.setPosition(this.object.pp_getPosition());
         this._myAppearAudio.setVolume(1);
-        this._myDisappearAudio.setVolume(1);
+        this._myDisappearAudio.setVolume(0.7);
 
         this._myFSM.init("hide");
     },
@@ -83,7 +83,7 @@ WL.registerComponent("credits-visualizer", {
             this._myText.material.color = tempColor;
 
             let easing = t => t * (2 - t);
-            this._myText.object.pp_setScale(Math.pp_interpolate(this._myHideScale, 1, this._mySpawnTimer.getPercentage(), easing));
+            this._myText.object.pp_setScaleLocal(Math.pp_interpolate(this._myHideScale, 1, this._mySpawnTimer.getPercentage(), easing));
 
             if (this._mySpawnTimer.isDone()) {
                 this._myFSM.perform("end");
@@ -104,7 +104,7 @@ WL.registerComponent("credits-visualizer", {
 
             let easing = t => t * t;
             let scale = Math.pp_interpolate(1, this._myHideScale, this._mySpawnTimer.getPercentage(), easing);
-            this._myText.object.pp_setScale(scale);
+            this._myText.object.pp_setScaleLocal(scale);
 
             if (this._mySpawnTimer.isDone()) {
                 this._myText.active = false;
