@@ -78,11 +78,11 @@ class ArcadeResultState extends PP.State {
         this._myFSM.perform("start");
 
         if (this._myIsDispute) {
-            if (Global.myStatistics.myDisputeBestTime < 0 || Global.myVentDuration < Global.myStatistics.myDisputeBestTime) {
+            if (Global.myStatistics.myDisputeBestTime < 0 || Global.myVentDuration > Global.myStatistics.myDisputeBestTime) {
                 Global.myStatistics.myDisputeBestTime = Global.myVentDuration;
             }
         } else {
-            if (Global.myStatistics.myChatBestTime < 0 || Global.myVentDuration < Global.myStatistics.myChatBestTime) {
+            if (Global.myStatistics.myChatBestTime < 0 || Global.myVentDuration > Global.myStatistics.myChatBestTime) {
                 Global.myStatistics.myChatBestTime = Global.myVentDuration;
             }
         }

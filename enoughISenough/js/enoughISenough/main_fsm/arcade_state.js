@@ -25,11 +25,13 @@ class ArcadeState extends PP.State {
     }
 
     update(dt, fsm) {
-        Global.myArcadeDuration += dt;
-        if (this._myIsDispute) {
-            Global.myStatistics.myDisputePlayTime += dt;
-        } else {
-            Global.myStatistics.myChatPlayTime += dt;
+        if (!this._myFSM.isInState("defeat")) {
+            Global.myArcadeDuration += dt;
+            if (this._myIsDispute) {
+                Global.myStatistics.myDisputePlayTime += dt;
+            } else {
+                Global.myStatistics.myChatPlayTime += dt;
+            }
         }
 
         this._myFSM.update(dt);
