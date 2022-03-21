@@ -195,12 +195,14 @@ class MrNOTVentState extends PP.State {
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.EVERYEYE, 5));
 
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ANT_MAIN_CHARACTER, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.SHATTERED_COIN, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.HEART, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.HALO_SWORD, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.FOX, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.FAMILY, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.MIRROR, 5));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ALOE_VERA, 5));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MR_NOT_EVIDENCE, 5));
 
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.WAYFINDER, 25, null, null,
             [CardinalPosition.NORTH, CardinalPosition.NORTH_EAST, CardinalPosition.NORTH_WEST, CardinalPosition.EAST, CardinalPosition.WEST]));

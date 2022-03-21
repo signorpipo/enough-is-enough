@@ -283,9 +283,9 @@ class MrNOT {
             GameObjectType.FAMILY,
             GameObjectType.MIRROR,
             GameObjectType.WAYFINDER,
-            //GameObjectType.ETHEREUM,
             GameObjectType.EVERYEYE,
             GameObjectType.ALOE_VERA,
+            //GameObjectType.MR_NOT_EVIDENCE,
             //GameObjectType.STARING_CUBE,
         ];
     }

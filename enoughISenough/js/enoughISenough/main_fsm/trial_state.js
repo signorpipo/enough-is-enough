@@ -242,13 +242,13 @@ class TrialState extends PP.State {
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.STARING_CUBE, 2));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.TROPHY, 5));
 
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERMELON, 7));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PSI, 7));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERLAND, 7));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.VR, 7));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EGGPLANT, 7));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PICO_8, 7));
-        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EVERYEYE, 7));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERMELON, 10));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PSI, 10));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.WONDERLAND, 10));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.VR, 10));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EGGPLANT, 10));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.PICO_8, 10));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.EVERYEYE, 10));
 
         return evidenceSetupList;
     }
@@ -277,12 +277,14 @@ class TrialState extends PP.State {
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.EVERYEYE, 5));
 
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ANT_MAIN_CHARACTER, 10));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.SHATTERED_COIN, 10));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.HEART, 10));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.HALO_SWORD, 10));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.FOX, 10));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.FAMILY, 10));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.MIRROR, 10));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ALOE_VERA, 10));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MR_NOT_EVIDENCE, 10));
 
         return evidenceSetupList;
     }

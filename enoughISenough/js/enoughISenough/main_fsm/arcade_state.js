@@ -96,12 +96,14 @@ class ArcadeState extends PP.State {
         let thirdStarTime = 90;
         let thirdEndTime = 130;
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ANT_MAIN_CHARACTER, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.SHATTERED_COIN, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.HEART, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.HALO_SWORD, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.FOX, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.FAMILY, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.MIRROR, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
         evidenceSetupList.push(new EvidenceSetup(GameObjectType.ALOE_VERA, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
+        evidenceSetupList.push(new EvidenceSetup(GameObjectType.MR_NOT_EVIDENCE, new ValueOverTime(0, 5, thirdStarTime, thirdEndTime, true)));
 
         let lastStarTime = 140;
         let lastEndTime = 180;
