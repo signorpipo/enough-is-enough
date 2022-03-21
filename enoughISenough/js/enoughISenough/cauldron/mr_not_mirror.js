@@ -20,7 +20,7 @@ WL.registerComponent("mr_not_mirror", {
 
         let angleFactor = Math.pp_mapToRange(angle, 10, 45, 0.9, 0);
 
-        let alpha = Math.pp_clamp(angleFactor * distanceFactor, 0, 1);
+        let alpha = Math.pp_clamp(angleFactor * distanceFactor, 0, 0.6);
 
         PP.MeshUtils.setAlpha(this.object, alpha);
     }
