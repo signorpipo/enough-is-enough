@@ -6,7 +6,7 @@ class TalkState extends PP.State {
         //this._myFSM.setDebugLogActive(true, "        Talk");
         this._myFSM.addState("init");
         this._myFSM.addState("first_wait", new PP.TimerState(1.5, "end"));
-        //this._myFSM.addState("first_wait", new PP.TimerState(5, "end")); // for trailer, emulator distance 1.7, speaker monitor volume 0.5
+        //this._myFSM.addState("first_wait", new PP.TimerState(5, "end")); // for trailer, emulator distance [0, 1.65, 1.7], speaker monitor volume 0.5
         this._myFSM.addState("mr_not_appear", this._updateMrNOTAppear.bind(this));
         this._myFSM.addState("talk", this._updateTalk.bind(this));
         this._myFSM.addState("mr_not_disappear", this._updateMrNOTDisappear.bind(this));
@@ -77,6 +77,7 @@ class TalkState extends PP.State {
     _prepareMrNOTAppear() {
         this._myMrNOT.pp_setPosition([0, 11, -18]);
         this._myMrNOT.pp_setRotation([40, 0, 0]);
+        //this._myMrNOT.pp_setRotation([30, 0, 0]);
         this._myMrNOT.pp_setScale([5, 5, 5]);
         PP.MeshUtils.setFogColor(this._myMrNOT, [0, 0, 0, this._myFogAlphaMax]);
 

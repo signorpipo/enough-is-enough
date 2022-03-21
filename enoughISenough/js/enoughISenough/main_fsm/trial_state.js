@@ -192,6 +192,23 @@ class TrialState extends PP.State {
         return sentences;
     }
 
+    _invitationSentences() {
+        let sentences = [];
+
+        sentences.push(new Sentence("My dearest puppet", 1.75, 0.75));
+        sentences.push(new Sentence("did you miss me?"));
+        sentences.push(new Sentence("I did", 2.5, 1.5));
+
+        sentences.push(new Sentence("Why don’t you STAND UP", 1, 0));
+        sentences.push(new Sentence("SQUEEZE those buttons", 1, 0));
+        sentences.push(new Sentence("and get ready to THROW?"));
+
+        sentences.push(new Sentence("I am here for you", 1.75, 0.75));
+        sentences.push(new Sentence("don’t make me wait", 2.5, 1.5));
+
+        return sentences;
+    }
+
     _firstEvidenceSetupList() {
         let evidenceSetupList = [];
 
