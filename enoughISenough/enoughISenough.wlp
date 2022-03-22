@@ -719,7 +719,8 @@
                         "mesh": "8"
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "88": {
             "name": "Test",
@@ -747,7 +748,8 @@
                 2.0000004,
                 5.960464477539065e-8,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "89": {
             "name": "Test",
@@ -801,7 +803,8 @@
                 1.5000004,
                 -8.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "91": {
             "name": "Test Right",
@@ -832,7 +835,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "92": {
             "name": "Test Up",
@@ -863,7 +867,8 @@
                 10.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "93": {
             "name": "Empty.000",
@@ -902,7 +907,8 @@
                 1.8990012,
                 -0.1418794,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "94": {
             "name": "Empty.001",
@@ -933,7 +939,8 @@
                 0.0000137,
                 3.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "95": {
             "name": "Empty.001",
@@ -964,7 +971,8 @@
                 3.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "96": {
             "name": "Empty.001",
@@ -995,7 +1003,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "98": {
             "name": "Empty.000",
@@ -1035,7 +1044,8 @@
                 2.9404842,
                 -1.1562485,
                 1.0000001
-            ]
+            ],
+            "deleted": true
         },
         "99": {
             "name": "Empty.001",
@@ -1066,7 +1076,8 @@
                 0.0000137,
                 3.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "100": {
             "name": "Empty.001",
@@ -1097,7 +1108,8 @@
                 3.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "101": {
             "name": "Empty.001",
@@ -1128,7 +1140,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "102": {
             "name": "Test",
@@ -1159,7 +1172,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "103": {
             "name": "Empty.002",
@@ -1191,7 +1205,8 @@
                     },
                     "active": false
                 }
-            ]
+            ],
+            "deleted": true
         },
         "104": {
             "name": "Test Prototype",
@@ -1221,7 +1236,8 @@
                         "mesh": "8"
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "105": {
             "name": "Lights",
@@ -1368,7 +1384,8 @@
                 -184.0,
                 1.0
             ],
-            "parent": "122"
+            "parent": "122",
+            "deleted": true
         },
         "114": {
             "name": "Text",
@@ -1434,7 +1451,8 @@
                 -143.000061,
                 1.0
             ],
-            "parent": "122"
+            "parent": "122",
+            "deleted": true
         },
         "118": {
             "link": {
@@ -1608,7 +1626,8 @@
                         "_myHierarchyActive": false
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "123": {
             "name": "Test Audio",
@@ -1618,7 +1637,8 @@
                     "type": "test-audio",
                     "active": true
                 }
-            ]
+            ],
+            "deleted": true
         },
         "124": {
             "name": "Test Clone",
@@ -1648,7 +1668,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "125": {
             "name": "Empty.003",
@@ -1679,7 +1700,8 @@
                 1.5,
                 -1.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "126": {
             "name": "Empty.004",
@@ -1710,7 +1732,8 @@
                 -1.463748,
                 0.9986633,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "129": {
             "link": {
@@ -1964,7 +1987,8 @@
                 -196.0,
                 1.0
             ],
-            "parent": "122"
+            "parent": "122",
+            "deleted": true
         },
         "135": {
             "name": "enough",
@@ -1998,7 +2022,8 @@
                 -148.0,
                 1.0
             ],
-            "parent": "122"
+            "parent": "122",
+            "deleted": true
         },
         "136": {
             "name": "Rumble Space",
@@ -2087,7 +2112,8 @@
                 -999999.875,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "141": {
             "name": "Cube",
@@ -2143,7 +2169,8 @@
                 1.4891208,
                 -0.6519167,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "142": {
             "name": "Empty.005",
@@ -2335,7 +2362,8 @@
                 -649.9998779,
                 1.0
             ],
-            "parent": "102"
+            "parent": "102",
+            "deleted": true
         },
         "147": {
             "name": "Nose",
@@ -3564,7 +3592,8 @@
                 133.0,
                 -164.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "174": {
             "name": "Evidence Objects",
@@ -3781,7 +3810,8 @@
                 11.0,
                 -18.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "181": {
             "name": "Mesh",
@@ -3813,7 +3843,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "182": {
             "name": "Nose",
@@ -3844,7 +3875,8 @@
                 0.0,
                 0.8999999,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "183": {
             "name": "BLA BLA",
@@ -3876,7 +3908,8 @@
                 -9.0,
                 1.0
             ],
-            "parent": "185"
+            "parent": "185",
+            "deleted": true
         },
         "185": {
             "name": "Mr NOT Blathering",
@@ -3898,7 +3931,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "186": {
             "name": "Test Set Alpha",
@@ -3925,7 +3959,8 @@
                     "type": "test-set-alpha"
                 }
             ],
-            "parent": "102"
+            "parent": "102",
+            "deleted": true
         },
         "187": {
             "name": "Empty.007",
@@ -3956,7 +3991,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "188": {
             "name": "Empty.008",
@@ -3987,7 +4023,8 @@
                 1.1179409,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "189": {
             "name": "Empty.008",
@@ -4018,7 +4055,8 @@
                 -1.1387395,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "190": {
             "name": "Empty.009",
@@ -4049,7 +4087,8 @@
                 0.7922868,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "195": {
             "name": "BLA BLA",
@@ -4082,7 +4121,8 @@
                 10.0,
                 1.0
             ],
-            "parent": "185"
+            "parent": "185",
+            "deleted": true
         },
         "196": {
             "name": "NOT ENOUGH",
@@ -4114,7 +4154,8 @@
                 -10.5,
                 1.0
             ],
-            "parent": "185"
+            "parent": "185",
+            "deleted": true
         },
         "197": {
             "name": "NOT ENOUGH",
@@ -4147,7 +4188,8 @@
                 -10.5,
                 1.0
             ],
-            "parent": "185"
+            "parent": "185",
+            "deleted": true
         },
         "198": {
             "name": "LoL",
@@ -5517,7 +5559,8 @@
                 -1.9802194,
                 1.0
             ],
-            "parent": "102"
+            "parent": "102",
+            "deleted": true
         },
         "229": {
             "name": "Normal",
@@ -5551,7 +5594,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "230": {
             "name": "Add",
@@ -5588,7 +5632,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "231": {
             "name": "Add World",
@@ -5627,7 +5672,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "232": {
             "name": "Mesh.000",
@@ -15396,7 +15442,8 @@
                     }
                 }
             ],
-            "parent": "995"
+            "parent": "995",
+            "deleted": true
         },
         "994": {
             "link": {
@@ -15452,7 +15499,8 @@
                     },
                     "active": false
                 }
-            ]
+            ],
+            "deleted": true
         },
         "996": {
             "name": "Palette Mesh",
@@ -15482,7 +15530,8 @@
                         "_myHierarchyActive": false
                     }
                 }
-            ]
+            ],
+            "deleted": true
         },
         "997": {
             "name": "Mesh",
@@ -15513,7 +15562,8 @@
                 0.0,
                 0.0,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "1014": {
             "name": "Visualizer Original",
@@ -15608,7 +15658,8 @@
                     "type": "pp-deactivate-on-first-update"
                 }
             ],
-            "parent": "995"
+            "parent": "995",
+            "deleted": true
         },
         "1015": {
             "name": "P8 palette",
@@ -15698,7 +15749,8 @@
                     "type": "pp-deactivate-on-first-update"
                 }
             ],
-            "parent": "995"
+            "parent": "995",
+            "deleted": true
         },
         "1020": {
             "name": "Light 3",
@@ -17778,7 +17830,7 @@
             ],
             "transformation": [
                 -0.136,
-                -1.188944320773544e-8,
+                -1.1889443207735441e-8,
                 3.850477270361807e-8,
                 0.0,
                 -3.8504133215155898e-8,
@@ -18326,7 +18378,8 @@
                 -196.3258361,
                 1.0
             ],
-            "parent": "122"
+            "parent": "122",
+            "deleted": true
         },
         "1380": {
             "name": "Physx",
