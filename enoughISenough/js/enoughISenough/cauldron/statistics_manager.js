@@ -7,58 +7,77 @@ class StatisticsManager {
         Global.myStatistics = new Statistics();
         Global.myStatistics.load();
 
+        if (WL.xrSession) {
+            this._onXRSessionStart(WL.xrSession);
+        }
+        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
+
         WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
 
-        this._myTimer = new PP.Timer(5);
-        this._myAnalyticsTimer = new PP.Timer(0);
+        this._mySaveTimer = new PP.Timer(20);
+        this._myCommitOnEndTimer = new PP.Timer(0);
 
         Global.mySaveManager.registerClearEventListener(this, this._onClear.bind(this));
     }
 
     update(dt) {
-        this._myAnalyticsTimer.update(dt);
-        this._myTimer.update(dt);
-        if (this._myTimer.isDone()) {
-            this._myTimer.start();
+        this._myCommitOnEndTimer.update(dt);
+        this._mySaveTimer.update(dt);
+        if (this._mySaveTimer.isDone()) {
+            this._mySaveTimer.start();
             Global.myStatistics.save();
         }
     }
 
+    _onXRSessionStart(session) {
+        session.addEventListener('visibilitychange', function (event) {
+            if (event.session.visibilityState != "visible") {
+                this._onXRSessionEnd();
+            }
+        }.bind(this));
+    }
+
     _onXRSessionEnd() {
-        Global.myStatistics.save();
-        this._sendAnalytics();
+        if (this._myCommitOnEndTimer.isDone()) {
+            this._myCommitOnEndTimer.start(20);
+            Global.myStatistics.save();
+            this._sendAnalytics();
+        }
     }
 
     _onClear() {
+        this._myCommitOnEndTimer.start(20);
         this._sendAnalytics();
         Global.myStatistics.load();
     }
 
     _sendAnalytics() {
-        if (this._myAnalyticsTimer.isDone()) {
-            this._myAnalyticsTimer.start(2);
+        if (Global.myGoogleAnalytics) {
+            gtag("event", "timing_complete", {
+                "name": "play_time",
+                "value": Math.round((Global.myStatistics.myTotalPlayTime - Global.myStatistics.myTotalPlayTimeOnLoad) * 1000)
+            });
 
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "timing_complete", {
-                    "name": "play_time",
-                    "value": Math.round((Global.myStatistics.myTotalPlayTime - Global.myStatistics.myTotalPlayTimeOnLoad) * 1000)
-                });
-
+            if ((Global.myStatistics.myEvidencesThrown - Global.myStatistics.myEvidencesThrownOnLoad) > 0) {
                 gtag("event", "evidences_thrown", {
                     "value": (Global.myStatistics.myEvidencesThrown - Global.myStatistics.myEvidencesThrownOnLoad)
                 });
+            }
 
+            if ((Global.myStatistics.myMrNOTDismissed - Global.myStatistics.myMrNOTDismissedOnLoad) > 0) {
                 gtag("event", "mr_NOT_dismissed", {
                     "value": (Global.myStatistics.myMrNOTDismissed - Global.myStatistics.myMrNOTDismissedOnLoad)
                 });
+            }
 
+            if ((Global.myStatistics.myMrNOTClonesDismissed - Global.myStatistics.myMrNOTClonesDismissedOnLoad) > 0) {
                 gtag("event", "mr_NOT_clones_dismissed", {
                     "value": (Global.myStatistics.myMrNOTClonesDismissed - Global.myStatistics.myMrNOTClonesDismissedOnLoad)
                 });
             }
-
-            Global.myStatistics.syncOnLoadVariables();
         }
+
+        Global.myStatistics.syncOnLoadVariables();
     }
 }
 

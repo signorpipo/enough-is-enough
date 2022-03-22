@@ -13,8 +13,6 @@ WL.registerComponent("display-leaderboard", {
     update: function (dt) {
     },
     onActivate: function () {
-        this._myNamesTextComponent.text = "";
-        this._myScoresTextComponent.text = "";
         PP.CAUtils.getLeaderboard(this._myName, true, this._myIsLocal, 10, this._onLeaderboardRetrieved.bind(this));
     },
     _onLeaderboardRetrieved(leaderboard) {
@@ -23,13 +21,15 @@ WL.registerComponent("display-leaderboard", {
 
         let maxRankDigit = 0;
         for (let value of leaderboard) {
-            if (value.rank.toFixed(0).length > maxRankDigit) {
-                maxRankDigit = value.rank.toFixed(0).length;
+            let rank = value.rank + 1;
+            if (rank.toFixed(0).length > maxRankDigit) {
+                maxRankDigit = rank.toFixed(0).length;
             }
         }
 
         for (let value of leaderboard) {
-            let fixedRank = value.rank.toFixed(0);
+            let rank = value.rank + 1;
+            let fixedRank = rank.toFixed(0);
             while (fixedRank.length < maxRankDigit) {
                 fixedRank = "0".concat(fixedRank);
             }
@@ -60,6 +60,5 @@ WL.registerComponent("display-leaderboard", {
         let convertedTime = hoursText.concat(":", minutesText, ":", secondsText);
 
         return convertedTime;
-
     }
 });
