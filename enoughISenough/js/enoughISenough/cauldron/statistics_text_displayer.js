@@ -4,7 +4,14 @@ WL.registerComponent("statistics-text-displayer", {
     },
     start: function () {
         this._myText = this.object.pp_getComponent("text");
+        this._myTextPosition = this._myText.object.pp_getPosition();
+        this._myTempDirection1 = [];
+        this._myTempDirection2 = [];
+
         this._myTimer = new PP.Timer(0.5);
+
+        this._mySendAnalytics = true;
+        this._myUp = [0, 1, 0];
     },
     update: function (dt) {
         this._myTimer.update(dt);
@@ -12,6 +19,8 @@ WL.registerComponent("statistics-text-displayer", {
             this._myTimer.start();
             this._updateStatistics();
         }
+
+        this._checkStatisticsViewed(dt);
     },
     _updateStatistics() {
         let text = "";
@@ -52,5 +61,33 @@ WL.registerComponent("statistics-text-displayer", {
         string = string.concat((seconds.toFixed(0).length < 2) ? "0".concat(seconds.toFixed(0)) : seconds.toFixed(0));
 
         return string;
+    },
+    _checkStatisticsViewed() {
+        if (this._mySendAnalytics) {
+            let height = Global.myPlayerPosition[1];
+            if (height < 0.9) {
+                let angle = Global.myPlayerForward.vec3_angle(this._myUp);
+                if (Math.abs(angle) < 80 && Math.abs(Global.myPlayerPosition[0]) < 0.7 && Math.abs(Global.myPlayerPosition[2]) < 0.7) {
+                    this._myTextPosition.vec3_sub(Global.myPlayerPosition, this._myTempDirection1);
+                    this._myTempDirection1.vec3_removeComponentAlongAxis(this._myUp, this._myTempDirection1);
+                    Global.myPlayerForward.vec3_removeComponentAlongAxis(this._myUp, this._myTempDirection2);
+
+                    let angleToText = Math.abs(this._myTempDirection1.vec3_angle(this._myTempDirection2));
+                    if (angleToText < 70) {
+                        if (Global.myGoogleAnalytics) {
+                            gtag("event", "statistics_viewed", {
+                                "value": 1
+                            });
+                        }
+                        this._mySendAnalytics = false;
+                    }
+                }
+            }
+        } else {
+            let height = Global.myPlayerPosition[1];
+            if (height > 1.2) {
+                this._mySendAnalytics = true;
+            }
+        }
     }
 });
