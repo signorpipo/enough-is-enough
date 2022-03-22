@@ -24,8 +24,12 @@ WL.registerComponent("activate-on-select", {
 
         this._myCollisionAudio = Global.myAudioManager.createAudioPlayer(SfxID.COLLISION);
         this._myCollisionPitch = this._myCollisionAudio.getPitch();
+
+        this._myAnalyticsTimer = new PP.Timer(0);
     },
-    update() {
+    update(dt) {
+        this._myAnalyticsTimer.update(dt);
+
         if (!Global.myEnableSelectPhysx) {
             this._myPhysx.active = false;
             this._myTriggerPhysx.active = false;
@@ -35,6 +39,16 @@ WL.registerComponent("activate-on-select", {
         if (Global.myEnableSelectPhysx) {
             this._myPhysx.active = true;
             this._myTriggerPhysx.active = true;
+
+            if (this._myAnalyticsTimer.isDone()) {
+                this._myAnalyticsTimer.start(2);
+
+                if (Global.myGoogleAnalytics) {
+                    gtag("event", "select_physx_actived", {
+                        "value": 1
+                    });
+                }
+            }
         }
     },
     _selectPressEnd() {

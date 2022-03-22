@@ -39,9 +39,12 @@ class MenuState extends PP.State {
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Unspawn Menu Time", 0.1, 0.1, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Unspawn Menu Scale", 2.5, 1, 3));
+
+        this._myMenuDuration = 0;
     }
 
     update(dt, fsm) {
+        this._myMenuDuration += dt;
         this._myFSM.update(dt);
         this._myNotEnough.update(dt);
     }
@@ -93,9 +96,18 @@ class MenuState extends PP.State {
         Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialLevel >= 2);
 
         Global.myPlayMusic = true;
+
+        this._myMenuDuration = 0;
     }
 
     end() {
+        if (Global.myGoogleAnalytics) {
+            gtag("event", "timing_complete", {
+                "name": "menu_time",
+                "value": Math.round(this._myMenuDuration * 1000)
+            });
+        }
+
         Global.myIsInMenu = false;
     }
 
@@ -163,11 +175,24 @@ class MenuState extends PP.State {
 
         let fullReset = this._myFloppyDisk.getGrabTime() >= 5;
         if (!fullReset) {
+
+            if (Global.myGoogleAnalytics) {
+                gtag("event", "save_reset", {
+                    "value": 1
+                });
+            }
+
             Global.mySaveManager.save("trial_started_once", false);
             Global.mySaveManager.save("trial_completed", false);
             Global.mySaveManager.save("trial_level", 1);
             this._myNotEnough.start();
         } else {
+            if (Global.myGoogleAnalytics) {
+                gtag("event", "save_reset_full", {
+                    "value": 1
+                });
+            }
+
             Global.mySaveManager.clear();
             Global.mySaveManager.save("game_version", Global.myGameVersion);
             this._myNotEnough.start();
@@ -343,6 +368,12 @@ class MenuState extends PP.State {
 
         {
             let wondermelon = new MenuItem(Global.myGameObjects.get(GameObjectType.WONDERMELON), GameObjectType.WONDERMELON, positions[7], function () {
+                if (Global.myGoogleAnalytics) {
+                    gtag("event", "not_enough_opened", {
+                        "value": 1
+                    });
+                }
+
                 if (WL.xrSession) {
                     WL.xrSession.end();
                 }

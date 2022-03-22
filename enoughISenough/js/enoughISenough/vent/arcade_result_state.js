@@ -81,9 +81,23 @@ class ArcadeResultState extends PP.State {
             if (Global.myStatistics.myDisputeBestTime < 0 || Global.myVentDuration > Global.myStatistics.myDisputeBestTime) {
                 Global.myStatistics.myDisputeBestTime = Global.myVentDuration;
             }
+
+            if (Global.myGoogleAnalytics) {
+                gtag("event", "timing_complete", {
+                    "name": "arcade_dispute_time",
+                    "value": Math.round(Global.myVentDuration * 1000)
+                });
+            }
         } else {
             if (Global.myStatistics.myChatBestTime < 0 || Global.myVentDuration > Global.myStatistics.myChatBestTime) {
                 Global.myStatistics.myChatBestTime = Global.myVentDuration;
+            }
+
+            if (Global.myGoogleAnalytics) {
+                gtag("event", "timing_complete", {
+                    "name": "arcade_chat_time",
+                    "value": Math.round(Global.myVentDuration * 1000)
+                });
             }
         }
 

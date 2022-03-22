@@ -10,11 +10,13 @@ class StatisticsManager {
         WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
 
         this._myTimer = new PP.Timer(5);
+        this._myAnalyticsTimer = new PP.Timer(0);
 
         Global.mySaveManager.registerClearEventListener(this, this._onClear.bind(this));
     }
 
     update(dt) {
+        this._myAnalyticsTimer.update(dt);
         this._myTimer.update(dt);
         if (this._myTimer.isDone()) {
             this._myTimer.start();
@@ -24,10 +26,39 @@ class StatisticsManager {
 
     _onXRSessionEnd() {
         Global.myStatistics.save();
+        this._sendAnalytics();
     }
 
     _onClear() {
+        this._sendAnalytics();
         Global.myStatistics.load();
+    }
+
+    _sendAnalytics() {
+        if (this._myAnalyticsTimer.isDone()) {
+            this._myAnalyticsTimer.start(2);
+
+            if (Global.myGoogleAnalytics) {
+                gtag("event", "timing_complete", {
+                    "name": "play_time",
+                    "value": Math.round((Global.myStatistics.myTotalPlayTime - Global.myStatistics.myTotalPlayTimeOnLoad) * 1000)
+                });
+
+                gtag("event", "evidences_thrown", {
+                    "value": (Global.myStatistics.myEvidencesThrown - Global.myStatistics.myEvidencesThrownOnLoad)
+                });
+
+                gtag("event", "mr_NOT_dismissed", {
+                    "value": (Global.myStatistics.myMrNOTDismissed - Global.myStatistics.myMrNOTDismissedOnLoad)
+                });
+
+                gtag("event", "mr_NOT_clones_dismissed", {
+                    "value": (Global.myStatistics.myMrNOTClonesDismissed - Global.myStatistics.myMrNOTClonesDismissedOnLoad)
+                });
+            }
+
+            Global.myStatistics.syncOnLoadVariables();
+        }
     }
 }
 
@@ -46,8 +77,13 @@ class Statistics {
         this.myDisputePlayCount = 0;
         this.myDisputeBestTime = 0;
         this.myEvidencesThrown = 0;
-        this.myMrNOTCloneDismissed = 0;
+        this.myMrNOTClonesDismissed = 0;
         this.myMrNOTDismissed = 0;
+
+        this.myTotalPlayTimeOnLoad = 0;
+        this.myEvidencesThrownOnLoad = 0;
+        this.myMrNOTClonesDismissedOnLoad = 0;
+        this.myMrNOTDismissedOnLoad = 0;
     }
 
     load() {
@@ -67,8 +103,17 @@ class Statistics {
         this.myDisputeBestTime = Global.mySaveManager.loadNumber("dispute_best_time", -1);
 
         this.myEvidencesThrown = Global.mySaveManager.loadNumber("evidences_thrown", 0);
-        this.myMrNOTCloneDismissed = Global.mySaveManager.loadNumber("mr_NOT_clone_dismissed", 0);
+        this.myMrNOTClonesDismissed = Global.mySaveManager.loadNumber("mr_NOT_clones_dismissed", 0);
         this.myMrNOTDismissed = Global.mySaveManager.loadNumber("mr_NOT_dismissed", 0);
+
+        this.syncOnLoadVariables();
+    }
+
+    syncOnLoadVariables() {
+        this.myTotalPlayTimeOnLoad = this.myTotalPlayTime;
+        this.myEvidencesThrownOnLoad = this.myEvidencesThrown;
+        this.myMrNOTClonesDismissedOnLoad = this.myMrNOTClonesDismissed;
+        this.myMrNOTDismissedOnLoad = this.myMrNOTDismissed;
     }
 
     save() {
@@ -92,8 +137,7 @@ class Statistics {
         Global.mySaveManager.save("dispute_best_time", this.myDisputeBestTime);
 
         Global.mySaveManager.save("evidences_thrown", this.myEvidencesThrown);
-        Global.mySaveManager.save("mr_NOT_clone_dismissed", this.myMrNOTCloneDismissed);
+        Global.mySaveManager.save("mr_NOT_clones_dismissed", this.myMrNOTClonesDismissed);
         Global.mySaveManager.save("mr_NOT_dismissed", this.myMrNOTDismissed);
-
     }
 }

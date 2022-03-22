@@ -5,6 +5,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
     _myRightHandAnimator: { type: WL.Type.Object },
 }, {
     init: function () {
+        Global.myGoogleAnalytics = window.gtag != null;
         Global.myAudioManager = new PP.AudioManager();
         Global.myParticlesManager = new ParticlesManager();
         Global.myMeshObjectPoolMap = new PP.ObjectPoolManager();
@@ -48,7 +49,15 @@ WL.registerComponent("enough-IS-enough-gateway", {
             this._myFirstUpdate = false;
             this._start();
             PP.setEasyTuneWidgetActiveVariable("Float 1");
-        } else {
+        } else if (!Global.myFirstUpdateDone) {
+            if (window.performance) {
+                if (Global.myGoogleAnalytics) {
+                    gtag("event", "timing_complete", {
+                        "name": "load_time",
+                        "value": Math.round(performance.now())
+                    });
+                }
+            }
             Global.myFirstUpdateDone = true;
         }
 
@@ -61,6 +70,12 @@ WL.registerComponent("enough-IS-enough-gateway", {
         }
 
         if (Global.myZestyToClick != null) {
+            if (Global.myGoogleAnalytics) {
+                gtag("event", "zesty_market_opened", {
+                    "value": 1
+                });
+            }
+
             Global.myZestyToClick.onClick();
             Global.myZestyToClick = null;
         }
@@ -235,5 +250,6 @@ var Global = {
     myDebugCurrentVentObject: null,
     myPlayMusic: false,
     myStopMusic: false,
-    myGameVersion: 0
+    myGameVersion: 0,
+    myGoogleAnalytics: false
 };

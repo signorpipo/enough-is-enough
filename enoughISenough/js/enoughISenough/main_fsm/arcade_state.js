@@ -46,8 +46,20 @@ class ArcadeState extends PP.State {
         Global.myArcadeDuration = 0;
 
         if (this._myIsDispute) {
+            if (Global.myGoogleAnalytics) {
+                gtag("event", "arcade_dispute_started", {
+                    "value": 1
+                });
+            }
+
             Global.myStatistics.myDisputePlayCount += 1;
         } else {
+            if (Global.myGoogleAnalytics) {
+                gtag("event", "arcade_chat_started", {
+                    "value": 1
+                });
+            }
+
             Global.myStatistics.myChatPlayCount += 1;
         }
     }

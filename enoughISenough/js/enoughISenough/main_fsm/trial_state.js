@@ -26,20 +26,20 @@ class TrialState extends PP.State {
         this._myFSM.addTransition("init", "MrNOT_talk", "start_4");
 
         this._myFSM.addTransition("first_talk", "first_vent", "end");
-        this._myFSM.addTransition("first_vent", "first_defeat", "lost");
-        this._myFSM.addTransition("first_vent", "second_talk", "completed");
+        this._myFSM.addTransition("first_vent", "first_defeat", "lost", this._trialLevelLost.bind(this, 1));
+        this._myFSM.addTransition("first_vent", "second_talk", "completed", this._trialLevelCompleted.bind(this, 1));
 
         this._myFSM.addTransition("second_talk", "second_vent", "end");
-        this._myFSM.addTransition("second_vent", "second_defeat", "lost");
-        this._myFSM.addTransition("second_vent", "third_talk", "completed");
+        this._myFSM.addTransition("second_vent", "second_defeat", "lost", this._trialLevelLost.bind(this, 2));
+        this._myFSM.addTransition("second_vent", "third_talk", "completed", this._trialLevelCompleted.bind(this, 2));
 
         this._myFSM.addTransition("third_talk", "third_vent", "end");
-        this._myFSM.addTransition("third_vent", "third_defeat", "lost");
-        this._myFSM.addTransition("third_vent", "MrNOT_talk", "completed");
+        this._myFSM.addTransition("third_vent", "third_defeat", "lost", this._trialLevelLost.bind(this, 3));
+        this._myFSM.addTransition("third_vent", "MrNOT_talk", "completed", this._trialLevelCompleted.bind(this, 3));
 
         this._myFSM.addTransition("MrNOT_talk", "MrNOT_vent", "end");
-        this._myFSM.addTransition("MrNOT_vent", "MrNOT_defeat", "lost");
-        this._myFSM.addTransition("MrNOT_vent", "it_will_always_be_not_enough", "completed");
+        this._myFSM.addTransition("MrNOT_vent", "MrNOT_defeat", "lost", this._trialLevelLost.bind(this, 4));
+        this._myFSM.addTransition("MrNOT_vent", "it_will_always_be_not_enough", "completed", this._trialLevelCompleted.bind(this, 4));
 
         this._myFSM.addTransition("it_will_always_be_not_enough", "done", "end", this._gameCompleted.bind(this));
 
@@ -76,17 +76,67 @@ class TrialState extends PP.State {
     start(fsm, transitionID) {
         this._myParentFSM = fsm;
         Global.myTrialDuration = 0;
-        this._myTrialStartedFromBegin = true;
+        this._myTrialStartedFromBegin = false;
         Global.myStatistics.myTrialPlayCount += 1;
 
         let trialLevel = Global.mySaveManager.loadNumber("trial_level", 1);
-        let transition = "start_".concat(trialLevel);
-        this._myFSM.perform(transition);
 
+        if (trialLevel == 1) {
+            this._myTrialStartedFromBegin = true;
+        }
+
+        let transition = "start_".concat(trialLevel);
+
+        if (Global.myGoogleAnalytics) {
+            gtag("event", "trial_started", {
+                "value": 1
+            });
+
+            gtag("event", "trial_started_level_".concat(trialLevel), {
+                "value": 1
+            });
+        }
+
+        this._myFSM.perform(transition);
     }
 
     end(fsm, transitionID) {
         Global.mySaveManager.save("trial_started_once", true);
+    }
+
+    _trialLevelCompleted(trialLevel, fsm) {
+        if (Global.myGoogleAnalytics) {
+            gtag("event", "trial_completed_level_".concat(trialLevel), {
+                "value": 1
+            });
+        }
+
+        if (trialLevel == 4) {
+            if (Global.myGoogleAnalytics) {
+                gtag("event", "timing_complete", {
+                    "name": "trial_time",
+                    "value": Math.round(Global.myTrialDuration * 1000)
+                });
+            }
+        }
+    }
+
+    _trialLevelLost(trialLevel, fsm) {
+        if (Global.myGoogleAnalytics) {
+            gtag("event", "trial_lost_level_".concat(trialLevel), {
+                "value": 1
+            });
+
+            gtag("event", "timing_complete", {
+                "name": "trial_lost_time_level_".concat(trialLevel),
+                "value": Math.round(Global.myVentDuration * 1000)
+            });
+
+            gtag("event", "timing_complete", {
+                "name": "trial_time",
+                "value": Math.round(Global.myTrialDuration * 1000)
+            });
+        }
     }
 
     _backToMenu(trialLevel, fsm) {
@@ -98,6 +148,17 @@ class TrialState extends PP.State {
         if (this._myTrialStartedFromBegin) {
             if (Global.myStatistics.myTrialBestTime < 0 || Global.myTrialDuration < Global.myStatistics.myTrialBestTime) {
                 Global.myStatistics.myTrialBestTime = Global.myTrialDuration;
+            }
+
+            if (Global.myGoogleAnalytics) {
+                gtag("event", "trial_completed_from_start", {
+                    "value": 1
+                });
+
+                gtag("event", "timing_complete", {
+                    "name": "trial_completed_from_start_time",
+                    "value": Math.round(Global.myTrialDuration * 1000)
+                });
             }
         }
 

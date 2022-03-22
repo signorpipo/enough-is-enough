@@ -9,7 +9,7 @@ class IntroState extends PP.State {
         this._myFSM.addState("spawn_hands", this.handsUpdate.bind(this));
         this._myFSM.addState("show_title", new ShowTitleState());
         this._myFSM.addState("done");
-        this._myFSM.addState("test");
+        //this._myFSM.addState("test");
 
         this._myFSM.addTransition("wait_session", "wait_start", "end");
         this._myFSM.addTransition("wait_start", "move_ring", "end", this.startRing.bind(this));
@@ -25,15 +25,32 @@ class IntroState extends PP.State {
         //this._myFSM.addTransition("move_ring", "test", "skip", this.skipRing.bind(this));
 
         this._myTimer = new PP.Timer(2.5);
+
+        this._myIntroDuration = 0;
     }
 
     update(dt, fsm) {
         this._myFSM.update(dt);
 
+        if (!this._myFSM.isInState("wait_session")) {
+            this._myIntroDuration += dt;
+        }
+
         if (Global.mySaveManager.loadBool("trial_started_once", false) || Global.myDebugShortcutsEnabled) {
             if (!this._myFSM.isInState("wait_session") && PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd((PP.XRUtils.isDeviceEmulated()) ? 1 : 3)) {
                 while (!this._myFSM.isInState("done") && !this._myFSM.isInState("test")) {
                     this._myFSM.perform("skip");
+                }
+
+                if (Global.myGoogleAnalytics) {
+                    gtag("event", "intro_skipped", {
+                        "value": 1
+                    });
+
+                    gtag("event", "timing_complete", {
+                        "name": "intro_skipped_time",
+                        "value": Math.round(this._myIntroDuration * 1000)
+                    });
                 }
             }
         }
@@ -48,6 +65,12 @@ class IntroState extends PP.State {
         if (WL.xrSession && Global.myFirstUpdateDone) {
             let currentVersion = Global.mySaveManager.loadNumber("game_version", 0);
             console.log("Game Version:", currentVersion);
+
+            if (Global.myGoogleAnalytics) {
+                gtag("event", "xr_enter_session", {
+                    "value": 1
+                });
+            }
 
             fsm.perform("end");
         }
