@@ -359,7 +359,7 @@
                 {
                     "type": "enable-debug-shortcuts",
                     "enable-debug-shortcuts": {
-                        "_myShortcutsEnabled": true
+                        "_myShortcutsEnabled": false
                     }
                 },
                 {
@@ -402,7 +402,7 @@
                         "_myShowOnStart": false,
                         "_myEnableChangeVariableShortcut": true
                     },
-                    "active": true
+                    "active": false
                 },
                 {
                     "type": "pp-console-vr",
@@ -415,7 +415,7 @@
                         "_myPulseOnNewMessage": "never",
                         "_myShowVisibilityButton": false
                     },
-                    "active": true
+                    "active": false
                 },
                 {
                     "type": "pp-set-hand-transform",
@@ -529,7 +529,8 @@
                         "_myCursorMaterial": "66",
                         "_myShowFingerCursor": false,
                         "_myPulseOnHover": false
-                    }
+                    },
+                    "active": false
                 },
                 {
                     "type": "pp-set-hand-transform",
@@ -1953,7 +1954,8 @@
                 -10.0,
                 -4.76837158203125e-7,
                 1.0
-            ]
+            ],
+            "deleted": true
         },
         "134": {
             "name": "MR NOT",
@@ -2520,7 +2522,8 @@
                         "_myIsLocal": true,
                         "_myScaleAsOne": true,
                         "_myUseTuneTarget": true
-                    }
+                    },
+                    "active": false
                 },
                 {
                     "type": "pp-easy-transform",
@@ -2529,11 +2532,12 @@
                         "_myIsLocal": true,
                         "_myVariableName": "Target",
                         "_myUseTuneTarget": true
-                    }
+                    },
+                    "active": false
                 },
                 {
                     "type": "pp-easy-set-tune-target-grab",
-                    "active": true
+                    "active": false
                 },
                 {
                     "type": "pp-easy-mesh-color",
@@ -2542,7 +2546,8 @@
                         "_myColorModel": "hsv",
                         "_myColorType": "diffuse color",
                         "_myUseTuneTarget": true
-                    }
+                    },
+                    "active": false
                 },
                 {
                     "type": "pp-easy-mesh-color",
@@ -2551,7 +2556,8 @@
                         "_myUseTuneTarget": true,
                         "_myColorModel": "hsv",
                         "_myColorType": "specular color"
-                    }
+                    },
+                    "active": false
                 },
                 {
                     "type": "pulse-on-grab",
@@ -8138,8 +8144,10 @@
                 null,
                 null,
                 {
-                    "type": "pp-deactivate-on-first-update",
-                    "active": true
+                    "type": "pp-set-hierarchy-active",
+                    "pp-set-hierarchy-active": {
+                        "_myHierarchyActive": false
+                    }
                 }
             ],
             "transformation": [
@@ -8236,8 +8244,10 @@
                 null,
                 null,
                 {
-                    "type": "pp-deactivate-on-first-update",
-                    "active": true
+                    "type": "pp-set-hierarchy-active",
+                    "pp-set-hierarchy-active": {
+                        "_myHierarchyActive": false
+                    }
                 }
             ],
             "transformation": [

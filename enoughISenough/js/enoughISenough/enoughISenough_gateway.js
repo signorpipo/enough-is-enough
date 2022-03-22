@@ -31,7 +31,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
     },
     start: function () {
         let version = Global.mySaveManager.loadNumber("game_version", 0);
-        Global.myGameVersion = 3;
+        Global.myGameVersion = 4;
         if (version < Global.myGameVersion) {
             Global.mySaveManager.save("game_version", Global.myGameVersion);
             Global.mySaveManager.save("trial_started_once", false);
