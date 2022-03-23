@@ -3,6 +3,7 @@ PP.SaveManager = class SaveManager {
         this._mySaveCache = new Map();
 
         this._myCommitSaveDelayTimer = new PP.Timer(0, false);
+        this._myIsCommitSaveDelayed = true;
         this._myIDsToCommit = [];
 
         WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
@@ -22,6 +23,10 @@ PP.SaveManager = class SaveManager {
         this._myCommitSaveDelayTimer.start(delay);
     }
 
+    setIsCommitSaveDelayed(delayed) {
+        this._myIsCommitSaveDelayed = delayed;
+    }
+
     update(dt) {
         if (this._myCommitSaveDelayTimer.isRunning()) {
             this._myCommitSaveDelayTimer.update(dt);
@@ -31,7 +36,7 @@ PP.SaveManager = class SaveManager {
         }
     }
 
-    save(id, data) {
+    save(id, data, overrideIsCommitSaveDelayed = null) {
         let sameData = false;
         if (this._mySaveCache.has(id)) {
             sameData = this._mySaveCache.get(id) === data;
@@ -39,9 +44,18 @@ PP.SaveManager = class SaveManager {
 
         if (!sameData) {
             this._mySaveCache.set(id, data);
-            this._myIDsToCommit.pp_pushUnique(id);
-            if (!this._myCommitSaveDelayTimer.isRunning()) {
-                this._myCommitSaveDelayTimer.start();
+            if ((this._myIsCommitSaveDelayed && overrideIsCommitSaveDelayed == null) || (overrideIsCommitSaveDelayed != null && overrideIsCommitSaveDelayed)) {
+                this._myIDsToCommit.pp_pushUnique(id);
+                if (!this._myCommitSaveDelayTimer.isRunning()) {
+                    this._myCommitSaveDelayTimer.start();
+                }
+            } else {
+                this._commitSave(id, false);
+
+                if (this._mySaveCommittedCallbacks.size > 0) {
+                    let isCommitSaveDelayed = false;
+                    this._mySaveCommittedCallbacks.forEach(function (value) { value(isCommitSaveDelayed); });
+                }
             }
         }
 
@@ -74,28 +88,32 @@ PP.SaveManager = class SaveManager {
         if (this._myIDsToCommit.length > 0) {
             for (let id of this._myIDsToCommit) {
                 if (this._mySaveCache.has(id)) {
-                    let data = this._mySaveCache.get(id);
-                    try {
-                        PP.SaveUtils.save(id, data);
-                    } catch (error) {
-                        // not managed for now
-                    }
-
-                    if (this._mySaveCommittedIDCallbacks.size > 0) {
-                        let callbackMap = this._mySaveCommittedIDCallbacks.get(id);
-                        if (callbackMap != null) {
-                            callbackMap.forEach(function (value) { value(id, data); });
-                        }
-                    }
+                    this._commitSave(id, true);
                 }
             }
 
             this._myIDsToCommit = [];
 
             if (this._mySaveCommittedCallbacks.size > 0) {
-                this._mySaveCommittedCallbacks.forEach(function (value) { value(); });
+                let isCommitSaveDelayed = true;
+                this._mySaveCommittedCallbacks.forEach(function (value) { value(isCommitSaveDelayed); });
             }
+        }
+    }
 
+    _commitSave(id, isCommitSaveDelayed) {
+        let data = this._mySaveCache.get(id);
+        try {
+            PP.SaveUtils.save(id, data);
+        } catch (error) {
+            // not managed for now
+        }
+
+        if (this._mySaveCommittedIDCallbacks.size > 0) {
+            let callbackMap = this._mySaveCommittedIDCallbacks.get(id);
+            if (callbackMap != null) {
+                callbackMap.forEach(function (value) { value(id, data, isCommitSaveDelayed); });
+            }
         }
     }
 

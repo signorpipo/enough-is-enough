@@ -711,6 +711,16 @@ class Vent {
         }
 
         //this._boosterGroupDebug();
+
+        if (!Global.mySaveManager.loadBool("mr_NOT_encountered", false)) {
+            Global.mySaveManager.save("mr_NOT_encountered", true);
+
+            if (Global.myGoogleAnalytics) {
+                gtag("event", "mr_NOT_encountered_before_trial", {
+                    "value": 1
+                });
+            }
+        }
     }
 
     _mrNOTDismissed() {
