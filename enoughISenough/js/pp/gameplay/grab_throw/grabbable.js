@@ -8,9 +8,9 @@ WL.registerComponent('pp-grabbable', {
 
         this._myGrabber = null;
 
-        this._myGrabCallbacks = new Map(); // Signature: callback(grabbable, grabber)
-        this._myThrowCallbacks = new Map(); // Signature: callback(grabbable, grabber)
-        this._myReleaseCallbacks = new Map(); // Signature: callback(grabbable, grabber, isThrow)
+        this._myGrabCallbacks = new Map();      // Signature: callback(grabber, grabbable)
+        this._myThrowCallbacks = new Map();     // Signature: callback(grabber, grabbable)
+        this._myReleaseCallbacks = new Map();   // Signature: callback(grabber, grabbable, isThrow)
     },
     start: function () {
         this._myOldParent = this.object.parent;
@@ -34,7 +34,7 @@ WL.registerComponent('pp-grabbable', {
 
         this._myIsGrabbed = true;
 
-        this._myGrabCallbacks.forEach(function (value) { value(this, grabber); }.bind(this));
+        this._myGrabCallbacks.forEach(function (value) { value(grabber, this); }.bind(this));
     },
     throw: function (linearVelocity, angularVelocity) {
         if (this._myIsGrabbed) {
@@ -48,8 +48,8 @@ WL.registerComponent('pp-grabbable', {
             this._myPhysX.angularVelocity = angularVelocity.vec3_scale(this._myThrowAngularVelocityMultiplier);
             //}
 
-            this._myThrowCallbacks.forEach(function (value) { value(this, grabber); }.bind(this));
-            this._myReleaseCallbacks.forEach(function (value) { value(this, grabber, true); }.bind(this));
+            this._myThrowCallbacks.forEach(function (value) { value(grabber, this); }.bind(this));
+            this._myReleaseCallbacks.forEach(function (value) { value(grabber, this, true); }.bind(this));
         }
     },
     release() {
@@ -58,7 +58,7 @@ WL.registerComponent('pp-grabbable', {
 
             this._release();
 
-            this._myReleaseCallbacks.forEach(function (value) { value(this, grabber, false); }.bind(this));
+            this._myReleaseCallbacks.forEach(function (value) { value(grabber, this, false); }.bind(this));
         }
     },
     getLinearVelocity() {

@@ -34,8 +34,8 @@ WL.registerComponent('pp-grabber-hand', {
 
         this._myThrowMaxAngularSpeedRadians = Math.pp_toRadians(this._myThrowMaxAngularSpeed);
 
-        this._myGrabCallbacks = new Map();
-        this._myThrowCallbacks = new Map();
+        this._myGrabCallbacks = new Map();      // Signature: callback(grabber, grabbable)
+        this._myThrowCallbacks = new Map();     // Signature: callback(grabber, grabbable)
 
         this._myDebugActive = false;
     },
@@ -173,13 +173,13 @@ WL.registerComponent('pp-grabber-hand', {
 
                 grabbable.throw(linearVelocity, angularVelocity);
 
-                this._myThrowCallbacks.forEach(function (value) { value(this, grabbable, linearVelocity, angularVelocity); }.bind(this));
+                this._myThrowCallbacks.forEach(function (value) { value(this, grabbable); }.bind(this));
             }
 
             this._myGrabbables = [];
         }
     },
-    _onRelease(grabbable) {
+    _onRelease(grabber, grabbable) {
         grabbable.unregisterReleaseEventListener(this);
         this._myGrabbables.pp_remove(element => element.getGrabbable() == grabbable);
     },
