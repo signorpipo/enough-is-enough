@@ -11,9 +11,12 @@ WL.registerComponent("statistics-text-displayer", {
         this._myTimer = new PP.Timer(0.5);
 
         this._mySendAnalytics = true;
+        this._myAnalyticsTimer = new PP.Timer(0);
         this._myUp = [0, 1, 0];
     },
     update: function (dt) {
+        this._myAnalyticsTimer.update(dt);
+
         this._myTimer.update(dt);
         if (this._myTimer.isDone()) {
             this._myTimer.start();
@@ -63,30 +66,33 @@ WL.registerComponent("statistics-text-displayer", {
         return string;
     },
     _checkStatisticsViewed() {
-        if (this._mySendAnalytics) {
-            let height = Global.myPlayerPosition[1];
-            if (height < 0.9) {
-                let angle = Global.myPlayerForward.vec3_angle(this._myUp);
-                if (Math.abs(angle) < 80 && Math.abs(Global.myPlayerPosition[0]) < 0.7 && Math.abs(Global.myPlayerPosition[2]) < 0.7) {
-                    this._myTextPosition.vec3_sub(Global.myPlayerPosition, this._myTempDirection1);
-                    this._myTempDirection1.vec3_removeComponentAlongAxis(this._myUp, this._myTempDirection1);
-                    Global.myPlayerForward.vec3_removeComponentAlongAxis(this._myUp, this._myTempDirection2);
+        if (this._myAnalyticsTimer.isDone()) {
+            if (this._mySendAnalytics) {
+                let height = Global.myPlayerPosition[1];
+                if (height < 0.9) {
+                    let angle = Global.myPlayerForward.vec3_angle(this._myUp);
+                    if (Math.abs(angle) < 80 && Math.abs(Global.myPlayerPosition[0]) < 0.7 && Math.abs(Global.myPlayerPosition[2]) < 0.7) {
+                        this._myTextPosition.vec3_sub(Global.myPlayerPosition, this._myTempDirection1);
+                        this._myTempDirection1.vec3_removeComponentAlongAxis(this._myUp, this._myTempDirection1);
+                        Global.myPlayerForward.vec3_removeComponentAlongAxis(this._myUp, this._myTempDirection2);
 
-                    let angleToText = Math.abs(this._myTempDirection1.vec3_angle(this._myTempDirection2));
-                    if (angleToText < 70) {
-                        if (Global.myGoogleAnalytics) {
-                            gtag("event", "statistics_viewed", {
-                                "value": 1
-                            });
+                        let angleToText = Math.abs(this._myTempDirection1.vec3_angle(this._myTempDirection2));
+                        if (angleToText < 70) {
+                            if (Global.myGoogleAnalytics) {
+                                gtag("event", "statistics_viewed", {
+                                    "value": 1
+                                });
+                            }
+                            this._mySendAnalytics = false;
+                            this._myAnalyticsTimer.start(20);
                         }
-                        this._mySendAnalytics = false;
                     }
                 }
-            }
-        } else {
-            let height = Global.myPlayerPosition[1];
-            if (height > 1.2) {
-                this._mySendAnalytics = true;
+            } else {
+                let height = Global.myPlayerPosition[1];
+                if (height > 1.2) {
+                    this._mySendAnalytics = true;
+                }
             }
         }
     }
