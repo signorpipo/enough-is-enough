@@ -6,10 +6,10 @@ WL.registerComponent("material-container", {
 }, {
     init: function () {
         Global.myMaterials = {};
-        Global.myMaterials.myTitle = this._myTitle;
-        Global.myMaterials.mySubtitle = this._mySubtitle;
-        Global.myMaterials.myText = this._myText;
-        Global.myMaterials.myBigText = this._myBigText;
+        Global.myMaterials.myTitle = this._myTitle.clone();
+        Global.myMaterials.mySubtitle = this._mySubtitle.clone();
+        Global.myMaterials.myText = this._myText.clone();
+        Global.myMaterials.myBigText = this._myBigText.clone();
     },
     start: function () {
     },

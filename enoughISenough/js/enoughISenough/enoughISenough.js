@@ -171,8 +171,9 @@ class enoughISenough {
         //This MAY avoid some crackle on first play with position
         let ringRise = manager.createAudioPlayer(SfxID.RING_RISE);
         ringRise.setVolume(0);
+        ringRise.updatePosition([0, -10000, 0]);
         ringRise.play();
-        ringRise.updatePosition([0, 0, 0]);
+        ringRise.updatePosition([0, -10000, 0]);
     }
 }
 
