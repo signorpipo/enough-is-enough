@@ -11,7 +11,7 @@ PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget {
 
         this._myIsVisible = true;
 
-        this._myScrollVariableRequestCallbacks = new Map();
+        this._myScrollVariableRequestCallbacks = new Map();     // Signature: callback(scrollAmount)
 
         this._myAppendToVariableName = "";
 

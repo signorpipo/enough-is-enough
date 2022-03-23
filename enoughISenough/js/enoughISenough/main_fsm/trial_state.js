@@ -113,9 +113,8 @@ class TrialState extends PP.State {
 
         if (trialLevel == 4) {
             if (Global.myGoogleAnalytics) {
-                gtag("event", "timing_complete", {
-                    "name": "trial_time",
-                    "value": Math.round(Global.myTrialDuration * 1000)
+                gtag("event", "trial_time", {
+                    "time": Math.round(Global.myTrialDuration * 1000)
                 });
             }
         }
@@ -127,14 +126,12 @@ class TrialState extends PP.State {
                 "value": 1
             });
 
-            gtag("event", "timing_complete", {
-                "name": "trial_lost_time_level_".concat(trialLevel),
-                "value": Math.round(Global.myVentDuration * 1000)
+            gtag("event", "trial_lost_time_level_".concat(trialLevel), {
+                "time": Math.round(Global.myVentDuration * 1000)
             });
 
-            gtag("event", "timing_complete", {
-                "name": "trial_time",
-                "value": Math.round(Global.myTrialDuration * 1000)
+            gtag("event", "trial_time", {
+                "time": Math.round(Global.myTrialDuration * 1000)
             });
         }
     }
@@ -155,9 +152,8 @@ class TrialState extends PP.State {
                     "value": 1
                 });
 
-                gtag("event", "timing_complete", {
-                    "name": "trial_completed_from_start_time",
-                    "value": Math.round(Global.myTrialDuration * 1000)
+                gtag("event", "trial_completed_from_start_time", {
+                    "time": Math.round(Global.myTrialDuration * 1000)
                 });
             }
         }

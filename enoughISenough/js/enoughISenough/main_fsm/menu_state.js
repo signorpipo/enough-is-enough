@@ -102,9 +102,8 @@ class MenuState extends PP.State {
 
     end() {
         if (Global.myGoogleAnalytics) {
-            gtag("event", "timing_complete", {
-                "name": "menu_time",
-                "value": Math.round(this._myMenuDuration * 1000)
+            gtag("event", "menu_time", {
+                "time": Math.round(this._myMenuDuration * 1000)
             });
         }
 

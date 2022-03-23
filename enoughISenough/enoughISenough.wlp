@@ -21422,9 +21422,9 @@
                     0.375
                 ],
                 "outlineColor": [
-                    0.5372549,
-                    0.1559092,
-                    0.4340673,
+                    0.5294117,
+                    0.1141868,
+                    0.4170569,
                     1.0
                 ],
                 "color": [
@@ -21447,9 +21447,9 @@
                     0.375
                 ],
                 "outlineColor": [
-                    0.1937716,
-                    0.2133115,
-                    0.4705882,
+                    0.1856977,
+                    0.1856977,
+                    0.4117647,
                     1.0
                 ],
                 "color": [
@@ -24521,7 +24521,8 @@
                     "local-floor": false
                 },
                 "optionalFeatures": {
-                    "local-floor": false
+                    "local-floor": false,
+                    "hand-tracking": false
                 }
             },
             "visualizeColliders": false,

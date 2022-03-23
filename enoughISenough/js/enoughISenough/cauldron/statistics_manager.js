@@ -53,9 +53,8 @@ class StatisticsManager {
 
     _sendAnalytics() {
         if (Global.myGoogleAnalytics) {
-            gtag("event", "timing_complete", {
-                "name": "play_time",
-                "value": Math.round((Global.myStatistics.myTotalPlayTime - Global.myStatistics.myTotalPlayTimeOnLoad) * 1000)
+            gtag("event", "play_time", {
+                "time": Math.round((Global.myStatistics.myTotalPlayTime - Global.myStatistics.myTotalPlayTimeOnLoad) * 1000)
             });
 
             if ((Global.myStatistics.myEvidencesThrown - Global.myStatistics.myEvidencesThrownOnLoad) > 0) {

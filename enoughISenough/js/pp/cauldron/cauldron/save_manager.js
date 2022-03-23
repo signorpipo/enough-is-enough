@@ -2,100 +2,122 @@ PP.SaveManager = class SaveManager {
     constructor() {
         this._mySaveCache = new Map();
 
-        this._myCommitSaveDelayTimer = new PP.Timer(0, false);
+        this._myCommitSavesDelayTimer = new PP.Timer(0, false);
+        this._myIsCommitSavesDelayed = true;
         this._myIDsToCommit = [];
 
+        if (WL.xrSession) {
+            this._onXRSessionStart(WL.xrSession);
+        }
+        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
         WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
 
-        this._myClearCallbacks = new Map();
-        this._myDeleteCallbacks = new Map();
-        this._myDeleteIDCallbacks = new Map();
-        this._mySaveCallbacks = new Map();
-        this._mySaveValueChangedCallbacks = new Map();
-        this._mySaveIDCallbacks = new Map();
-        this._mySaveValueChangedIDCallbacks = new Map();
-        this._mySaveCommittedCallbacks = new Map();
-        this._mySaveCommittedIDCallbacks = new Map();
+        this._myClearCallbacks = new Map();                 // Signature: callback()
+        this._myDeleteCallbacks = new Map();                // Signature: callback(id)
+        this._myDeleteIDCallbacks = new Map();              // Signature: callback(id)
+        this._mySaveCallbacks = new Map();                  // Signature: callback(id, value)
+        this._mySaveValueChangedCallbacks = new Map();      // Signature: callback(id, value)
+        this._mySaveIDCallbacks = new Map();                // Signature: callback(id, value)
+        this._mySaveValueChangedIDCallbacks = new Map();    // Signature: callback(id, value)
+        this._myCommitSavesCallbacks = new Map();           // Signature: callback(isCommitSavesDelayed)
+        this._myCommitSaveIDCallbacks = new Map();          // Signature: callback(id, value, isCommitSaveDelayed)
     }
 
-    setCommitSaveDelay(delay) {
-        this._myCommitSaveDelayTimer.start(delay);
+    setCommitSavesDelay(delay) {
+        this._myCommitSavesDelayTimer.start(delay);
+    }
+
+    setIsCommitSavesDelayed(delayed) {
+        this._myIsCommitSavesDelayed = delayed;
     }
 
     update(dt) {
-        if (this._myCommitSaveDelayTimer.isRunning()) {
-            this._myCommitSaveDelayTimer.update(dt);
-            if (this._myCommitSaveDelayTimer.isDone()) {
-                this.commitSave();
+        if (this._myCommitSavesDelayTimer.isRunning()) {
+            this._myCommitSavesDelayTimer.update(dt);
+            if (this._myCommitSavesDelayTimer.isDone()) {
+                this.commitSaves();
             }
         }
     }
 
-    save(id, data) {
-        let sameData = false;
+    save(id, value, overrideIsCommitSavesDelayed = null) {
+        let sameValue = false;
         if (this._mySaveCache.has(id)) {
-            sameData = this._mySaveCache.get(id) === data;
+            sameValue = this._mySaveCache.get(id) === value;
         }
 
-        if (!sameData) {
-            this._mySaveCache.set(id, data);
-            this._myIDsToCommit.pp_pushUnique(id);
-            if (!this._myCommitSaveDelayTimer.isRunning()) {
-                this._myCommitSaveDelayTimer.start();
+        if (!sameValue) {
+            this._mySaveCache.set(id, value);
+            if ((this._myIsCommitSavesDelayed && overrideIsCommitSavesDelayed == null) || (overrideIsCommitSavesDelayed != null && overrideIsCommitSavesDelayed)) {
+                this._myIDsToCommit.pp_pushUnique(id);
+                if (!this._myCommitSavesDelayTimer.isRunning()) {
+                    this._myCommitSavesDelayTimer.start();
+                }
+            } else {
+                this._commitSave(id, false);
+
+                if (this._myCommitSavesCallbacks.size > 0) {
+                    let isCommitSaveDelayed = false;
+                    this._myCommitSavesCallbacks.forEach(function (value) { value(isCommitSaveDelayed); });
+                }
             }
         }
 
         if (this._mySaveCallbacks.size > 0) {
-            this._mySaveCallbacks.forEach(function (value) { value(id, data); });
+            this._mySaveCallbacks.forEach(function (value) { value(id, value); });
         }
 
         if (this._mySaveIDCallbacks.size > 0) {
             let callbackMap = this._mySaveIDCallbacks.get(id);
             if (callbackMap != null) {
-                callbackMap.forEach(function (value) { value(id, data); });
+                callbackMap.forEach(function (value) { value(id, value); });
             }
         }
 
-        if (!sameData) {
+        if (!sameValue) {
             if (this._mySaveValueChangedCallbacks.size > 0) {
-                this._mySaveValueChangedCallbacks.forEach(function (value) { value(id, data); });
+                this._mySaveValueChangedCallbacks.forEach(function (value) { value(id, value); });
             }
 
             if (this._mySaveValueChangedIDCallbacks.size > 0) {
                 let callbackMap = this._mySaveValueChangedIDCallbacks.get(id);
                 if (callbackMap != null) {
-                    callbackMap.forEach(function (value) { value(id, data); });
+                    callbackMap.forEach(function (value) { value(id, value); });
                 }
             }
         }
     }
 
-    commitSave() {
+    commitSaves() {
         if (this._myIDsToCommit.length > 0) {
             for (let id of this._myIDsToCommit) {
                 if (this._mySaveCache.has(id)) {
-                    let data = this._mySaveCache.get(id);
-                    try {
-                        PP.SaveUtils.save(id, data);
-                    } catch (error) {
-                        // not managed for now
-                    }
-
-                    if (this._mySaveCommittedIDCallbacks.size > 0) {
-                        let callbackMap = this._mySaveCommittedIDCallbacks.get(id);
-                        if (callbackMap != null) {
-                            callbackMap.forEach(function (value) { value(id, data); });
-                        }
-                    }
+                    this._commitSave(id, true);
                 }
             }
 
             this._myIDsToCommit = [];
 
-            if (this._mySaveCommittedCallbacks.size > 0) {
-                this._mySaveCommittedCallbacks.forEach(function (value) { value(); });
+            if (this._myCommitSavesCallbacks.size > 0) {
+                let isCommitSavesDelayed = true;
+                this._myCommitSavesCallbacks.forEach(function (value) { value(isCommitSavesDelayed); });
             }
+        }
+    }
 
+    _commitSave(id, isCommitSaveDelayed) {
+        let value = this._mySaveCache.get(id);
+        try {
+            PP.SaveUtils.save(id, value);
+        } catch (error) {
+            // not managed for now
+        }
+
+        if (this._myCommitSaveIDCallbacks.size > 0) {
+            let callbackMap = this._myCommitSaveIDCallbacks.get(id);
+            if (callbackMap != null) {
+                callbackMap.forEach(function (value) { value(id, value, isCommitSaveDelayed); });
+            }
         }
     }
 
@@ -162,115 +184,123 @@ PP.SaveManager = class SaveManager {
         return item;
     }
 
+    _onXRSessionStart(session) {
+        session.addEventListener('visibilitychange', function (event) {
+            if (event.session.visibilityState != "visible") {
+                this._onXRSessionEnd();
+            }
+        }.bind(this));
+    }
+
     _onXRSessionEnd() {
-        this.commitSave();
+        this.commitSaves();
     }
 
-    registerClearEventListener(id, callback) {
-        this._myClearCallbacks.set(id, callback);
+    registerClearEventListener(callbackID, callback) {
+        this._myClearCallbacks.set(callbackID, callback);
     }
 
-    unregisterClearEventListener(id) {
-        this._myClearCallbacks.delete(id);
+    unregisterClearEventListener(callbackID) {
+        this._myClearCallbacks.delete(callbackID);
     }
 
-    registerDeleteEventListener(id, callback) {
-        this._myDeleteCallbacks.set(id, callback);
+    registerDeleteEventListener(callbackID, callback) {
+        this._myDeleteCallbacks.set(callbackID, callback);
     }
 
-    unregisterDeleteEventListener(id) {
-        this._myDeleteCallbacks.delete(id);
+    unregisterDeleteEventListener(callbackID) {
+        this._myDeleteCallbacks.delete(callbackID);
     }
 
-    registerDeleteIDEventListener(dataID, callbackID, callback) {
-        let dataIDMap = this._myDeleteIDCallbacks.get(dataID);
-        if (dataIDMap == null) {
-            this._myDeleteIDCallbacks.set(dataID, new Map());
-            dataIDMap = this._myDeleteIDCallbacks.get(dataID);
+    registerDeleteIDEventListener(valueID, callbackID, callback) {
+        let valueIDMap = this._myDeleteIDCallbacks.get(valueID);
+        if (valueIDMap == null) {
+            this._myDeleteIDCallbacks.set(valueID, new Map());
+            valueIDMap = this._myDeleteIDCallbacks.get(valueID);
         }
 
-        dataIDMap.set(callbackID, callback);
+        valueIDMap.set(callbackID, callback);
     }
 
-    unregisterDeleteIDEventListener(dataID, callbackID) {
-        let dataIDMap = this._myDeleteIDCallbacks.get(dataID);
-        if (dataIDMap != null) {
-            dataIDMap.delete(callbackID);
-        }
-    }
-
-    registerSaveEventListener(id, callback) {
-        this._mySaveCallbacks.set(id, callback);
-    }
-
-    unregisterSaveEventListener(id) {
-        this._mySaveCallbacks.delete(id);
-    }
-
-    registerSaveIDEventListener(dataID, callbackID, callback) {
-        let dataIDMap = this._mySaveIDCallbacks.get(dataID);
-        if (dataIDMap == null) {
-            this._mySaveIDCallbacks.set(dataID, new Map());
-            dataIDMap = this._mySaveIDCallbacks.get(dataID);
-        }
-
-        dataIDMap.set(callbackID, callback);
-    }
-
-    unregisterSaveIDEventListener(dataID, callbackID) {
-        let dataIDMap = this._mySaveIDCallbacks.get(dataID);
-        if (dataIDMap != null) {
-            dataIDMap.delete(callbackID);
+    unregisterDeleteIDEventListener(valueID, callbackID) {
+        let valueIDMap = this._myDeleteIDCallbacks.get(valueID);
+        if (valueIDMap != null) {
+            valueIDMap.delete(callbackID);
         }
     }
 
-    registerSaveValueChangedEventListener(id, callback) {
-        this._mySaveValueChangedCallbacks.set(id, callback);
+    registerSaveEventListener(callbackID, callback) {
+        this._mySaveCallbacks.set(callbackID, callback);
     }
 
-    unregisterSaveValueChangedEventListener(id) {
-        this._mySaveValueChangedCallbacks.delete(id);
+    unregisterSaveEventListener(callbackID) {
+        this._mySaveCallbacks.delete(callbackID);
     }
 
-    registerSaveValueChangedIDEventListener(dataID, callbackID, callback) {
-        let dataIDMap = this._mySaveValueChangedIDCallbacks.get(dataID);
-        if (dataIDMap == null) {
-            this._mySaveValueChangedIDCallbacks.set(dataID, new Map());
-            dataIDMap = this._mySaveValueChangedIDCallbacks.get(dataID);
+    registerSaveIDEventListener(valueID, callbackID, callback) {
+        let valueIDMap = this._mySaveIDCallbacks.get(valueID);
+        if (valueIDMap == null) {
+            this._mySaveIDCallbacks.set(valueID, new Map());
+            valueIDMap = this._mySaveIDCallbacks.get(valueID);
         }
 
-        dataIDMap.set(callbackID, callback);
+        valueIDMap.set(callbackID, callback);
     }
 
-    unregisterSaveValueChangedIDEventListener(dataID, callbackID) {
-        let dataIDMap = this._mySaveValueChangedIDCallbacks.get(dataID);
-        if (dataIDMap != null) {
-            dataIDMap.delete(callbackID);
+    unregisterSaveIDEventListener(valueID, callbackID) {
+        let valueIDMap = this._mySaveIDCallbacks.get(valueID);
+        if (valueIDMap != null) {
+            valueIDMap.delete(callbackID);
         }
     }
 
-    registerSaveCommittedEventListener(id, callback) {
-        this._mySaveCommittedCallbacks.set(id, callback);
+    registerSaveValueChangedEventListener(callbackID, callback) {
+        this._mySaveValueChangedCallbacks.set(callbackID, callback);
     }
 
-    unregisterSaveCommittedEventListener(id) {
-        this._mySaveCommittedCallbacks.delete(id);
+    unregisterSaveValueChangedEventListener(callbackID) {
+        this._mySaveValueChangedCallbacks.delete(callbackID);
     }
 
-    registerSaveCommittedIDEventListener(dataID, callbackID, callback) {
-        let dataIDMap = this._mySaveCommittedIDCallbacks.get(dataID);
-        if (dataIDMap == null) {
-            this._mySaveCommittedIDCallbacks.set(dataID, new Map());
-            dataIDMap = this._mySaveCommittedIDCallbacks.get(dataID);
+    registerSaveValueChangedIDEventListener(valueID, callbackID, callback) {
+        let valueIDMap = this._mySaveValueChangedIDCallbacks.get(valueID);
+        if (valueIDMap == null) {
+            this._mySaveValueChangedIDCallbacks.set(valueID, new Map());
+            valueIDMap = this._mySaveValueChangedIDCallbacks.get(valueID);
         }
 
-        dataIDMap.set(callbackID, callback);
+        valueIDMap.set(callbackID, callback);
     }
 
-    unregisterSaveCommittedIDEventListener(dataID, callbackID) {
-        let dataIDMap = this._mySaveCommittedIDCallbacks.get(dataID);
-        if (dataIDMap != null) {
-            dataIDMap.delete(callbackID);
+    unregisterSaveValueChangedIDEventListener(valueID, callbackID) {
+        let valueIDMap = this._mySaveValueChangedIDCallbacks.get(valueID);
+        if (valueIDMap != null) {
+            valueIDMap.delete(callbackID);
+        }
+    }
+
+    registerCommitSavesEventListener(callbackID, callback) {
+        this._myCommitSavesCallbacks.set(callbackID, callback);
+    }
+
+    unregisterCommitSavesEventListener(callbackID) {
+        this._myCommitSavesCallbacks.delete(callbackID);
+    }
+
+    registerCommitSaveIDEventListener(valueID, callbackID, callback) {
+        let valueIDMap = this._myCommitSaveIDCallbacks.get(valueID);
+        if (valueIDMap == null) {
+            this._myCommitSaveIDCallbacks.set(valueID, new Map());
+            valueIDMap = this._myCommitSaveIDCallbacks.get(valueID);
+        }
+
+        valueIDMap.set(callbackID, callback);
+    }
+
+    unregisterCommitSaveIDEventListener(valueID, callbackID) {
+        let valueIDMap = this._myCommitSaveIDCallbacks.get(valueID);
+        if (valueIDMap != null) {
+            valueIDMap.delete(callbackID);
         }
     }
 };

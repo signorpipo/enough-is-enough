@@ -83,9 +83,8 @@ class ArcadeResultState extends PP.State {
             }
 
             if (Global.myGoogleAnalytics) {
-                gtag("event", "timing_complete", {
-                    "name": "arcade_dispute_time",
-                    "value": Math.round(Global.myVentDuration * 1000)
+                gtag("event", "arcade_dispute_time", {
+                    "time": Math.round(Global.myVentDuration * 1000)
                 });
             }
         } else {
@@ -94,9 +93,8 @@ class ArcadeResultState extends PP.State {
             }
 
             if (Global.myGoogleAnalytics) {
-                gtag("event", "timing_complete", {
-                    "name": "arcade_chat_time",
-                    "value": Math.round(Global.myVentDuration * 1000)
+                gtag("event", "arcade_chat_time", {
+                    "time": Math.round(Global.myVentDuration * 1000)
                 });
             }
         }

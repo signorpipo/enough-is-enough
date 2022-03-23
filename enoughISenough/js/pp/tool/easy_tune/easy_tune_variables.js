@@ -72,7 +72,7 @@ PP.EasyTuneVariable = class EasyTuneVariable {
 
         this.myIsActive = false;
 
-        this._myValueChangedCallbacks = new Map();
+        this._myValueChangedCallbacks = new Map();      // Signature: callback(name, value)
     }
 
     getValue() {

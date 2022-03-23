@@ -41,7 +41,7 @@ WL.registerComponent("activate-on-select", {
             this._myTriggerPhysx.active = true;
 
             if (this._myAnalyticsTimer.isDone()) {
-                this._myAnalyticsTimer.start(2);
+                this._myAnalyticsTimer.start(20);
 
                 if (Global.myGoogleAnalytics) {
                     gtag("event", "select_physx_actived", {

@@ -1,6 +1,6 @@
 PP.SaveUtils = {
-    save: function (id, data) {
-        localStorage.setItem(id, data);
+    save: function (id, value) {
+        localStorage.setItem(id, value);
     },
     has: function (id) {
         return PP.SaveUtils.loadString(id) != null;

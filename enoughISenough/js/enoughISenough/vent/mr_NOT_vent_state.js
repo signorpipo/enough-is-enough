@@ -82,6 +82,8 @@ class MrNOTVentState extends PP.State {
         this._myMrNOT.start();
         this._myEvidenceTimer.start();
         this._myVent.start();
+
+        Global.mySaveManager.save("mr_NOT_encountered", true);
     }
 
     _updateVent(dt, fsm) {
