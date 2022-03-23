@@ -11,6 +11,10 @@ WL.registerComponent("ring-sfx-on-collision", {
         this._myCollisionPitch = this._myCollisionAudio.getPitch();
     },
     update: function (dt) {
+        if (this._myPhysx.active) {
+            this._myPhysx.active = false;
+        }
+
         if (this._myPhysxToIgnore.length > 0) {
             for (let element of this._myPhysxToIgnore) {
                 element[1].update(dt);
