@@ -15,12 +15,12 @@ PP.SaveManager = class SaveManager {
         this._myClearCallbacks = new Map();                 // Signature: callback()
         this._myDeleteCallbacks = new Map();                // Signature: callback(id)
         this._myDeleteIDCallbacks = new Map();              // Signature: callback(id)
-        this._mySaveCallbacks = new Map();                  // Signature: callback(id, data)
-        this._mySaveValueChangedCallbacks = new Map();      // Signature: callback(id, data)
-        this._mySaveIDCallbacks = new Map();                // Signature: callback(id, data)
-        this._mySaveValueChangedIDCallbacks = new Map();    // Signature: callback(id, data)
+        this._mySaveCallbacks = new Map();                  // Signature: callback(id, value)
+        this._mySaveValueChangedCallbacks = new Map();      // Signature: callback(id, value)
+        this._mySaveIDCallbacks = new Map();                // Signature: callback(id, value)
+        this._mySaveValueChangedIDCallbacks = new Map();    // Signature: callback(id, value)
         this._myCommitSavesCallbacks = new Map();           // Signature: callback(isCommitSavesDelayed)
-        this._myCommitSaveIDCallbacks = new Map();          // Signature: callback(id, data, isCommitSaveDelayed)
+        this._myCommitSaveIDCallbacks = new Map();          // Signature: callback(id, value, isCommitSaveDelayed)
     }
 
     setCommitSavesDelay(delay) {
@@ -40,14 +40,14 @@ PP.SaveManager = class SaveManager {
         }
     }
 
-    save(id, data, overrideIsCommitSavesDelayed = null) {
-        let sameData = false;
+    save(id, value, overrideIsCommitSavesDelayed = null) {
+        let sameValue = false;
         if (this._mySaveCache.has(id)) {
-            sameData = this._mySaveCache.get(id) === data;
+            sameValue = this._mySaveCache.get(id) === value;
         }
 
-        if (!sameData) {
-            this._mySaveCache.set(id, data);
+        if (!sameValue) {
+            this._mySaveCache.set(id, value);
             if ((this._myIsCommitSavesDelayed && overrideIsCommitSavesDelayed == null) || (overrideIsCommitSavesDelayed != null && overrideIsCommitSavesDelayed)) {
                 this._myIDsToCommit.pp_pushUnique(id);
                 if (!this._myCommitSavesDelayTimer.isRunning()) {
@@ -64,25 +64,25 @@ PP.SaveManager = class SaveManager {
         }
 
         if (this._mySaveCallbacks.size > 0) {
-            this._mySaveCallbacks.forEach(function (value) { value(id, data); });
+            this._mySaveCallbacks.forEach(function (value) { value(id, value); });
         }
 
         if (this._mySaveIDCallbacks.size > 0) {
             let callbackMap = this._mySaveIDCallbacks.get(id);
             if (callbackMap != null) {
-                callbackMap.forEach(function (value) { value(id, data); });
+                callbackMap.forEach(function (value) { value(id, value); });
             }
         }
 
-        if (!sameData) {
+        if (!sameValue) {
             if (this._mySaveValueChangedCallbacks.size > 0) {
-                this._mySaveValueChangedCallbacks.forEach(function (value) { value(id, data); });
+                this._mySaveValueChangedCallbacks.forEach(function (value) { value(id, value); });
             }
 
             if (this._mySaveValueChangedIDCallbacks.size > 0) {
                 let callbackMap = this._mySaveValueChangedIDCallbacks.get(id);
                 if (callbackMap != null) {
-                    callbackMap.forEach(function (value) { value(id, data); });
+                    callbackMap.forEach(function (value) { value(id, value); });
                 }
             }
         }
@@ -106,9 +106,9 @@ PP.SaveManager = class SaveManager {
     }
 
     _commitSave(id, isCommitSaveDelayed) {
-        let data = this._mySaveCache.get(id);
+        let value = this._mySaveCache.get(id);
         try {
-            PP.SaveUtils.save(id, data);
+            PP.SaveUtils.save(id, value);
         } catch (error) {
             // not managed for now
         }
@@ -116,7 +116,7 @@ PP.SaveManager = class SaveManager {
         if (this._myCommitSaveIDCallbacks.size > 0) {
             let callbackMap = this._myCommitSaveIDCallbacks.get(id);
             if (callbackMap != null) {
-                callbackMap.forEach(function (value) { value(id, data, isCommitSaveDelayed); });
+                callbackMap.forEach(function (value) { value(id, value, isCommitSaveDelayed); });
             }
         }
     }
@@ -212,20 +212,20 @@ PP.SaveManager = class SaveManager {
         this._myDeleteCallbacks.delete(callbackID);
     }
 
-    registerDeleteIDEventListener(dataID, callbackID, callback) {
-        let dataIDMap = this._myDeleteIDCallbacks.get(dataID);
-        if (dataIDMap == null) {
-            this._myDeleteIDCallbacks.set(dataID, new Map());
-            dataIDMap = this._myDeleteIDCallbacks.get(dataID);
+    registerDeleteIDEventListener(valueID, callbackID, callback) {
+        let valueIDMap = this._myDeleteIDCallbacks.get(valueID);
+        if (valueIDMap == null) {
+            this._myDeleteIDCallbacks.set(valueID, new Map());
+            valueIDMap = this._myDeleteIDCallbacks.get(valueID);
         }
 
-        dataIDMap.set(callbackID, callback);
+        valueIDMap.set(callbackID, callback);
     }
 
-    unregisterDeleteIDEventListener(dataID, callbackID) {
-        let dataIDMap = this._myDeleteIDCallbacks.get(dataID);
-        if (dataIDMap != null) {
-            dataIDMap.delete(callbackID);
+    unregisterDeleteIDEventListener(valueID, callbackID) {
+        let valueIDMap = this._myDeleteIDCallbacks.get(valueID);
+        if (valueIDMap != null) {
+            valueIDMap.delete(callbackID);
         }
     }
 
@@ -237,20 +237,20 @@ PP.SaveManager = class SaveManager {
         this._mySaveCallbacks.delete(callbackID);
     }
 
-    registerSaveIDEventListener(dataID, callbackID, callback) {
-        let dataIDMap = this._mySaveIDCallbacks.get(dataID);
-        if (dataIDMap == null) {
-            this._mySaveIDCallbacks.set(dataID, new Map());
-            dataIDMap = this._mySaveIDCallbacks.get(dataID);
+    registerSaveIDEventListener(valueID, callbackID, callback) {
+        let valueIDMap = this._mySaveIDCallbacks.get(valueID);
+        if (valueIDMap == null) {
+            this._mySaveIDCallbacks.set(valueID, new Map());
+            valueIDMap = this._mySaveIDCallbacks.get(valueID);
         }
 
-        dataIDMap.set(callbackID, callback);
+        valueIDMap.set(callbackID, callback);
     }
 
-    unregisterSaveIDEventListener(dataID, callbackID) {
-        let dataIDMap = this._mySaveIDCallbacks.get(dataID);
-        if (dataIDMap != null) {
-            dataIDMap.delete(callbackID);
+    unregisterSaveIDEventListener(valueID, callbackID) {
+        let valueIDMap = this._mySaveIDCallbacks.get(valueID);
+        if (valueIDMap != null) {
+            valueIDMap.delete(callbackID);
         }
     }
 
@@ -262,20 +262,20 @@ PP.SaveManager = class SaveManager {
         this._mySaveValueChangedCallbacks.delete(callbackID);
     }
 
-    registerSaveValueChangedIDEventListener(dataID, callbackID, callback) {
-        let dataIDMap = this._mySaveValueChangedIDCallbacks.get(dataID);
-        if (dataIDMap == null) {
-            this._mySaveValueChangedIDCallbacks.set(dataID, new Map());
-            dataIDMap = this._mySaveValueChangedIDCallbacks.get(dataID);
+    registerSaveValueChangedIDEventListener(valueID, callbackID, callback) {
+        let valueIDMap = this._mySaveValueChangedIDCallbacks.get(valueID);
+        if (valueIDMap == null) {
+            this._mySaveValueChangedIDCallbacks.set(valueID, new Map());
+            valueIDMap = this._mySaveValueChangedIDCallbacks.get(valueID);
         }
 
-        dataIDMap.set(callbackID, callback);
+        valueIDMap.set(callbackID, callback);
     }
 
-    unregisterSaveValueChangedIDEventListener(dataID, callbackID) {
-        let dataIDMap = this._mySaveValueChangedIDCallbacks.get(dataID);
-        if (dataIDMap != null) {
-            dataIDMap.delete(callbackID);
+    unregisterSaveValueChangedIDEventListener(valueID, callbackID) {
+        let valueIDMap = this._mySaveValueChangedIDCallbacks.get(valueID);
+        if (valueIDMap != null) {
+            valueIDMap.delete(callbackID);
         }
     }
 
@@ -287,20 +287,20 @@ PP.SaveManager = class SaveManager {
         this._myCommitSavesCallbacks.delete(callbackID);
     }
 
-    registerCommitSaveIDEventListener(dataID, callbackID, callback) {
-        let dataIDMap = this._myCommitSaveIDCallbacks.get(dataID);
-        if (dataIDMap == null) {
-            this._myCommitSaveIDCallbacks.set(dataID, new Map());
-            dataIDMap = this._myCommitSaveIDCallbacks.get(dataID);
+    registerCommitSaveIDEventListener(valueID, callbackID, callback) {
+        let valueIDMap = this._myCommitSaveIDCallbacks.get(valueID);
+        if (valueIDMap == null) {
+            this._myCommitSaveIDCallbacks.set(valueID, new Map());
+            valueIDMap = this._myCommitSaveIDCallbacks.get(valueID);
         }
 
-        dataIDMap.set(callbackID, callback);
+        valueIDMap.set(callbackID, callback);
     }
 
-    unregisterCommitSaveIDEventListener(dataID, callbackID) {
-        let dataIDMap = this._myCommitSaveIDCallbacks.get(dataID);
-        if (dataIDMap != null) {
-            dataIDMap.delete(callbackID);
+    unregisterCommitSaveIDEventListener(valueID, callbackID) {
+        let valueIDMap = this._myCommitSaveIDCallbacks.get(valueID);
+        if (valueIDMap != null) {
+            valueIDMap.delete(callbackID);
         }
     }
 };
