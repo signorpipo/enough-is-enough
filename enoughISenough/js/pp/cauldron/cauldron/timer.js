@@ -1,7 +1,7 @@
 PP.Timer = class Timer {
     constructor(duration, autoStart = true) {
         this._myDuration = duration;
-        this._myOnEndCallbacks = new Map();
+        this._myOnEndCallbacks = new Map();     // Signature: callback()
 
         this._myIsDone = false;
         this._myStarted = false;

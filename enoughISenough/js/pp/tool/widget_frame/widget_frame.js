@@ -10,8 +10,8 @@ PP.WidgetFrame = class WidgetFrame {
 
         this._myUI = new PP.WidgetFrameUI();
 
-        this._myWidgetVisibleChangedCallbacks = new Map();
-        this._myPinnedChangedCallbacks = new Map();
+        this._myWidgetVisibleChangedCallbacks = new Map();      // Signature: callback(isWidgetVisible)
+        this._myPinChangedCallbacks = new Map();                // Signature: callback(isPinned)
     }
 
     getWidgetObject() {
@@ -34,12 +34,12 @@ PP.WidgetFrame = class WidgetFrame {
         this._myWidgetVisibleChangedCallbacks.delete(id);
     }
 
-    registerPinnedChangedEventListener(id, callback) {
-        this._myPinnedChangedCallbacks.set(id, callback);
+    registerPinChangedEventListener(id, callback) {
+        this._myPinChangedCallbacks.set(id, callback);
     }
 
-    unregisterPinnedChangedEventListener(id) {
-        this._myPinnedChangedCallbacks.delete(id);
+    unregisterPinChangedEventListener(id) {
+        this._myPinChangedCallbacks.delete(id);
     }
 
     start(parentObject, additionalSetup) {
@@ -118,7 +118,7 @@ PP.WidgetFrame = class WidgetFrame {
                 }
             }
 
-            for (let value of this._myPinnedChangedCallbacks.values()) {
+            for (let value of this._myPinChangedCallbacks.values()) {
                 value(this.myIsPinned);
             }
         }

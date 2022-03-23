@@ -38,7 +38,7 @@ PP.AudioPlayer = class AudioPlayer {
 
         this._myCallbackMap = new Map();
         for (let eventKey in PP.AudioEvent) {
-            this._myCallbackMap.set(PP.AudioEvent[eventKey], new Map());
+            this._myCallbackMap.set(PP.AudioEvent[eventKey], new Map());    // Signature: callback(audioID)
         }
 
         this._addListeners();
