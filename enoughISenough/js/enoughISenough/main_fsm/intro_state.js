@@ -47,9 +47,8 @@ class IntroState extends PP.State {
                         "value": 1
                     });
 
-                    gtag("event", "timing_complete", {
-                        "name": "intro_skipped_time",
-                        "value": Math.round(this._myIntroDuration * 1000)
+                    gtag("event", "intro_skipped_time", {
+                        "time": Math.round(this._myIntroDuration * 1000)
                     });
                 }
             }
