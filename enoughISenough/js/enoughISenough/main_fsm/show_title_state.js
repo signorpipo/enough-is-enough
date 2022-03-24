@@ -186,7 +186,7 @@ class ShowTitleState extends PP.State {
         this._myChars = "enough";
         this._myCurrChar = 0;
 
-        this._myWaitTimer = new PP.Timer(1);
+        this._myWaitTimer = new PP.Timer(0);
     }
 
     showSub2(dt, fsm) {
