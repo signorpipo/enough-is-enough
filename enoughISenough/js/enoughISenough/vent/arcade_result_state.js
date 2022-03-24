@@ -109,12 +109,16 @@ class ArcadeResultState extends PP.State {
         let score = Math.floor(Global.myVentDuration * 1000);
 
         PP.CAUtils.submitScore(leaderboardID, score);
+
+        Global.myIsInArcadeResult = true;
     }
 
     end(fsm, transitionID) {
         if (!this._myFSM.isInState("done")) {
             this._myFSM.perform("skip");
         }
+
+        Global.myIsInArcadeResult = false;
     }
 
     _onTimerUnspawned(evidence) {

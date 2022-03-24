@@ -243,6 +243,7 @@ var Global = {
     myStartFadeOut: false,
     myStatistics: null,
     myIsInMenu: false,
+    myIsInArcadeResult: false,
     myZestyToClick: null,
     myEnableSelectPhysx: false,
     mySaveManager: null,

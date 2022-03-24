@@ -63,6 +63,12 @@ class StatisticsManager {
                 });
             }
 
+            if ((Global.myStatistics.myEvidencesPunched - Global.myStatistics.myEvidencesPunchedOnLoad) > 0) {
+                gtag("event", "evidences_punched", {
+                    "value": (Global.myStatistics.myEvidencesPunched - Global.myStatistics.myEvidencesPunchedOnLoad)
+                });
+            }
+
             if ((Global.myStatistics.myMrNOTDismissed - Global.myStatistics.myMrNOTDismissedOnLoad) > 0) {
                 gtag("event", "mr_NOT_dismissed", {
                     "value": (Global.myStatistics.myMrNOTDismissed - Global.myStatistics.myMrNOTDismissedOnLoad)
@@ -95,11 +101,13 @@ class Statistics {
         this.myDisputePlayCount = 0;
         this.myDisputeBestTime = 0;
         this.myEvidencesThrown = 0;
+        this.myEvidencesPunched = 0;
         this.myMrNOTClonesDismissed = 0;
         this.myMrNOTDismissed = 0;
 
         this.myTotalPlayTimeOnLoad = 0;
         this.myEvidencesThrownOnLoad = 0;
+        this.myEvidencesPunchedOnLoad = 0;
         this.myMrNOTClonesDismissedOnLoad = 0;
         this.myMrNOTDismissedOnLoad = 0;
     }
@@ -121,6 +129,7 @@ class Statistics {
         this.myDisputeBestTime = Global.mySaveManager.loadNumber("dispute_best_time", -1);
 
         this.myEvidencesThrown = Global.mySaveManager.loadNumber("evidences_thrown", 0);
+        this.myEvidencesPunched = Global.mySaveManager.loadNumber("evidences_punched", 0);
         this.myMrNOTClonesDismissed = Global.mySaveManager.loadNumber("mr_NOT_clones_dismissed", 0);
         this.myMrNOTDismissed = Global.mySaveManager.loadNumber("mr_NOT_dismissed", 0);
 
@@ -130,6 +139,7 @@ class Statistics {
     syncOnLoadVariables() {
         this.myTotalPlayTimeOnLoad = this.myTotalPlayTime;
         this.myEvidencesThrownOnLoad = this.myEvidencesThrown;
+        this.myEvidencesPunchedOnLoad = this.myEvidencesPunched;
         this.myMrNOTClonesDismissedOnLoad = this.myMrNOTClonesDismissed;
         this.myMrNOTDismissedOnLoad = this.myMrNOTDismissed;
     }
@@ -155,6 +165,7 @@ class Statistics {
         Global.mySaveManager.save("dispute_best_time", this.myDisputeBestTime);
 
         Global.mySaveManager.save("evidences_thrown", this.myEvidencesThrown);
+        Global.mySaveManager.save("evidences_punched", this.myEvidencesPunched);
         Global.mySaveManager.save("mr_NOT_clones_dismissed", this.myMrNOTClonesDismissed);
         Global.mySaveManager.save("mr_NOT_dismissed", this.myMrNOTDismissed);
     }

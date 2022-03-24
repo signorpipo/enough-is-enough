@@ -559,7 +559,7 @@ class MenuItem {
 
     _startUnspawn() {
         if (this._myHitFloor) {
-            Global.myStatistics.myEvidencesThrown += 1;
+            //Global.myStatistics.myEvidencesThrown += 1;
         }
 
         this._myTimer.start(PP.myEasyTuneVariables.get("Unspawn Menu Time"));
