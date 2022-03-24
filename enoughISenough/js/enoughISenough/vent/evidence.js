@@ -195,8 +195,11 @@ class Evidence {
     }
 
     _startUnspawn() {
-        if (this._myHitFloor || this._myHitExplosion || this._myBigHitExplosion) {
+        if ((this._myHitFloor || this._myHitExplosion || this._myBigHitExplosion) && !Global.myIsInArcadeResult) {
             Global.myStatistics.myEvidencesThrown += 1;
+            if ((this._myHitExplosion || this._myBigHitExplosion) && this._myGrabbable.isGrabbed()) {
+                Global.myStatistics.myEvidencesPunched += 1;
+            }
         }
 
         if (this._myBigHitExplosion) {
