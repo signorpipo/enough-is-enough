@@ -41,6 +41,7 @@ class MenuState extends PP.State {
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Unspawn Menu Scale", 2.5, 1, 3));
 
         this._myMenuDuration = 0;
+        this._myFirstTime = true;
     }
 
     update(dt, fsm) {
@@ -73,7 +74,12 @@ class MenuState extends PP.State {
         }
 
         let times = [];
-        times[0] = Math.pp_random(0.15, 0.55);
+        if (this._myFirstTime) {
+            times[0] = 0.25;
+            this._myFirstTime = false;
+        } else {
+            times[0] = Math.pp_random(0.15, 0.55);
+        }
         for (let i = 1; i < this._myCurrentMenuItems.length; i++) {
             times[i] = times[i - 1] + Math.pp_random(0.15, 0.55);
         }
