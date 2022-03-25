@@ -31,12 +31,16 @@ WL.registerComponent("enough-IS-enough-gateway", {
     },
     start: function () {
         let version = Global.mySaveManager.loadNumber("game_version", 0);
-        Global.myGameVersion = 3;
-        if (version < Global.myGameVersion) {
+        Global.myGameVersion = 5;
+
+        let minVersionToReset = 4;
+        if (version < minVersionToReset) {
             Global.mySaveManager.save("game_version", Global.myGameVersion);
             Global.mySaveManager.save("trial_started_once", false);
             Global.mySaveManager.save("trial_completed", false);
             Global.mySaveManager.save("trial_level", 1);
+        } else if (version < Global.myGameVersion) {
+            Global.mySaveManager.save("game_version", Global.myGameVersion);
         }
 
         let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false);

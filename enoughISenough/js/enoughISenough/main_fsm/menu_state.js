@@ -75,7 +75,7 @@ class MenuState extends PP.State {
 
         let times = [];
         if (this._myFirstTime) {
-            times[0] = 0.25;
+            times[0] = 0.35;
             this._myFirstTime = false;
         } else {
             times[0] = Math.pp_random(0.15, 0.55);
