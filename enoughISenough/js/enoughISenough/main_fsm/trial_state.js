@@ -133,6 +133,27 @@ class TrialState extends PP.State {
             gtag("event", "trial_time", {
                 "time": Math.round(Global.myTrialDuration * 1000)
             });
+
+            if (Global.myStatistics.myTrialCompletedCount <= 0) {
+                gtag("event", "trial_lost_time_before_completed_level_".concat(trialLevel), {
+                    "time": Math.round(Global.myVentDuration * 1000)
+                });
+            }
+
+            if (trialLevel == 1 && Global.myStatistics.myTrialCompletedCount <= 0) {
+                let clonesOnlyPunched = Global.myStatistics.myMrNOTClonesDismissed > 0 && Global.myStatistics.myMrNOTClonesDismissed == Global.myStatistics.myEvidencesPunched;
+                if (Global.myStatistics.myMrNOTClonesDismissed <= 0 || clonesOnlyPunched) {
+                    gtag("event", "trial_lost_before_first_throw", {
+                        "value": 1
+                    });
+
+                    if (clonesOnlyPunched) {
+                        gtag("event", "trial_lost_only_punched", {
+                            "value": 1
+                        });
+                    }
+                }
+            }
         }
     }
 
