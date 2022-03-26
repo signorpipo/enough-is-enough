@@ -190,6 +190,12 @@ class MenuState extends PP.State {
             Global.mySaveManager.save("trial_started_once", false);
             Global.mySaveManager.save("trial_completed", false);
             Global.mySaveManager.save("trial_level", 1);
+
+            Global.myStatistics.myTrialPlayCountResettable = 0;
+            Global.myStatistics.myMrNOTClonesDismissedResettable = 0;
+            Global.mySaveManager.save("trial_play_count_resettable", 0);
+            Global.mySaveManager.save("mr_NOT_clones_dismissed_resettable", 0);
+
             this._myNotEnough.start();
         } else {
             if (Global.myGoogleAnalytics) {

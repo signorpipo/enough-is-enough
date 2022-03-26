@@ -6,6 +6,7 @@ class TrialState extends PP.State {
         //this._myFSM.setDebugLogActive(true, "    Trial");
         this._myFSM.addState("init");
         this._myFSM.addState("first_talk", new TalkState(this._firstTalkSentences(), false));
+        this._myFSM.addState("first_talk_hint", new TalkState(this._firstTalkHintSentences(), false));
         this._myFSM.addState("first_vent", new VentState(this._firstVentSetup(), this._firstEvidenceSetupList()));
         this._myFSM.addState("first_defeat", new TalkState(this._firstDefeatSentences(), true));
         this._myFSM.addState("second_talk", new TalkState(this._secondTalkSentences(), false));
@@ -21,11 +22,13 @@ class TrialState extends PP.State {
         this._myFSM.addState("done");
 
         this._myFSM.addTransition("init", "first_talk", "start_1");
+        this._myFSM.addTransition("init", "first_talk_hint", "start_1_hint");
         this._myFSM.addTransition("init", "second_talk", "start_2");
         this._myFSM.addTransition("init", "third_talk", "start_3");
         this._myFSM.addTransition("init", "MrNOT_talk", "start_4");
 
         this._myFSM.addTransition("first_talk", "first_vent", "end");
+        this._myFSM.addTransition("first_talk_hint", "first_vent", "end");
         this._myFSM.addTransition("first_vent", "first_defeat", "lost", this._trialLevelLost.bind(this, 1));
         this._myFSM.addTransition("first_vent", "second_talk", "completed", this._trialLevelCompleted.bind(this, 1));
 
@@ -49,6 +52,7 @@ class TrialState extends PP.State {
         this._myFSM.addTransition("MrNOT_defeat", "done", "end", this._backToMenu.bind(this, 4));
 
         this._myFSM.addTransition("done", "first_talk", "start_1");
+        this._myFSM.addTransition("done", "first_talk_hint", "start_1_hint");
         this._myFSM.addTransition("done", "second_talk", "start_2");
         this._myFSM.addTransition("done", "third_talk", "start_3");
         this._myFSM.addTransition("done", "MrNOT_talk", "start_4");
@@ -78,6 +82,7 @@ class TrialState extends PP.State {
         Global.myTrialDuration = 0;
         this._myTrialStartedFromBegin = false;
         Global.myStatistics.myTrialPlayCount += 1;
+        Global.myStatistics.myTrialPlayCountResettable += 1;
 
         let trialLevel = Global.mySaveManager.loadNumber("trial_level", 1);
 
@@ -86,6 +91,12 @@ class TrialState extends PP.State {
         }
 
         let transition = "start_".concat(trialLevel);
+
+        let giveHint = false;
+        giveHint = trialLevel == 1 && Global.myStatistics.myTrialPlayCountResettable >= 7 && Global.myStatistics.myMrNOTClonesDismissedResettable <= 0;
+        if (giveHint) {
+            transition = transition.concat("_hint");
+        }
 
         if (Global.myGoogleAnalytics) {
             gtag("event", "trial_started", {
@@ -191,6 +202,16 @@ class TrialState extends PP.State {
         sentences.push(new Sentence("Glad to see you again"));
         sentences.push(new Sentence("Maybe we could have a little conversation"));
         sentences.push(new Sentence("Why don't you show me what you have learned so far?", 2.5, 1.5));
+
+        return sentences;
+    }
+
+    _firstTalkHintSentences() {
+        let sentences = [];
+
+        sentences.push(new Sentence("Glad to see you again"));
+        sentences.push(new Sentence("Maybe we could have a little conversation"));
+        sentences.push(new Sentence("Why don't you THROW me what you have learned so far?", 2.5, 1.5));
 
         return sentences;
     }

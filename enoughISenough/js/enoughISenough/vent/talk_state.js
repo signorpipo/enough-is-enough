@@ -310,7 +310,8 @@ class Blather {
                 } else {
                     if (this._myCurrentCharacterIndex + 1 < sentence.mySentence.length &&
                         (sentence.mySentence[this._myCurrentCharacterIndex + 1] == '.') ||
-                        (sentence.mySentence.includes("KNOW") && this._myCurrentCharacterIndex > 2)) {
+                        (sentence.mySentence.includes("KNOW") && this._myCurrentCharacterIndex > 2) ||
+                        (sentence.mySentence.includes("Why don't you THROW me what you have learned so far?") && this._myCurrentCharacterIndex > 12 && this._myCurrentCharacterIndex < 20)) {
                         this._myCharacterTimer.start(0.3);
                     } else {
                         this._myCharacterTimer.start(0.13);
