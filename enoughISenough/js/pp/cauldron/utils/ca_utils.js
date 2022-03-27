@@ -14,7 +14,16 @@ PP.CAUtils = {
     isSDKAvailable: function () {
         return "casdk" in window;
     },
-    getLeaderboard: function (leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError, ignoreDummy = false) {
+    isUseDummyServerOnSDKMissing: function () {
+        return PP.CAUtils._myUseDummyServerOnSDKMissing;
+    },
+    isUseDummyServerOnError: function () {
+        return PP.CAUtils._myUseDummyServerOnError;
+    },
+    getDummyServer: function () {
+        return PP.CAUtils._myDummyServer;
+    },
+    getLeaderboard: function (leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError, overrideUseDummyServer = null) {
         if (PP.CAUtils.isSDKAvailable()) {
             if (!isAroundPlayer) {
                 casdk.getLeaderboard(leaderboardID, isAscending, isAroundPlayer, scoresAmount).then(function (result) {
@@ -23,7 +32,7 @@ PP.CAUtils = {
                             callbackOnDone(result.leaderboard);
                         }
                     } else {
-                        if (PP.CAUtils._myUseDummyServerOnError && !ignoreDummy) {
+                        if ((PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                             PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
                         } else if (callbackOnError) {
                             let error = {};
@@ -51,7 +60,7 @@ PP.CAUtils = {
                                         callbackOnDone(result.leaderboard);
                                     }
                                 } else {
-                                    if (PP.CAUtils._myUseDummyServerOnError && !ignoreDummy) {
+                                    if ((PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                                         PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
                                     } else if (callbackOnError) {
                                         let error = {};
@@ -61,7 +70,7 @@ PP.CAUtils = {
                                     }
                                 }
                             } else {
-                                if (PP.CAUtils._myUseDummyServerOnError && !ignoreDummy) {
+                                if ((PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                                     PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
                                 } else if (callbackOnError) {
                                     let error = {};
@@ -74,7 +83,7 @@ PP.CAUtils = {
 
                     },
                     function () {
-                        if (PP.CAUtils._myUseDummyServerOnError && !ignoreDummy) {
+                        if ((PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                             PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
                         } else if (callbackOnError) {
                             let error = {};
@@ -83,10 +92,10 @@ PP.CAUtils = {
                             callbackOnError(error, result);
                         }
                     },
-                    true);
+                    false);
             }
         } else {
-            if (PP.CAUtils._myUseDummyServerOnSDKMissing && !ignoreDummy) {
+            if ((PP.CAUtils._myUseDummyServerOnSDKMissing && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                 PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
             } else if (callbackOnError) {
                 let error = {};
@@ -108,11 +117,11 @@ PP.CAUtils = {
             }
         }
     },
-    submitScore: function (leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError, ignoreDummy = false) {
+    submitScore: function (leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError, overrideUseDummyServer = null) {
         if (PP.CAUtils.isSDKAvailable()) {
             casdk.submitScore(leaderboardID, scoreToSubmit).then(function (result) {
                 if (result.error) {
-                    if (PP.CAUtils._myUseDummyServerOnError && !ignoreDummy) {
+                    if ((PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                         PP.CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError);
                     } else if (callbackOnError) {
                         let error = {};
@@ -125,7 +134,7 @@ PP.CAUtils = {
                 }
             });
         } else {
-            if (PP.CAUtils._myUseDummyServerOnSDKMissing && !ignoreDummy) {
+            if ((PP.CAUtils._myUseDummyServerOnSDKMissing && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                 PP.CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError);
             } else if (callbackOnError) {
                 let error = {};
@@ -147,7 +156,7 @@ PP.CAUtils = {
             }
         }
     },
-    getUser: function (callbackOnDone, callbackOnError, ignoreDummy = false) {
+    getUser: function (callbackOnDone, callbackOnError, overrideUseDummyServer = null) {
         if (PP.CAUtils.isSDKAvailable()) {
             casdk.getUser().then(function (result) {
                 if (result.user) {
@@ -155,7 +164,7 @@ PP.CAUtils = {
                         callbackOnDone(result.user);
                     }
                 } else {
-                    if (PP.CAUtils._myUseDummyServerOnError && !ignoreDummy) {
+                    if ((PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                         PP.CAUtils.getUserDummy(callbackOnDone, callbackOnError);
                     } else if (callbackOnError) {
                         let error = {};
@@ -166,7 +175,7 @@ PP.CAUtils = {
                 }
             });
         } else {
-            if (PP.CAUtils._myUseDummyServerOnSDKMissing && !ignoreDummy) {
+            if ((PP.CAUtils._myUseDummyServerOnSDKMissing && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                 PP.CAUtils.getUserDummy(callbackOnDone, callbackOnError);
             } else if (callbackOnError) {
                 let error = {};

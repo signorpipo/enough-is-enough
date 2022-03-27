@@ -79,7 +79,7 @@ class IntroState extends PP.State {
                             "value": 1
                         });
                     }
-                }, null, true);
+                }, null, false);
             }
 
             fsm.perform("end");
