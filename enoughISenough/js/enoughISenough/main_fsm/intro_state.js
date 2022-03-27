@@ -51,7 +51,7 @@ class IntroState extends PP.State {
                     });
 
                     gtag("event", "intro_skipped_time", {
-                        "time": Math.round(this._myIntroDuration * 1000)
+                        "value": this._myIntroDuration.toFixed(2)
                     });
                 }
             }

@@ -57,7 +57,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
             if (window.performance) {
                 if (Global.myGoogleAnalytics) {
                     gtag("event", "load_time", {
-                        "time": Math.round(performance.now())
+                        "value": (performance.now() / 1000).toFixed(2)
                     });
                 }
             }
