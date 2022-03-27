@@ -92,7 +92,7 @@ PP.CAUtils = {
                 let error = {};
                 error.reason = "Construct Arcade SDK missing";
                 error.type = PP.CAUtils.ErrorType.CA_SDK_MISSING;
-                callbackOnError(error, result);
+                callbackOnError(error, null);
             }
         }
     },
@@ -131,7 +131,7 @@ PP.CAUtils = {
                 let error = {};
                 error.reason = "Construct Arcade SDK missing";
                 error.type = PP.CAUtils.ErrorType.CA_SDK_MISSING;
-                callbackOnError(error, result);
+                callbackOnError(error, null);
             }
         }
     },
@@ -172,7 +172,7 @@ PP.CAUtils = {
                 let error = {};
                 error.reason = "Construct Arcade SDK missing";
                 error.type = PP.CAUtils.ErrorType.CA_SDK_MISSING;
-                callbackOnError(error, result);
+                callbackOnError(error, null);
             }
         }
     },

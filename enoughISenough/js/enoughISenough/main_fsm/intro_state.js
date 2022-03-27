@@ -72,6 +72,14 @@ class IntroState extends PP.State {
                 gtag("event", "xr_enter_session", {
                     "value": 1
                 });
+
+                PP.CAUtils.getUser(function () {
+                    if (Global.myGoogleAnalytics) {
+                        gtag("event", "xr_enter_session_logged_in", {
+                            "value": 1
+                        });
+                    }
+                }, null, true);
             }
 
             fsm.perform("end");
