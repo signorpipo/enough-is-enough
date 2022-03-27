@@ -8,7 +8,7 @@ class ArcadeResultState extends PP.State {
         this._myFSM.addState("first_wait", new PP.TimerState(1.5, "end"));
         this._myFSM.addState("result");
         this._myFSM.addState("clean", this._updateClean.bind(this));
-        this._myFSM.addState("second_wait", new PP.TimerState(1.5, "end"));
+        this._myFSM.addState("second_wait", new PP.TimerState(2, "end"));
         this._myFSM.addState("done");
 
         this._myFSM.addTransition("init", "first_wait", "start", this._prepareState.bind(this));

@@ -122,7 +122,7 @@ class MrNOTVentState extends PP.State {
         if (grabbable.isGrabbed()) {
             let zestyComponent = zestyObject.pp_getComponentHierarchy("zesty-banner");
             if (zestyComponent) {
-                Global.myZestyToClick = zestyComponent;
+                //Global.myZestyToClick = zestyComponent;
             }
         }
 
