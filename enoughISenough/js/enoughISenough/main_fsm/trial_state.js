@@ -29,20 +29,20 @@ class TrialState extends PP.State {
 
         this._myFSM.addTransition("first_talk", "first_vent", "end");
         this._myFSM.addTransition("first_talk_hint", "first_vent", "end");
-        this._myFSM.addTransition("first_vent", "first_defeat", "lost", this._trialLevelLost.bind(this, 1));
-        this._myFSM.addTransition("first_vent", "second_talk", "completed", this._trialLevelCompleted.bind(this, 1));
+        this._myFSM.addTransition("first_vent", "first_defeat", "lost", this._trialPhaseLost.bind(this, 1));
+        this._myFSM.addTransition("first_vent", "second_talk", "completed", this._trialPhaseCompleted.bind(this, 1));
 
         this._myFSM.addTransition("second_talk", "second_vent", "end");
-        this._myFSM.addTransition("second_vent", "second_defeat", "lost", this._trialLevelLost.bind(this, 2));
-        this._myFSM.addTransition("second_vent", "third_talk", "completed", this._trialLevelCompleted.bind(this, 2));
+        this._myFSM.addTransition("second_vent", "second_defeat", "lost", this._trialPhaseLost.bind(this, 2));
+        this._myFSM.addTransition("second_vent", "third_talk", "completed", this._trialPhaseCompleted.bind(this, 2));
 
         this._myFSM.addTransition("third_talk", "third_vent", "end");
-        this._myFSM.addTransition("third_vent", "third_defeat", "lost", this._trialLevelLost.bind(this, 3));
-        this._myFSM.addTransition("third_vent", "MrNOT_talk", "completed", this._trialLevelCompleted.bind(this, 3));
+        this._myFSM.addTransition("third_vent", "third_defeat", "lost", this._trialPhaseLost.bind(this, 3));
+        this._myFSM.addTransition("third_vent", "MrNOT_talk", "completed", this._trialPhaseCompleted.bind(this, 3));
 
         this._myFSM.addTransition("MrNOT_talk", "MrNOT_vent", "end");
-        this._myFSM.addTransition("MrNOT_vent", "MrNOT_defeat", "lost", this._trialLevelLost.bind(this, 4));
-        this._myFSM.addTransition("MrNOT_vent", "it_will_always_be_not_enough", "completed", this._trialLevelCompleted.bind(this, 4));
+        this._myFSM.addTransition("MrNOT_vent", "MrNOT_defeat", "lost", this._trialPhaseLost.bind(this, 4));
+        this._myFSM.addTransition("MrNOT_vent", "it_will_always_be_not_enough", "completed", this._trialPhaseCompleted.bind(this, 4));
 
         this._myFSM.addTransition("it_will_always_be_not_enough", "done", "end", this._gameCompleted.bind(this));
 
@@ -84,21 +84,21 @@ class TrialState extends PP.State {
         Global.myStatistics.myTrialPlayCount += 1;
         Global.myStatistics.myTrialPlayCountResettable += 1;
 
-        let trialLevel = Global.mySaveManager.loadNumber("trial_level", 1);
+        let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
 
-        if (trialLevel == 1) {
+        if (trialPhase == 1) {
             this._myTrialStartedFromBegin = true;
         }
 
-        let transition = "start_".concat(trialLevel);
+        let transition = "start_".concat(trialPhase);
 
         let giveHint = false;
-        giveHint = trialLevel == 1 && Global.myStatistics.myTrialPlayCountResettable >= 7 && Global.myStatistics.myMrNOTClonesDismissedResettable <= 0;
+        giveHint = trialPhase == 1 && Global.myStatistics.myTrialPlayCountResettable >= 7 && Global.myStatistics.myMrNOTClonesDismissedResettable <= 0;
         if (giveHint) {
             transition = transition.concat("_hint");
 
             if (Global.myGoogleAnalytics) {
-                gtag("event", "trial_hint_viewed_level_".concat(trialLevel), {
+                gtag("event", "trial_hint_viewed_phase_".concat(trialPhase), {
                     "value": 1
                 });
             }
@@ -109,7 +109,7 @@ class TrialState extends PP.State {
                 "value": 1
             });
 
-            gtag("event", "trial_started_level_".concat(trialLevel), {
+            gtag("event", "trial_started_phase_".concat(trialPhase), {
                 "value": 1
             });
         }
@@ -121,14 +121,14 @@ class TrialState extends PP.State {
         Global.mySaveManager.save("trial_started_once", true);
     }
 
-    _trialLevelCompleted(trialLevel, fsm) {
+    _trialPhaseCompleted(trialPhase, fsm) {
         if (Global.myGoogleAnalytics) {
-            gtag("event", "trial_completed_level_".concat(trialLevel), {
+            gtag("event", "trial_completed_phase_".concat(trialPhase), {
                 "value": 1
             });
         }
 
-        if (trialLevel == 4) {
+        if (trialPhase == 4) {
             if (Global.myGoogleAnalytics) {
                 gtag("event", "trial_time", {
                     "value": Global.myTrialDuration.toFixed(2)
@@ -137,13 +137,13 @@ class TrialState extends PP.State {
         }
     }
 
-    _trialLevelLost(trialLevel, fsm) {
+    _trialPhaseLost(trialPhase, fsm) {
         if (Global.myGoogleAnalytics) {
-            gtag("event", "trial_lost_level_".concat(trialLevel), {
+            gtag("event", "trial_lost_phase_".concat(trialPhase), {
                 "value": 1
             });
 
-            gtag("event", "trial_lost_time_level_".concat(trialLevel), {
+            gtag("event", "trial_lost_time_phase_".concat(trialPhase), {
                 "value": Global.myVentDuration.toFixed(2)
             });
 
@@ -152,12 +152,12 @@ class TrialState extends PP.State {
             });
 
             if (Global.myStatistics.myTrialCompletedCount <= 0) {
-                gtag("event", "trial_lost_time_before_completed_level_".concat(trialLevel), {
+                gtag("event", "trial_lost_time_before_completed_phase_".concat(trialPhase), {
                     "value": Global.myVentDuration.toFixed(2)
                 });
             }
 
-            if (trialLevel == 1 && Global.myStatistics.myTrialCompletedCount <= 0) {
+            if (trialPhase == 1 && Global.myStatistics.myTrialCompletedCount <= 0) {
                 let clonesOnlyPunched = Global.myStatistics.myMrNOTClonesDismissed > 0 && Global.myStatistics.myMrNOTClonesDismissed == Global.myStatistics.myEvidencesPunched;
                 if (Global.myStatistics.myMrNOTClonesDismissed <= 0 || clonesOnlyPunched) {
                     gtag("event", "trial_lost_before_first_throw", {
@@ -174,8 +174,8 @@ class TrialState extends PP.State {
         }
     }
 
-    _backToMenu(trialLevel, fsm) {
-        Global.mySaveManager.save("trial_level", trialLevel);
+    _backToMenu(trialPhase, fsm) {
+        Global.mySaveManager.save("trial_phase", trialPhase);
         this._myParentFSM.perform(MainTransitions.End);
     }
 
@@ -196,7 +196,7 @@ class TrialState extends PP.State {
             }
         }
 
-        Global.mySaveManager.save("trial_level", 1);
+        Global.mySaveManager.save("trial_phase", 1);
         Global.mySaveManager.save("trial_completed", true);
         Global.myStatistics.myTrialCompletedCount += 1;
         this._myParentFSM.perform(MainTransitions.End);

@@ -54,9 +54,9 @@ class MenuState extends PP.State {
         this._myParentFSM = fsm;
 
         let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false);
-        let trialLevel = Global.mySaveManager.loadNumber("trial_level", 1);
+        let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
         let trialCompleted = Global.mySaveManager.loadBool("trial_completed", false);
-        if (trialCompleted || (trialStartedOnce && trialLevel >= 2)) {
+        if (trialCompleted || (trialStartedOnce && trialPhase >= 2)) {
             this._myCurrentMenuItems = [];
 
             if (trialCompleted) {
@@ -99,7 +99,7 @@ class MenuState extends PP.State {
 
         Global.myIsInMenu = true;
 
-        Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialLevel >= 2);
+        Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialPhase >= 2);
 
         Global.myPlayMusic = true;
 
@@ -189,7 +189,7 @@ class MenuState extends PP.State {
 
             Global.mySaveManager.save("trial_started_once", false);
             Global.mySaveManager.save("trial_completed", false);
-            Global.mySaveManager.save("trial_level", 1);
+            Global.mySaveManager.save("trial_phase", 1);
 
             Global.myStatistics.myTrialPlayCountResettable = 0;
             Global.myStatistics.myMrNOTClonesDismissedResettable = 0;
