@@ -5,57 +5,57 @@ class TrialState extends PP.State {
         this._myFSM = new PP.FSM();
         //this._myFSM.setDebugLogActive(true, "    Trial");
         this._myFSM.addState("init");
-        this._myFSM.addState("first_talk", new TalkState(this._firstTalkSentences(), false));
-        this._myFSM.addState("first_talk_hint", new TalkState(this._firstTalkHintSentences(), false));
+        this._myFSM.addState("first_blather", new BlatherState(this._firstBlatherSentences(), false));
+        this._myFSM.addState("first_blather_hint", new BlatherState(this._firstBlatherHintSentences(), false));
         this._myFSM.addState("first_vent", new VentState(this._firstVentSetup(), this._firstEvidenceSetupList()));
-        this._myFSM.addState("first_defeat", new TalkState(this._firstDefeatSentences(), true));
-        this._myFSM.addState("second_talk", new TalkState(this._secondTalkSentences(), false));
+        this._myFSM.addState("first_defeat_blather", new BlatherState(this._firstDefeatBlatherSentences(), true));
+        this._myFSM.addState("second_blather", new BlatherState(this._secondBlatherSentences(), false));
         this._myFSM.addState("second_vent", new VentState(this._secondVentSetup(), this._secondEvidenceSetupList()));
-        this._myFSM.addState("second_defeat", new TalkState(this._secondDefeatSentences(), true));
-        this._myFSM.addState("third_talk", new TalkState(this._thirdTalkSentences(), false));
+        this._myFSM.addState("second_defeat_blather", new BlatherState(this._secondDefeatBlatherSentences(), true));
+        this._myFSM.addState("third_blather", new BlatherState(this._thirdBlatherSentences(), false));
         this._myFSM.addState("third_vent", new VentState(this._thirdVentSetup(), this._thirdEvidenceSetupList()));
-        this._myFSM.addState("third_defeat", new TalkState(this._thirdDefeatSentences(), true));
-        this._myFSM.addState("MrNOT_talk", new TalkState(this._mrNOTTalkSentences(), true));
+        this._myFSM.addState("third_defeat_blather", new BlatherState(this._thirdDefeatBlatherSentences(), true));
+        this._myFSM.addState("MrNOT_blather", new BlatherState(this._mrNOTBlatherSentences(), true));
         this._myFSM.addState("MrNOT_vent", new MrNOTVentState());
-        this._myFSM.addState("MrNOT_defeat", new TalkState(this._mrNOTDefeatSentences(), true));
-        this._myFSM.addState("it_will_always_be_not_enough", new TalkState(this._NOTENOUGHTalkSentences(), true));
+        this._myFSM.addState("MrNOT_defeat_blather", new BlatherState(this._mrNOTDefeatBlatherSentences(), true));
+        this._myFSM.addState("it_will_always_be_not_enough", new BlatherState(this._NOTENOUGHBlatherSentences(), true));
         this._myFSM.addState("done");
 
-        this._myFSM.addTransition("init", "first_talk", "start_1");
-        this._myFSM.addTransition("init", "first_talk_hint", "start_1_hint");
-        this._myFSM.addTransition("init", "second_talk", "start_2");
-        this._myFSM.addTransition("init", "third_talk", "start_3");
-        this._myFSM.addTransition("init", "MrNOT_talk", "start_4");
+        this._myFSM.addTransition("init", "first_blather", "start_1");
+        this._myFSM.addTransition("init", "first_blather_hint", "start_1_hint");
+        this._myFSM.addTransition("init", "second_blather", "start_2");
+        this._myFSM.addTransition("init", "third_blather", "start_3");
+        this._myFSM.addTransition("init", "MrNOT_blather", "start_4");
 
-        this._myFSM.addTransition("first_talk", "first_vent", "end");
-        this._myFSM.addTransition("first_talk_hint", "first_vent", "end");
-        this._myFSM.addTransition("first_vent", "first_defeat", "lost", this._trialPhaseLost.bind(this, 1));
-        this._myFSM.addTransition("first_vent", "second_talk", "completed", this._trialPhaseCompleted.bind(this, 1));
+        this._myFSM.addTransition("first_blather", "first_vent", "end");
+        this._myFSM.addTransition("first_blather_hint", "first_vent", "end");
+        this._myFSM.addTransition("first_vent", "first_defeat_blather", "lost", this._trialPhaseLost.bind(this, 1));
+        this._myFSM.addTransition("first_vent", "second_blather", "completed", this._trialPhaseCompleted.bind(this, 1));
 
-        this._myFSM.addTransition("second_talk", "second_vent", "end");
-        this._myFSM.addTransition("second_vent", "second_defeat", "lost", this._trialPhaseLost.bind(this, 2));
-        this._myFSM.addTransition("second_vent", "third_talk", "completed", this._trialPhaseCompleted.bind(this, 2));
+        this._myFSM.addTransition("second_blather", "second_vent", "end");
+        this._myFSM.addTransition("second_vent", "second_defeat_blather", "lost", this._trialPhaseLost.bind(this, 2));
+        this._myFSM.addTransition("second_vent", "third_blather", "completed", this._trialPhaseCompleted.bind(this, 2));
 
-        this._myFSM.addTransition("third_talk", "third_vent", "end");
-        this._myFSM.addTransition("third_vent", "third_defeat", "lost", this._trialPhaseLost.bind(this, 3));
-        this._myFSM.addTransition("third_vent", "MrNOT_talk", "completed", this._trialPhaseCompleted.bind(this, 3));
+        this._myFSM.addTransition("third_blather", "third_vent", "end");
+        this._myFSM.addTransition("third_vent", "third_defeat_blather", "lost", this._trialPhaseLost.bind(this, 3));
+        this._myFSM.addTransition("third_vent", "MrNOT_blather", "completed", this._trialPhaseCompleted.bind(this, 3));
 
-        this._myFSM.addTransition("MrNOT_talk", "MrNOT_vent", "end");
-        this._myFSM.addTransition("MrNOT_vent", "MrNOT_defeat", "lost", this._trialPhaseLost.bind(this, 4));
+        this._myFSM.addTransition("MrNOT_blather", "MrNOT_vent", "end");
+        this._myFSM.addTransition("MrNOT_vent", "MrNOT_defeat_blather", "lost", this._trialPhaseLost.bind(this, 4));
         this._myFSM.addTransition("MrNOT_vent", "it_will_always_be_not_enough", "completed", this._trialPhaseCompleted.bind(this, 4));
 
         this._myFSM.addTransition("it_will_always_be_not_enough", "done", "end", this._gameCompleted.bind(this));
 
-        this._myFSM.addTransition("first_defeat", "done", "end", this._backToMenu.bind(this, 1));
-        this._myFSM.addTransition("second_defeat", "done", "end", this._backToMenu.bind(this, 2));
-        this._myFSM.addTransition("third_defeat", "done", "end", this._backToMenu.bind(this, 3));
-        this._myFSM.addTransition("MrNOT_defeat", "done", "end", this._backToMenu.bind(this, 4));
+        this._myFSM.addTransition("first_defeat_blather", "done", "end", this._backToMenu.bind(this, 1));
+        this._myFSM.addTransition("second_defeat_blather", "done", "end", this._backToMenu.bind(this, 2));
+        this._myFSM.addTransition("third_defeat_blather", "done", "end", this._backToMenu.bind(this, 3));
+        this._myFSM.addTransition("MrNOT_defeat_blather", "done", "end", this._backToMenu.bind(this, 4));
 
-        this._myFSM.addTransition("done", "first_talk", "start_1");
-        this._myFSM.addTransition("done", "first_talk_hint", "start_1_hint");
-        this._myFSM.addTransition("done", "second_talk", "start_2");
-        this._myFSM.addTransition("done", "third_talk", "start_3");
-        this._myFSM.addTransition("done", "MrNOT_talk", "start_4");
+        this._myFSM.addTransition("done", "first_blather", "start_1");
+        this._myFSM.addTransition("done", "first_blather_hint", "start_1_hint");
+        this._myFSM.addTransition("done", "second_blather", "start_2");
+        this._myFSM.addTransition("done", "third_blather", "start_3");
+        this._myFSM.addTransition("done", "MrNOT_blather", "start_4");
 
         let states = this._myFSM.getStates();
         for (let state of states) {
@@ -202,7 +202,7 @@ class TrialState extends PP.State {
         this._myParentFSM.perform(MainTransitions.End);
     }
 
-    _firstTalkSentences() {
+    _firstBlatherSentences() {
         let sentences = [];
 
         sentences.push(new Sentence("Glad to see you again"));
@@ -212,7 +212,7 @@ class TrialState extends PP.State {
         return sentences;
     }
 
-    _firstTalkHintSentences() {
+    _firstBlatherHintSentences() {
         let sentences = [];
 
         sentences.push(new Sentence("Glad to see you again"));
@@ -222,7 +222,7 @@ class TrialState extends PP.State {
         return sentences;
     }
 
-    _firstDefeatSentences() {
+    _firstDefeatBlatherSentences() {
         let sentences = [];
 
         sentences.push(new Sentence("Don't even bother", 2.5, 2));
@@ -230,7 +230,7 @@ class TrialState extends PP.State {
         return sentences;
     }
 
-    _secondTalkSentences() {
+    _secondBlatherSentences() {
         let sentences = [];
 
         sentences.push(new Sentence("After our last time together", 1, 0));
@@ -240,7 +240,7 @@ class TrialState extends PP.State {
         return sentences;
     }
 
-    _secondDefeatSentences() {
+    _secondDefeatBlatherSentences() {
         let sentences = [];
 
         sentences.push(new Sentence("Stop wasting my time too", 2.5, 2));
@@ -248,7 +248,7 @@ class TrialState extends PP.State {
         return sentences;
     }
 
-    _thirdTalkSentences() {
+    _thirdBlatherSentences() {
         let sentences = [];
 
         sentences.push(new Sentence("I've watched you jump from one thing to another", 1, 0));
@@ -258,7 +258,7 @@ class TrialState extends PP.State {
         return sentences;
     }
 
-    _thirdDefeatSentences() {
+    _thirdDefeatBlatherSentences() {
         let sentences = [];
 
         sentences.push(new Sentence("There is no purpose left for you", 2.5, 2));
@@ -266,7 +266,7 @@ class TrialState extends PP.State {
         return sentences;
     }
 
-    _mrNOTTalkSentences() {
+    _mrNOTBlatherSentences() {
         let sentences = [];
 
         sentences.push(new Sentence("enough IS enough", 0.1, 0));
@@ -274,7 +274,7 @@ class TrialState extends PP.State {
         return sentences;
     }
 
-    _mrNOTDefeatSentences() {
+    _mrNOTDefeatBlatherSentences() {
         let sentences = [];
 
         sentences.push(new Sentence("", 2, 1.5));
@@ -282,7 +282,7 @@ class TrialState extends PP.State {
         return sentences;
     }
 
-    _NOTENOUGHTalkSentences() {
+    _NOTENOUGHBlatherSentences() {
         let sentences = [];
 
         sentences.push(new Sentence("You may think you are stronger now"));
