@@ -41,6 +41,7 @@ class MenuState extends PP.State {
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Unspawn Menu Scale", 2.5, 1, 3));
 
         this._myMenuDuration = 0;
+        this._myFirstTime = true;
     }
 
     update(dt, fsm) {
@@ -53,9 +54,9 @@ class MenuState extends PP.State {
         this._myParentFSM = fsm;
 
         let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false);
-        let trialLevel = Global.mySaveManager.loadNumber("trial_level", 1);
+        let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
         let trialCompleted = Global.mySaveManager.loadBool("trial_completed", false);
-        if (trialCompleted || (trialStartedOnce && trialLevel >= 2)) {
+        if (trialCompleted || (trialStartedOnce && trialPhase >= 2)) {
             this._myCurrentMenuItems = [];
 
             if (trialCompleted) {
@@ -73,7 +74,12 @@ class MenuState extends PP.State {
         }
 
         let times = [];
-        times[0] = Math.pp_random(0.15, 0.55);
+        if (this._myFirstTime) {
+            times[0] = 0.35;
+            this._myFirstTime = false;
+        } else {
+            times[0] = Math.pp_random(0.15, 0.55);
+        }
         for (let i = 1; i < this._myCurrentMenuItems.length; i++) {
             times[i] = times[i - 1] + Math.pp_random(0.15, 0.55);
         }
@@ -93,7 +99,7 @@ class MenuState extends PP.State {
 
         Global.myIsInMenu = true;
 
-        Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialLevel >= 2);
+        Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialPhase >= 2);
 
         Global.myPlayMusic = true;
 
@@ -103,7 +109,7 @@ class MenuState extends PP.State {
     end() {
         if (Global.myGoogleAnalytics) {
             gtag("event", "menu_time", {
-                "time": Math.round(this._myMenuDuration * 1000)
+                "value": this._myMenuDuration.toFixed(2)
             });
         }
 
@@ -183,7 +189,13 @@ class MenuState extends PP.State {
 
             Global.mySaveManager.save("trial_started_once", false);
             Global.mySaveManager.save("trial_completed", false);
-            Global.mySaveManager.save("trial_level", 1);
+            Global.mySaveManager.save("trial_phase", 1);
+
+            Global.myStatistics.myTrialPlayCountResettable = 0;
+            Global.myStatistics.myMrNOTClonesDismissedResettable = 0;
+            Global.mySaveManager.save("trial_play_count_resettable", 0);
+            Global.mySaveManager.save("mr_NOT_clones_dismissed_resettable", 0);
+
             this._myNotEnough.start();
         } else {
             if (Global.myGoogleAnalytics) {

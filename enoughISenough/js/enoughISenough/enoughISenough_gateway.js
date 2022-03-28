@@ -31,18 +31,20 @@ WL.registerComponent("enough-IS-enough-gateway", {
     },
     start: function () {
         let version = Global.mySaveManager.loadNumber("game_version", 0);
-        Global.myGameVersion = 4;
-        if (version < Global.myGameVersion) {
+        Global.myGameVersion = 5;
+
+        let minVersionToReset = 4;
+        if (version < minVersionToReset) {
+            Global.mySaveManager.clear();
             Global.mySaveManager.save("game_version", Global.myGameVersion);
-            Global.mySaveManager.save("trial_started_once", false);
-            Global.mySaveManager.save("trial_completed", false);
-            Global.mySaveManager.save("trial_level", 1);
+        } else if (version < Global.myGameVersion) {
+            Global.mySaveManager.save("game_version", Global.myGameVersion);
         }
 
         let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false);
-        let trialLevel = Global.mySaveManager.loadNumber("trial_level", 1);
+        let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
         let trialCompleted = Global.mySaveManager.loadBool("trial_completed", false);
-        Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialLevel >= 2);
+        Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialPhase >= 2);
     },
     update: function (dt) {
         if (this._myFirstUpdate) {
@@ -53,7 +55,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
             if (window.performance) {
                 if (Global.myGoogleAnalytics) {
                     gtag("event", "load_time", {
-                        "time": Math.round(performance.now())
+                        "value": (performance.now() / 1000).toFixed(2)
                     });
                 }
             }

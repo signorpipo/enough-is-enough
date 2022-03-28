@@ -54,7 +54,7 @@ class StatisticsManager {
     _sendAnalytics() {
         if (Global.myGoogleAnalytics) {
             gtag("event", "play_time", {
-                "time": Math.round((Global.myStatistics.myTotalPlayTime - Global.myStatistics.myTotalPlayTimeOnLoad) * 1000)
+                "value": (Global.myStatistics.myTotalPlayTime - Global.myStatistics.myTotalPlayTimeOnLoad).toFixed(2)
             });
 
             if ((Global.myStatistics.myEvidencesThrown - Global.myStatistics.myEvidencesThrownOnLoad) > 0) {
@@ -92,6 +92,7 @@ class Statistics {
         this.myTotalPlayTime = 0;
         this.myTrialPlayTime = 0;
         this.myTrialPlayCount = 0;
+        this.myTrialPlayCountResettable = 0;
         this.myTrialCompletedCount = 0;
         this.myTrialBestTime = 0;
         this.myChatPlayTime = 0;
@@ -103,6 +104,7 @@ class Statistics {
         this.myEvidencesThrown = 0;
         this.myEvidencesPunched = 0;
         this.myMrNOTClonesDismissed = 0;
+        this.myMrNOTClonesDismissedResettable = 0;
         this.myMrNOTDismissed = 0;
 
         this.myTotalPlayTimeOnLoad = 0;
@@ -117,6 +119,7 @@ class Statistics {
 
         this.myTrialPlayTime = Global.mySaveManager.loadNumber("trial_play_time", 0);
         this.myTrialPlayCount = Global.mySaveManager.loadNumber("trial_play_count", 0);
+        this.myTrialPlayCountResettable = Global.mySaveManager.loadNumber("trial_play_count_resettable", 0);
         this.myTrialCompletedCount = Global.mySaveManager.loadNumber("trial_completed_count", 0);
         this.myTrialBestTime = Global.mySaveManager.loadNumber("trial_best_time", -1);
 
@@ -131,6 +134,7 @@ class Statistics {
         this.myEvidencesThrown = Global.mySaveManager.loadNumber("evidences_thrown", 0);
         this.myEvidencesPunched = Global.mySaveManager.loadNumber("evidences_punched", 0);
         this.myMrNOTClonesDismissed = Global.mySaveManager.loadNumber("mr_NOT_clones_dismissed", 0);
+        this.myMrNOTClonesDismissedResettable = Global.mySaveManager.loadNumber("mr_NOT_clones_dismissed_resettable", 0);
         this.myMrNOTDismissed = Global.mySaveManager.loadNumber("mr_NOT_dismissed", 0);
 
         this.syncOnLoadVariables();
@@ -153,6 +157,7 @@ class Statistics {
 
         Global.mySaveManager.save("trial_play_time", this.myTrialPlayTime);
         Global.mySaveManager.save("trial_play_count", this.myTrialPlayCount);
+        Global.mySaveManager.save("trial_play_count_resettable", this.myTrialPlayCountResettable);
         Global.mySaveManager.save("trial_completed_count", this.myTrialCompletedCount);
         Global.mySaveManager.save("trial_best_time", this.myTrialBestTime);
 
@@ -167,6 +172,7 @@ class Statistics {
         Global.mySaveManager.save("evidences_thrown", this.myEvidencesThrown);
         Global.mySaveManager.save("evidences_punched", this.myEvidencesPunched);
         Global.mySaveManager.save("mr_NOT_clones_dismissed", this.myMrNOTClonesDismissed);
+        Global.mySaveManager.save("mr_NOT_clones_dismissed_resettable", this.myMrNOTClonesDismissedResettable);
         Global.mySaveManager.save("mr_NOT_dismissed", this.myMrNOTDismissed);
     }
 }

@@ -36,7 +36,10 @@ class IntroState extends PP.State {
             this._myIntroDuration += dt;
         }
 
-        if (Global.mySaveManager.loadBool("trial_started_once", false) || Global.myDebugShortcutsEnabled) {
+        let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false);
+        let introViewed = Global.mySaveManager.loadNumber("intro_viewed", 0);
+
+        if ((trialStartedOnce && introViewed >= 3) || Global.myDebugShortcutsEnabled) {
             if (!this._myFSM.isInState("wait_session") && PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd((PP.XRUtils.isDeviceEmulated()) ? 1 : 3)) {
                 while (!this._myFSM.isInState("done") && !this._myFSM.isInState("test")) {
                     this._myFSM.perform("skip");
@@ -48,7 +51,7 @@ class IntroState extends PP.State {
                     });
 
                     gtag("event", "intro_skipped_time", {
-                        "time": Math.round(this._myIntroDuration * 1000)
+                        "value": this._myIntroDuration.toFixed(2)
                     });
                 }
             }
@@ -69,6 +72,14 @@ class IntroState extends PP.State {
                 gtag("event", "xr_enter_session", {
                     "value": 1
                 });
+
+                PP.CAUtils.getUser(function () {
+                    if (Global.myGoogleAnalytics) {
+                        gtag("event", "xr_enter_session_logged_in", {
+                            "value": 1
+                        });
+                    }
+                }, null, false);
             }
 
             fsm.perform("end");
@@ -146,6 +157,14 @@ class IntroState extends PP.State {
 
     endIntro(fsm) {
         this._myParentFSM.perform(MainTransitions.End);
+
+        let introViewed = Global.mySaveManager.loadNumber("intro_viewed", 0);
+        introViewed += 1;
+        Global.mySaveManager.save("intro_viewed", introViewed);
+
+        gtag("event", "intro_viewed", {
+            "value": 1
+        });
     }
 
     skipIntro(fsm, transition) {

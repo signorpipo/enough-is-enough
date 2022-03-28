@@ -226,6 +226,7 @@ class MrNOTClone {
             }
 
             Global.myStatistics.myMrNOTClonesDismissed += 1;
+            Global.myStatistics.myMrNOTClonesDismissedResettable += 1;
         }
     }
 

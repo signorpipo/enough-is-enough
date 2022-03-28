@@ -39,17 +39,24 @@ class enoughISenough {
         }
 
         {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blabla_1.wav");
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blather_0.wav");
             audioSetup.myVolume = 0.4;
             audioSetup.myReferenceDistance = 1000000;
-            manager.addAudioSetup(SfxID.BLABLA_1, audioSetup);
+            manager.addAudioSetup(SfxID.BLATHER_0, audioSetup);
         }
 
         {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blabla_2.wav");
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blather_1.wav");
             audioSetup.myVolume = 0.4;
             audioSetup.myReferenceDistance = 1000000;
-            manager.addAudioSetup(SfxID.BLABLA_2, audioSetup);
+            manager.addAudioSetup(SfxID.BLATHER_1, audioSetup);
+        }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blather_dot.wav");
+            audioSetup.myVolume = 0.4;
+            audioSetup.myReferenceDistance = 1000000;
+            manager.addAudioSetup(SfxID.BLATHER_DOT, audioSetup);
         }
 
         {
@@ -164,7 +171,7 @@ class enoughISenough {
         }
 
         manager.createAudioPlayer(SfxID.RING_RISE);
-        for (let i = 0; i <= SfxID.COLLISION; i++) {
+        for (let i = 0; i <= SfxID.BLATHER_DOT; i++) {
             manager.createAudioPlayer(i);
         }
 
@@ -179,8 +186,8 @@ class enoughISenough {
 
 var SfxID = {
     NOT_ENOUGH: 0,
-    BLABLA_1: 1,
-    BLABLA_2: 2,
+    BLATHER_0: 1,
+    BLATHER_1: 2,
     RING_RISE: 3,
     HAND_PIECE_APPEAR: 4,
     MR_NOT_APPEAR: 5,
@@ -197,4 +204,5 @@ var SfxID = {
     GRAB: 16,
     THROW: 17,
     COLLISION: 18,
+    BLATHER_DOT: 19,
 };

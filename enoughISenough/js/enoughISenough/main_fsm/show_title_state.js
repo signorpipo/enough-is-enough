@@ -45,8 +45,8 @@ class ShowTitleState extends PP.State {
         this._mySubtitleCenterPosition = [-7, 83, -143];
 
         this._myCharAudios = [];
-        this._myCharAudios[0] = Global.myAudioManager.createAudioPlayer(SfxID.BLABLA_2);
-        this._myCharAudios[1] = Global.myAudioManager.createAudioPlayer(SfxID.BLABLA_1);
+        this._myCharAudios[0] = Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_1);
+        this._myCharAudios[1] = Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_0);
         this._myCharAudios[0].setVolume(0.5);
         this._myCharAudios[1].setVolume(0.5);
 
@@ -132,7 +132,7 @@ class ShowTitleState extends PP.State {
         this._myCharMaxTime = 0.15;
 
         this._myCharTimer = new PP.Timer(Math.pp_random(this._myCharMinTime, this._myCharMaxTime));
-        this._myWaitTimer = new PP.Timer(0.1);
+        this._myWaitTimer = new PP.Timer(0.05);
         this._myChars = "enough";
         this._myCurrChar = 0;
     }
@@ -186,7 +186,7 @@ class ShowTitleState extends PP.State {
         this._myChars = "enough";
         this._myCurrChar = 0;
 
-        this._myWaitTimer = new PP.Timer(1);
+        this._myWaitTimer = new PP.Timer(0);
     }
 
     showSub2(dt, fsm) {

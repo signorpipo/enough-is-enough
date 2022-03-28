@@ -1,14 +1,14 @@
-class TalkState extends PP.State {
+class BlatherState extends PP.State {
     constructor(sentences, isDefeat) {
         super();
 
         this._myFSM = new PP.FSM();
-        //this._myFSM.setDebugLogActive(true, "        Talk");
+        //this._myFSM.setDebugLogActive(true, "        Blather");
         this._myFSM.addState("init");
         this._myFSM.addState("first_wait", new PP.TimerState(1.5, "end"));
         //this._myFSM.addState("first_wait", new PP.TimerState(5, "end")); // for trailer, emulator distance [0, 1.65, 1.7], speaker monitor volume 0.5
         this._myFSM.addState("mr_not_appear", this._updateMrNOTAppear.bind(this));
-        this._myFSM.addState("talk", this._updateTalk.bind(this));
+        this._myFSM.addState("blather", this._updateBlather.bind(this));
         this._myFSM.addState("mr_not_disappear", this._updateMrNOTDisappear.bind(this));
         this._myFSM.addState("second_wait", new PP.TimerState(0, "end"));
         //this._myFSM.addState("second_wait", new PP.TimerState(5, "end")); // for trailer
@@ -16,15 +16,15 @@ class TalkState extends PP.State {
 
         if (isDefeat) {
             this._myFSM.addTransition("init", "first_wait", "start", this._prepareState.bind(this));
-            this._myFSM.addTransition("first_wait", "talk", "end", this._prepareTalk.bind(this));
-            this._myFSM.addTransition("talk", "second_wait", "end");
+            this._myFSM.addTransition("first_wait", "blather", "end", this._prepareBlather.bind(this));
+            this._myFSM.addTransition("blather", "second_wait", "end");
             this._myFSM.addTransition("second_wait", "done", "end", this._startFight.bind(this));
             this._myFSM.addTransition("done", "first_wait", "start", this._prepareState.bind(this));
         } else {
             this._myFSM.addTransition("init", "first_wait", "start", this._prepareState.bind(this));
             this._myFSM.addTransition("first_wait", "mr_not_appear", "end", this._prepareMrNOTAppear.bind(this));
-            this._myFSM.addTransition("mr_not_appear", "talk", "end", this._prepareTalk.bind(this));
-            this._myFSM.addTransition("talk", "mr_not_disappear", "end", this._prepareMrNOTDisappear.bind(this));
+            this._myFSM.addTransition("mr_not_appear", "blather", "end", this._prepareBlather.bind(this));
+            this._myFSM.addTransition("blather", "mr_not_disappear", "end", this._prepareMrNOTDisappear.bind(this));
             this._myFSM.addTransition("mr_not_disappear", "second_wait", "end");
             this._myFSM.addTransition("second_wait", "done", "end", this._startFight.bind(this));
             this._myFSM.addTransition("done", "first_wait", "start", this._prepareState.bind(this));
@@ -33,7 +33,7 @@ class TalkState extends PP.State {
         this._myFSM.addTransition("init", "done", "skip");
         this._myFSM.addTransition("first_wait", "done", "skip");
         this._myFSM.addTransition("mr_not_appear", "done", "skip", this._hideMrNOT.bind(this));
-        this._myFSM.addTransition("talk", "done", "skip", this._hideTalk.bind(this));
+        this._myFSM.addTransition("blather", "done", "skip", this._hideBlather.bind(this));
         this._myFSM.addTransition("mr_not_disappear", "done", "skip", this._hideMrNOT.bind(this));
         this._myFSM.addTransition("second_wait", "done", "skip");
 
@@ -109,11 +109,11 @@ class TalkState extends PP.State {
         }
     }
 
-    _prepareTalk() {
+    _prepareBlather() {
         this._myBlather.start();
     }
 
-    _updateTalk(dt, fsm) {
+    _updateBlather(dt, fsm) {
         this._myBlather.update(dt);
         if (this._myBlather.isDone()) {
             fsm.perform("end");
@@ -155,7 +155,7 @@ class TalkState extends PP.State {
         Global.myStartFadeOut = false;
     }
 
-    _hideTalk() {
+    _hideBlather() {
         this._hideMrNOT();
         this._myBlather.skip();
     }
@@ -241,8 +241,8 @@ class Blather {
         this._myNextTimer = new PP.Timer(0.1);
 
         this._myCharAudios = [];
-        this._myCharAudios[0] = Global.myAudioManager.createAudioPlayer(SfxID.BLABLA_2);
-        this._myCharAudios[1] = Global.myAudioManager.createAudioPlayer(SfxID.BLABLA_1);
+        this._myCharAudios[0] = Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_1);
+        this._myCharAudios[1] = Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_0);
 
         this._myFSM.init("init");
     }
@@ -310,7 +310,8 @@ class Blather {
                 } else {
                     if (this._myCurrentCharacterIndex + 1 < sentence.mySentence.length &&
                         (sentence.mySentence[this._myCurrentCharacterIndex + 1] == '.') ||
-                        (sentence.mySentence.includes("KNOW") && this._myCurrentCharacterIndex > 2)) {
+                        (sentence.mySentence.includes("KNOW") && this._myCurrentCharacterIndex > 2) ||
+                        (sentence.mySentence.includes("Why don't you THROW me what you have learned so far?") && this._myCurrentCharacterIndex > 12 && this._myCurrentCharacterIndex < 20)) {
                         this._myCharacterTimer.start(0.3);
                     } else {
                         this._myCharacterTimer.start(0.13);
