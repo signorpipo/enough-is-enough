@@ -241,8 +241,8 @@ class Blather {
         this._myNextTimer = new PP.Timer(0.1);
 
         this._myCharAudios = [];
-        this._myCharAudios[0] = Global.myAudioManager.createAudioPlayer(SfxID.BLABLA_2);
-        this._myCharAudios[1] = Global.myAudioManager.createAudioPlayer(SfxID.BLABLA_1);
+        this._myCharAudios[0] = Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_1);
+        this._myCharAudios[1] = Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_0);
 
         this._myFSM.init("init");
     }

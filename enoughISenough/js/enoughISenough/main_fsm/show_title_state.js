@@ -45,8 +45,8 @@ class ShowTitleState extends PP.State {
         this._mySubtitleCenterPosition = [-7, 83, -143];
 
         this._myCharAudios = [];
-        this._myCharAudios[0] = Global.myAudioManager.createAudioPlayer(SfxID.BLABLA_2);
-        this._myCharAudios[1] = Global.myAudioManager.createAudioPlayer(SfxID.BLABLA_1);
+        this._myCharAudios[0] = Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_1);
+        this._myCharAudios[1] = Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_0);
         this._myCharAudios[0].setVolume(0.5);
         this._myCharAudios[1].setVolume(0.5);
 
