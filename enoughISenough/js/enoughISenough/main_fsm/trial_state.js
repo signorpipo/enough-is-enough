@@ -96,6 +96,12 @@ class TrialState extends PP.State {
         giveHint = trialLevel == 1 && Global.myStatistics.myTrialPlayCountResettable >= 7 && Global.myStatistics.myMrNOTClonesDismissedResettable <= 0;
         if (giveHint) {
             transition = transition.concat("_hint");
+
+            if (Global.myGoogleAnalytics) {
+                gtag("event", "trial_hint_viewed_level_".concat(trialLevel), {
+                    "value": 1
+                });
+            }
         }
 
         if (Global.myGoogleAnalytics) {

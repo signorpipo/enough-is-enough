@@ -35,10 +35,8 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
         let minVersionToReset = 4;
         if (version < minVersionToReset) {
+            Global.mySaveManager.clear();
             Global.mySaveManager.save("game_version", Global.myGameVersion);
-            Global.mySaveManager.save("trial_started_once", false);
-            Global.mySaveManager.save("trial_completed", false);
-            Global.mySaveManager.save("trial_level", 1);
         } else if (version < Global.myGameVersion) {
             Global.mySaveManager.save("game_version", Global.myGameVersion);
         }
