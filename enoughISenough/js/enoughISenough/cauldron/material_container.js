@@ -3,6 +3,7 @@ WL.registerComponent("material-container", {
     _mySubtitle: { type: WL.Type.Material },
     _myText: { type: WL.Type.Material },
     _myBigText: { type: WL.Type.Material },
+    _myTitlePatch: { type: WL.Type.Object },
 }, {
     init: function () {
         Global.myMaterials = {};
@@ -10,6 +11,8 @@ WL.registerComponent("material-container", {
         Global.myMaterials.mySubtitle = this._mySubtitle.clone();
         Global.myMaterials.myText = this._myText.clone();
         Global.myMaterials.myBigText = this._myBigText.clone();
+
+        Global.myTitlePatchObject = this._myTitlePatch;
     },
     start: function () {
     },

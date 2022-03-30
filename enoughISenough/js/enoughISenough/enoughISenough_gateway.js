@@ -228,6 +228,7 @@ var Global = {
     myTitlesRumbleObject: null,
     myTitleObject: null,
     mySubtitleObject: null,
+    myTitlePatchObject: null,
     myMeshObjectPoolMap: null,
     myMeshNoFogObjectPoolMap: null,
     myGameObjectPoolMap: null,
