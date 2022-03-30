@@ -27,6 +27,12 @@ class IntroState extends PP.State {
         this._myTimer = new PP.Timer(2.5);
 
         this._myIntroDuration = 0;
+
+        if (WL.xrSession) {
+            this._onXRSessionStart(WL.xrSession);
+        }
+        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
+        this._myXRSessionStartCalled = false;
     }
 
     update(dt, fsm) {
@@ -165,10 +171,26 @@ class IntroState extends PP.State {
         gtag("event", "intro_viewed", {
             "value": 1
         });
+
+        if (!this._myXRSessionStartCalled) {
+            gtag("event", "xr_session_not_started", {
+                "value": 1
+            });
+        }
     }
 
     skipIntro(fsm, transition) {
         transition.myFromState.myObject.end(fsm, transition);
         this._myParentFSM.perform(MainTransitions.Skip);
+
+        if (!this._myXRSessionStartCalled) {
+            gtag("event", "xr_session_not_started", {
+                "value": 1
+            });
+        }
+    }
+
+    _onXRSessionStart() {
+        this._myXRSessionStartCalled = true;
     }
 }
