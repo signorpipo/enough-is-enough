@@ -1,6 +1,6 @@
 WL.registerComponent('pp-grabber-hand', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
-    _myGrabButton: { type: WL.Type.Enum, values: ['select', 'squeeze', 'both'], default: 'squeeze' },
+    _myGrabButton: { type: WL.Type.Enum, values: ['select', 'squeeze', 'both', 'both_exclusive'], default: 'squeeze' }, // both_exclusive means u can use both buttons but you have to use the same button you grabbed with to throw
     _mySnapOnPivot: { type: WL.Type.Bool, default: false },
     _myMaxNumberOfObjects: { type: WL.Type.Int, default: 1 }, // how many objects you can grab at the same time
     // ADVANCED SETTINGS
@@ -19,6 +19,8 @@ WL.registerComponent('pp-grabber-hand', {
         this._myGrabbables = [];
 
         this._myGamepad = null;
+
+        this._myActiveGrabButton = null;
 
         this._myLinearVelocityHistorySize = 5;
         this._myLinearVelocityHistorySpeedAverageSamplesFromStart = 1;
@@ -69,11 +71,11 @@ WL.registerComponent('pp-grabber-hand', {
             this._updateAngularVelocityHistory();
         }
     },
-    grab: function () {
-        this._grab();
+    grab: function (grabButton = null) {
+        this._grab(grabButton);
     },
-    throw: function () {
-        this._throw();
+    throw: function (throwButton = null) {
+        this._throw(throwButton);
     },
     registerGrabEventListener(id, callback) {
         this._myGrabCallbacks.set(id, callback);
@@ -89,17 +91,17 @@ WL.registerComponent('pp-grabber-hand', {
     },
     onActivate() {
         if (this._myGrabButton == 0) {
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this));
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this));
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this, PP.ButtonType.SELECT));
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this, PP.ButtonType.SELECT));
         } else if (this._myGrabButton == 1) {
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this));
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this));
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this, PP.ButtonType.SQUEEZE));
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this, PP.ButtonType.SQUEEZE));
         } else {
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this));
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this));
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this, PP.ButtonType.SQUEEZE));
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this, PP.ButtonType.SQUEEZE));
 
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this));
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this));
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this, PP.ButtonType.SELECT));
+            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this, PP.ButtonType.SELECT));
         }
     },
     onDeactivate() {
@@ -117,71 +119,87 @@ WL.registerComponent('pp-grabber-hand', {
             this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this);
         }
     },
-    _grab: function () {
+    _grab: function (grabButton) {
         if (this._myGrabbables.length >= this._myMaxNumberOfObjects) {
             return;
         }
 
-        let grabbablesToGrab = [];
+        if (this._myGrabButton == 2 || this._myActiveGrabButton == null || this._myActiveGrabButton == grabButton || grabButton == null) {
+            let grabbablesToGrab = [];
 
-        let collisions = this._myCollisionsCollector.getCollisions();
-        for (let i = 0; i < collisions.length; i++) {
-            let grabbable = collisions[i].getComponent("pp-grabbable");
-            if (grabbable && grabbable.active) {
-                grabbablesToGrab.push(grabbable);
+            let collisions = this._myCollisionsCollector.getCollisions();
+            for (let i = 0; i < collisions.length; i++) {
+                let grabbable = collisions[i].getComponent("pp-grabbable");
+                if (grabbable && grabbable.active) {
+                    grabbablesToGrab.push(grabbable);
+                }
             }
-        }
 
-        for (let grabbableToGrab of grabbablesToGrab) {
-            if (!this._isAlreadyGrabbed(grabbableToGrab)) {
-                let grabbableData = new PP.GrabberHandGrabbableData(grabbableToGrab, this._myThrowVelocitySource == 1, this._myLinearVelocityHistorySize, this._myAngularVelocityHistorySize);
-                this._myGrabbables.push(grabbableData);
-                grabbableToGrab.grab(this.object);
-                grabbableToGrab.registerReleaseEventListener(this, this._onRelease.bind(this));
+            for (let grabbableToGrab of grabbablesToGrab) {
+                if (!this._isAlreadyGrabbed(grabbableToGrab)) {
+                    let grabbableData = new PP.GrabberHandGrabbableData(grabbableToGrab, this._myThrowVelocitySource == 1, this._myLinearVelocityHistorySize, this._myAngularVelocityHistorySize);
+                    this._myGrabbables.push(grabbableData);
+                    grabbableToGrab.grab(this.object);
+                    grabbableToGrab.registerReleaseEventListener(this, this._onRelease.bind(this));
 
-                if (this._mySnapOnPivot) {
-                    grabbableToGrab.object.resetTranslation();
+                    if (this._mySnapOnPivot) {
+                        grabbableToGrab.object.resetTranslation();
+                    }
+
+                    this._myGrabCallbacks.forEach(function (value) { value(this, grabbableToGrab); }.bind(this));
                 }
 
-                this._myGrabCallbacks.forEach(function (value) { value(this, grabbableToGrab); }.bind(this));
+                if (this._myGrabbables.length >= this._myMaxNumberOfObjects) {
+                    break;
+                }
             }
 
-            if (this._myGrabbables.length >= this._myMaxNumberOfObjects) {
-                break;
+            if (this._myGrabbables.length > 0) {
+                if (this._myActiveGrabButton == null) {
+                    this._myActiveGrabButton = grabButton;
+                }
             }
         }
     },
-    _throw: function () {
-        if (this._myGrabbables.length > 0) {
-            let linearVelocity = null;
-            let angularVelocity = null;
+    _throw: function (throwButton) {
+        if (this._myGrabButton == 2 || this._myActiveGrabButton == null || this._myActiveGrabButton == throwButton || throwButton == null) {
+            if (this._myGrabbables.length > 0) {
+                let linearVelocity = null;
+                let angularVelocity = null;
 
-            if (this._myThrowVelocitySource == 0) {
-                linearVelocity = this._computeReleaseLinearVelocity(this._myHandLinearVelocityHistory);
-                angularVelocity = this._computeReleaseAngularVelocity(this._myHandAngularVelocityHistory);
-            }
-
-            for (let grabbableData of this._myGrabbables) {
-                let grabbable = grabbableData.getGrabbable();
-
-                grabbable.unregisterReleaseEventListener(this);
-
-                if (this._myThrowVelocitySource == 1) {
-                    linearVelocity = this._computeReleaseLinearVelocity(grabbableData.getLinearVelocityHistory());
-                    angularVelocity = this._computeReleaseAngularVelocity(grabbableData.getAngularVelocityHistory());
+                if (this._myThrowVelocitySource == 0) {
+                    linearVelocity = this._computeReleaseLinearVelocity(this._myHandLinearVelocityHistory);
+                    angularVelocity = this._computeReleaseAngularVelocity(this._myHandAngularVelocityHistory);
                 }
 
-                grabbable.throw(linearVelocity, angularVelocity);
+                for (let grabbableData of this._myGrabbables) {
+                    let grabbable = grabbableData.getGrabbable();
 
-                this._myThrowCallbacks.forEach(function (value) { value(this, grabbable); }.bind(this));
+                    grabbable.unregisterReleaseEventListener(this);
+
+                    if (this._myThrowVelocitySource == 1) {
+                        linearVelocity = this._computeReleaseLinearVelocity(grabbableData.getLinearVelocityHistory());
+                        angularVelocity = this._computeReleaseAngularVelocity(grabbableData.getAngularVelocityHistory());
+                    }
+
+                    grabbable.throw(linearVelocity, angularVelocity);
+
+                    this._myThrowCallbacks.forEach(function (value) { value(this, grabbable); }.bind(this));
+                }
+
+                this._myGrabbables = [];
             }
 
-            this._myGrabbables = [];
+            this._myActiveGrabButton = null;
         }
     },
     _onRelease(grabber, grabbable) {
         grabbable.unregisterReleaseEventListener(this);
         this._myGrabbables.pp_remove(element => element.getGrabbable() == grabbable);
+
+        if (this._myGrabbables.length <= 0) {
+            this._myActiveGrabButton = null;
+        }
     },
     _updateLinearVelocityHistory() {
         this._myHandLinearVelocityHistory.unshift(this._myHandPose.getLinearVelocity());
