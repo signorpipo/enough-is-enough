@@ -28,6 +28,9 @@ class NotEnough {
         } else {
             this._myLastLeftIntensity = 0.7;
         }
+
+        this._myMrNOTRoot = WL.scene.addObject(Global.myScene);
+        Global.myMrNOT.pp_setParent(this._myMrNOTRoot);
     }
 
     stop() {
@@ -47,6 +50,10 @@ class NotEnough {
             Global.myPlayerRumbleObject.pp_setPositionLocal([Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue)]);
             rumbleValue = 8;
             Global.myTitlesRumbleObject.pp_setPositionLocal([Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue)]);
+            rumbleValue = 0.3;
+            this._myMrNOTRoot.pp_setPositionLocal([Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue), Math.pp_random(-rumbleValue, rumbleValue)]);
+
+
 
             this._myLeftTimer.update(dt);
             if (this._myLeftTimer.isDone()) {

@@ -5,22 +5,24 @@ class BlatherState extends PP.State {
         this._myFSM = new PP.FSM();
         //this._myFSM.setDebugLogActive(true, "        Blather");
         this._myFSM.addState("init");
-        this._myFSM.addState("first_wait", new PP.TimerState(1.5, "end"));
         //this._myFSM.addState("first_wait", new PP.TimerState(5, "end")); // for trailer, emulator distance [0, 1.65, 1.7], speaker monitor volume 0.5
         this._myFSM.addState("mr_not_appear", this._updateMrNOTAppear.bind(this));
         this._myFSM.addState("blather", this._updateBlather.bind(this));
         this._myFSM.addState("mr_not_disappear", this._updateMrNOTDisappear.bind(this));
-        this._myFSM.addState("second_wait", new PP.TimerState(0, "end"));
         //this._myFSM.addState("second_wait", new PP.TimerState(5, "end")); // for trailer
         this._myFSM.addState("done");
 
         if (isDefeat) {
+            this._myFSM.addState("first_wait", new PP.TimerState(1.5, "end"));
+            this._myFSM.addState("second_wait", new PP.TimerState(5, "end"));
             this._myFSM.addTransition("init", "first_wait", "start", this._prepareState.bind(this));
             this._myFSM.addTransition("first_wait", "blather", "end", this._prepareBlather.bind(this));
             this._myFSM.addTransition("blather", "second_wait", "end");
             this._myFSM.addTransition("second_wait", "done", "end", this._startFight.bind(this));
             this._myFSM.addTransition("done", "first_wait", "start", this._prepareState.bind(this));
         } else {
+            this._myFSM.addState("first_wait", new PP.TimerState(1.5, "end"));
+            this._myFSM.addState("second_wait", new PP.TimerState(0, "end"));
             this._myFSM.addTransition("init", "first_wait", "start", this._prepareState.bind(this));
             this._myFSM.addTransition("first_wait", "mr_not_appear", "end", this._prepareMrNOTAppear.bind(this));
             this._myFSM.addTransition("mr_not_appear", "blather", "end", this._prepareBlather.bind(this));
@@ -56,10 +58,13 @@ class BlatherState extends PP.State {
         this._myHideScale = 0.9;
 
         this._myMrNOT = Global.myGameObjects.get(GameObjectType.MR_NOT);
+
+        this._myNotEnough = new NotEnough();
     }
 
     update(dt, fsm) {
         this._myFSM.update(dt);
+        this._myNotEnough.update(dt);
 
         if (Global.myDebugShortcutsEnabled) {
             //TEMP REMOVE THIS
@@ -122,26 +127,14 @@ class BlatherState extends PP.State {
 
     _prepareMrNOTDisappear() {
         this._myTimer.start(this._myUnspawnTime);
-        Global.myLightFadeInTime = this._myUnspawnTime;
-        Global.myStartFadeOut = true;
-        this._myMrNOTDisappearAudio.play();
+        this._myNotEnough.start();
     }
 
     _updateMrNOTDisappear(dt, fsm) {
-        if (this._myTimer.isRunning()) {
-            this._myTimer.update(dt);
-            let easing = t => t * t;
-            PP.MeshUtils.setFogColor(this._myMrNOT, [0, 0, 0, Math.pp_mapToRange(this._myTimer.getPercentage(), 0.05, 0.8, this._myFogAlphaMin, this._myFogAlphaMax)]);
-            let currentScaleFactor = Math.pp_interpolate(1, this._myHideScale, this._myTimer.getPercentage(), easing);
-
-            this._myMrNOT.pp_setScale([5, 5, 5]);
-            this._myMrNOT.pp_scaleObject([currentScaleFactor, currentScaleFactor, 1]);
-
-            if (this._myTimer.isDone()) {
-                this._myTimer.reset();
-                this._hideMrNOT();
-                fsm.perform("end");
-            }
+        if (!this._myNotEnough.isNotEnoughing()) {
+            this._myBlather._myBlatherTextComponent.text = "";
+            this._hideMrNOT();
+            fsm.perform("end");
         }
     }
 
@@ -287,8 +280,15 @@ class Blather {
 
     _updateBlather(dt, fsm) {
         let sentence = this._mySentences[this._myCurrentSenteceIndex];
-
         let textComponent = this._myBlatherTextComponent;
+
+
+        if (sentence.mySentence.includes("NOT ENOUGH")) {
+            textComponent.text = "NOT ENOUGH";
+            fsm.perform("skip");
+            return;
+        }
+
         if (sentence.myIsBigBlather) {
             textComponent = this._myBigBlatherTextComponent;
         }
@@ -340,10 +340,6 @@ class Blather {
     }
 
     _done() {
-        this._myBlatherTextComponent.text = "";
-        this._myBigBlatherTextComponent.text = "";
-        this._myBlatherTextObject.pp_setActive(false);
-        this._myBigBlatherTextObject.pp_setActive(false);
         this._myIsDone = true;
     }
 

@@ -42,6 +42,15 @@ WL.registerComponent("enough-IS-enough-gateway", {
             Global.mySaveManager.save("game_version", Global.myGameVersion);
         }
 
+        Global.mySaveManager.save("trial_started_once", false);
+        Global.mySaveManager.save("trial_completed", false);
+        Global.mySaveManager.save("trial_phase", 1);
+
+        Global.myStatistics.myTrialPlayCountResettable = 0;
+        Global.myStatistics.myMrNOTClonesDismissedResettable = 0;
+        Global.mySaveManager.save("trial_play_count_resettable", 0);
+        Global.mySaveManager.save("mr_NOT_clones_dismissed_resettable", 0);
+
         let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false);
         let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
         let trialCompleted = Global.mySaveManager.loadBool("trial_completed", false);

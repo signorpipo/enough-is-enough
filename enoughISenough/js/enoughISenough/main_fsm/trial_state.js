@@ -27,7 +27,7 @@ class TrialState extends PP.State {
         this._myFSM.addTransition("init", "third_blather", "start_3");
         this._myFSM.addTransition("init", "MrNOT_blather", "start_4");
 
-        this._myFSM.addTransition("first_blather", "first_vent", "end");
+        this._myFSM.addTransition("first_blather", "first_defeat_blather", "end");
         this._myFSM.addTransition("first_blather_hint", "first_vent", "end");
         this._myFSM.addTransition("first_vent", "first_defeat_blather", "lost", this._trialPhaseLost.bind(this, 1));
         this._myFSM.addTransition("first_vent", "second_blather", "completed", this._trialPhaseCompleted.bind(this, 1));
@@ -205,9 +205,10 @@ class TrialState extends PP.State {
     _firstBlatherSentences() {
         let sentences = [];
 
-        sentences.push(new Sentence("Glad to see you again"));
-        sentences.push(new Sentence("Maybe we could have a little conversation"));
-        sentences.push(new Sentence("Why don't you show me what you have learned so far?", 2.5, 1.5));
+        sentences.push(new Sentence("Glad to see you again", 1.75, 0.75));
+        sentences.push(new Sentence("but you should play the game yourself", 1.75, 0.75));
+        sentences.push(new Sentence("watching it is...", 1, 0));
+        sentences.push(new Sentence("NOT ENOUGH", 3, 0));
 
         return sentences;
     }
@@ -225,7 +226,9 @@ class TrialState extends PP.State {
     _firstDefeatBlatherSentences() {
         let sentences = [];
 
-        sentences.push(new Sentence("Don't even bother", 2.5, 2));
+        sentences.push(new Sentence("Come play with me on Construct Arcade"));
+        sentences.push(new Sentence("I am there for you", 1.75, 0.75));
+        sentences.push(new Sentence("don’t make me wait", 2.5, 1.5));
 
         return sentences;
     }
