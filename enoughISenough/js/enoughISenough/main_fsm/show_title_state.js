@@ -16,6 +16,7 @@ class ShowTitleState extends PP.State {
         this._myTitleTextComponent.justification = WL.Justification.Line;
         this._myTitleTextComponent.material = Global.myMaterials.myTitle.clone();
         this._myTitleTextComponent.text = " ";
+        this._myTitleTextComponent.text = "";
         //this._myTitle.addComponent('pp-easy-transform');
         //this._myTitle.addComponent('pp-easy-text-color', { "_myColorType": 1, "_mySetAsDefault": true });
 
@@ -26,23 +27,25 @@ class ShowTitleState extends PP.State {
         this._mySubtitleTextComponent.justification = WL.Justification.Line;
         this._mySubtitleTextComponent.material = Global.myMaterials.mySubtitle.clone();
         this._mySubtitleTextComponent.text = " ";
+        this._mySubtitleTextComponent.text = "";
 
         this._myTitlesObjectPosition = [-10, 133, -164];
         this._myTitlesObject.pp_setPosition(this._myTitlesObjectPosition);
 
-        this._myTitle.pp_setPosition([-107, 153, -196]);
+        this._myTitle.pp_setPosition([-100, 153, -196]);
         this._myTitle.pp_setScale(550);
         this._myTitle.pp_setRotation([40, 0, 0]);
 
-        this._mySubtitle.pp_setPosition([-116, 81.5, -148]);
+        this._mySubtitle.pp_setPosition([-108.5, 81.5, -148]);
         this._mySubtitle.pp_setScale(240);
         this._mySubtitle.pp_setRotation([40, 0, 0]);
 
         this._myTitle.pp_setParent(this._myTitlesRumbleObject);
         this._mySubtitle.pp_setParent(this._myTitlesRumbleObject);
+        Global.myTitlePatchObject.pp_setParent(this._myTitlesRumbleObject);
 
         this._myTitleCenterPosition = [0, 168, -184];
-        this._mySubtitleCenterPosition = [-7, 83, -143];
+        this._mySubtitleCenterPosition = [0, 87, -144];
 
         this._myCharAudios = [];
         this._myCharAudios[0] = Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_1);

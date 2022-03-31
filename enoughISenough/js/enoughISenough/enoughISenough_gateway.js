@@ -6,6 +6,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
 }, {
     init: function () {
         Global.myGoogleAnalytics = window.gtag != null;
+        //Global.myGoogleAnalytics = false;
         Global.myAudioManager = new PP.AudioManager();
         Global.myParticlesManager = new ParticlesManager();
         Global.myMeshObjectPoolMap = new PP.ObjectPoolManager();
@@ -31,7 +32,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
     },
     start: function () {
         let version = Global.mySaveManager.loadNumber("game_version", 0);
-        Global.myGameVersion = 6;
+        Global.myGameVersion = 7;
 
         let minVersionToReset = 6;
         if (version < minVersionToReset) {
@@ -228,6 +229,7 @@ var Global = {
     myTitlesRumbleObject: null,
     myTitleObject: null,
     mySubtitleObject: null,
+    myTitlePatchObject: null,
     myMeshObjectPoolMap: null,
     myMeshNoFogObjectPoolMap: null,
     myGameObjectPoolMap: null,

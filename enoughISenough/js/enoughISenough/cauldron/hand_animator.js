@@ -97,7 +97,7 @@ WL.registerComponent("hand-animator", {
 
             let randomTimer = Math.pp_random(0.15, 0.45);
             if (firstTime) {
-                randomTimer = 0.2;
+                randomTimer = 0.1;
                 firstTime = false;
             }
 
