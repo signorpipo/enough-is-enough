@@ -41,8 +41,8 @@ WL.registerComponent("ring-animator", {
         this._myRingOut.pp_setPosition([0, -this._myRingOut.pp_getScale()[1] - 0.001, 0]);
         this._myRingMiddle.pp_setPosition([0, -this._myRingMiddle.pp_getScale()[1] - 0.001, 0]);
 
-        this._myTimer = new PP.Timer(5);
-        this._myAudioTimer = new PP.Timer(0.05);
+        this._myTimer = new PP.Timer(5.35);
+        this._myAudioTimer = new PP.Timer(0.25);
     },
     moveUp: function (dt, fsm) {
         this._myTimer.update(dt);
@@ -53,8 +53,9 @@ WL.registerComponent("ring-animator", {
             this._myRingOutAudio.play();
         }
 
-        let alphaInterpolationValue = Math.pp_mapToRange(this._myTimer.getPercentage(), 0, 0.8, 0, 1);
-        let alphaValue = PP.EasingFunction.easeOut(alphaInterpolationValue);
+        let alphaInterpolationValue = Math.pp_mapToRange(this._myTimer.getPercentage(), 0, 0.5, 0, 1);
+        let easing = -(Math.cos(Math.PI * alphaInterpolationValue) - 1) / 2;
+        let alphaValue = easing;
         PP.MeshUtils.setAlpha(this._myRingOut, alphaValue);
         PP.MeshUtils.setAlpha(this._myRingMiddle, alphaValue);
 
@@ -71,6 +72,9 @@ WL.registerComponent("ring-animator", {
 
             this._myRingOut.pp_setPosition([0, this._myRingHeight, 0]);
             this._myRingMiddle.pp_setPosition([0, this._myRingHeight, 0]);
+
+            PP.MeshUtils.setAlpha(this._myRingOut, 1);
+            PP.MeshUtils.setAlpha(this._myRingMiddle, 1);
 
             fsm.perform("end");
         }

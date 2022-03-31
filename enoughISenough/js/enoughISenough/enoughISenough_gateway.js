@@ -6,6 +6,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
 }, {
     init: function () {
         Global.myGoogleAnalytics = window.gtag != null;
+        //Global.myGoogleAnalytics = false;
         Global.myAudioManager = new PP.AudioManager();
         Global.myParticlesManager = new ParticlesManager();
         Global.myMeshObjectPoolMap = new PP.ObjectPoolManager();
