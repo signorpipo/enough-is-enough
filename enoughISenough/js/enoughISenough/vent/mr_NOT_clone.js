@@ -98,7 +98,7 @@ class MrNOTClone {
         }
         this._mySpinSpeed = rotationSetup.mySpinSpeed.get(Global.myVentDuration) * Math.pp_randomSign();
 
-        this._myTimerBeforeCheckingSeen = new PP.Timer(3);
+        this._myTimerBeforeCheckingSeen = new PP.Timer(2);
         this._myTimerBeforeSettingSeen = new PP.Timer(0.5, false);
         this._myMrNOTClonesSeen = Global.mySaveManager.loadBool("mr_NOT_clones_seen", false);
 
@@ -109,7 +109,7 @@ class MrNOTClone {
     update(dt) {
         this._myFSM.update(dt);
 
-        if (!this._myMrNOTClonesSeen) {
+        if (!this._myMrNOTClonesSeen && this._myFSM.isInState("move") && this._myObject != null) {
             this._myTimerBeforeCheckingSeen.update(dt);
             if (this._myTimerBeforeCheckingSeen.isDone()) {
                 if (!this._myTimerBeforeSettingSeen.isRunning()) {
@@ -124,8 +124,7 @@ class MrNOTClone {
                     this._myTimerBeforeSettingSeen.update(dt);
                     if (this._myTimerBeforeSettingSeen.isDone()) {
                         this._myMrNOTClonesSeen = true;
-                        //Global.mySaveManager.save("mr_NOT_clones_seen", true);
-                        console.error("seen");
+                        Global.mySaveManager.save("mr_NOT_clones_seen", true);
                     }
                 }
             }
