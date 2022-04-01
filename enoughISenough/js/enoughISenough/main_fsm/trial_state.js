@@ -171,6 +171,12 @@ class TrialState extends PP.State {
                     }
                 }
             }
+
+            if (trialPhase == 1 && !Global.mySaveManager.loadBool("mr_NOT_clones_seen", false)) {
+                gtag("event", "trial_lost_before_first_clone_seen", {
+                    "value": 1
+                });
+            }
         }
     }
 

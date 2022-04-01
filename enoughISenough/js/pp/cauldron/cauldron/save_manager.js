@@ -3,8 +3,10 @@ PP.SaveManager = class SaveManager {
         this._mySaveCache = new Map();
 
         this._myCommitSavesDelayTimer = new PP.Timer(0, false);
-        this._myIsCommitSavesDelayed = true;
+        this._myDelaySavesCommit = true;
         this._myIDsToCommit = [];
+
+        this._myCacheDefaultValueOnFail = true;
 
         if (WL.xrSession) {
             this._onXRSessionStart(WL.xrSession);
@@ -27,8 +29,12 @@ PP.SaveManager = class SaveManager {
         this._myCommitSavesDelayTimer.start(delay);
     }
 
-    setIsCommitSavesDelayed(delayed) {
-        this._myIsCommitSavesDelayed = delayed;
+    setDelaySavesCommit(delayed) {
+        this._myDelaySavesCommit = delayed;
+    }
+
+    setCacheDefaultValueOnFail(cache) {
+        this._myCacheDefaultValueOnFail = cache;
     }
 
     update(dt) {
@@ -40,7 +46,7 @@ PP.SaveManager = class SaveManager {
         }
     }
 
-    save(id, value, overrideIsCommitSavesDelayed = null) {
+    save(id, value, overrideDelaySavesCommit = null) {
         let sameValue = false;
         if (this._mySaveCache.has(id)) {
             sameValue = this._mySaveCache.get(id) === value;
@@ -48,7 +54,7 @@ PP.SaveManager = class SaveManager {
 
         if (!sameValue) {
             this._mySaveCache.set(id, value);
-            if ((this._myIsCommitSavesDelayed && overrideIsCommitSavesDelayed == null) || (overrideIsCommitSavesDelayed != null && overrideIsCommitSavesDelayed)) {
+            if ((this._myDelaySavesCommit && overrideDelaySavesCommit == null) || (overrideDelaySavesCommit != null && overrideDelaySavesCommit)) {
                 this._myIDsToCommit.pp_pushUnique(id);
                 if (!this._myCommitSavesDelayTimer.isRunning()) {
                     this._myCommitSavesDelayTimer.start();
@@ -105,22 +111,6 @@ PP.SaveManager = class SaveManager {
         }
     }
 
-    _commitSave(id, isCommitSaveDelayed) {
-        let value = this._mySaveCache.get(id);
-        try {
-            PP.SaveUtils.save(id, value);
-        } catch (error) {
-            // not managed for now
-        }
-
-        if (this._myCommitSaveIDCallbacks.size > 0) {
-            let callbackMap = this._myCommitSaveIDCallbacks.get(id);
-            if (callbackMap != null) {
-                callbackMap.forEach(function (value) { value(id, value, isCommitSaveDelayed); });
-            }
-        }
-    }
-
     has(id) {
         return this._mySaveCache.has(id) || PP.SaveUtils.has(id);
     }
@@ -166,19 +156,65 @@ PP.SaveManager = class SaveManager {
         return this._load(id, defaultValue, "loadBool");
     }
 
+    getCommitSavesDelay() {
+        return this._myCommitSavesDelayTimer.getDuration();
+    }
+
+    isDelaySavesCommit() {
+        return this._myDelaySavesCommit;
+    }
+
+    isCacheDefaultValueOnFail() {
+        return this._myCacheDefaultValueOnFail;
+    }
+
+    _commitSave(id, isCommitSaveDelayed) {
+        let value = this._mySaveCache.get(id);
+        try {
+            PP.SaveUtils.save(id, value);
+        } catch (error) {
+            // Not managed for now
+        }
+
+        if (this._myCommitSaveIDCallbacks.size > 0) {
+            let callbackMap = this._myCommitSaveIDCallbacks.get(id);
+            if (callbackMap != null) {
+                callbackMap.forEach(function (value) { value(id, value, isCommitSaveDelayed); });
+            }
+        }
+    }
+
     _load(id, defaultValue, functionName) {
         let item = null;
         if (this._mySaveCache.has(id)) {
             item = this._mySaveCache.get(id);
-        } else {
-            try {
-                item = PP.SaveUtils[functionName](id, defaultValue);
-            } catch (error) {
-                // not managed for now
+
+            if (item == null && defaultValue != null) {
                 item = defaultValue;
+                if (this._myCacheDefaultValueOnFail) {
+                    this._mySaveCache.set(id, item);
+                }
+            }
+        } else {
+            let saveResult = null;
+            try {
+                saveResult = PP.SaveUtils[functionName](id, null);
+            } catch (error) {
+                // Fail is managed as if it worked but there was no value
+                saveResult = null;
             }
 
-            this._mySaveCache.set(id, item);
+            if (saveResult == null) {
+                item = defaultValue;
+            } else {
+                item = saveResult;
+            }
+
+            if (saveResult != null || this._myCacheDefaultValueOnFail) {
+                this._mySaveCache.set(id, item);
+            } else {
+                this._mySaveCache.set(id, null);
+            }
         }
 
         return item;

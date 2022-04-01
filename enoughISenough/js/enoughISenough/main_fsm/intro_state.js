@@ -168,14 +168,16 @@ class IntroState extends PP.State {
         introViewed += 1;
         Global.mySaveManager.save("intro_viewed", introViewed);
 
-        gtag("event", "intro_viewed", {
-            "value": 1
-        });
-
-        if (!this._myXRSessionStartCalled) {
-            gtag("event", "xr_session_not_started", {
+        if (Global.myGoogleAnalytics) {
+            gtag("event", "intro_viewed", {
                 "value": 1
             });
+
+            if (!this._myXRSessionStartCalled) {
+                gtag("event", "xr_session_not_started", {
+                    "value": 1
+                });
+            }
         }
     }
 
@@ -183,10 +185,12 @@ class IntroState extends PP.State {
         transition.myFromState.myObject.end(fsm, transition);
         this._myParentFSM.perform(MainTransitions.Skip);
 
-        if (!this._myXRSessionStartCalled) {
-            gtag("event", "xr_session_not_started", {
-                "value": 1
-            });
+        if (Global.myGoogleAnalytics) {
+            if (!this._myXRSessionStartCalled) {
+                gtag("event", "xr_session_not_started", {
+                    "value": 1
+                });
+            }
         }
     }
 
