@@ -98,12 +98,38 @@ class MrNOTClone {
         }
         this._mySpinSpeed = rotationSetup.mySpinSpeed.get(Global.myVentDuration) * Math.pp_randomSign();
 
+        this._myTimerBeforeCheckingSeen = new PP.Timer(3);
+        this._myTimerBeforeSettingSeen = new PP.Timer(0.5, false);
+        this._myMrNOTClonesSeen = Global.mySaveManager.loadBool("mr_NOT_clones_seen", false);
+
         //Setup
         this._myReachTargetDistance = Global.myRingRadius * 2;
     }
 
     update(dt) {
         this._myFSM.update(dt);
+
+        if (!this._myMrNOTClonesSeen) {
+            this._myTimerBeforeCheckingSeen.update(dt);
+            if (this._myTimerBeforeCheckingSeen.isDone()) {
+                if (!this._myTimerBeforeSettingSeen.isRunning()) {
+                    let directionToClone = this._myObject.pp_getPosition();
+                    directionToClone.vec3_sub(Global.myPlayerPosition, directionToClone).vec3_normalize(directionToClone);
+
+                    let angle = Global.myPlayerForward.vec3_angle(directionToClone);
+                    if (angle < 25) {
+                        this._myTimerBeforeSettingSeen.start();
+                    }
+                } else {
+                    this._myTimerBeforeSettingSeen.update(dt);
+                    if (this._myTimerBeforeSettingSeen.isDone()) {
+                        this._myMrNOTClonesSeen = true;
+                        //Global.mySaveManager.save("mr_NOT_clones_seen", true);
+                        console.error("seen");
+                    }
+                }
+            }
+        }
     }
 
     canUnspawn() {
