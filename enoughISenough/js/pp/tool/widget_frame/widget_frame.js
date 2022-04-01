@@ -92,8 +92,8 @@ PP.WidgetFrame = class WidgetFrame {
         }
 
         if (notify) {
-            for (let value of this._myWidgetVisibleChangedCallbacks.values()) {
-                value(this.myIsWidgetVisible);
+            for (let callback of this._myWidgetVisibleChangedCallbacks.values()) {
+                callback(this.myIsWidgetVisible);
             }
         }
     }
@@ -118,8 +118,8 @@ PP.WidgetFrame = class WidgetFrame {
                 }
             }
 
-            for (let value of this._myPinChangedCallbacks.values()) {
-                value(this.myIsPinned);
+            for (let callback of this._myPinChangedCallbacks.values()) {
+                callback(this.myIsPinned);
             }
         }
     }

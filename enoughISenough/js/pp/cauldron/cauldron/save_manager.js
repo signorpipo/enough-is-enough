@@ -68,31 +68,31 @@ PP.SaveManager = class SaveManager {
 
                 if (this._myCommitSavesCallbacks.size > 0) {
                     let isCommitSaveDelayed = false;
-                    this._myCommitSavesCallbacks.forEach(function (value) { value(isCommitSaveDelayed, failed); });
+                    this._myCommitSavesCallbacks.forEach(function (callback) { callback(isCommitSaveDelayed, failed); });
                 }
             }
         }
 
         if (this._mySaveCallbacks.size > 0) {
-            this._mySaveCallbacks.forEach(function (value) { value(id, value); });
+            this._mySaveCallbacks.forEach(function (callback) { callback(id, value); });
         }
 
         if (this._mySaveIDCallbacks.size > 0) {
             let callbackMap = this._mySaveIDCallbacks.get(id);
             if (callbackMap != null) {
-                callbackMap.forEach(function (value) { value(id, value); });
+                callbackMap.forEach(function (callback) { callback(id, value); });
             }
         }
 
         if (!sameValue) {
             if (this._mySaveValueChangedCallbacks.size > 0) {
-                this._mySaveValueChangedCallbacks.forEach(function (value) { value(id, value); });
+                this._mySaveValueChangedCallbacks.forEach(function (callback) { callback(id, value); });
             }
 
             if (this._mySaveValueChangedIDCallbacks.size > 0) {
                 let callbackMap = this._mySaveValueChangedIDCallbacks.get(id);
                 if (callbackMap != null) {
-                    callbackMap.forEach(function (value) { value(id, value); });
+                    callbackMap.forEach(function (callback) { callback(id, value); });
                 }
             }
         }
@@ -113,7 +113,7 @@ PP.SaveManager = class SaveManager {
 
             if (this._myCommitSavesCallbacks.size > 0) {
                 let isCommitSavesDelayed = true;
-                this._myCommitSavesCallbacks.forEach(function (value) { value(isCommitSavesDelayed, failed); });
+                this._myCommitSavesCallbacks.forEach(function (callback) { callback(isCommitSavesDelayed, failed); });
             }
         }
     }
@@ -127,13 +127,13 @@ PP.SaveManager = class SaveManager {
         PP.SaveUtils.delete(id);
 
         if (this._myDeleteCallbacks.size > 0) {
-            this._myDeleteCallbacks.forEach(function (value) { value(id); });
+            this._myDeleteCallbacks.forEach(function (callback) { callback(id); });
         }
 
         if (this._myDeleteIDCallbacks.size > 0) {
             let callbackMap = this._myDeleteIDCallbacks.get(id);
             if (callbackMap != null) {
-                callbackMap.forEach(function (value) { value(id); });
+                callbackMap.forEach(function (callback) { callback(id); });
             }
         }
     }
@@ -143,7 +143,7 @@ PP.SaveManager = class SaveManager {
         PP.SaveUtils.clear();
 
         if (this._myClearCallbacks.size > 0) {
-            this._myClearCallbacks.forEach(function (value) { value(); });
+            this._myClearCallbacks.forEach(function (callback) { callback(); });
         }
     }
 
@@ -186,13 +186,13 @@ PP.SaveManager = class SaveManager {
         }
 
         if (this._myCommitSaveCallbacks.size > 0) {
-            this._myCommitSaveCallbacks.forEach(function (value) { value(id, value, isCommitSaveDelayed, failed); });
+            this._myCommitSaveCallbacks.forEach(function (callback) { callback(id, value, isCommitSaveDelayed, failed); });
         }
 
         if (this._myCommitSaveIDCallbacks.size > 0) {
             let callbackMap = this._myCommitSaveIDCallbacks.get(id);
             if (callbackMap != null) {
-                callbackMap.forEach(function (value) { value(id, value, isCommitSaveDelayed, failed); });
+                callbackMap.forEach(function (callback) { callback(id, value, isCommitSaveDelayed, failed); });
             }
         }
 
@@ -239,13 +239,13 @@ PP.SaveManager = class SaveManager {
         }
 
         if (this._myLoadCallbacks.size > 0) {
-            this._myLoadCallbacks.forEach(function (value) { value(id, value, loadFromCache, failed); });
+            this._myLoadCallbacks.forEach(function (callback) { callback(id, value, loadFromCache, failed); });
         }
 
         if (this._myLoadIDCallbacks.size > 0) {
             let callbackMap = this._myLoadIDCallbacks.get(id);
             if (callbackMap != null) {
-                callbackMap.forEach(function (value) { value(id, value, loadFromCache, failed); });
+                callbackMap.forEach(function (callback) { callback(id, value, loadFromCache, failed); });
             }
         }
 

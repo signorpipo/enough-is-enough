@@ -146,7 +146,7 @@ WL.registerComponent('pp-grabber-hand', {
                         grabbableToGrab.object.resetTranslation();
                     }
 
-                    this._myGrabCallbacks.forEach(function (value) { value(this, grabbableToGrab); }.bind(this));
+                    this._myGrabCallbacks.forEach(function (callback) { callback(this, grabbableToGrab); }.bind(this));
                 }
 
                 if (this._myGrabbables.length >= this._myMaxNumberOfObjects) {
@@ -184,7 +184,7 @@ WL.registerComponent('pp-grabber-hand', {
 
                     grabbable.throw(linearVelocity, angularVelocity);
 
-                    this._myThrowCallbacks.forEach(function (value) { value(this, grabbable); }.bind(this));
+                    this._myThrowCallbacks.forEach(function (callback) { callback(this, grabbable); }.bind(this));
                 }
 
                 this._myGrabbables = [];

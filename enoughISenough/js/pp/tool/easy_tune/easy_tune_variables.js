@@ -108,7 +108,7 @@ PP.EasyTuneVariable = class EasyTuneVariable {
 
     _triggerValueChangedCallback() {
         if (this._myValueChangedCallbacks.size > 0) {
-            this._myValueChangedCallbacks.forEach(function (value) { value(this.myName, this.getValue()); }.bind(this));
+            this._myValueChangedCallbacks.forEach(function (callback) { callback(this.myName, this.getValue()); }.bind(this));
         }
     }
 };

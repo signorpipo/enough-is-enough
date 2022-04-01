@@ -695,8 +695,8 @@ PP.Gamepad = class Gamepad {
     }
 
     _triggerCallbacks(callbacksMap, info) {
-        for (let value of callbacksMap.values()) {
-            value(info, this);
+        for (let callback of callbacksMap.values()) {
+            callback(info, this);
         }
     }
 };
