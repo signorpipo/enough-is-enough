@@ -1,9 +1,11 @@
 PP.SaveUtils = {
     save: function (id, value) {
-        localStorage.setItem(id, value);
+        if (value != null) {
+            localStorage.setItem(id, value);
+        }
     },
     has: function (id) {
-        return PP.SaveUtils.loadString(id) != null;
+        return PP.SaveUtils.loadString(id, null) != null;
     },
     delete: function (id) {
         return localStorage.removeItem(id);
@@ -12,7 +14,7 @@ PP.SaveUtils = {
         return localStorage.clear();
     },
     load: function (id, defaultValue = null) {
-        return PP.SaveUtils.load(id, defaultValue);
+        return PP.SaveUtils.loadString(id, defaultValue);
     },
     loadString: function (id, defaultValue = null) {
         let item = localStorage.getItem(id);
