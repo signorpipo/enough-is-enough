@@ -79,8 +79,8 @@ PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
     }
 
     _scrollVariable(amount) {
-        for (let value of this._myScrollVariableRequestCallbacks.values()) {
-            value(amount);
+        for (let callback of this._myScrollVariableRequestCallbacks.values()) {
+            callback(amount);
         }
     }
 

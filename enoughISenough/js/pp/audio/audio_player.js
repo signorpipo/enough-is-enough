@@ -183,8 +183,8 @@ PP.AudioPlayer = class AudioPlayer {
             let event = PP.AudioEvent[eventKey];
             this._myAudio.on(event, function (audioID) {
                 let callbacks = this._myCallbackMap.get(event);
-                for (let value of callbacks.values()) {
-                    value(audioID);
+                for (let callback of callbacks.values()) {
+                    callback(audioID);
                 }
             }.bind(this));
         }

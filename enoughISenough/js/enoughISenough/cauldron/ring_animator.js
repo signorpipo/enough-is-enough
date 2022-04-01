@@ -41,7 +41,7 @@ WL.registerComponent("ring-animator", {
         this._myRingOut.pp_setPosition([0, -this._myRingOut.pp_getScale()[1] - 0.001, 0]);
         this._myRingMiddle.pp_setPosition([0, -this._myRingMiddle.pp_getScale()[1] - 0.001, 0]);
 
-        this._myTimer = new PP.Timer(5.35);
+        this._myTimer = new PP.Timer(5.3);
         this._myAudioTimer = new PP.Timer(0.25);
     },
     moveUp: function (dt, fsm) {

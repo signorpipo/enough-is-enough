@@ -161,8 +161,8 @@ PP.EasyTuneBoolArrayWidget = class EasyTuneBoolArrayWidget {
 
     _scrollVariableRequest(amount) {
         if (this._isActive()) {
-            for (let value of this._myScrollVariableRequestCallbacks.values()) {
-                value(amount);
+            for (let callback of this._myScrollVariableRequestCallbacks.values()) {
+                callback(amount);
             }
         }
     }

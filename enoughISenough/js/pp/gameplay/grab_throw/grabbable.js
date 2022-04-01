@@ -34,7 +34,7 @@ WL.registerComponent('pp-grabbable', {
 
         this._myIsGrabbed = true;
 
-        this._myGrabCallbacks.forEach(function (value) { value(grabber, this); }.bind(this));
+        this._myGrabCallbacks.forEach(function (callback) { callback(grabber, this); }.bind(this));
     },
     throw: function (linearVelocity, angularVelocity) {
         if (this._myIsGrabbed) {
@@ -48,8 +48,8 @@ WL.registerComponent('pp-grabbable', {
             this._myPhysX.angularVelocity = angularVelocity.vec3_scale(this._myThrowAngularVelocityMultiplier);
             //}
 
-            this._myThrowCallbacks.forEach(function (value) { value(grabber, this); }.bind(this));
-            this._myReleaseCallbacks.forEach(function (value) { value(grabber, this, true); }.bind(this));
+            this._myThrowCallbacks.forEach(function (callback) { callback(grabber, this); }.bind(this));
+            this._myReleaseCallbacks.forEach(function (callback) { callback(grabber, this, true); }.bind(this));
         }
     },
     release() {
@@ -58,7 +58,7 @@ WL.registerComponent('pp-grabbable', {
 
             this._release();
 
-            this._myReleaseCallbacks.forEach(function (value) { value(grabber, this, false); }.bind(this));
+            this._myReleaseCallbacks.forEach(function (callback) { callback(grabber, this, false); }.bind(this));
         }
     },
     getLinearVelocity() {

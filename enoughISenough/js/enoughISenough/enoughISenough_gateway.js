@@ -32,7 +32,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
     },
     start: function () {
         let version = Global.mySaveManager.loadNumber("game_version", 0);
-        Global.myGameVersion = 8;
+        Global.myGameVersion = 9;
 
         let minVersionToReset = 6;
         if (version < minVersionToReset) {
