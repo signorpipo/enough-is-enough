@@ -42,12 +42,34 @@ class MenuState extends PP.State {
 
         this._myMenuDuration = 0;
         this._myFirstTime = true;
+
+        this._myButtonPressed = Global.mySaveManager.loadBool("button_pressed", false);
     }
 
     update(dt, fsm) {
         this._myMenuDuration += dt;
         this._myFSM.update(dt);
         this._myNotEnough.update(dt);
+
+        if (!this._myButtonPressed) {
+            for (let key in PP.ButtonType) {
+                let resultLeft = PP.myLeftGamepad.getButtonInfo(PP.ButtonType[key]).isPressStart();
+                let resultRight = PP.myRightGamepad.getButtonInfo(PP.ButtonType[key]).isPressStart();
+
+                if (resultLeft || resultRight) {
+                    this._myButtonPressed = true;
+                    Global.mySaveManager.save("button_pressed", true);
+
+                    if (Global.myGoogleAnalytics) {
+                        gtag("event", "button_pressed", {
+                            "value": 1
+                        });
+                    }
+
+                    break;
+                }
+            }
+        }
     }
 
     start(fsm, transitionID) {

@@ -32,12 +32,16 @@ class StatisticsManager {
     _onXRSessionStart(session) {
         session.addEventListener('visibilitychange', function (event) {
             if (event.session.visibilityState != "visible") {
-                this._onXRSessionEnd();
+                this._onXRSessionInterrupt();
             }
         }.bind(this));
     }
 
     _onXRSessionEnd() {
+        this._onXRSessionInterrupt();
+    }
+
+    _onXRSessionInterrupt() {
         if (this._myCommitOnEndTimer.isDone()) {
             this._myCommitOnEndTimer.start(20);
             Global.myStatistics.save();
