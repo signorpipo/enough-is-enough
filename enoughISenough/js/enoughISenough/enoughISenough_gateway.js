@@ -29,6 +29,8 @@ WL.registerComponent("enough-IS-enough-gateway", {
         this._myIncreasePool = false;
         this._myMeshObjectPoolSize = 20;
         this._myGameObjectPoolSize = 40;
+        this._myUpdateReadyCountdown = 10;
+        this._myLoadTimeSent = false;
     },
     start: function () {
         let version = Global.mySaveManager.loadNumber("game_version", 0);
@@ -52,34 +54,44 @@ WL.registerComponent("enough-IS-enough-gateway", {
             this._myFirstUpdate = false;
             this._start();
             PP.setEasyTuneWidgetActiveVariable("Float 1");
-        } else if (!Global.myFirstUpdateDone) {
-            if (window.performance) {
+        } else if (!Global.myUpdateReady) {
+            if (!this._myLoadTimeSent) {
+                if (window.performance) {
+                    if (Global.myGoogleAnalytics) {
+                        gtag("event", "load_time", {
+                            "value": (performance.now() / 1000).toFixed(2)
+                        });
+                    }
+                }
+
+                this._myLoadTimeSent = true;
+            }
+
+            this._myUpdateReadyCountdown--;
+            if (this._myUpdateReadyCountdown <= 0) {
+                Global.myUpdateReady = true;
+            }
+        }
+
+        if (Global.myUpdateReady) {
+            if (this._myIncreasePool) {
+                this._increasePools();
+            } else {
+                this.enoughISenough.update(dt * Global.myDeltaTimeSpeed);
+                Global.myParticlesManager.update(dt * Global.myDeltaTimeSpeed);
+                Global.mySaveManager.update(dt * Global.myDeltaTimeSpeed);
+            }
+
+            if (Global.myZestyToClick != null) {
                 if (Global.myGoogleAnalytics) {
-                    gtag("event", "load_time", {
-                        "value": (performance.now() / 1000).toFixed(2)
+                    gtag("event", "zesty_market_opened", {
+                        "value": 1
                     });
                 }
+
+                Global.myZestyToClick.onClick();
+                Global.myZestyToClick = null;
             }
-            Global.myFirstUpdateDone = true;
-        }
-
-        if (this._myIncreasePool) {
-            this._increasePools();
-        } else {
-            this.enoughISenough.update(dt * Global.myDeltaTimeSpeed);
-            Global.myParticlesManager.update(dt * Global.myDeltaTimeSpeed);
-            Global.mySaveManager.update(dt * Global.myDeltaTimeSpeed);
-        }
-
-        if (Global.myZestyToClick != null) {
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "zesty_market_opened", {
-                    "value": 1
-                });
-            }
-
-            Global.myZestyToClick.onClick();
-            Global.myZestyToClick = null;
         }
     },
     _start() {
@@ -213,7 +225,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
 var Global = {
     myDeltaTimeSpeed: 1,
     myScene: null,
-    myFirstUpdateDone: false,
+    myUpdateReady: false,
     myAudioManager: null,
     myParticlesManager: null,
     myPlayerRumbleObject: null,

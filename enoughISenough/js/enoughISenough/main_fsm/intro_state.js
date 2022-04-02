@@ -70,7 +70,7 @@ class IntroState extends PP.State {
     }
 
     waitSession(dt, fsm) {
-        if (WL.xrSession && Global.myFirstUpdateDone) {
+        if (WL.xrSession && Global.myUpdateReady) {
             let currentVersion = Global.mySaveManager.loadNumber("game_version", 0);
             console.log("Game Version:", currentVersion);
 

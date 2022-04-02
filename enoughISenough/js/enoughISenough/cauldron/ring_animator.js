@@ -21,7 +21,7 @@ WL.registerComponent("ring-animator", {
         this._myRingOutAudio = Global.myAudioManager.createAudioPlayer(SfxID.RING_RISE);
     },
     update: function (dt) {
-        if (!Global.myFirstUpdateDone) {
+        if (!Global.myUpdateReady) {
             this._myRingOut.pp_setActive(false);
             this._myRingMiddle.pp_setActive(false);
         }
