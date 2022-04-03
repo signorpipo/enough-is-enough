@@ -23,7 +23,7 @@ TrialState.prototype._firstVentSetup = function () {
         wave.myRefDirection = [0, 0, -1];
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("I_Am_Here_Warm_Up", 10);
+        nextWavesSetup.addWave("I_Am_Here_Warm_Up", 100);
 
         ventSetup.myWavesMap.set("I_Am_Here_Start", wave);
         ventSetup.myNextWavesMap.set("I_Am_Here_Start", nextWavesSetup);
@@ -39,8 +39,8 @@ TrialState.prototype._firstVentSetup = function () {
         wave.myRefDirection = [0, 0, -1];
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("I_Am_Here_Warm_Up", 10, 0, 30);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10, 30, null);
+        nextWavesSetup.addWave("I_Am_Here_Warm_Up", 100, 0, 30);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100, 30, null);
 
         ventSetup.myWavesMap.set("I_Am_Here_Warm_Up", wave);
         ventSetup.myNextWavesMap.set("I_Am_Here_Warm_Up", nextWavesSetup);
@@ -58,9 +58,9 @@ TrialState.prototype._firstVentSetup = function () {
         wave.myFirstCloneInTheMiddle = true;
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("I_Am_Here_Front", 4);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10);
-        nextWavesSetup.addWave("I_Am_Everywhere", new ValueOverTime(100000, 15, 60, 70), 60);
+        nextWavesSetup.addWave("I_Am_Here_Front", 50);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100);
+        nextWavesSetup.addWave("I_Am_Everywhere", new ValueOverTime(1000000, 150, 60, 70), 60);
 
         ventSetup.myWavesMap.set("I_Am_Here_Front", wave);
         ventSetup.myNextWavesMap.set("I_Am_Here_Front", nextWavesSetup);
@@ -78,9 +78,9 @@ TrialState.prototype._firstVentSetup = function () {
         wave.myFirstCloneInTheMiddle = true;
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("I_Am_Here_Front", 5);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10);
-        nextWavesSetup.addWave("I_Am_Everywhere", new ValueOverTime(100000, 15, 60, 70), 60);
+        nextWavesSetup.addWave("I_Am_Here_Front", 75);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100);
+        nextWavesSetup.addWave("I_Am_Everywhere", new ValueOverTime(1000000, 150, 60, 70), 60);
 
         ventSetup.myWavesMap.set("I_Am_Here_Side", wave);
         ventSetup.myNextWavesMap.set("I_Am_Here_Side", nextWavesSetup);
@@ -96,8 +96,8 @@ TrialState.prototype._firstVentSetup = function () {
         wave.myWaveStartAngle = new RangeValue([70, 100]);
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("I_Am_Here_Front", 5);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10);
+        nextWavesSetup.addWave("I_Am_Here_Front", 75);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100);
 
         ventSetup.myWavesMap.set("I_Am_Everywhere", wave);
         ventSetup.myNextWavesMap.set("I_Am_Everywhere", nextWavesSetup);

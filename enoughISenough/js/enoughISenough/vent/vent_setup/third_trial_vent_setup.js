@@ -25,12 +25,12 @@ TrialState.prototype._thirdVentSetup = function () {
         let wave = new ZeroWaveSetup();
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
-        nextWavesSetup.addWave("Merry_Go_Round_Left", 10);
-        nextWavesSetup.addWave("I_Am_Here_Front", 5);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10);
-        nextWavesSetup.addWave("I_Am_Everywhere", 10);
-        nextWavesSetup.addWave("Queue_For_You", 10);
+        nextWavesSetup.addWave("Merry_Go_Round_Right", 100);
+        nextWavesSetup.addWave("Merry_Go_Round_Left", 100);
+        nextWavesSetup.addWave("I_Am_Here_Front", 50);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100);
+        nextWavesSetup.addWave("I_Am_Everywhere", 100);
+        nextWavesSetup.addWave("Queue_For_You", 100);
 
         ventSetup.myWavesMap.set("Zero", wave);
         ventSetup.myNextWavesMap.set("Zero", nextWavesSetup);
@@ -48,18 +48,18 @@ TrialState.prototype._thirdVentSetup = function () {
         wave.myFirstCloneInTheMiddle = true;
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
-        nextWavesSetup.addWave("Merry_Go_Round_Left", 10);
-        nextWavesSetup.addWave("I_Am_Here_Front", 5);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10);
-        nextWavesSetup.addWave("I_Am_Everywhere", 10);
-        nextWavesSetup.addWave("Queue_For_You", 10);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 30, 40);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 15, 40);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 83, 93);
-        nextWavesSetup.addWave("Man_In_The_Middle", 100000, 60, 70);
-        nextWavesSetup.addWave("Man_In_The_Middle", 15, 70);
-        nextWavesSetup.addWave("Man_In_The_Middle", 100000, 100);
+        nextWavesSetup.addWave("Merry_Go_Round_Right", 100);
+        nextWavesSetup.addWave("Merry_Go_Round_Left", 100);
+        nextWavesSetup.addWave("I_Am_Here_Front", 50);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100);
+        nextWavesSetup.addWave("I_Am_Everywhere", 100);
+        nextWavesSetup.addWave("Queue_For_You", 100);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 1000000, 30, 40);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 100, 40);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 1000000, 83, 93);
+        nextWavesSetup.addWave("Man_In_The_Middle", 1000000, 60, 70);
+        nextWavesSetup.addWave("Man_In_The_Middle", 150, 70);
+        nextWavesSetup.addWave("Man_In_The_Middle", 1000000, 100, 110);
 
         ventSetup.myWavesMap.set("I_Am_Here_Front", wave);
         ventSetup.myNextWavesMap.set("I_Am_Here_Front", nextWavesSetup);
@@ -77,18 +77,18 @@ TrialState.prototype._thirdVentSetup = function () {
         wave.myFirstCloneInTheMiddle = true;
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
-        nextWavesSetup.addWave("Merry_Go_Round_Left", 10);
-        nextWavesSetup.addWave("I_Am_Here_Front", 5);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10);
-        nextWavesSetup.addWave("I_Am_Everywhere", 10);
-        nextWavesSetup.addWave("Queue_For_You", 10);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 30, 40);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 15, 40);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 83, 93);
-        nextWavesSetup.addWave("Man_In_The_Middle", 100000, 60, 70);
-        nextWavesSetup.addWave("Man_In_The_Middle", 15, 70);
-        nextWavesSetup.addWave("Man_In_The_Middle", 100000, 100);
+        nextWavesSetup.addWave("Merry_Go_Round_Right", 100);
+        nextWavesSetup.addWave("Merry_Go_Round_Left", 100);
+        nextWavesSetup.addWave("I_Am_Here_Front", 50);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100);
+        nextWavesSetup.addWave("I_Am_Everywhere", 100);
+        nextWavesSetup.addWave("Queue_For_You", 100);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 1000000, 30, 40);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 100, 40);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 1000000, 83, 93);
+        nextWavesSetup.addWave("Man_In_The_Middle", 1000000, 60, 70);
+        nextWavesSetup.addWave("Man_In_The_Middle", 150, 70);
+        nextWavesSetup.addWave("Man_In_The_Middle", 1000000, 100, 110);
 
         ventSetup.myWavesMap.set("I_Am_Here_Side", wave);
         ventSetup.myNextWavesMap.set("I_Am_Here_Side", nextWavesSetup);
@@ -104,17 +104,17 @@ TrialState.prototype._thirdVentSetup = function () {
         wave.myWaveStartAngle = new RangeValue([70, 120]);
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
-        nextWavesSetup.addWave("Merry_Go_Round_Left", 10);
-        nextWavesSetup.addWave("I_Am_Here_Front", 5);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10);
-        nextWavesSetup.addWave("Queue_For_You", 10);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 30, 40);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 15, 40);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 83, 93);
-        nextWavesSetup.addWave("Man_In_The_Middle", 100000, 60, 70);
-        nextWavesSetup.addWave("Man_In_The_Middle", 15, 70);
-        nextWavesSetup.addWave("Man_In_The_Middle", 100000, 100);
+        nextWavesSetup.addWave("Merry_Go_Round_Right", 100);
+        nextWavesSetup.addWave("Merry_Go_Round_Left", 100);
+        nextWavesSetup.addWave("I_Am_Here_Front", 50);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100);
+        nextWavesSetup.addWave("Queue_For_You", 100);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 1000000, 30, 40);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 100, 40);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 1000000, 83, 93);
+        nextWavesSetup.addWave("Man_In_The_Middle", 1000000, 60, 70);
+        nextWavesSetup.addWave("Man_In_The_Middle", 150, 70);
+        nextWavesSetup.addWave("Man_In_The_Middle", 1000000, 100, 110);
 
         ventSetup.myWavesMap.set("I_Am_Everywhere", wave);
         ventSetup.myNextWavesMap.set("I_Am_Everywhere", nextWavesSetup);
@@ -132,17 +132,17 @@ TrialState.prototype._thirdVentSetup = function () {
         wave.myWaveDirection = 1;
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
-        nextWavesSetup.addWave("I_Am_Here_Front", 5);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10);
-        nextWavesSetup.addWave("I_Am_Everywhere", 10);
-        nextWavesSetup.addWave("Queue_For_You", 10);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 30, 40);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 15, 40);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 83, 93);
-        nextWavesSetup.addWave("Man_In_The_Middle", 100000, 60, 70);
-        nextWavesSetup.addWave("Man_In_The_Middle", 15, 70);
-        nextWavesSetup.addWave("Man_In_The_Middle", 100000, 100);
+        nextWavesSetup.addWave("Merry_Go_Round_Right", 100);
+        nextWavesSetup.addWave("I_Am_Here_Front", 50);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100);
+        nextWavesSetup.addWave("I_Am_Everywhere", 100);
+        nextWavesSetup.addWave("Queue_For_You", 100);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 1000000, 30, 40);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 100, 40);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 1000000, 83, 93);
+        nextWavesSetup.addWave("Man_In_The_Middle", 1000000, 60, 70);
+        nextWavesSetup.addWave("Man_In_The_Middle", 150, 70);
+        nextWavesSetup.addWave("Man_In_The_Middle", 1000000, 100, 110);
 
         ventSetup.myWavesMap.set("Merry_Go_Round_Left", wave);
         ventSetup.myNextWavesMap.set("Merry_Go_Round_Left", nextWavesSetup);
@@ -160,17 +160,17 @@ TrialState.prototype._thirdVentSetup = function () {
         wave.myWaveDirection = -1;
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("Merry_Go_Round_Left", 10);
-        nextWavesSetup.addWave("I_Am_Here_Front", 5);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10);
-        nextWavesSetup.addWave("I_Am_Everywhere", 10);
-        nextWavesSetup.addWave("Queue_For_You", 10);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 30, 40);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 15, 40);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 83, 93);
-        nextWavesSetup.addWave("Man_In_The_Middle", 100000, 60, 70);
-        nextWavesSetup.addWave("Man_In_The_Middle", 15, 70);
-        nextWavesSetup.addWave("Man_In_The_Middle", 100000, 100);
+        nextWavesSetup.addWave("Merry_Go_Round_Left", 100);
+        nextWavesSetup.addWave("I_Am_Here_Front", 50);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100);
+        nextWavesSetup.addWave("I_Am_Everywhere", 100);
+        nextWavesSetup.addWave("Queue_For_You", 100);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 1000000, 30, 40);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 100, 40);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 1000000, 83, 93);
+        nextWavesSetup.addWave("Man_In_The_Middle", 1000000, 60, 70);
+        nextWavesSetup.addWave("Man_In_The_Middle", 150, 70);
+        nextWavesSetup.addWave("Man_In_The_Middle", 1000000, 100, 110);
 
         ventSetup.myWavesMap.set("Merry_Go_Round_Right", wave);
         ventSetup.myNextWavesMap.set("Merry_Go_Round_Right", nextWavesSetup);
@@ -186,18 +186,18 @@ TrialState.prototype._thirdVentSetup = function () {
         wave.mySameTimeBetweenClones = new RangeValueOverTime([1, 1], [-0.5, 1], 10, 70, false); // >= 0 means true
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
-        nextWavesSetup.addWave("Merry_Go_Round_Left", 10);
-        nextWavesSetup.addWave("I_Am_Here_Front", 5);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10);
-        nextWavesSetup.addWave("I_Am_Everywhere", 10);
-        nextWavesSetup.addWave("Queue_For_You", 10);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 30, 40);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 15, 40);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 83, 93);
-        nextWavesSetup.addWave("Man_In_The_Middle", 100000, 60, 70);
-        nextWavesSetup.addWave("Man_In_The_Middle", 15, 70);
-        nextWavesSetup.addWave("Man_In_The_Middle", 100000, 100);
+        nextWavesSetup.addWave("Merry_Go_Round_Right", 100);
+        nextWavesSetup.addWave("Merry_Go_Round_Left", 100);
+        nextWavesSetup.addWave("I_Am_Here_Front", 50);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100);
+        nextWavesSetup.addWave("I_Am_Everywhere", 100);
+        nextWavesSetup.addWave("Queue_For_You", 100);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 1000000, 30, 40);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 100, 40);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 1000000, 83, 93);
+        nextWavesSetup.addWave("Man_In_The_Middle", 1000000, 60, 70);
+        nextWavesSetup.addWave("Man_In_The_Middle", 150, 70);
+        nextWavesSetup.addWave("Man_In_The_Middle", 1000000, 100, 110);
 
         ventSetup.myWavesMap.set("Queue_For_You", wave);
         ventSetup.myNextWavesMap.set("Queue_For_You", nextWavesSetup);
@@ -218,15 +218,15 @@ TrialState.prototype._thirdVentSetup = function () {
         wave.myHugAngle = new RangeValueOverTime([30, 40], [30, 50], 40, 60, false);
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
-        nextWavesSetup.addWave("Merry_Go_Round_Left", 10);
-        nextWavesSetup.addWave("I_Am_Here_Front", 5);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10);
-        nextWavesSetup.addWave("I_Am_Everywhere", 10);
-        nextWavesSetup.addWave("Queue_For_You", 10);
-        nextWavesSetup.addWave("Man_In_The_Middle", 100000, 60, 70);
-        nextWavesSetup.addWave("Man_In_The_Middle", 15, 70);
-        nextWavesSetup.addWave("Man_In_The_Middle", 100000, 100);
+        nextWavesSetup.addWave("Merry_Go_Round_Right", 100);
+        nextWavesSetup.addWave("Merry_Go_Round_Left", 100);
+        nextWavesSetup.addWave("I_Am_Here_Front", 50);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100);
+        nextWavesSetup.addWave("I_Am_Everywhere", 100);
+        nextWavesSetup.addWave("Queue_For_You", 100);
+        nextWavesSetup.addWave("Man_In_The_Middle", 1000000, 60, 70);
+        nextWavesSetup.addWave("Man_In_The_Middle", 150, 70);
+        nextWavesSetup.addWave("Man_In_The_Middle", 1000000, 100, 110);
 
         ventSetup.myWavesMap.set("Give_Us_A_Hug", wave);
         ventSetup.myNextWavesMap.set("Give_Us_A_Hug", nextWavesSetup);
@@ -242,15 +242,15 @@ TrialState.prototype._thirdVentSetup = function () {
         wave.myDoneDelay = new RangeValueOverTime([3, 4], [2.5, 3], 10, 70, false);
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
-        nextWavesSetup.addWave("Merry_Go_Round_Left", 10);
-        nextWavesSetup.addWave("I_Am_Here_Front", 5);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10);
-        nextWavesSetup.addWave("I_Am_Everywhere", 10);
-        nextWavesSetup.addWave("Queue_For_You", 10);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 30, 40);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 15, 40);
-        nextWavesSetup.addWave("Give_Us_A_Hug", 100000, 83, 93);
+        nextWavesSetup.addWave("Merry_Go_Round_Right", 100);
+        nextWavesSetup.addWave("Merry_Go_Round_Left", 100);
+        nextWavesSetup.addWave("I_Am_Here_Front", 50);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100);
+        nextWavesSetup.addWave("I_Am_Everywhere", 100);
+        nextWavesSetup.addWave("Queue_For_You", 100);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 1000000, 30, 40);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 100, 40);
+        nextWavesSetup.addWave("Give_Us_A_Hug", 1000000, 83, 93);
 
         ventSetup.myWavesMap.set("Man_In_The_Middle", wave);
         ventSetup.myNextWavesMap.set("Man_In_The_Middle", nextWavesSetup);

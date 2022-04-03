@@ -30,9 +30,9 @@ TrialState.prototype._secondVentSetup = function () {
         wave.myRefDirection = [0, 0, -1];
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("I_Am_Here_Warm_Up", 10, 0, 20);
-        nextWavesSetup.addWave("Merry_Go_Round_Left", 10, 20);
-        nextWavesSetup.addWave("Merry_Go_Round_Right", 10, 20);
+        nextWavesSetup.addWave("I_Am_Here_Warm_Up", 100, 0, 20);
+        nextWavesSetup.addWave("Merry_Go_Round_Left", 100, 20);
+        nextWavesSetup.addWave("Merry_Go_Round_Right", 100, 20);
 
         ventSetup.myWavesMap.set("I_Am_Here_Warm_Up", wave);
         ventSetup.myNextWavesMap.set("I_Am_Here_Warm_Up", nextWavesSetup);
@@ -50,12 +50,12 @@ TrialState.prototype._secondVentSetup = function () {
         wave.myFirstCloneInTheMiddle = true;
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("Merry_Go_Round_Right", 12);
-        nextWavesSetup.addWave("Merry_Go_Round_Left", 12);
-        nextWavesSetup.addWave("I_Am_Here_Front", 4);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10);
-        nextWavesSetup.addWave("I_Am_Everywhere", 7, 50);
-        nextWavesSetup.addWave("Queue_For_You", new ValueOverTime(100000, 15, 50, 60), 50);
+        nextWavesSetup.addWave("Merry_Go_Round_Right", 120);
+        nextWavesSetup.addWave("Merry_Go_Round_Left", 120);
+        nextWavesSetup.addWave("I_Am_Here_Front", 50);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100);
+        nextWavesSetup.addWave("I_Am_Everywhere", 100, 50);
+        nextWavesSetup.addWave("Queue_For_You", new ValueOverTime(1000000, 150, 50, 60), 50);
 
         ventSetup.myWavesMap.set("I_Am_Here_Front", wave);
         ventSetup.myNextWavesMap.set("I_Am_Here_Front", nextWavesSetup);
@@ -73,12 +73,12 @@ TrialState.prototype._secondVentSetup = function () {
         wave.myFirstCloneInTheMiddle = true;
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("Merry_Go_Round_Right", 12);
-        nextWavesSetup.addWave("Merry_Go_Round_Left", 12);
-        nextWavesSetup.addWave("I_Am_Here_Front", 4);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10);
-        nextWavesSetup.addWave("I_Am_Everywhere", 7, 50);
-        nextWavesSetup.addWave("Queue_For_You", new ValueOverTime(100000, 15, 50, 60), 50);
+        nextWavesSetup.addWave("Merry_Go_Round_Right", 120);
+        nextWavesSetup.addWave("Merry_Go_Round_Left", 120);
+        nextWavesSetup.addWave("I_Am_Here_Front", 50);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100);
+        nextWavesSetup.addWave("I_Am_Everywhere", 100, 50);
+        nextWavesSetup.addWave("Queue_For_You", new ValueOverTime(1000000, 150, 50, 60), 50);
 
         ventSetup.myWavesMap.set("I_Am_Here_Side", wave);
         ventSetup.myNextWavesMap.set("I_Am_Here_Side", nextWavesSetup);
@@ -94,11 +94,11 @@ TrialState.prototype._secondVentSetup = function () {
         wave.myWaveStartAngle = new RangeValue([70, 100]);
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("Merry_Go_Round_Right", 12);
-        nextWavesSetup.addWave("Merry_Go_Round_Left", 12);
-        nextWavesSetup.addWave("I_Am_Here_Front", 4);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10);
-        nextWavesSetup.addWave("Queue_For_You", new ValueOverTime(100000, 15, 50, 60), 50);
+        nextWavesSetup.addWave("Merry_Go_Round_Right", 120);
+        nextWavesSetup.addWave("Merry_Go_Round_Left", 120);
+        nextWavesSetup.addWave("I_Am_Here_Front", 50);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100);
+        nextWavesSetup.addWave("Queue_For_You", new ValueOverTime(1000000, 150, 50, 60), 50);
 
         ventSetup.myWavesMap.set("I_Am_Everywhere", wave);
         ventSetup.myNextWavesMap.set("I_Am_Everywhere", nextWavesSetup);
@@ -116,11 +116,11 @@ TrialState.prototype._secondVentSetup = function () {
         wave.myWaveDirection = 1;
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("Merry_Go_Round_Right", 10);
-        nextWavesSetup.addWave("I_Am_Here_Front", 4);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10);
-        nextWavesSetup.addWave("I_Am_Everywhere", 7, 50);
-        nextWavesSetup.addWave("Queue_For_You", new ValueOverTime(100000, 15, 50, 60), 50);
+        nextWavesSetup.addWave("Merry_Go_Round_Right", 100);
+        nextWavesSetup.addWave("I_Am_Here_Front", 50);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100);
+        nextWavesSetup.addWave("I_Am_Everywhere", 100, 50);
+        nextWavesSetup.addWave("Queue_For_You", new ValueOverTime(1000000, 150, 50, 60), 50);
 
         ventSetup.myWavesMap.set("Merry_Go_Round_Left", wave);
         ventSetup.myNextWavesMap.set("Merry_Go_Round_Left", nextWavesSetup);
@@ -138,11 +138,11 @@ TrialState.prototype._secondVentSetup = function () {
         wave.myWaveDirection = -1;
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("Merry_Go_Round_Left", 10);
-        nextWavesSetup.addWave("I_Am_Here_Front", 4);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10);
-        nextWavesSetup.addWave("I_Am_Everywhere", 7, 50);
-        nextWavesSetup.addWave("Queue_For_You", new ValueOverTime(100000, 15, 50, 60), 50);
+        nextWavesSetup.addWave("Merry_Go_Round_Left", 100);
+        nextWavesSetup.addWave("I_Am_Here_Front", 50);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100);
+        nextWavesSetup.addWave("I_Am_Everywhere", 100, 50);
+        nextWavesSetup.addWave("Queue_For_You", new ValueOverTime(1000000, 150, 50, 60), 50);
 
         ventSetup.myWavesMap.set("Merry_Go_Round_Right", wave);
         ventSetup.myNextWavesMap.set("Merry_Go_Round_Right", nextWavesSetup);
@@ -158,12 +158,12 @@ TrialState.prototype._secondVentSetup = function () {
         wave.mySameTimeBetweenClones = 1;
 
         let nextWavesSetup = new NextWavesSetup();
-        nextWavesSetup.addWave("Merry_Go_Round_Left", 15);
-        nextWavesSetup.addWave("Merry_Go_Round_Right", 15);
-        nextWavesSetup.addWave("I_Am_Here_Front", 4);
-        nextWavesSetup.addWave("I_Am_Here_Side", 10);
-        nextWavesSetup.addWave("I_Am_Everywhere", 15, 50);
-        nextWavesSetup.addWave("Queue_For_You", 10, 65);
+        nextWavesSetup.addWave("Merry_Go_Round_Right", 120);
+        nextWavesSetup.addWave("Merry_Go_Round_Left", 120);
+        nextWavesSetup.addWave("I_Am_Here_Front", 50);
+        nextWavesSetup.addWave("I_Am_Here_Side", 100);
+        nextWavesSetup.addWave("I_Am_Everywhere", 100, 50);
+        nextWavesSetup.addWave("Queue_For_You", 100);
 
         ventSetup.myWavesMap.set("Queue_For_You", wave);
         ventSetup.myNextWavesMap.set("Queue_For_You", nextWavesSetup);
