@@ -160,7 +160,7 @@ class TrialState extends PP.State {
             if (trialPhase == 1 && Global.myStatistics.myTrialCompletedCount <= 0) {
                 let clonesOnlyPunched = Global.myStatistics.myMrNOTClonesDismissed > 0 && Global.myStatistics.myMrNOTClonesDismissed == Global.myStatistics.myEvidencesPunched;
                 if (Global.myStatistics.myMrNOTClonesDismissed <= 0 || clonesOnlyPunched) {
-                    gtag("event", "trial_lost_before_first_throw", {
+                    gtag("event", "trial_lost_before_first_dismiss", {
                         "value": 1
                     });
 

@@ -300,6 +300,22 @@ PP.Gamepad = class Gamepad {
         return this._myPulseInfo.clone();
     }
 
+    getFastPressMaxDelay() {
+        return this._myFastPressMaxDelay;
+    }
+
+    setFastPressMaxDelay(maxDelay) {
+        this._myFastPressMaxDelay = maxDelay;
+    }
+
+    getFastTouchMaxDelay() {
+        return this._myFastTouchMaxDelay;
+    }
+
+    setFastTouchMaxDelay(maxDelay) {
+        this._myFastTouchMaxDelay = maxDelay;
+    }
+
     start() {
         if (WL.xrSession) {
             this._onXRSessionStart(WL.xrSession);
