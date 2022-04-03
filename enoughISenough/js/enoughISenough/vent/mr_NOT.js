@@ -66,7 +66,7 @@ class MrNOT {
         this._mySpeed = (this._myTargetPosition.vec3_sub(this._myStartPosition).vec3_length() - distanceToIgnore) / PP.myEasyTuneVariables.get("Time To Reach Target");
         this._myMaxPatience = PP.myEasyTuneVariables.get("Max Patience");
 
-        this._myDebugActive = true;
+        this._myDebugActive = false;
     }
 
     start(dt) {

@@ -72,7 +72,7 @@ TrialState.prototype._firstVentSetup = function () {
         wave.myClonesCount = new RangeValueOverTime([1, 1], [1, 3], 30, 65, true);
         wave.mySpawnConeAngle = new RangeValue([20, 40]);
         wave.myMinAngleBetweenClones = 10;
-        wave.myWaveStartAngle = new RangeValueOverTime([60, 130], [60, 175], 30, 70, false);
+        wave.myWaveStartAngle = new RangeValueOverTime([70, 110], [60, 150], 30, 70, false);
         wave.myTimeBetweenClones = new RangeValueOverTime([2, 3], [1, 2], 30, 70, false);
         wave.myDoneDelay = new RangeValueOverTime([2.5, 4], [2.5, 3], 30, 70, false);
         wave.myFirstCloneInTheMiddle = true;
@@ -90,10 +90,10 @@ TrialState.prototype._firstVentSetup = function () {
         let wave = new IAmEverywhereWaveSetup();
 
         wave.myWavesCount = new RangeValueOverTime([3, 3], [3, 4], 65, 70, true);
-        wave.myAngleBetweenWaves = new RangeValueOverTime([50, 90], [60, 110], 65, 75, false);
+        wave.myAngleBetweenWaves = new RangeValueOverTime([60, 110], [60, 110], 65, 75, false);
         wave.myTimeBetweenWaves = new RangeValueOverTime([2, 3], [1.5, 2.5], 65, 75, false);
         wave.myDoneDelay = new RangeValueOverTime([3, 4], [2.5, 4], 65, 75, false);
-        wave.myWaveStartAngle = new RangeValue([70, 100]);
+        wave.myWaveStartAngle = new RangeValueOverTime([60, 110], [60, 110], 65, 75, false);
 
         let nextWavesSetup = new NextWavesSetup();
         nextWavesSetup.addWave("I_Am_Here_Front", 75);

@@ -298,7 +298,7 @@ class MrNOTVentState extends PP.State {
             let wave = new IAmHereWaveSetup();
 
             wave.myClonesCount = new RangeValueOverTime([1, 3], [1, 5], 10, 30, true);
-            wave.myWaveStartAngle = new RangeValue([0, 180]);
+            wave.myWaveStartAngle = new RangeValue([10, 175]);
             wave.mySpawnConeAngle = new RangeValue([20, 40]);
             wave.myMinAngleBetweenClones = 10;
             wave.myTimeBetweenClones = timeBetweenClones;
@@ -322,10 +322,10 @@ class MrNOTVentState extends PP.State {
             let wave = new IAmEverywhereWaveSetup();
 
             wave.myWavesCount = new RangeValueOverTime([3, 4], [3, 5], 10, 30, true);
-            wave.myAngleBetweenWaves = new RangeValueOverTime([70, 120], [70, 120], 10, 30, false);
+            wave.myAngleBetweenWaves = new RangeValueOverTime([60, 110], [60, 150], 10, 30, false);
             wave.myTimeBetweenWaves = timeBetweenClones;
             wave.myDoneDelay = new RangeValueOverTime([3, 4], [2.5, 3], 10, 30, false);
-            wave.myWaveStartAngle = new RangeValue([0, 180]);
+            wave.myWaveStartAngle = new RangeValue([10, 175]);
 
             let nextWavesSetup = new NextWavesSetup();
             nextWavesSetup.addWave("Merry_Go_Round_Right", 100);
@@ -345,7 +345,7 @@ class MrNOTVentState extends PP.State {
             wave.myWavesCount = new RangeValueOverTime([3, 5], [4, 6], 10, 30, true);
             wave.myAngleBetweenWaves = new RangeValue([15, 25]);
             wave.myTimeBetweenWaves = new RangeValueOverTime([2, 3], [1.5, 2], 10, 30, false);
-            wave.myWaveStartAngle = new RangeValue([0, 180]);
+            wave.myWaveStartAngle = new RangeValue([10, 175]);
             wave.mySameTimeBetweenWaves = 1;
             wave.myDoneDelay = doneDelay;
             wave.myWaveDirection = 1;
@@ -368,7 +368,7 @@ class MrNOTVentState extends PP.State {
             wave.myWavesCount = new RangeValueOverTime([3, 5], [4, 6], 10, 30, true);
             wave.myAngleBetweenWaves = new RangeValue([15, 25]);
             wave.myTimeBetweenWaves = new RangeValueOverTime([2, 3], [1.5, 2], 10, 30, false);
-            wave.myWaveStartAngle = new RangeValue([0, 180]);
+            wave.myWaveStartAngle = new RangeValue([10, 175]);
             wave.mySameTimeBetweenWaves = 1;
             wave.myDoneDelay = doneDelay;
             wave.myWaveDirection = -1;
@@ -389,7 +389,7 @@ class MrNOTVentState extends PP.State {
             let wave = new QueueForYouWaveSetup();
 
             wave.myClonesCount = new RangeValueOverTime([2, 3], [2, 5], 10, 30, true);
-            wave.myWaveStartAngle = new RangeValue([0, 180]);
+            wave.myWaveStartAngle = new RangeValue([10, 175]);
             wave.myTimeBetweenClones = timeBetweenClones;
             wave.myDoneDelay = doneDelay;
             wave.mySameTimeBetweenClones = new RangeValueOverTime([1, 1], [-1, 1], 10, 30, false); // >= 0 means true
@@ -413,7 +413,7 @@ class MrNOTVentState extends PP.State {
             wave.myClonesCount = new RangeValueOverTime([1, 2], [2, 3], 10, 30, true);
             wave.mySpawnConeAngle = new RangeValue([20, 40]);
             wave.myMinAngleBetweenClones = 10;
-            wave.myWaveStartAngle = new RangeValue([0, 180]);
+            wave.myWaveStartAngle = new RangeValue([10, 175]);
             wave.myTimeBetweenClones = timeBetweenClones;
             wave.myDoneDelay = doneDelay;
             wave.myFirstCloneInTheMiddle = true;
@@ -439,7 +439,7 @@ class MrNOTVentState extends PP.State {
             wave.myWavesCount = new RangeValueOverTime([3, 3], [2, 4], 10, 30, true);
             wave.myTimeBeforeStart = new RangeValueOverTime([1, 1.5], [1, 1.5], 10, 30, false);
             wave.myTimeBetweenWaves = new RangeValueOverTime([1.5, 2], [1, 2], 10, 30, false);
-            wave.myWaveStartAngle = new RangeValue([0, 180]);
+            wave.myWaveStartAngle = new RangeValue([10, 175]);
             wave.myDoneDelay = new RangeValueOverTime([3, 4], [2.5, 3], 10, 30, false);
 
             let nextWavesSetup = new NextWavesSetup();
