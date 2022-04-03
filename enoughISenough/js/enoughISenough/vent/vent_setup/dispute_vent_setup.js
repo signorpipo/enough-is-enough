@@ -497,7 +497,7 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
         ventSetup.myWavesMap.set("Merry_Go_Round_GUAH2", wave);
         ventSetup.myNextWavesMap.set("Merry_Go_Round_GUAH2", nextWavesSetup);
         ventSetup.myNextWaveChanceBoosterSetupMap.set("Merry_Go_Round_GUAH2",
-            new NextWaveChanceBoosterSetup(secondWavesStartTimeGroup, boosterGroup4, boosterGroupName4, dampingOverLastPick4, boostMultiplier4 * 2 * 19 / 30, boostDivider4, boostValueOnReset4));
+            new NextWaveChanceBoosterSetup(secondWavesStartTimeGroup, boosterGroup4, boosterGroupName4, dampingOverLastPick4, boostMultiplier4 * 2 * 20 / 30, boostDivider4, boostValueOnReset4));
     }
 
     {
@@ -518,7 +518,7 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
         ventSetup.myWavesMap.set("Merry_Go_Round_GUAH3", wave);
         ventSetup.myNextWavesMap.set("Merry_Go_Round_GUAH3", nextWavesSetup);
         ventSetup.myNextWaveChanceBoosterSetupMap.set("Merry_Go_Round_GUAH3",
-            new NextWaveChanceBoosterSetup(thirdWavesStartTimeGroup, boosterGroup4, boosterGroupName4, dampingOverLastPick4, boostMultiplier4 * 2 * 11 / 30, boostDivider4, boostValueOnReset4));
+            new NextWaveChanceBoosterSetup(thirdWavesStartTimeGroup, boosterGroup4, boosterGroupName4, dampingOverLastPick4, boostMultiplier4 * 2 * 10 / 30, boostDivider4, boostValueOnReset4));
     }
 
     {
@@ -602,7 +602,7 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
         ventSetup.myWavesMap.set("I_Am_Everywhere_GUAH2", wave);
         ventSetup.myNextWavesMap.set("I_Am_Everywhere_GUAH2", nextWavesSetup);
         ventSetup.myNextWaveChanceBoosterSetupMap.set("I_Am_Everywhere_GUAH2",
-            new NextWaveChanceBoosterSetup(secondWavesStartTimeGroup, boosterGroup4, boosterGroupName4, dampingOverLastPick4, boostMultiplier4 * 2 * 19 / 30, boostDivider4, boostValueOnReset4));
+            new NextWaveChanceBoosterSetup(secondWavesStartTimeGroup, boosterGroup4, boosterGroupName4, dampingOverLastPick4, boostMultiplier4 * 2 * 20 / 30, boostDivider4, boostValueOnReset4));
     }
 
 
@@ -622,7 +622,7 @@ ArcadeState.prototype._disputeVentSetup = function (avoidHarderGroups = false) {
         ventSetup.myWavesMap.set("I_Am_Everywhere_GUAH3", wave);
         ventSetup.myNextWavesMap.set("I_Am_Everywhere_GUAH3", nextWavesSetup);
         ventSetup.myNextWaveChanceBoosterSetupMap.set("I_Am_Everywhere_GUAH3",
-            new NextWaveChanceBoosterSetup(thirdWavesStartTimeGroup, boosterGroup4, boosterGroupName4, dampingOverLastPick4, boostMultiplier4 * 2 * 11 / 30, boostDivider4, boostValueOnReset4));
+            new NextWaveChanceBoosterSetup(thirdWavesStartTimeGroup, boosterGroup4, boosterGroupName4, dampingOverLastPick4, boostMultiplier4 * 2 * 10 / 30, boostDivider4, boostValueOnReset4));
     }
 
     // GIVE US A HUG
