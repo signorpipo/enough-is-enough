@@ -46,15 +46,15 @@ PP.ButtonInfo = class ButtonInfo {
         this.myTimeNotTouched = 0;
         this.myPrevTimeNotTouched = 0;
 
-        this.myFastPressStartCount = 0;
-        this.myPrevFastPressStartCount = 0;
-        this.myFastPressEndCount = 0;
-        this.myPrevFastPressEndCount = 0;
+        this.myMultiplePressStartCount = 0;
+        this.myPrevMultiplePressStartCount = 0;
+        this.myMultiplePressEndCount = 0;
+        this.myPrevMultiplePressEndCount = 0;
 
-        this.myFastTouchStartCount = 0;
-        this.myPrevFastTouchStartCount = 0;
-        this.myFastTouchEndCount = 0;
-        this.myPrevFastTouchEndCount = 0;
+        this.myMultipleTouchStartCount = 0;
+        this.myPrevMultipleTouchStartCount = 0;
+        this.myMultipleTouchEndCount = 0;
+        this.myPrevMultipleTouchEndCount = 0;
     }
 
     getValue() {
@@ -69,20 +69,20 @@ PP.ButtonInfo = class ButtonInfo {
         return this.myIsTouched;
     }
 
-    isPressStart(fastPressCount = null) {
-        return (this.myIsPressed && !this.myPrevIsPressed) && (fastPressCount == null || this.myFastPressStartCount == fastPressCount);
+    isPressStart(multiplePressCount = null) {
+        return (this.myIsPressed && !this.myPrevIsPressed) && (multiplePressCount == null || this.myMultiplePressStartCount == multiplePressCount);
     }
 
-    isPressEnd(fastPressCount = null) {
-        return (!this.myIsPressed && this.myPrevIsPressed) && (fastPressCount == null || this.myFastPressEndCount == fastPressCount);
+    isPressEnd(multiplePressCount = null) {
+        return (!this.myIsPressed && this.myPrevIsPressed) && (multiplePressCount == null || this.myMultiplePressEndCount == multiplePressCount);
     }
 
-    isTouchStart(fastTouchCount = null) {
-        return (this.myIsTouched && !this.myPrevIsTouched) && (fastTouchCount == null || this.myFastTouchStartCount == fastTouchCount);
+    isTouchStart(multipleTouchCount = null) {
+        return (this.myIsTouched && !this.myPrevIsTouched) && (multipleTouchCount == null || this.myMultipleTouchStartCount == multipleTouchCount);
     }
 
-    isTouchEnd(fastTouchCount = null) {
-        return (!this.myIsTouched && this.myPrevIsTouched) && (fastTouchCount == null || this.myFastTouchEndCount == fastTouchCount);
+    isTouchEnd(multipleTouchCount = null) {
+        return (!this.myIsTouched && this.myPrevIsTouched) && (multipleTouchCount == null || this.myMultipleTouchEndCount == multipleTouchCount);
     }
 
     clone() {
@@ -104,15 +104,15 @@ PP.ButtonInfo = class ButtonInfo {
         value.myTimeNotTouched = this.myTimeNotTouched;
         value.myPrevTimeNotTouched = this.myPrevTimeNotTouched;
 
-        value.myFastPressStartCount = this.myFastPressStartCount;
-        value.myPrevFastPressStartCount = this.myPrevFastPressStartCount;
-        value.myFastPressEndCount = this.myFastPressEndCount;
-        value.myPrevFastPressEndCount = this.myPrevFastPressEndCount;
+        value.myMultiplePressStartCount = this.myMultiplePressStartCount;
+        value.myPrevMultiplePressStartCount = this.myPrevMultiplePressStartCount;
+        value.myMultiplePressEndCount = this.myMultiplePressEndCount;
+        value.myPrevMultiplePressEndCount = this.myPrevMultiplePressEndCount;
 
-        value.myFastTouchStartCount = this.myFastTouchStartCount;
-        value.myPrevFastTouchStartCount = this.myPrevFastTouchStartCount;
-        value.myFastTouchEndCount = this.myFastTouchEndCount;
-        value.myPrevFastTouchEndCount = this.myPrevFastTouchEndCount;
+        value.myMultipleTouchStartCount = this.myMultipleTouchStartCount;
+        value.myPrevMultipleTouchStartCount = this.myPrevMultipleTouchStartCount;
+        value.myMultipleTouchEndCount = this.myMultipleTouchEndCount;
+        value.myPrevMultipleTouchEndCount = this.myPrevMultipleTouchEndCount;
 
         return value;
     }
@@ -207,8 +207,8 @@ PP.Gamepad = class Gamepad {
         this._myPulseInfo = new PP.PulseInfo();
 
         //Setup
-        this._myFastPressMaxDelay = 0.3;
-        this._myFastTouchMaxDelay = 0.3;
+        this._myMultiplePressMaxDelay = 0.3;
+        this._myMultipleTouchMaxDelay = 0.3;
     }
 
     /**
@@ -300,20 +300,20 @@ PP.Gamepad = class Gamepad {
         return this._myPulseInfo.clone();
     }
 
-    getFastPressMaxDelay() {
-        return this._myFastPressMaxDelay;
+    getMultiplePressMaxDelay() {
+        return this._myMultiplePressMaxDelay;
     }
 
-    setFastPressMaxDelay(maxDelay) {
-        this._myFastPressMaxDelay = maxDelay;
+    setMultiplePressMaxDelay(maxDelay) {
+        this._myMultiplePressMaxDelay = maxDelay;
     }
 
-    getFastTouchMaxDelay() {
-        return this._myFastTouchMaxDelay;
+    getMultipleTouchMaxDelay() {
+        return this._myMultipleTouchMaxDelay;
     }
 
-    setFastTouchMaxDelay(maxDelay) {
-        this._myFastTouchMaxDelay = maxDelay;
+    setMultipleTouchMaxDelay(maxDelay) {
+        this._myMultipleTouchMaxDelay = maxDelay;
     }
 
     start() {
@@ -396,76 +396,76 @@ PP.Gamepad = class Gamepad {
             if (item.myIsPressed) {
                 item.myTimePressed += dt;
                 if (!item.myPrevIsPressed) {
-                    item.myFastPressStartCount += 1;
+                    item.myMultiplePressStartCount += 1;
 
                     item.myPrevTimeNotPressed = item.myTimeNotPressed;
                     item.myTimeNotPressed = 0;
                 }
 
-                if (item.myPrevTimeNotPressed + item.myTimePressed > this._myFastPressMaxDelay && item.myFastPressEndCount > 0) {
-                    item.myPrevFastPressEndCount = item.myFastPressEndCount;
-                    item.myFastPressEndCount = 0;
+                if (item.myPrevTimeNotPressed + item.myTimePressed > this._myMultiplePressMaxDelay && item.myMultiplePressEndCount > 0) {
+                    item.myPrevMultiplePressEndCount = item.myMultiplePressEndCount;
+                    item.myMultiplePressEndCount = 0;
                 }
 
-                if (item.myTimePressed > this._myFastPressMaxDelay && item.myFastPressStartCount > 0) {
-                    item.myPrevFastPressStartCount = item.myFastPressStartCount;
-                    item.myFastPressStartCount = 0;
+                if (item.myTimePressed > this._myMultiplePressMaxDelay && item.myMultiplePressStartCount > 0) {
+                    item.myPrevMultiplePressStartCount = item.myMultiplePressStartCount;
+                    item.myMultiplePressStartCount = 0;
                 }
             } else {
                 item.myTimeNotPressed += dt;
                 if (item.myPrevIsPressed) {
-                    item.myFastPressEndCount += 1;
+                    item.myMultiplePressEndCount += 1;
 
                     item.myPrevTimePressed = item.myTimePressed;
                     item.myTimePressed = 0;
                 }
 
-                if (item.myPrevTimePressed + item.myTimeNotPressed > this._myFastPressMaxDelay && item.myFastPressStartCount > 0) {
-                    item.myPrevFastPressStartCount = item.myFastPressStartCount;
-                    item.myFastPressStartCount = 0;
+                if (item.myPrevTimePressed + item.myTimeNotPressed > this._myMultiplePressMaxDelay && item.myMultiplePressStartCount > 0) {
+                    item.myPrevMultiplePressStartCount = item.myMultiplePressStartCount;
+                    item.myMultiplePressStartCount = 0;
                 }
 
-                if (item.myTimeNotPressed > this._myFastPressMaxDelay && item.myFastPressEndCount > 0) {
-                    item.myPrevFastPressEndCount = item.myFastPressEndCount;
-                    item.myFastPressEndCount = 0;
+                if (item.myTimeNotPressed > this._myMultiplePressMaxDelay && item.myMultiplePressEndCount > 0) {
+                    item.myPrevMultiplePressEndCount = item.myMultiplePressEndCount;
+                    item.myMultiplePressEndCount = 0;
                 }
             }
 
             if (item.myIsTouched) {
                 item.myTimeTouched += dt;
                 if (!item.myPrevIsTouched) {
-                    item.myFastTouchStartCount += 1;
+                    item.myMultipleTouchStartCount += 1;
 
                     item.myPrevTimeNotTouched = item.myTimeNotTouched;
                     item.myTimeNotTouched = 0;
                 }
 
-                if (item.myPrevTimeNotTouched + item.myTimeTouched > this._myFastTouchMaxDelay && item.myFastTouchEndCount > 0) {
-                    item.myPrevFastTouchEndCount = item.myFastTouchEndCount;
-                    item.myFastTouchEndCount = 0;
+                if (item.myPrevTimeNotTouched + item.myTimeTouched > this._myMultipleTouchMaxDelay && item.myMultipleTouchEndCount > 0) {
+                    item.myPrevMultipleTouchEndCount = item.myMultipleTouchEndCount;
+                    item.myMultipleTouchEndCount = 0;
                 }
 
-                if (item.myTimeTouched > this._myFastTouchMaxDelay && item.myFastTouchStartCount > 0) {
-                    item.myPrevFastTouchStartCount = item.myFastTouchStartCount;
-                    item.myFastTouchStartCount = 0;
+                if (item.myTimeTouched > this._myMultipleTouchMaxDelay && item.myMultipleTouchStartCount > 0) {
+                    item.myPrevMultipleTouchStartCount = item.myMultipleTouchStartCount;
+                    item.myMultipleTouchStartCount = 0;
                 }
             } else {
                 item.myTimeNotTouched += dt;
                 if (item.myPrevIsTouched) {
-                    item.myFastTouchEndCount += 1;
+                    item.myMultipleTouchEndCount += 1;
 
                     item.myPrevTimeTouched = item.myTimeTouched;
                     item.myTimeTouched = 0;
                 }
 
-                if (item.myPrevTimeTouched + item.myTimeNotTouched > this._myFastTouchMaxDelay && item.myFastTouchStartCount > 0) {
-                    item.myPrevFastTouchStartCount = item.myFastTouchStartCount;
-                    item.myFastTouchStartCount = 0;
+                if (item.myPrevTimeTouched + item.myTimeNotTouched > this._myMultipleTouchMaxDelay && item.myMultipleTouchStartCount > 0) {
+                    item.myPrevMultipleTouchStartCount = item.myMultipleTouchStartCount;
+                    item.myMultipleTouchStartCount = 0;
                 }
 
-                if (item.myTimeNotTouched > this._myFastTouchMaxDelay && item.myFastTouchEndCount > 0) {
-                    item.myPrevFastTouchEndCount = item.myFastTouchEndCount;
-                    item.myFastTouchEndCount = 0;
+                if (item.myTimeNotTouched > this._myMultipleTouchMaxDelay && item.myMultipleTouchEndCount > 0) {
+                    item.myPrevMultipleTouchEndCount = item.myMultipleTouchEndCount;
+                    item.myMultipleTouchEndCount = 0;
                 }
             }
         }.bind(this));
