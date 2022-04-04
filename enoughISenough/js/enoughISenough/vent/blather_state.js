@@ -203,7 +203,17 @@ class Blather {
         //this._myBigBlatherTextObject.pp_addComponent("pp-easy-text-color", { "_myVariableName": "ciao2", "_myColorType": 0, "_myColorModel": 1 });
         //this._myBigBlatherTextComponent.material.color = [90 / 255, 90 / 255, 100 / 255, 1];
         //this._myBigBlatherTextComponent.material.outlineColor = [90 / 255, 90 / 255, 100 / 255, 1];
+
+        this._myBigBlatherTextObject.pp_setPosition([0, 4, -10.5]);
+        this._myBigBlatherTextObject.pp_setRotation([20, 0, 0]);
+        this._myBigBlatherTextObject.pp_setScale(19);
+
+        this._myBigBlatherPatchObject = Global.myBigBlatherPatchObject.pp_clone();
+        this._myBigBlatherPatchObject.pp_resetTransform();
+        this._myBigBlatherPatchObject.pp_setParent(this._myBigBlatherTextObject, false);
+        this._myBigBlatherPatchObject.pp_setScale(1);
         this._myBigBlatherTextObject.pp_setActive(false);
+        this._myBigBlatherPatchObject.pp_setActive(false);
 
         this._mySentences = sentences;
 
@@ -226,12 +236,12 @@ class Blather {
         this._myFSM.addTransition("second_wait", "done", "end", this._done.bind(this));
         this._myFSM.addTransition("done", "first_wait", "start", this._prepareState.bind(this));
 
-        this._myFSM.addTransition("init", "done", "skip");
-        this._myFSM.addTransition("first_wait", "done", "skip");
+        this._myFSM.addTransition("init", "done", "skip", this._done.bind(this));
+        this._myFSM.addTransition("first_wait", "done", "skip", this._done.bind(this));
         this._myFSM.addTransition("blather", "done", "skip", this._done.bind(this));
-        this._myFSM.addTransition("wait", "done", "skip");
+        this._myFSM.addTransition("wait", "done", "skip", this._done.bind(this));
         this._myFSM.addTransition("blather", "done", "skip", this._done.bind(this));
-        this._myFSM.addTransition("second_wait", "done", "skip");
+        this._myFSM.addTransition("second_wait", "done", "skip", this._done.bind(this));
 
         this._myIsDone = false;
         this._myCurrentSenteceIndex = 0;
@@ -268,6 +278,7 @@ class Blather {
         this._myCurrentSenteceIndex = -1;
         this._myBlatherTextObject.pp_setActive(true);
         this._myBigBlatherTextObject.pp_setActive(true);
+        this._myBigBlatherPatchObject.pp_setActive(false);
     }
 
     _nextBlather(speedStart) {
@@ -277,8 +288,10 @@ class Blather {
 
         if (this._mySentences[this._myCurrentSenteceIndex].myIsBigBlather) {
             this._setBigBlatherPosition();
+            this._myBigBlatherPatchObject.pp_setActive(true);
         } else {
             this._setBlatherPosition();
+            this._myBigBlatherPatchObject.pp_setActive(false);
         }
 
         this._myCharacterTimer.start(speedStart ? 0 : 0.13);
@@ -330,9 +343,11 @@ class Blather {
                 this._myTimerState.setDuration(sentence.myTimeToWaitAfterDisappearing);
                 if (this._myCurrentSenteceIndex < this._mySentences.length - 1) {
                     textComponent.text = "";
+                    this._myBigBlatherPatchObject.pp_setActive(false);
                     fsm.perform("next");
                 } else {
                     textComponent.text = "";
+                    this._myBigBlatherPatchObject.pp_setActive(false);
                     fsm.perform("end");
                 }
             }
@@ -344,6 +359,7 @@ class Blather {
         this._myBigBlatherTextComponent.text = "";
         this._myBlatherTextObject.pp_setActive(false);
         this._myBigBlatherTextObject.pp_setActive(false);
+        this._myBigBlatherPatchObject.pp_setActive(false);
         this._myIsDone = true;
     }
 
@@ -381,6 +397,9 @@ class Blather {
         let sentenceLength = this._mySentences[this._myCurrentSenteceIndex].mySentence.length;
         let displacement = sentenceLength * 0.6;
         this._myBigBlatherTextObject.translateObject([-displacement, 0, 0]);
+
+        this._myBigBlatherPatchObject.pp_setPositionLocal([0, 0, 0]);
+        this._myBigBlatherPatchObject.pp_translateLocal([displacement / 19, 0, 0]);
     }
 }
 

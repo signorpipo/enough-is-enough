@@ -699,6 +699,7 @@ class MenuTitle {
         if (!this._myTitleText.active) {
             this._myTitleObject.pp_setActive(true);
             this._mySubtitleObject.pp_setActive(true);
+            Global.myTitlePatchObject.pp_setActive(true);
 
             this._myTitleCenterPosition = [0, 168, -184];
             this._myAppearAudio.setPosition(this._myTitleCenterPosition);
@@ -793,6 +794,7 @@ class MenuTitle {
                 this._myTimer.reset();
                 this._myTitleObject.pp_setActive(false);
                 this._mySubtitleObject.pp_setActive(false);
+                Global.myTitlePatchObject.pp_setActive(false);
             }
         }
     }

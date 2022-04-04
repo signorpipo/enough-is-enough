@@ -242,6 +242,7 @@ var Global = {
     myTitleObject: null,
     mySubtitleObject: null,
     myTitlePatchObject: null,
+    myBigBlatherPatchObject: null,
     myMeshObjectPoolMap: null,
     myMeshNoFogObjectPoolMap: null,
     myGameObjectPoolMap: null,
