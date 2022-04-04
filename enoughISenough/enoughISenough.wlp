@@ -10701,7 +10701,8 @@
                         "format": "tall",
                         "style": "standard",
                         "beacon": true,
-                        "space": 129
+                        "space": 129,
+                        "createAutomaticCollision": false
                     }
                 }
             ],
