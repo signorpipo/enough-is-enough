@@ -229,7 +229,7 @@ class MrNOTClone {
 
                     if (isColliding) {
                         let evidenceComponent = collidingComponent.object.pp_getComponent("evidence-component");
-                        if (evidenceComponent.getEvidence() && evidenceComponent.getEvidence().canHit()) {
+                        if (evidenceComponent && evidenceComponent.getEvidence() && evidenceComponent.getEvidence().canHit()) {
                             hit = true;
                             hittingObject = collidingComponent.object;
                             break;
