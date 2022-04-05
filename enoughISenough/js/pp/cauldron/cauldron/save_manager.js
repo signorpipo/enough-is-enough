@@ -255,12 +255,16 @@ PP.SaveManager = class SaveManager {
     _onXRSessionStart(session) {
         session.addEventListener('visibilitychange', function (event) {
             if (event.session.visibilityState != "visible") {
-                this._onXRSessionEnd();
+                this._onXRSessionInterrupt();
             }
         }.bind(this));
     }
 
     _onXRSessionEnd() {
+        this._onXRSessionInterrupt();
+    }
+
+    _onXRSessionInterrupt() {
         this.commitSaves();
     }
 

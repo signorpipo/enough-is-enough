@@ -28,7 +28,7 @@ WL.registerComponent("random-material", {
     update: function (dt) {
     },
     onActivate: function () {
-        if (Global.myFirstUpdateDone) {
+        if (Global.myUpdateReady) {
             this._randomMaterial();
         }
     },

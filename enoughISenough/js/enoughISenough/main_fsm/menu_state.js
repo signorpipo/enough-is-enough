@@ -42,12 +42,34 @@ class MenuState extends PP.State {
 
         this._myMenuDuration = 0;
         this._myFirstTime = true;
+
+        this._myButtonPressed = Global.mySaveManager.loadBool("button_pressed", false);
     }
 
     update(dt, fsm) {
         this._myMenuDuration += dt;
         this._myFSM.update(dt);
         this._myNotEnough.update(dt);
+
+        if (!this._myButtonPressed) {
+            for (let key in PP.ButtonType) {
+                let resultLeft = PP.myLeftGamepad.getButtonInfo(PP.ButtonType[key]).isPressStart();
+                let resultRight = PP.myRightGamepad.getButtonInfo(PP.ButtonType[key]).isPressStart();
+
+                if (resultLeft || resultRight) {
+                    this._myButtonPressed = true;
+                    Global.mySaveManager.save("button_pressed", true);
+
+                    if (Global.myGoogleAnalytics) {
+                        gtag("event", "button_pressed", {
+                            "value": 1
+                        });
+                    }
+
+                    break;
+                }
+            }
+        }
     }
 
     start(fsm, transitionID) {
@@ -677,6 +699,7 @@ class MenuTitle {
         if (!this._myTitleText.active) {
             this._myTitleObject.pp_setActive(true);
             this._mySubtitleObject.pp_setActive(true);
+            Global.myTitlePatchObject.pp_setActive(true);
 
             this._myTitleCenterPosition = [0, 168, -184];
             this._myAppearAudio.setPosition(this._myTitleCenterPosition);
@@ -771,6 +794,7 @@ class MenuTitle {
                 this._myTimer.reset();
                 this._myTitleObject.pp_setActive(false);
                 this._mySubtitleObject.pp_setActive(false);
+                Global.myTitlePatchObject.pp_setActive(false);
             }
         }
     }

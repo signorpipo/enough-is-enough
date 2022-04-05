@@ -199,7 +199,7 @@ class MrNOTVent {
 
                         if (isColliding) {
                             let evidenceComponent = collidingComponent.object.pp_getComponent("evidence-component");
-                            if (evidenceComponent.getEvidence() && evidenceComponent.getEvidence().canHit()) {
+                            if (evidenceComponent && evidenceComponent.getEvidence() && evidenceComponent.getEvidence().canHit()) {
                                 hit = true;
                                 hittingObjects.push(collidingComponent.object);
                             }
@@ -215,7 +215,7 @@ class MrNOTVent {
             if (collisionsStart.length > 0) {
                 for (let collision of collisionsStart) {
                     let evidenceComponent = collision.pp_getComponent("evidence-component");
-                    if (evidenceComponent.getEvidence() && evidenceComponent.getEvidence().canHit()) {
+                    if (evidenceComponent && evidenceComponent.getEvidence() && evidenceComponent.getEvidence().canHit()) {
                         hit = true;
                         hittingObjects.push(collision);
                     }

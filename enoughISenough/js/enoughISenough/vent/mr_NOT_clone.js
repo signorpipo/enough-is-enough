@@ -98,8 +98,8 @@ class MrNOTClone {
         }
         this._mySpinSpeed = rotationSetup.mySpinSpeed.get(Global.myVentDuration) * Math.pp_randomSign();
 
-        this._myTimerBeforeCheckingSeen = new PP.Timer(2);
-        this._myTimerBeforeSettingSeen = new PP.Timer(0.5, false);
+        this._myTimerBeforeCheckingSeen = new PP.Timer(3);
+        this._myTimerBeforeSettingSeen = new PP.Timer(0.75, false);
         this._myMrNOTClonesSeen = Global.mySaveManager.loadBool("mr_NOT_clones_seen", false);
 
         //Setup
@@ -117,7 +117,7 @@ class MrNOTClone {
                     directionToClone.vec3_sub(Global.myPlayerPosition, directionToClone).vec3_normalize(directionToClone);
 
                     let angle = Global.myPlayerForward.vec3_angle(directionToClone);
-                    if (angle < 25) {
+                    if (angle < 20) {
                         this._myTimerBeforeSettingSeen.start();
                     }
                 } else {
@@ -229,7 +229,7 @@ class MrNOTClone {
 
                     if (isColliding) {
                         let evidenceComponent = collidingComponent.object.pp_getComponent("evidence-component");
-                        if (evidenceComponent.getEvidence() && evidenceComponent.getEvidence().canHit()) {
+                        if (evidenceComponent && evidenceComponent.getEvidence() && evidenceComponent.getEvidence().canHit()) {
                             hit = true;
                             hittingObject = collidingComponent.object;
                             break;
