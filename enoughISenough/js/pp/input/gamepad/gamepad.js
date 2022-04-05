@@ -318,9 +318,9 @@ PP.Gamepad = class Gamepad {
 
     start() {
         if (WL.xrSession) {
-            this._onXRSessionStart(WL.xrSession);
+            this._onXRSessionStart(true, WL.xrSession);
         }
-        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
+        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this, false));
         WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
     }
 
@@ -648,7 +648,7 @@ PP.Gamepad = class Gamepad {
         return hapticActuator;
     }
 
-    _onXRSessionStart(session) {
+    _onXRSessionStart(manualStart, session) {
         session.addEventListener("inputsourceschange", function (event) {
             if (event.removed) {
                 for (let item of event.removed) {
@@ -668,6 +668,15 @@ PP.Gamepad = class Gamepad {
                 }
             }
         }.bind(this));
+
+        if (manualStart && this._myInputSource == null && session.inputSources) {
+            for (let item of session.inputSources) {
+                if (item.handedness == this._myHandedness) {
+                    this._myInputSource = item;
+                    this._myGamepad = item.gamepad;
+                }
+            }
+        }
 
         session.addEventListener("selectstart", this._selectStart.bind(this));
         session.addEventListener("selectend", this._selectEnd.bind(this));

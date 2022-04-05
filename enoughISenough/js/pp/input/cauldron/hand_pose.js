@@ -87,9 +87,9 @@ PP.HandPose = class HandPose {
 
     start() {
         if (WL.xrSession) {
-            this._onXRSessionStart(WL.xrSession);
+            this._onXRSessionStart(true, WL.xrSession);
         }
-        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
+        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this, false));
         WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
     }
 
@@ -176,7 +176,7 @@ PP.HandPose = class HandPose {
         }
     }
 
-    _onXRSessionStart(session) {
+    _onXRSessionStart(manualStart, session) {
         session.requestReferenceSpace(WebXR.refSpace).then(function (referenceSpace) { this._myReferenceSpace = referenceSpace; }.bind(this));
 
         session.addEventListener('inputsourceschange', function (event) {
@@ -196,6 +196,14 @@ PP.HandPose = class HandPose {
                 }
             }
         }.bind(this));
+
+        if (manualStart && this._myInputSource == null && session.inputSources) {
+            for (let item of session.inputSources) {
+                if (item.handedness == this._myHandedness) {
+                    this._myInputSource = item;
+                }
+            }
+        }
     }
 
     _onXRSessionEnd(session) {
