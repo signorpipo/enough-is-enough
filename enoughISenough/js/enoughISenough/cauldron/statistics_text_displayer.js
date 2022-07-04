@@ -39,9 +39,9 @@ WL.registerComponent("statistics-text-displayer", {
         text = text.concat("Dispute Best Time: ", this._convertTimeToString(Global.myStatistics.myDisputeBestTime), "\n");
         text = text.concat("Dispute Played: ", Global.myStatistics.myDisputePlayCount, "\n\n");
         text = text.concat("Evidences Thrown: ", Global.myStatistics.myEvidencesThrown, "\n");
+        text = text.concat("Evidences Missed: ", Global.myStatistics.myEvidencesMissed, "\n\n");
         text = text.concat("mr NOT Clones Dismissed: ", Global.myStatistics.myMrNOTClonesDismissed, "\n");
-        text = text.concat("mr NOT Dismissed: ", Global.myStatistics.myMrNOTDismissed, "\n");
-        text = text.concat(" ");
+        text = text.concat("mr NOT Dismissed: ", Global.myStatistics.myMrNOTDismissed);
 
         this._myText.text = text;
     },

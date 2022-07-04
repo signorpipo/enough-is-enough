@@ -200,6 +200,11 @@ class Evidence {
             if ((this._myHitExplosion || this._myBigHitExplosion) && this._myGrabbable.isGrabbed()) {
                 Global.myStatistics.myEvidencesPunched += 1;
             }
+
+            if (this._myHitFloor) {
+                Global.myStatistics.myEvidencesMissed += 1;
+            }
+
         }
 
         if (this._myBigHitExplosion) {
