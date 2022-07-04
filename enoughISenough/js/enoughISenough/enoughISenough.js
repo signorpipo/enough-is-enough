@@ -165,7 +165,7 @@ class enoughISenough {
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/collision.wav");
             audioSetup.myRate = 0.8;
-            audioSetup.myVolume = 0.325;
+            audioSetup.myVolume = 0.5;
             audioSetup.myReferenceDistance = 0.3;
             manager.addAudioSetup(SfxID.COLLISION, audioSetup);
         }
