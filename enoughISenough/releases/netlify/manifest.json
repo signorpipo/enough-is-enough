@@ -5,7 +5,7 @@
 	"lang": "en-US",
 	"display": "standalone",
 	"ovr_package_name": "com.pipo.enoughISenough",
-	"start_url": "insert-url-here",
+	"start_url": "https://enough-is-enough.netlify.app/",
 	"scope": "./",
 	"focusaware": true,
 	"orientation":"landscape",
