@@ -1,0 +1,7 @@
+- update zesty
+	- mettere che c'è sempre una immagine se non carica
+- update casdk to heyvr
+	- assicurarsi che ci sia sempre un errore anche se poi heyvr non funzionerà più o in caso di eccezioni
+	- assicurarsi che il sistema di save, se uso quello di heyvr, funzioni o fallbacki a localStorage se non c'è quello di heyvr
+- update service worker
+- testare che la fisica funzioni quando lo buildo di nuovo, provando prima con la release 0.8.10
