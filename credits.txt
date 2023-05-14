@@ -1,0 +1,6 @@
+Credits
+
+  - Fonts
+    - [Tourney](https://fonts.google.com/specimen/Tourney) by [Tyler Finck](https://fonts.google.com/?query=Tyler+Finck) and [ETC](https://fonts.google.com/?query=ETC)
+	
+  - Made using [PP](https://github.com/SignorPipo/wle_pp)

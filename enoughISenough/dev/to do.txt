@@ -5,3 +5,5 @@
 	- assicurarsi che il sistema di save, se uso quello di heyvr, funzioni o fallbacki a localStorage se non c'è quello di heyvr
 - update service worker
 - testare che la fisica funzioni quando lo buildo di nuovo, provando prima con la release 0.8.10
+- mettere che se la hand pose è invalid la mano viene nascosta
+- lock a 72 fps
