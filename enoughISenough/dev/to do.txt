@@ -1,5 +1,6 @@
 - update zesty
 	- mettere che c'è sempre una immagine se non carica
+	- descrizione: "mr NOT will take care of your customers"
 - update casdk to heyvr
 	- assicurarsi che ci sia sempre un errore anche se poi heyvr non funzionerà più o in caso di eccezioni
 	- assicurarsi che il sistema di save, se uso quello di heyvr, funzioni o fallbacki a localStorage se non c'è quello di heyvr
@@ -7,3 +8,10 @@
 - testare che la fisica funzioni quando lo buildo di nuovo, provando prima con la release 0.8.10
 - mettere che se la hand pose è invalid la mano viene nascosta
 - lock a 72 fps
+- when hand tracking is used select is the grab button (disable select physx)
+- if I make an open link that is more reliable, use that to open links
+- update the link to my itch
+- add intro done gtag event
+- remove the versions of wle from the folder that are not used after I have built the game with the one that works
+	- put the unused in a sub folder as extra or something like that
+- stare attenti a non pubblicare console VR o altro attivi
