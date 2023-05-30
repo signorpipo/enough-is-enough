@@ -1,6 +1,7 @@
 - update zesty
 	- mettere che c'è sempre una immagine se non carica
 	- descrizione: "mr NOT will take care of your customers"
+	- ricordarsi di rimuovere il material.clone dal zesty sdk
 - update casdk to heyvr
 	- assicurarsi che ci sia sempre un errore anche se poi heyvr non funzionerà più o in caso di eccezioni
 	- assicurarsi che il sistema di save, se uso quello di heyvr, funzioni o fallbacki a localStorage se non c'è quello di heyvr
