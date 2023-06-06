@@ -7,3 +7,6 @@
 - testare che la fisica funzioni quando lo buildo di nuovo, provando prima con la release 0.8.10
 - mettere che se la hand pose è invalid la mano viene nascosta
 - lock a 72 fps
+- aggiornare link a itch quando lanci wondermelon
+- aggiungere support a hand tracking? se funziona semplicemente attivando il flag
+	- nel caso mettere che se sono hand non deve uasre squeeze ma select e non li fa diventare rosa per la fisica
