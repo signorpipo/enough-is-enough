@@ -4116,6 +4116,60 @@ PP.XRUtils = {
     },
     isXRSessionActive: function () {
         return WL.xrSession != null;
+    },
+    openLink(url, newTab = true, exitXRSession = true, onSuccessCallback = null, onFailureCallback = null) {
+        if (exitXRSession) {
+            if (WL.xrSession) {
+                WL.xrSession.end();
+            }
+        }
+
+        let element = document.createElement("a");
+
+        element.style.display = "none";
+
+        document.body.appendChild(element);
+
+        element.addEventListener("click", function () {
+            let targetPage = undefined;
+            if (newTab) {
+                targetPage = "_blank";
+            }
+
+            let result = window.open(url, targetPage);
+
+            if (result != null) {
+                if (onSuccessCallback != null) {
+                    onSuccessCallback();
+                }
+            } else {
+                if (onFailureCallback != null) {
+                    onFailureCallback();
+                }
+            }
+        });
+
+        element.click();
+
+        document.body.removeChild(element);
+    },
+    openLinkPersistent(url, newTab = true, exitXRSession = true, timeOutSeconds = null, onSuccessCallback = null, onFailureCallback = null) {
+        let totalSeconds = 0;
+        let secondsTillNextAttempt = 0.5;
+        let onPersistentFailureCallback = function (...args) {
+            if (timeOutSeconds != null && totalSeconds >= timeOutSeconds) {
+                if (onFailureCallback != null) {
+                    onFailureCallback(...args);
+                }
+            } else {
+                totalSeconds += secondsTillNextAttempt;
+                setTimeout(function () {
+                    PP.XRUtils.openLink(url, newTab, exitXRSession, onSuccessCallback, onPersistentFailureCallback);
+                }, secondsTillNextAttempt * 1000);
+            }
+        };
+
+        PP.XRUtils.openLink(url, newTab, exitXRSession, onSuccessCallback, onPersistentFailureCallback);
     }
 };
 PP.DebugAxes = class DebugAxes {
@@ -5154,7 +5208,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
     },
     start: function () {
         let version = Global.mySaveManager.loadNumber("game_version", 0);
-        Global.myGameVersion = 12;
+        Global.myGameVersion = 13;
 
         let minVersionToReset = 6;
         if (version < minVersionToReset) {
@@ -14837,6 +14891,10 @@ class IntroState extends PP.State {
                         "value": 1
                     });
 
+                    gtag("event", "intro_done", {
+                        "value": 1
+                    });
+
                     gtag("event", "intro_skipped_time", {
                         "value": this._myIntroDuration.toFixed(2)
                     });
@@ -14954,6 +15012,10 @@ class IntroState extends PP.State {
                 "value": 1
             });
 
+            gtag("event", "intro_done", {
+                "value": 1
+            });
+
             if (!this._myXRSessionStartCalled) {
                 gtag("event", "xr_session_not_started", {
                     "value": 1
@@ -14975,8 +15037,16 @@ class IntroState extends PP.State {
         }
     }
 
-    _onXRSessionStart() {
+    _onXRSessionStart(session) {
         this._myXRSessionStartCalled = true;
+
+        if (session.supportedFrameRates && session.updateTargetFrameRate) {
+            let targetFramerate = 72;
+
+            let supportedFrameRates = session.supportedFrameRates;
+            supportedFrameRates.sort((first, second) => Math.abs(first - targetFramerate) - Math.abs(second - targetFramerate));
+            session.updateTargetFrameRate(supportedFrameRates[0]);
+        }
     }
 }
 class MainFSM {
@@ -15500,10 +15570,7 @@ class MenuState extends PP.State {
                     });
                 }
 
-                if (WL.xrSession) {
-                    WL.xrSession.end();
-                }
-                window.open("https://elia-ducceschi.itch.io/not-enough", "_blank");
+                PP.XRUtils.openLinkPersistent("https://signor-pipo.itch.io/not-enough", true, true, 10);
             }.bind(this));
             this._myMenuItems.push(wondermelon);
         }
