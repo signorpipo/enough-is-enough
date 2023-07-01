@@ -387,6 +387,12 @@
                         "_mySpecularMultiplier": 2.0
                     },
                     "active": true
+                },
+                {
+                    "type": "target-framerate",
+                    "target-framerate": {
+                        "framerate": 72.0
+                    }
                 }
             ]
         },
@@ -25388,7 +25394,7 @@
             "usePreZ": false
         },
         "runtime": {
-            "xrButtonColor": "492f82",
+            "xrButtonColor": "492d85",
             "webxr": {
                 "requiredFeatures": {
                     "local-floor": false

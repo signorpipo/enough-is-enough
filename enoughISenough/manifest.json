@@ -9,7 +9,7 @@
 	"scope": "./",
 	"focusaware": true,
 	"orientation": "landscape",
-	"theme_color": "#492f82",
+	"theme_color": "#492d85",
 	"background_color": "#000000",
 	"icons": [
 		{
