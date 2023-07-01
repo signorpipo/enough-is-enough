@@ -17,6 +17,12 @@ PP.HandPose = class HandPose {
 
         this._myLinearVelocity = [0, 0, 0];
         this._myAngularVelocity = [0, 0, 0]; // Radians
+
+        this._myValid = false;
+    }
+
+    isValid() {
+        return this._myValid;
     }
 
     getReferenceSpace() {
@@ -130,6 +136,8 @@ PP.HandPose = class HandPose {
                 } else {
                     this._computeEmulatedAngularVelocity(dt);
                 }
+
+                this._myValid = true;
             } else {
                 //keep previous position and rotation but reset velocity because reasons
 
@@ -140,6 +148,8 @@ PP.HandPose = class HandPose {
                 this._myAngularVelocity[0] = 0;
                 this._myAngularVelocity[1] = 0;
                 this._myAngularVelocity[2] = 0;
+
+                this._myValid = false;
             }
         } else {
             //keep previous position and rotation but reset velocity because reasons
@@ -151,6 +161,8 @@ PP.HandPose = class HandPose {
             this._myAngularVelocity[0] = 0;
             this._myAngularVelocity[1] = 0;
             this._myAngularVelocity[2] = 0;
+
+            this._myValid = false;
         }
     }
 

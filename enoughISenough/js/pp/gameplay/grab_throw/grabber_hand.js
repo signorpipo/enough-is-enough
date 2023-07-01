@@ -70,6 +70,10 @@ WL.registerComponent('pp-grabber-hand', {
             this._updateLinearVelocityHistory();
             this._updateAngularVelocityHistory();
         }
+
+        if (!this._myHandPose.isValid()) {
+            this.throw();
+        }
     },
     grab: function (grabButton = null) {
         this._grab(grabButton);
