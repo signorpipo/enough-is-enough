@@ -25388,7 +25388,7 @@
             "usePreZ": false
         },
         "runtime": {
-            "xrButtonColor": "553388",
+            "xrButtonColor": "492f82",
             "webxr": {
                 "requiredFeatures": {
                     "local-floor": false
