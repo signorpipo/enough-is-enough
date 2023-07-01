@@ -2,11 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-  <link rel="preload" href="enough IS enough-bundle.js?t=2022-07-04T14:30:42.633" as="script">
+  <link rel="preload" href="enough IS enough-bundle.js" as="script">
   <title>mr NOT - enough IS enough</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#7d59b3">
+  <meta name="theme-color" content="#4d2c7f">
 
   <style>
     html {
@@ -50,11 +50,11 @@
     }
 
     .xr-button-label {
-      fill: #7d59b3;
+      fill: #4d2c7f;
     }
 
     .xr-button-frame {
-      stroke: #7d59b3;
+      stroke: #4d2c7f;
     }
   </style>
   <script>
@@ -74,7 +74,7 @@
     }
   </script>
 
-  <script src="wonderland.min.js?t=2022-07-04T14:30:42.633"></script>
+  <script src="wonderland.min.js"></script>
   <script type="module">
     import { simd, threads } from "./wasm-featuredetect.js";
 
@@ -93,7 +93,7 @@
           s.onload = () => {
             const bundle = document.createElement('script');
             bundle.id = 'bundle';
-            bundle.src = "enough IS enough-bundle.js?t=2022-07-04T14:30:42.633";
+            bundle.src = "enough IS enough-bundle.js";
             document.body.appendChild(bundle);
           };
           s.src = runtime + '.js';
