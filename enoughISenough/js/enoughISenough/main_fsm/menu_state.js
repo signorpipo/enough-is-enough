@@ -407,10 +407,7 @@ class MenuState extends PP.State {
                     });
                 }
 
-                if (WL.xrSession) {
-                    WL.xrSession.end();
-                }
-                window.open("https://elia-ducceschi.itch.io/not-enough", "_blank");
+                PP.XRUtils.openLinkPersistent("https://signor-pipo.itch.io/not-enough", true, true, 10);
             }.bind(this));
             this._myMenuItems.push(wondermelon);
         }

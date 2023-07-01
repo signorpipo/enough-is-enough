@@ -1,0 +1,66 @@
+{
+	"name": "mr NOT - enough IS enough",
+	"short_name": "mr NOT - enoush IS enough",
+	"description": "don't make me wait",
+	"lang": "en-US",
+	"display": "standalone",
+	"ovr_package_name": "com.pipo.enoughISenough",
+	"start_url": "https://enough-is-enough.netlify.app/",
+	"scope": "./",
+	"focusaware": true,
+	"orientation": "landscape",
+	"theme_color": "#ffffff",
+	"background_color": "#000000",
+	"icons": [
+		{
+			"src": "icon512.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "any"
+		},
+		{
+			"src": "icon192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "any"
+		},
+		{
+			"src": "icon168.png",
+			"sizes": "168x168",
+			"type": "image/png",
+			"purpose": "maskable"
+		},
+		{
+			"src": "icon144.png",
+			"sizes": "144x144",
+			"type": "image/png",
+			"purpose": "maskable"
+		},
+		{
+			"src": "icon96.png",
+			"sizes": "96x96",
+			"type": "image/png",
+			"purpose": "maskable"
+		},
+		{
+			"src": "icon72.png",
+			"sizes": "72x72",
+			"type": "image/png",
+			"purpose": "maskable"
+		},
+		{
+			"src": "icon48.png",
+			"sizes": "48x48",
+			"type": "image/png",
+			"purpose": "maskable"
+		}
+	],
+	"screenshots": [
+		{
+			"src": "pwa/screenshots/dont_make_me_wait.png",
+			"sizes": "2560x1440",
+			"type": "image/png",
+			"description": "don't make me wait"
+		}
+	]
+}
