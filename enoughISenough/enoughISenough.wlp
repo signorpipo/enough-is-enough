@@ -10697,12 +10697,11 @@
                 {
                     "type": "zesty-banner",
                     "zesty-banner": {
-                        "creator": "0x7f0b3f1CFb2B35433EFde2419B4Fa27D1094d7AF",
+                        "createAutomaticCollision": false,
                         "format": "tall",
                         "style": "standard",
-                        "beacon": true,
-                        "space": 129,
-                        "createAutomaticCollision": false
+                        "textureProperty": "diffuseTexture",
+                        "adUnit": "fe866e85-0faf-4d17-b7a0-ac19d9210438"
                     }
                 }
             ],
@@ -17781,7 +17780,7 @@
             ],
             "transformation": [
                 -0.136,
-                -1.188944320773544e-8,
+                -1.1889443207735441e-8,
                 3.850477270361807e-8,
                 0.0,
                 -3.8504133215155898e-8,
@@ -24674,7 +24673,16 @@
             "link": {
                 "name": "Phong Opaque Textured",
                 "file": "default"
-            }
+            },
+            "blending": true,
+            "blendSrc": "source alpha",
+            "blendDest": "one minus source alpha",
+            "blendEqAlpha": "max",
+            "depthFunction": "less or equal",
+            "features": {
+                "TEXTURED": true
+            },
+            "doubleSided": false
         },
         "82": {
             "link": {
