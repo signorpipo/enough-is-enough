@@ -26,17 +26,19 @@ WL.registerComponent("activate-on-select", {
         this._myCollisionPitch = this._myCollisionAudio.getPitch();
 
         this._myAnalyticsTimer = new PP.Timer(0);
+
+        this._myHandednessType = PP.InputUtils.getHandednessByIndex(this._myHandedness);
     },
     update(dt) {
         this._myAnalyticsTimer.update(dt);
 
-        if (!Global.myEnableSelectPhysx) {
+        if (!Global.myEnableSelectPhysx || PP.InputUtils.getInputSourceType(this._myHandednessType) != PP.InputSourceType.GAMEPAD) {
             this._myPhysx.active = false;
             this._myTriggerPhysx.active = false;
         }
     },
     _selectPressStart() {
-        if (Global.myEnableSelectPhysx) {
+        if (Global.myEnableSelectPhysx && PP.InputUtils.getInputSourceType(this._myHandednessType) == PP.InputSourceType.GAMEPAD) {
             this._myPhysx.active = true;
             this._myTriggerPhysx.active = true;
 

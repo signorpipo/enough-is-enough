@@ -61,6 +61,8 @@ WL.registerComponent('pp-grabber-hand', {
                 this._myDebugLines.push(line);
             }
         }
+
+        this._myLastInputSourceType = PP.InputUtils.getInputSourceType(this._myHandPose._myHandedness);
     },
     update: function (dt) {
         this._myCollisionsCollector.update(dt);
@@ -71,8 +73,27 @@ WL.registerComponent('pp-grabber-hand', {
             this._updateAngularVelocityHistory();
         }
 
+        if (this._myLastInputSourceType != PP.InputUtils.getInputSourceType(this._myHandPose._myHandedness)) {
+            this._myLastInputSourceType = PP.InputUtils.getInputSourceType(this._myHandPose._myHandedness);
+            this.throw();
+        }
+
         if (!this._myHandPose.isValid()) {
             this.throw();
+        } else {
+            if (PP.InputUtils.getInputSourceType(this._myHandPose._myHandedness) != PP.InputSourceType.GAMEPAD) {
+                if (this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressStart()) {
+                    this._grab(PP.ButtonType.SELECT);
+                } else if (this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd()) {
+                    this._throw(PP.ButtonType.SELECT);
+                }
+
+                if (this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressStart()) {
+                    this._grab(PP.ButtonType.SQUEEZE);
+                } else if (this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd()) {
+                    this._throw(PP.ButtonType.SQUEEZE);
+                }
+            }
         }
     },
     grab: function (grabButton = null) {

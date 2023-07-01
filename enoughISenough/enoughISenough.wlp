@@ -25388,14 +25388,14 @@
             "usePreZ": false
         },
         "runtime": {
-            "xrButtonColor": "492d85",
+            "xrButtonColor": "#492d85",
             "webxr": {
                 "requiredFeatures": {
                     "local-floor": false
                 },
                 "optionalFeatures": {
                     "local-floor": false,
-                    "hand-tracking": false
+                    "hand-tracking": true
                 }
             },
             "visualizeColliders": false,

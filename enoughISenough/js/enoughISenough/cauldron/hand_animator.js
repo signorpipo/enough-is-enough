@@ -67,7 +67,17 @@ WL.registerComponent("hand-animator", {
         this._myHandPose.update(dt);
 
         for (let piece of this._myHandPieces) {
-            piece.update(dt, this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).myValue);
+            if (PP.InputUtils.getInputSourceType(this._myHandPose._myHandedness) == PP.InputSourceType.GAMEPAD) {
+                piece.update(dt, this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).myValue);
+            } else {
+                let pressValue = 0;
+                if (this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).myIsPressed || this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).myIsPressed) {
+                    pressValue = 1;
+                }
+
+                piece.update(dt, pressValue);
+            }
+
             piece.setVisible(this._myHandPose.isValid());
         }
 

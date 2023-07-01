@@ -88,26 +88,22 @@
     function loadRuntime(simd, threads) {
 
       let runtime = 'WonderlandRuntime-physx' + (simd ? '-simd' : '') + (threads ? '-threads' : '')
-      Module.worker = runtime + ".worker.js";
 
-      fetch(runtime + ".wasm")
-        .then(r => r.arrayBuffer())
-        .then(wasm => {
-          Module.wasm = wasm;
+      const s = document.createElement('script');
+      document.body.appendChild(s);
+      const bundle = document.createElement('script');
+      bundle.id = 'bundle';
+      document.body.appendChild(bundle);
 
-          const s = document.createElement('script');
-          /* We need to ensure the bundle is loaded after the runtime js always */
-          s.onload = () => {
-            const bundle = document.createElement('script');
-            bundle.id = 'bundle';
-            bundle.src = "enough IS enough-bundle.js";
-            document.body.appendChild(bundle);
-          };
-          s.src = runtime + '.js';
-
-          document.body.appendChild(s);
-        })
-        .catch(console.error);
+      /* We need to ensure the bundle is loaded after the runtime js always */
+      Module.preRun = function () {
+        addRunDependency('bundle');
+        bundle.onload = () => {
+          removeRunDependency('bundle');
+        };
+        bundle.src = "enough IS enough-bundle.js";
+      }
+      s.src = runtime + '.js';
     }
 
     WL.onXRSupported.push((type, supported) => {
@@ -152,7 +148,8 @@
 <body>
   <canvas id="canvas" style="width: 100%; height: 100%; display: block;" tabindex="0"></canvas>
   <div class="xr-button-container">
-    <a id="vr-button" onclick="Module['webxr_request_session_func']('immersive-vr', ['local',], ['local','hit-test',])">
+    <a id="vr-button"
+      onclick="Module['webxr_request_session_func']('immersive-vr', ['local',], ['local','hand-tracking','hit-test',])">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 109.41 65">
         <rect class="xr-button-frame" x="3.5" y="3.5" width="102.41" height="58" rx="16.68"
           style="fill:none;stroke-linejoin:round;stroke-width:7px" />
