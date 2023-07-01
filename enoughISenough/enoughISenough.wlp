@@ -17781,7 +17781,7 @@
             ],
             "transformation": [
                 -0.136,
-                -1.1889443207735441e-8,
+                -1.188944320773544e-8,
                 3.850477270361807e-8,
                 0.0,
                 -3.8504133215155898e-8,
@@ -19691,7 +19691,7 @@
                 0.0,
                 0.0199999,
                 0.0,
-                -2.9802322387695315e-8,
+                -2.9802322387695329e-8,
                 -0.0259817,
                 -0.0011606,
                 1.0
@@ -19761,10 +19761,10 @@
                 0.0,
                 0.0,
                 0.6,
-                4.470348358154297e-8,
+                4.4703483581542978e-8,
                 0.0,
                 0.0,
-                -7.450576333667414e-8,
+                -7.450576333667416e-8,
                 0.9999994,
                 0.0,
                 0.0,
@@ -22033,6 +22033,12 @@
                 "name": "P8_palette.png",
                 "file": "assets\\textures\\P8_palette.png"
             }
+        },
+        "1429": {
+            "link": {
+                "name": "icon.png",
+                "file": "assets\\icons\\icon.png"
+            }
         }
     },
     "images": {
@@ -22046,7 +22052,15 @@
             "link": {
                 "name": "P8_palette.png",
                 "file": "assets\\textures\\P8_palette.png"
-            }
+            },
+            "compress": false
+        },
+        "1428": {
+            "link": {
+                "name": "icon.png",
+                "file": "assets\\icons\\icon.png"
+            },
+            "compress": false
         }
     },
     "materials": {
@@ -25306,7 +25320,8 @@
                 0,
                 8,
                 10
-            ]
+            ],
+            "customIndexHtml": true
         },
         "vr": {
             "leftEyeObject": "18",
@@ -25373,7 +25388,7 @@
             "usePreZ": false
         },
         "runtime": {
-            "xrButtonColor": "white",
+            "xrButtonColor": "553388",
             "webxr": {
                 "requiredFeatures": {
                     "local-floor": false
@@ -25386,7 +25401,13 @@
             "visualizeColliders": false,
             "enableRuntimeGltf": false,
             "visualizePhysX": false,
-            "googleAnalytics": ""
+            "googleAnalytics": "G-KN2L5E21YD",
+            "pwa": {
+                "appIcon": "1428",
+                "customManifest": true,
+                "customServiceWorker": true,
+                "enable": true
+            }
         },
         "physx": {
             "enable": true,
@@ -25468,7 +25489,8 @@
         "assets/models/evidences/ethereum_physx.fbx",
         "assets/models/evidences/arcade_stick_f.fbx",
         "assets/models/evidences/frame_f.fbx",
-        "assets/models/evidences/floppy_f.fbx"
+        "assets/models/evidences/floppy_f.fbx",
+        "assets/icons/icon.png"
     ],
     "pipelines": {
         "69": {
