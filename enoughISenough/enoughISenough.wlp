@@ -24695,8 +24695,8 @@
             },
             "name": "Phong Alpha",
             "features": {
-                "ALPHA": true,
-                "ALPHA_MASKED": true,
+                "ALPHA": false,
+                "ALPHA_MASKED": false,
                 "WITH_FOG": true
             },
             "blending": true,
