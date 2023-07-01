@@ -46,13 +46,7 @@ PP.HandPose = class HandPose {
     }
 
     getRotationQuat() {
-        let out = this._myRotation.slice(0);
-
-        if (this._myFixForward) {
-            out = glMatrix.quat.rotateY(out, out, Math.PI);
-        }
-
-        return out;
+        // Implemented outside class definition
     }
 
     getTransform() {
@@ -223,3 +217,23 @@ PP.HandPose = class HandPose {
         this._myInputSource = null;
     }
 };
+
+PP.HandPose.prototype.getRotationQuat = function () {
+    let up = glMatrix.vec3.create();
+    let right = glMatrix.vec3.create();
+    return function getRotationQuat() {
+        let out = this._myRotation.slice(0);
+
+        if (PP.InputUtils.getInputSourceType(this._myHandedness) == PP.InputSourceType.HAND) {
+            if (this._myFixForward) {
+                out.quat_rotateAxisDegrees(180, out.quat_getUp(up), out);
+            }
+
+            out.quat_rotateAxisDegrees(-90, out.quat_getRight(right), out);
+        } else if (this._myFixForward) {
+            out = glMatrix.quat.rotateY(out, out, Math.PI);
+        }
+
+        return out;
+    };
+}();
