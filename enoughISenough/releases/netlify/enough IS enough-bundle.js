@@ -217,6 +217,8 @@ WL.registerComponent('pp-grabber-hand', {
                 this._myDebugLines.push(line);
             }
         }
+
+        this._myLastInputSourceType = PP.InputUtils.getInputSourceType(this._myHandPose._myHandedness);
     },
     update: function (dt) {
         this._myCollisionsCollector.update(dt);
@@ -225,6 +227,29 @@ WL.registerComponent('pp-grabber-hand', {
         if (this._myGrabbables.length > 0) {
             this._updateLinearVelocityHistory();
             this._updateAngularVelocityHistory();
+        }
+
+        if (this._myLastInputSourceType != PP.InputUtils.getInputSourceType(this._myHandPose._myHandedness)) {
+            this._myLastInputSourceType = PP.InputUtils.getInputSourceType(this._myHandPose._myHandedness);
+            this.throw();
+        }
+
+        if (!this._myHandPose.isValid()) {
+            this.throw();
+        } else {
+            if (PP.InputUtils.getInputSourceType(this._myHandPose._myHandedness) != PP.InputSourceType.GAMEPAD) {
+                if (this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressStart()) {
+                    this._grab(PP.ButtonType.SELECT);
+                } else if (this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd()) {
+                    this._throw(PP.ButtonType.SELECT);
+                }
+
+                if (this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressStart()) {
+                    this._grab(PP.ButtonType.SQUEEZE);
+                } else if (this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd()) {
+                    this._throw(PP.ButtonType.SQUEEZE);
+                }
+            }
         }
     },
     grab: function (grabButton = null) {
@@ -654,6 +679,12 @@ PP.HandPose = class HandPose {
 
         this._myLinearVelocity = [0, 0, 0];
         this._myAngularVelocity = [0, 0, 0]; // Radians
+
+        this._myValid = false;
+    }
+
+    isValid() {
+        return this._myValid;
     }
 
     getReferenceSpace() {
@@ -677,13 +708,7 @@ PP.HandPose = class HandPose {
     }
 
     getRotationQuat() {
-        let out = this._myRotation.slice(0);
-
-        if (this._myFixForward) {
-            out = glMatrix.quat.rotateY(out, out, Math.PI);
-        }
-
-        return out;
+        // Implemented outside class definition
     }
 
     getTransform() {
@@ -767,6 +792,8 @@ PP.HandPose = class HandPose {
                 } else {
                     this._computeEmulatedAngularVelocity(dt);
                 }
+
+                this._myValid = true;
             } else {
                 //keep previous position and rotation but reset velocity because reasons
 
@@ -777,6 +804,8 @@ PP.HandPose = class HandPose {
                 this._myAngularVelocity[0] = 0;
                 this._myAngularVelocity[1] = 0;
                 this._myAngularVelocity[2] = 0;
+
+                this._myValid = false;
             }
         } else {
             //keep previous position and rotation but reset velocity because reasons
@@ -788,6 +817,8 @@ PP.HandPose = class HandPose {
             this._myAngularVelocity[0] = 0;
             this._myAngularVelocity[1] = 0;
             this._myAngularVelocity[2] = 0;
+
+            this._myValid = false;
         }
     }
 
@@ -848,6 +879,26 @@ PP.HandPose = class HandPose {
         this._myInputSource = null;
     }
 };
+
+PP.HandPose.prototype.getRotationQuat = function () {
+    let up = glMatrix.vec3.create();
+    let right = glMatrix.vec3.create();
+    return function getRotationQuat() {
+        let out = this._myRotation.slice(0);
+
+        if (PP.InputUtils.getInputSourceType(this._myHandedness) == PP.InputSourceType.HAND) {
+            if (this._myFixForward) {
+                out.quat_rotateAxisDegrees(180, out.quat_getUp(up), out);
+            }
+
+            out.quat_rotateAxisDegrees(-90, out.quat_getRight(right), out);
+        } else if (this._myFixForward) {
+            out = glMatrix.quat.rotateY(out, out, Math.PI);
+        }
+
+        return out;
+    };
+}();
 PP.HeadPose = class HeadPose {
 
     constructor(fixForward = true, forceEmulatedVelocities = false) {
@@ -3610,9 +3661,6 @@ PP.CAUtils = {
     setDummyServer: function (dummyServer) {
         PP.CAUtils._myDummyServer = dummyServer;
     },
-    isSDKAvailable: function () {
-        return "casdk" in window;
-    },
     isUseDummyServerOnSDKMissing: function () {
         return PP.CAUtils._myUseDummyServerOnSDKMissing;
     },
@@ -3621,6 +3669,9 @@ PP.CAUtils = {
     },
     getDummyServer: function () {
         return PP.CAUtils._myDummyServer;
+    },
+    isSDKAvailable: function () {
+        return "casdk" in window;
     },
     getLeaderboard: function (leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError, overrideUseDummyServer = null) {
         if (PP.CAUtils.isSDKAvailable()) {
@@ -3631,7 +3682,8 @@ PP.CAUtils = {
                             callbackOnDone(result.leaderboard);
                         }
                     } else {
-                        if ((PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                        if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
+                            (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                             PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
                         } else if (callbackOnError) {
                             let error = {};
@@ -3639,6 +3691,16 @@ PP.CAUtils = {
                             error.type = PP.CAUtils.ErrorType.GET_LEADERBOARD_FAILED;
                             callbackOnError(error, result);
                         }
+                    }
+                }).catch(function (result) {
+                    if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
+                        (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                        PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
+                    } else if (callbackOnError) {
+                        let error = {};
+                        error.reason = "Get leaderboard failed";
+                        error.type = PP.CAUtils.ErrorType.GET_LEADERBOARD_FAILED;
+                        callbackOnError(error, result);
                     }
                 });
             } else {
@@ -3659,7 +3721,8 @@ PP.CAUtils = {
                                         callbackOnDone(result.leaderboard);
                                     }
                                 } else {
-                                    if ((PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                                    if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
+                                        (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                                         PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
                                     } else if (callbackOnError) {
                                         let error = {};
@@ -3669,7 +3732,8 @@ PP.CAUtils = {
                                     }
                                 }
                             } else {
-                                if ((PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                                if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
+                                    (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                                     PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
                                 } else if (callbackOnError) {
                                     let error = {};
@@ -3678,11 +3742,22 @@ PP.CAUtils = {
                                     callbackOnError(error, result);
                                 }
                             }
+                        }).catch(function (result) {
+                            if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
+                                (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                                PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
+                            } else if (callbackOnError) {
+                                let error = {};
+                                error.reason = "Get leaderboard failed";
+                                error.type = PP.CAUtils.ErrorType.GET_LEADERBOARD_FAILED;
+                                callbackOnError(error, result);
+                            }
                         });
 
                     },
                     function () {
-                        if ((PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                        if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
+                            (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                             PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
                         } else if (callbackOnError) {
                             let error = {};
@@ -3694,7 +3769,8 @@ PP.CAUtils = {
                     false);
             }
         } else {
-            if ((PP.CAUtils._myUseDummyServerOnSDKMissing && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+            if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
+                (PP.CAUtils._myUseDummyServerOnSDKMissing && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                 PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
             } else if (callbackOnError) {
                 let error = {};
@@ -3720,7 +3796,8 @@ PP.CAUtils = {
         if (PP.CAUtils.isSDKAvailable()) {
             casdk.submitScore(leaderboardID, scoreToSubmit).then(function (result) {
                 if (result.error) {
-                    if ((PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                    if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.submitScore != null &&
+                        (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                         PP.CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError);
                     } else if (callbackOnError) {
                         let error = {};
@@ -3731,9 +3808,20 @@ PP.CAUtils = {
                 } else {
                     callbackOnDone();
                 }
+            }).catch(function (result) {
+                if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.submitScore != null &&
+                    (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                    PP.CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError);
+                } else if (callbackOnError) {
+                    let error = {};
+                    error.reason = "Submit score failed";
+                    error.type = PP.CAUtils.ErrorType.SUBMIT_SCORE_FAILED;
+                    callbackOnError(error, result);
+                }
             });
         } else {
-            if ((PP.CAUtils._myUseDummyServerOnSDKMissing && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+            if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.submitScore != null &&
+                (PP.CAUtils._myUseDummyServerOnSDKMissing && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                 PP.CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError);
             } else if (callbackOnError) {
                 let error = {};
@@ -3763,7 +3851,8 @@ PP.CAUtils = {
                         callbackOnDone(result.user);
                     }
                 } else {
-                    if ((PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                    if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getUser != null &&
+                        (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                         PP.CAUtils.getUserDummy(callbackOnDone, callbackOnError);
                     } else if (callbackOnError) {
                         let error = {};
@@ -3772,9 +3861,20 @@ PP.CAUtils = {
                         callbackOnError(error, result);
                     }
                 }
+            }).catch(function (result) {
+                if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getUser != null &&
+                    (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                    PP.CAUtils.getUserDummy(callbackOnDone, callbackOnError);
+                } else if (callbackOnError) {
+                    let error = {};
+                    error.reason = "Get user failed";
+                    error.type = PP.CAUtils.ErrorType.GET_USER_FAILED;
+                    callbackOnError(error, result);
+                }
             });
         } else {
-            if ((PP.CAUtils._myUseDummyServerOnSDKMissing && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+            if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getUser != null &&
+                (PP.CAUtils._myUseDummyServerOnSDKMissing && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                 PP.CAUtils.getUserDummy(callbackOnDone, callbackOnError);
             } else if (callbackOnError) {
                 let error = {};
@@ -3814,30 +3914,47 @@ PP.CADummyServer = class CADummyServer {
     getLeaderboard(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError) {
         let leaderboard = null;
 
-        if (isAroundPlayer) {
+        if (PP.CAUtils.isSDKAvailable()) {
             leaderboard = [
-                { rank: 7, displayName: "Player 1", score: 1000000 },
-                { rank: 8, displayName: "Player 2", score: 1000000 },
-                { rank: 9, displayName: "Player 3", score: 900000 },
-                { rank: 10, displayName: "Player 4", score: 800000 },
-                { rank: 11111, displayName: "Player 5", score: 70000000 },
-                { rank: 22222, displayName: "VeryLongName_06", score: 600000 },
-                { rank: 33333, displayName: "Player 7", score: 500000 },
-                { rank: 44444, displayName: "Player 8", score: 400000 },
-                { rank: 55555, displayName: "Player 9", score: 300000 },
-                { rank: 66666, displayName: "Player 10", score: 200000 }];
+                { rank: 0, displayName: "An", score: 0 },
+                { rank: 1, displayName: "Error", score: 0 },
+                { rank: 2, displayName: "Has", score: 0 },
+                { rank: 3, displayName: "Occurred", score: 0 },
+                { rank: 4, displayName: "While", score: 0 },
+                { rank: 5, displayName: "Trying", score: 0 },
+                { rank: 6, displayName: "To", score: 0 },
+                { rank: 7, displayName: "Retrieve", score: 0 },
+                { rank: 8, displayName: "The", score: 0 },
+                { rank: 9, displayName: "Leaderboard", score: 0 }
+            ];
         } else {
-            leaderboard = [
-                { rank: 0, displayName: "Player 1", score: 1000000 },
-                { rank: 1, displayName: "Player 2", score: 1000000 },
-                { rank: 2, displayName: "Player 3", score: 900000 },
-                { rank: 3, displayName: "Player 4", score: 800000 },
-                { rank: 4, displayName: "Player 5", score: 700000 },
-                { rank: 5, displayName: "Player 6", score: 600000 },
-                { rank: 6, displayName: "Player 7", score: 500000 },
-                { rank: 7, displayName: "Player 8", score: 400000 },
-                { rank: 8, displayName: "Player 9", score: 300000 },
-                { rank: 9, displayName: "Player 10", score: 200000 }];
+            if (isAroundPlayer) {
+                leaderboard = [
+                    { rank: 0, displayName: "Sign In", score: 0 },
+                    { rank: 1, displayName: "And", score: 0 },
+                    { rank: 2, displayName: "Play", score: 0 },
+                    { rank: 3, displayName: "On", score: 0 },
+                    { rank: 4, displayName: "HeyVR", score: 0 },
+                    { rank: 5, displayName: "To", score: 0 },
+                    { rank: 6, displayName: "Submit", score: 0 },
+                    { rank: 7, displayName: "Your", score: 0 },
+                    { rank: 8, displayName: "Own", score: 0 },
+                    { rank: 9, displayName: "Score", score: 0 }
+                ];
+            } else {
+                leaderboard = [
+                    { rank: 0, displayName: "The", score: 0 },
+                    { rank: 1, displayName: "Top 10", score: 0 },
+                    { rank: 2, displayName: "Leaderboard", score: 0 },
+                    { rank: 3, displayName: "Is", score: 0 },
+                    { rank: 4, displayName: "Available", score: 0 },
+                    { rank: 5, displayName: "Only", score: 0 },
+                    { rank: 5, displayName: "When", score: 0 },
+                    { rank: 7, displayName: "Playing", score: 0 },
+                    { rank: 8, displayName: "On", score: 0 },
+                    { rank: 9, displayName: "HeyVR", score: 0 },
+                ];
+            }
         }
 
         while (leaderboard.length > scoresAmount) {
@@ -4121,6 +4238,7 @@ PP.XRUtils = {
         if (exitXRSession) {
             if (WL.xrSession) {
                 WL.xrSession.end();
+                Global.myXRSessionActiveOpenLinkExtraCheck = false;
             }
         }
 
@@ -5187,7 +5305,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         Global.myMeshNoFogObjectPoolMap = new PP.ObjectPoolManager();
         Global.myGameObjectPoolMap = new PP.ObjectPoolManager();
         Global.mySaveManager = new PP.SaveManager();
-        //Global.mySaveManager.clear();
+        //Global.mySaveManager.clear(); 
         Global.myScene = this.object;
 
         Global.myPlayerRumbleObject = this._myPlayerRumbleObject;
@@ -5208,7 +5326,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
     },
     start: function () {
         let version = Global.mySaveManager.loadNumber("game_version", 0);
-        Global.myGameVersion = 13;
+        Global.myGameVersion = 14;
 
         let minVersionToReset = 6;
         if (version < minVersionToReset) {
@@ -5222,6 +5340,12 @@ WL.registerComponent("enough-IS-enough-gateway", {
         let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
         let trialCompleted = Global.mySaveManager.loadBool("trial_completed", false);
         Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialPhase >= 2);
+
+        if (WL.xrSession) {
+            this._onXRSessionStart(WL.xrSession);
+        }
+        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
+        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
     },
     update: function (dt) {
         if (this._myFirstUpdate) {
@@ -5256,15 +5380,9 @@ WL.registerComponent("enough-IS-enough-gateway", {
                 Global.mySaveManager.update(dt * Global.myDeltaTimeSpeed);
             }
 
-            if (Global.myZestyToClick != null) {
-                if (Global.myGoogleAnalytics) {
-                    gtag("event", "zesty_market_opened", {
-                        "value": 1
-                    });
-                }
-
-                Global.myZestyToClick.onClick();
-                Global.myZestyToClick = null;
+            if (Global.myUnmute && PP.XRUtils.isXRSessionActive() && Global.myXRSessionActiveOpenLinkExtraCheck) {
+                Global.myUnmute = false;
+                Howler.mute(false);
             }
         }
     },
@@ -5393,6 +5511,12 @@ WL.registerComponent("enough-IS-enough-gateway", {
                 console.clear();
             }
         }
+    },
+    _onXRSessionStart(session) {
+        Global.myXRSessionActiveOpenLinkExtraCheck = true;
+    },
+    _onXRSessionEnd() {
+        Global.myXRSessionActiveOpenLinkExtraCheck = false;
     }
 });
 
@@ -5435,14 +5559,15 @@ var Global = {
     myStatistics: null,
     myIsInMenu: false,
     myIsInArcadeResult: false,
-    myZestyToClick: null,
     myEnableSelectPhysx: false,
     mySaveManager: null,
     myDebugCurrentVentObject: null,
     myPlayMusic: false,
     myStopMusic: false,
     myGameVersion: 0,
-    myGoogleAnalytics: false
+    myGoogleAnalytics: false,
+    myUnmute: false,
+    myXRSessionActiveOpenLinkExtraCheck: false
 };
 WL.registerComponent('pp-tool-cursor', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
@@ -6547,6 +6672,58 @@ Array.prototype.quat_toMatrix = function (out = glMatrix.mat3.create()) {
     glMatrix.mat3.fromQuat(out, this);
     return out;
 };
+
+Array.prototype.quat_rotateAxisDegrees = function () {
+    let secondQuat = glMatrix.quat.create();
+    return function quat_rotateAxisDegrees(angle, axis, out = glMatrix.quat.create()) {
+        secondQuat.quat_fromAxisAngleDegrees(axis, angle);
+        return this.quat_rotateQuat(secondQuat, out);
+    };
+}();
+
+Array.prototype.quat_rotateQuat = function (second, out = glMatrix.quat.create()) {
+    second.quat_mul(this, out);
+    return out;
+};
+
+Array.prototype.quat_getForward = function () {
+    let rotationMatrix = glMatrix.mat3.create();
+    return function quat_getForward(out = glMatrix.vec3.create()) {
+        this.quat_toMatrix(rotationMatrix);
+
+        out.vec3_set(rotationMatrix[6], rotationMatrix[7], rotationMatrix[8]);
+
+        return out;
+    };
+}();
+
+Array.prototype.quat_getLeft = function () {
+    let rotationMatrix = glMatrix.mat3.create();
+    return function quat_getLeft(out = glMatrix.vec3.create()) {
+        this.quat_toMatrix(rotationMatrix);
+
+        out.vec3_set(rotationMatrix[0], rotationMatrix[1], rotationMatrix[2]);
+
+        return out;
+    };
+}();
+
+Array.prototype.quat_getRight = function (out = glMatrix.vec3.create()) {
+    this.quat_getLeft(out);
+    out.vec3_negate(out);
+    return out;
+};
+
+Array.prototype.quat_getUp = function () {
+    let rotationMatrix = glMatrix.mat3.create();
+    return function quat_getUp(out = glMatrix.vec3.create()) {
+        this.quat_toMatrix(rotationMatrix);
+
+        out.vec3_set(rotationMatrix[3], rotationMatrix[4], rotationMatrix[5]);
+
+        return out;
+    };
+}();
 
 //QUAT 2
 
@@ -12536,17 +12713,19 @@ WL.registerComponent("activate-on-select", {
         this._myCollisionPitch = this._myCollisionAudio.getPitch();
 
         this._myAnalyticsTimer = new PP.Timer(0);
+
+        this._myHandednessType = PP.InputUtils.getHandednessByIndex(this._myHandedness);
     },
     update(dt) {
         this._myAnalyticsTimer.update(dt);
 
-        if (!Global.myEnableSelectPhysx) {
+        if (!Global.myEnableSelectPhysx || PP.InputUtils.getInputSourceType(this._myHandednessType) != PP.InputSourceType.GAMEPAD) {
             this._myPhysx.active = false;
             this._myTriggerPhysx.active = false;
         }
     },
     _selectPressStart() {
-        if (Global.myEnableSelectPhysx) {
+        if (Global.myEnableSelectPhysx && PP.InputUtils.getInputSourceType(this._myHandednessType) == PP.InputSourceType.GAMEPAD) {
             this._myPhysx.active = true;
             this._myTriggerPhysx.active = true;
 
@@ -12681,6 +12860,8 @@ WL.registerComponent("color-on-select", {
 
         this._myFirstUpdate = true;
         this._myPrevSelectValue = -1;
+
+        this._myHandednessType = PP.InputUtils.getHandednessByIndex(this._myHandedness);
     },
     update() {
         if (this._myFirstUpdate) {
@@ -12698,7 +12879,7 @@ WL.registerComponent("color-on-select", {
             PP.MeshUtils.setMaterial(this.object, this._myMaterial);
         } else {
             let selectValue = Math.pp_mapToRange(this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).getValue(), 0.1, 0.85, 0, 1);
-            if (!Global.myEnableSelectPhysx) {
+            if (!Global.myEnableSelectPhysx || PP.InputUtils.getInputSourceType(this._myHandednessType) != PP.InputSourceType.GAMEPAD) {
                 selectValue = 0;
             }
 
@@ -12933,32 +13114,47 @@ class EIECADummyServer {
     getLeaderboard(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError) {
         let leaderboard = null;
 
-        if (isAroundPlayer) {
+        if (PP.CAUtils.isSDKAvailable()) {
             leaderboard = [
-                { rank: 0, displayName: "Login", score: 0 },
-                { rank: 1, displayName: "And", score: 0 },
-                { rank: 2, displayName: "Play", score: 0 },
-                { rank: 3, displayName: "On", score: 0 },
-                { rank: 4, displayName: "Construct", score: 0 },
-                { rank: 5, displayName: "Arcade", score: 0 },
+                { rank: 0, displayName: "An", score: 0 },
+                { rank: 1, displayName: "Error", score: 0 },
+                { rank: 2, displayName: "Has", score: 0 },
+                { rank: 3, displayName: "Occurred", score: 0 },
+                { rank: 4, displayName: "While", score: 0 },
+                { rank: 5, displayName: "Trying", score: 0 },
                 { rank: 6, displayName: "To", score: 0 },
-                { rank: 7, displayName: "Submit", score: 0 },
-                { rank: 8, displayName: "Your", score: 0 },
-                { rank: 9, displayName: "Score", score: 0 }
+                { rank: 7, displayName: "Retrieve", score: 0 },
+                { rank: 8, displayName: "The", score: 0 },
+                { rank: 9, displayName: "Leaderboard", score: 0 }
             ];
         } else {
-            leaderboard = [
-                { rank: 0, displayName: "The", score: 0 },
-                { rank: 1, displayName: "Leaderboard", score: 0 },
-                { rank: 2, displayName: "Is", score: 0 },
-                { rank: 3, displayName: "Available", score: 0 },
-                { rank: 4, displayName: "Only", score: 0 },
-                { rank: 5, displayName: "When", score: 0 },
-                { rank: 6, displayName: "Playing", score: 0 },
-                { rank: 7, displayName: "On", score: 0 },
-                { rank: 8, displayName: "Construct", score: 0 },
-                { rank: 9, displayName: "Arcade", score: 0 }
-            ];
+            if (isAroundPlayer) {
+                leaderboard = [
+                    { rank: 0, displayName: "Login", score: 0 },
+                    { rank: 1, displayName: "And", score: 0 },
+                    { rank: 2, displayName: "Play", score: 0 },
+                    { rank: 3, displayName: "On", score: 0 },
+                    { rank: 4, displayName: "Construct", score: 0 },
+                    { rank: 5, displayName: "Arcade", score: 0 },
+                    { rank: 6, displayName: "To", score: 0 },
+                    { rank: 7, displayName: "Submit", score: 0 },
+                    { rank: 8, displayName: "Your", score: 0 },
+                    { rank: 9, displayName: "Score", score: 0 }
+                ];
+            } else {
+                leaderboard = [
+                    { rank: 0, displayName: "The", score: 0 },
+                    { rank: 1, displayName: "Leaderboard", score: 0 },
+                    { rank: 2, displayName: "Is", score: 0 },
+                    { rank: 3, displayName: "Available", score: 0 },
+                    { rank: 4, displayName: "Only", score: 0 },
+                    { rank: 5, displayName: "When", score: 0 },
+                    { rank: 6, displayName: "Playing", score: 0 },
+                    { rank: 7, displayName: "On", score: 0 },
+                    { rank: 8, displayName: "Construct", score: 0 },
+                    { rank: 9, displayName: "Arcade", score: 0 }
+                ];
+            }
         }
 
         while (leaderboard.length > scoresAmount) {
@@ -13246,10 +13442,26 @@ WL.registerComponent("hand-animator", {
         this._myStarted = false;
 
         this._myPulseTimer = new PP.Timer(0.25);
+
+        this._myHandPose = new PP.HandPose(PP.InputUtils.getHandednessByIndex(this._myHandedness));
+        this._myHandPose.start();
     },
     update: function (dt) {
+        this._myHandPose.update(dt);
+
         for (let piece of this._myHandPieces) {
-            piece.update(dt, this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).myValue);
+            if (PP.InputUtils.getInputSourceType(this._myHandPose._myHandedness) == PP.InputSourceType.GAMEPAD) {
+                piece.update(dt, this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).myValue);
+            } else {
+                let pressValue = 0;
+                if (this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).myIsPressed || this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).myIsPressed) {
+                    pressValue = 1;
+                }
+
+                piece.update(dt, pressValue);
+            }
+
+            piece.setVisible(this._myHandPose.isValid());
         }
 
         if (this._myAppearList.length > 0) {
@@ -13317,8 +13529,9 @@ class HandPiece {
 
         this._myCurrentPosition = startPosition.slice(0);
 
+        this._myIsVisible = false;
         this._myIsActive = false;
-        this._myObject.pp_setActive(this._myIsActive);
+        this._myObject.pp_setActive(this._myIsVisible);
 
         this._myScale = 0;
         this._myObject.pp_setScale(this._myScale);
@@ -13331,7 +13544,6 @@ class HandPiece {
 
     start() {
         this._myIsActive = true;
-        this._myObject.pp_setActive(this._myIsActive);
 
         this._myAudio.play();
     }
@@ -13358,7 +13570,6 @@ class HandPiece {
 
     skip() {
         this._myIsActive = true;
-        this._myObject.pp_setActive(this._myIsActive);
 
         this._myTimer.reset();
 
@@ -13366,6 +13577,13 @@ class HandPiece {
 
         this._myScale = 1;
         this._myObject.pp_setScale(this._myScale);
+    }
+
+    setVisible(visible) {
+        if (this._myIsVisible != (this._myIsActive && visible)) {
+            this._myIsVisible = this._myIsActive && visible;
+            this._myObject.pp_setActive(this._myIsVisible);
+        }
     }
 }
 WL.registerComponent("light-fade-in", {
@@ -15039,14 +15257,6 @@ class IntroState extends PP.State {
 
     _onXRSessionStart(session) {
         this._myXRSessionStartCalled = true;
-
-        if (session.supportedFrameRates && session.updateTargetFrameRate) {
-            let targetFramerate = 72;
-
-            let supportedFrameRates = session.supportedFrameRates;
-            supportedFrameRates.sort((first, second) => Math.abs(first - targetFramerate) - Math.abs(second - targetFramerate));
-            session.updateTargetFrameRate(supportedFrameRates[0]);
-        }
     }
 }
 class MainFSM {
@@ -15540,7 +15750,29 @@ class MenuState extends PP.State {
                     this._myResetCount = 0;
                     let zestyComponent = this._myZestyObject.getObject().pp_getComponentHierarchy("zesty-banner");
                     if (zestyComponent) {
-                        Global.myZestyToClick = zestyComponent;
+                        if (Global.myGoogleAnalytics) {
+                            gtag("event", "zesty_market_opened", {
+                                "value": 1
+                            });
+                        }
+
+                        if (zestyComponent.banner != null) {
+                            let onZestySuccess = function () {
+                                Global.myUnmute = true;
+                                Howler.mute(true);
+
+                                zestyComponent.executeClick();
+                            }.bind(this);
+
+                            PP.XRUtils.openLinkPersistent(zestyComponent.banner.url, true, true, 15, onZestySuccess);
+                        } else {
+                            PP.XRUtils.openLinkPersistent("https://www.zesty.market", true, true, 15,
+                                function () {
+                                    Global.myUnmute = true;
+                                    Howler.mute(true);
+                                }.bind(this)
+                            );
+                        }
                     }
                 }
             }.bind(this));
@@ -15570,7 +15802,12 @@ class MenuState extends PP.State {
                     });
                 }
 
-                PP.XRUtils.openLinkPersistent("https://signor-pipo.itch.io/not-enough", true, true, 10);
+                PP.XRUtils.openLinkPersistent("https://signor-pipo.itch.io/not-enough", true, true, 15,
+                    function () {
+                        Global.myUnmute = true;
+                        Howler.mute(true);
+                    }.bind(this)
+                );
             }.bind(this));
             this._myMenuItems.push(wondermelon);
         }
@@ -15774,7 +16011,7 @@ class MenuItem {
         if (this._myTimer.isDone()) {
             Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myParticlesRadius, this._myScale, this._myObjectType);
             this._myFSM.perform("end");
-            if (this._myCallbackOnFall && WL.xrSession && this._myThrowTimer.isRunning()) {
+            if (this._myCallbackOnFall && PP.XRUtils.isXRSessionActive() && Global.myXRSessionActiveOpenLinkExtraCheck && this._myThrowTimer.isRunning()) {
                 this._myCallbackOnFall();
             }
         }
@@ -21417,7 +21654,7 @@ class MrNOTVentState extends PP.State {
         if (grabbable.isGrabbed()) {
             let zestyComponent = zestyObject.pp_getComponentHierarchy("zesty-banner");
             if (zestyComponent) {
-                //Global.myZestyToClick = zestyComponent;
+                // open zesty, I decided to not do that in this case tho
             }
         }
 
@@ -22979,7 +23216,7 @@ class VentState extends PP.State {
         if (grabbable.isGrabbed()) {
             let zestyComponent = zestyObject.pp_getComponentHierarchy("zesty-banner");
             if (zestyComponent) {
-                //Global.myZestyToClick = zestyComponent;
+                // open zesty, I decided to not do that in this case tho
             }
         }
 
@@ -23035,47 +23272,9 @@ class VentState extends PP.State {
         this._myFSM.perform("completed");
     }
 }
-(() => {
-  var yt = Object.create, N = Object.defineProperty; var gt = Object.getOwnPropertyDescriptor; var bt = Object.getOwnPropertyNames; var wt = Object.getPrototypeOf, vt = Object.prototype.hasOwnProperty; var xt = t => N(t, "__esModule", { value: !0 }); var c = (t, e) => () => (e || t((e = { exports: {} }).exports, e), e.exports); var Ct = (t, e, r) => { if (e && typeof e == "object" || typeof e == "function") for (let s of bt(e)) !vt.call(t, s) && s !== "default" && N(t, s, { get: () => e[s], enumerable: !(r = gt(e, s)) || r.enumerable }); return t }, se = t => Ct(xt(N(t != null ? yt(wt(t)) : {}, "default", t && t.__esModule && "default" in t ? { get: () => t.default, enumerable: !0 } : { value: t, enumerable: !0 })), t); var F = c((hr, ne) => { "use strict"; ne.exports = function (e, r) { return function () { for (var n = new Array(arguments.length), a = 0; a < n.length; a++)n[a] = arguments[a]; return e.apply(r, n) } } }); var d = c((mr, oe) => { "use strict"; var Et = F(), w = Object.prototype.toString; function D(t) { return w.call(t) === "[object Array]" } function j(t) { return typeof t == "undefined" } function qt(t) { return t !== null && !j(t) && t.constructor !== null && !j(t.constructor) && typeof t.constructor.isBuffer == "function" && t.constructor.isBuffer(t) } function Tt(t) { return w.call(t) === "[object ArrayBuffer]" } function At(t) { return typeof FormData != "undefined" && t instanceof FormData } function Rt(t) { var e; return typeof ArrayBuffer != "undefined" && ArrayBuffer.isView ? e = ArrayBuffer.isView(t) : e = t && t.buffer && t.buffer instanceof ArrayBuffer, e } function St(t) { return typeof t == "string" } function kt(t) { return typeof t == "number" } function ae(t) { return t !== null && typeof t == "object" } function A(t) { if (w.call(t) !== "[object Object]") return !1; var e = Object.getPrototypeOf(t); return e === null || e === Object.prototype } function Lt(t) { return w.call(t) === "[object Date]" } function Ot(t) { return w.call(t) === "[object File]" } function Ut(t) { return w.call(t) === "[object Blob]" } function ie(t) { return w.call(t) === "[object Function]" } function Pt(t) { return ae(t) && ie(t.pipe) } function Bt(t) { return typeof URLSearchParams != "undefined" && t instanceof URLSearchParams } function zt(t) { return t.replace(/^\s*/, "").replace(/\s*$/, "") } function Nt() { return typeof navigator != "undefined" && (navigator.product === "ReactNative" || navigator.product === "NativeScript" || navigator.product === "NS") ? !1 : typeof window != "undefined" && typeof document != "undefined" } function M(t, e) { if (!(t === null || typeof t == "undefined")) if (typeof t != "object" && (t = [t]), D(t)) for (var r = 0, s = t.length; r < s; r++)e.call(null, t[r], r, t); else for (var n in t) Object.prototype.hasOwnProperty.call(t, n) && e.call(null, t[n], n, t) } function _() { var t = {}; function e(n, a) { A(t[a]) && A(n) ? t[a] = _(t[a], n) : A(n) ? t[a] = _({}, n) : D(n) ? t[a] = n.slice() : t[a] = n } for (var r = 0, s = arguments.length; r < s; r++)M(arguments[r], e); return t } function Ft(t, e, r) { return M(e, function (n, a) { r && typeof n == "function" ? t[a] = Et(n, r) : t[a] = n }), t } function Dt(t) { return t.charCodeAt(0) === 65279 && (t = t.slice(1)), t } oe.exports = { isArray: D, isArrayBuffer: Tt, isBuffer: qt, isFormData: At, isArrayBufferView: Rt, isString: St, isNumber: kt, isObject: ae, isPlainObject: A, isUndefined: j, isDate: Lt, isFile: Ot, isBlob: Ut, isFunction: ie, isStream: Pt, isURLSearchParams: Bt, isStandardBrowserEnv: Nt, forEach: M, merge: _, extend: Ft, trim: zt, stripBOM: Dt } }); var $ = c((yr, le) => { "use strict"; var x = d(); function ue(t) { return encodeURIComponent(t).replace(/%3A/gi, ":").replace(/%24/g, "$").replace(/%2C/gi, ",").replace(/%20/g, "+").replace(/%5B/gi, "[").replace(/%5D/gi, "]") } le.exports = function (e, r, s) { if (!r) return e; var n; if (s) n = s(r); else if (x.isURLSearchParams(r)) n = r.toString(); else { var a = []; x.forEach(r, function (l, g) { l === null || typeof l == "undefined" || (x.isArray(l) ? g = g + "[]" : l = [l], x.forEach(l, function (m) { x.isDate(m) ? m = m.toISOString() : x.isObject(m) && (m = JSON.stringify(m)), a.push(ue(g) + "=" + ue(m)) })) }), n = a.join("&") } if (n) { var u = e.indexOf("#"); u !== -1 && (e = e.slice(0, u)), e += (e.indexOf("?") === -1 ? "?" : "&") + n } return e } }); var pe = c((gr, ce) => { "use strict"; var jt = d(); function R() { this.handlers = [] } R.prototype.use = function (e, r) { return this.handlers.push({ fulfilled: e, rejected: r }), this.handlers.length - 1 }; R.prototype.eject = function (e) { this.handlers[e] && (this.handlers[e] = null) }; R.prototype.forEach = function (e) { jt.forEach(this.handlers, function (s) { s !== null && e(s) }) }; ce.exports = R }); var de = c((br, fe) => { "use strict"; var Mt = d(); fe.exports = function (e, r, s) { return Mt.forEach(s, function (a) { e = a(e, r) }), e } }); var I = c((wr, he) => { "use strict"; he.exports = function (e) { return !!(e && e.__CANCEL__) } }); var ye = c((vr, me) => { "use strict"; var _t = d(); me.exports = function (e, r) { _t.forEach(e, function (n, a) { a !== r && a.toUpperCase() === r.toUpperCase() && (e[r] = n, delete e[a]) }) } }); var be = c((xr, ge) => { "use strict"; ge.exports = function (e, r, s, n, a) { return e.config = r, s && (e.code = s), e.request = n, e.response = a, e.isAxiosError = !0, e.toJSON = function () { return { message: this.message, name: this.name, description: this.description, number: this.number, fileName: this.fileName, lineNumber: this.lineNumber, columnNumber: this.columnNumber, stack: this.stack, config: this.config, code: this.code } }, e } }); var H = c((Cr, we) => { "use strict"; var $t = be(); we.exports = function (e, r, s, n, a) { var u = new Error(e); return $t(u, r, s, n, a) } }); var xe = c((Er, ve) => { "use strict"; var It = H(); ve.exports = function (e, r, s) { var n = s.config.validateStatus; !s.status || !n || n(s.status) ? e(s) : r(It("Request failed with status code " + s.status, s.config, null, s.request, s)) } }); var Ee = c((qr, Ce) => { "use strict"; var S = d(); Ce.exports = S.isStandardBrowserEnv() ? function () { return { write: function (r, s, n, a, u, i) { var l = []; l.push(r + "=" + encodeURIComponent(s)), S.isNumber(n) && l.push("expires=" + new Date(n).toGMTString()), S.isString(a) && l.push("path=" + a), S.isString(u) && l.push("domain=" + u), i === !0 && l.push("secure"), document.cookie = l.join("; ") }, read: function (r) { var s = document.cookie.match(new RegExp("(^|;\\s*)(" + r + ")=([^;]*)")); return s ? decodeURIComponent(s[3]) : null }, remove: function (r) { this.write(r, "", Date.now() - 864e5) } } }() : function () { return { write: function () { }, read: function () { return null }, remove: function () { } } }() }); var Te = c((Tr, qe) => { "use strict"; qe.exports = function (e) { return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(e) } }); var Re = c((Ar, Ae) => { "use strict"; Ae.exports = function (e, r) { return r ? e.replace(/\/+$/, "") + "/" + r.replace(/^\/+/, "") : e } }); var ke = c((Rr, Se) => { "use strict"; var Ht = Te(), Wt = Re(); Se.exports = function (e, r) { return e && !Ht(r) ? Wt(e, r) : r } }); var Oe = c((Sr, Le) => {
-    "use strict"; var W = d(), Kt = ["age", "authorization", "content-length", "content-type", "etag", "expires", "from", "host", "if-modified-since", "if-unmodified-since", "last-modified", "location", "max-forwards", "proxy-authorization", "referer", "retry-after", "user-agent"]; Le.exports = function (e) {
-      var r = {}, s, n, a; return e && W.forEach(e.split(`
-`), function (i) { if (a = i.indexOf(":"), s = W.trim(i.substr(0, a)).toLowerCase(), n = W.trim(i.substr(a + 1)), s) { if (r[s] && Kt.indexOf(s) >= 0) return; s === "set-cookie" ? r[s] = (r[s] ? r[s] : []).concat([n]) : r[s] = r[s] ? r[s] + ", " + n : n } }), r
-    }
-  }); var Be = c((kr, Pe) => { "use strict"; var Ue = d(); Pe.exports = Ue.isStandardBrowserEnv() ? function () { var e = /(msie|trident)/i.test(navigator.userAgent), r = document.createElement("a"), s; function n(a) { var u = a; return e && (r.setAttribute("href", u), u = r.href), r.setAttribute("href", u), { href: r.href, protocol: r.protocol ? r.protocol.replace(/:$/, "") : "", host: r.host, search: r.search ? r.search.replace(/^\?/, "") : "", hash: r.hash ? r.hash.replace(/^#/, "") : "", hostname: r.hostname, port: r.port, pathname: r.pathname.charAt(0) === "/" ? r.pathname : "/" + r.pathname } } return s = n(window.location.href), function (u) { var i = Ue.isString(u) ? n(u) : u; return i.protocol === s.protocol && i.host === s.host } }() : function () { return function () { return !0 } }() }); var X = c((Lr, ze) => { "use strict"; var k = d(), Xt = xe(), Vt = Ee(), Jt = $(), Gt = ke(), Qt = Oe(), Zt = Be(), K = H(); ze.exports = function (e) { return new Promise(function (s, n) { var a = e.data, u = e.headers; k.isFormData(a) && delete u["Content-Type"]; var i = new XMLHttpRequest; if (e.auth) { var l = e.auth.username || "", g = e.auth.password ? unescape(encodeURIComponent(e.auth.password)) : ""; u.Authorization = "Basic " + btoa(l + ":" + g) } var E = Gt(e.baseURL, e.url); if (i.open(e.method.toUpperCase(), Jt(E, e.params, e.paramsSerializer), !0), i.timeout = e.timeout, i.onreadystatechange = function () { if (!(!i || i.readyState !== 4) && !(i.status === 0 && !(i.responseURL && i.responseURL.indexOf("file:") === 0))) { var o = "getAllResponseHeaders" in i ? Qt(i.getAllResponseHeaders()) : null, q = !e.responseType || e.responseType === "text" ? i.responseText : i.response, mt = { data: q, status: i.status, statusText: i.statusText, headers: o, config: e, request: i }; Xt(s, n, mt), i = null } }, i.onabort = function () { !i || (n(K("Request aborted", e, "ECONNABORTED", i)), i = null) }, i.onerror = function () { n(K("Network Error", e, null, i)), i = null }, i.ontimeout = function () { var o = "timeout of " + e.timeout + "ms exceeded"; e.timeoutErrorMessage && (o = e.timeoutErrorMessage), n(K(o, e, "ECONNABORTED", i)), i = null }, k.isStandardBrowserEnv()) { var m = (e.withCredentials || Zt(E)) && e.xsrfCookieName ? Vt.read(e.xsrfCookieName) : void 0; m && (u[e.xsrfHeaderName] = m) } if ("setRequestHeader" in i && k.forEach(u, function (o, q) { typeof a == "undefined" && q.toLowerCase() === "content-type" ? delete u[q] : i.setRequestHeader(q, o) }), k.isUndefined(e.withCredentials) || (i.withCredentials = !!e.withCredentials), e.responseType) try { i.responseType = e.responseType } catch (p) { if (e.responseType !== "json") throw p } typeof e.onDownloadProgress == "function" && i.addEventListener("progress", e.onDownloadProgress), typeof e.onUploadProgress == "function" && i.upload && i.upload.addEventListener("progress", e.onUploadProgress), e.cancelToken && e.cancelToken.promise.then(function (o) { !i || (i.abort(), n(o), i = null) }), a || (a = null), i.send(a) }) } }); var V = c((Or, De) => { "use strict"; var h = d(), Ne = ye(), Yt = { "Content-Type": "application/x-www-form-urlencoded" }; function Fe(t, e) { !h.isUndefined(t) && h.isUndefined(t["Content-Type"]) && (t["Content-Type"] = e) } function er() { var t; return typeof XMLHttpRequest != "undefined" ? t = X() : typeof process != "undefined" && Object.prototype.toString.call(process) === "[object process]" && (t = X()), t } var L = { adapter: er(), transformRequest: [function (e, r) { return Ne(r, "Accept"), Ne(r, "Content-Type"), h.isFormData(e) || h.isArrayBuffer(e) || h.isBuffer(e) || h.isStream(e) || h.isFile(e) || h.isBlob(e) ? e : h.isArrayBufferView(e) ? e.buffer : h.isURLSearchParams(e) ? (Fe(r, "application/x-www-form-urlencoded;charset=utf-8"), e.toString()) : h.isObject(e) ? (Fe(r, "application/json;charset=utf-8"), JSON.stringify(e)) : e }], transformResponse: [function (e) { if (typeof e == "string") try { e = JSON.parse(e) } catch (r) { } return e }], timeout: 0, xsrfCookieName: "XSRF-TOKEN", xsrfHeaderName: "X-XSRF-TOKEN", maxContentLength: -1, maxBodyLength: -1, validateStatus: function (e) { return e >= 200 && e < 300 } }; L.headers = { common: { Accept: "application/json, text/plain, */*" } }; h.forEach(["delete", "get", "head"], function (e) { L.headers[e] = {} }); h.forEach(["post", "put", "patch"], function (e) { L.headers[e] = h.merge(Yt) }); De.exports = L }); var _e = c((Ur, Me) => { "use strict"; var je = d(), J = de(), tr = I(), rr = V(); function G(t) { t.cancelToken && t.cancelToken.throwIfRequested() } Me.exports = function (e) { G(e), e.headers = e.headers || {}, e.data = J(e.data, e.headers, e.transformRequest), e.headers = je.merge(e.headers.common || {}, e.headers[e.method] || {}, e.headers), je.forEach(["delete", "get", "head", "post", "put", "patch", "common"], function (n) { delete e.headers[n] }); var r = e.adapter || rr.adapter; return r(e).then(function (n) { return G(e), n.data = J(n.data, n.headers, e.transformResponse), n }, function (n) { return tr(n) || (G(e), n && n.response && (n.response.data = J(n.response.data, n.response.headers, e.transformResponse))), Promise.reject(n) }) } }); var Q = c((Pr, $e) => { "use strict"; var f = d(); $e.exports = function (e, r) { r = r || {}; var s = {}, n = ["url", "method", "data"], a = ["headers", "auth", "proxy", "params"], u = ["baseURL", "transformRequest", "transformResponse", "paramsSerializer", "timeout", "timeoutMessage", "withCredentials", "adapter", "responseType", "xsrfCookieName", "xsrfHeaderName", "onUploadProgress", "onDownloadProgress", "decompress", "maxContentLength", "maxBodyLength", "maxRedirects", "transport", "httpAgent", "httpsAgent", "cancelToken", "socketPath", "responseEncoding"], i = ["validateStatus"]; function l(p, o) { return f.isPlainObject(p) && f.isPlainObject(o) ? f.merge(p, o) : f.isPlainObject(o) ? f.merge({}, o) : f.isArray(o) ? o.slice() : o } function g(p) { f.isUndefined(r[p]) ? f.isUndefined(e[p]) || (s[p] = l(void 0, e[p])) : s[p] = l(e[p], r[p]) } f.forEach(n, function (o) { f.isUndefined(r[o]) || (s[o] = l(void 0, r[o])) }), f.forEach(a, g), f.forEach(u, function (o) { f.isUndefined(r[o]) ? f.isUndefined(e[o]) || (s[o] = l(void 0, e[o])) : s[o] = l(void 0, r[o]) }), f.forEach(i, function (o) { o in r ? s[o] = l(e[o], r[o]) : o in e && (s[o] = l(void 0, e[o])) }); var E = n.concat(a).concat(u).concat(i), m = Object.keys(e).concat(Object.keys(r)).filter(function (o) { return E.indexOf(o) === -1 }); return f.forEach(m, g), s } }); var Ke = c((Br, We) => { "use strict"; var Ie = d(), sr = $(), He = pe(), nr = _e(), O = Q(); function T(t) { this.defaults = t, this.interceptors = { request: new He, response: new He } } T.prototype.request = function (e) { typeof e == "string" ? (e = arguments[1] || {}, e.url = arguments[0]) : e = e || {}, e = O(this.defaults, e), e.method ? e.method = e.method.toLowerCase() : this.defaults.method ? e.method = this.defaults.method.toLowerCase() : e.method = "get"; var r = [nr, void 0], s = Promise.resolve(e); for (this.interceptors.request.forEach(function (a) { r.unshift(a.fulfilled, a.rejected) }), this.interceptors.response.forEach(function (a) { r.push(a.fulfilled, a.rejected) }); r.length;)s = s.then(r.shift(), r.shift()); return s }; T.prototype.getUri = function (e) { return e = O(this.defaults, e), sr(e.url, e.params, e.paramsSerializer).replace(/^\?/, "") }; Ie.forEach(["delete", "get", "head", "options"], function (e) { T.prototype[e] = function (r, s) { return this.request(O(s || {}, { method: e, url: r, data: (s || {}).data })) } }); Ie.forEach(["post", "put", "patch"], function (e) { T.prototype[e] = function (r, s, n) { return this.request(O(n || {}, { method: e, url: r, data: s })) } }); We.exports = T }); var Y = c((zr, Xe) => { "use strict"; function Z(t) { this.message = t } Z.prototype.toString = function () { return "Cancel" + (this.message ? ": " + this.message : "") }; Z.prototype.__CANCEL__ = !0; Xe.exports = Z }); var Je = c((Nr, Ve) => { "use strict"; var ar = Y(); function U(t) { if (typeof t != "function") throw new TypeError("executor must be a function."); var e; this.promise = new Promise(function (n) { e = n }); var r = this; t(function (n) { r.reason || (r.reason = new ar(n), e(r.reason)) }) } U.prototype.throwIfRequested = function () { if (this.reason) throw this.reason }; U.source = function () { var e, r = new U(function (n) { e = n }); return { token: r, cancel: e } }; Ve.exports = U }); var Qe = c((Fr, Ge) => { "use strict"; Ge.exports = function (e) { return function (s) { return e.apply(null, s) } } }); var Ye = c((Dr, Ze) => { "use strict"; Ze.exports = function (e) { return typeof e == "object" && e.isAxiosError === !0 } }); var rt = c((jr, ee) => { "use strict"; var et = d(), ir = F(), P = Ke(), or = Q(), ur = V(); function tt(t) { var e = new P(t), r = ir(P.prototype.request, e); return et.extend(r, P.prototype, e), et.extend(r, e), r } var y = tt(ur); y.Axios = P; y.create = function (e) { return tt(or(y.defaults, e)) }; y.Cancel = Y(); y.CancelToken = Je(); y.isCancel = I(); y.all = function (e) { return Promise.all(e) }; y.spread = Qe(); y.isAxiosError = Ye(); ee.exports = y; ee.exports.default = y }); var te = c((Mr, st) => { st.exports = rt() }); var v = se(te()); var nt = se(te()), B = t => { if (t.substring(0, 4) === "ipfs") return `https://ipfs.zesty.market/ipfs/${t.substring(7)}`; if (t.substring(0, 4) === "http") return t; if (t.substring(0, 5) === "https") return t; if (t.substring(0, 2) === "ar") nt.default.get(`https://arweave.net/${t.substring(5)}`).then(e => e.url).catch(e => { console.error(e) }); else return `https://ipfs.zesty.market/ipfs/${t}` }, b = () => { let t = [{ gateway: "https://cloudflare-ipfs.com", weight: 35 }, { gateway: "https://ipfs.fleek.co", weight: 35 }, { gateway: "https://gateway.pinata.cloud", weight: 20 }, { gateway: "https://dweb.link", weight: 10 }], e = [], r; for (r = 0; r < t.length; r++)e[r] = t[r].weight + (e[r - 1] || 0); let s = Math.random() * e[e.length - 1]; for (r = 0; r < e.length && !(e[r] > s); r++); return t[r].gateway }, lr = () => window.XRHand != null && window.XRMediaBinding != null, at = t => { if (!!t) { if (lr() && t.includes("https://www.oculus.com/experiences/quest/")) { setTimeout(() => { window.open(t, "_blank") }, 1e3); return } window.open(t, "_blank") } }, it = t => t.indexOf("utm_source=") !== -1 || t.indexOf("utm_campaign=") !== -1 || t.indexOf("utm_channel=") !== -1, ot = (t, e) => { let r = new URL(t); return r.searchParams.set("utm_source", "ZestyMarket"), r.searchParams.set("utm_campaign", "ZestyCampaign"), r.searchParams.set("utm_channel", `CampaignId_${e}`), r.href }; var C = { tall: { width: .75, height: 1, style: { standard: `${b()}/ipns/lib.zesty.market/assets/zesty-banner-tall.png`, minimal: `${b()}/ipns/lib.zesty.market/assets/zesty-banner-tall-minimal.png`, transparent: `${b()}/ipns/lib.zesty.market/assets/zesty-banner-tall-transparent.png` } }, wide: { width: 4, height: 1, style: { standard: `${b()}/ipns/lib.zesty.market/assets/zesty-banner-wide.png`, minimal: `${b()}/ipns/lib.zesty.market/assets/zesty-banner-wide-minimal.png`, transparent: `${b()}/ipns/lib.zesty.market/assets/zesty-banner-wide-transparent.png` } }, square: { width: 1, height: 1, style: { standard: `${b()}/ipns/lib.zesty.market/assets/zesty-banner-square.png`, minimal: `${b()}/ipns/lib.zesty.market/assets/zesty-banner-square-minimal.png`, transparent: `${b()}/ipns/lib.zesty.market/assets/zesty-banner-square-transparent.png` } } }, z = "square", ut = "standard"; var lt = "https://beacon.zesty.market", ct = "https://beacon2.zesty.market/zgraphql", cr = { matic: "https://api.thegraph.com/subgraphs/name/zestymarket/zesty-market-graph-matic", polygon: "https://api.thegraph.com/subgraphs/name/zestymarket/zesty-market-graph-matic", rinkeby: "https://api.thegraph.com/subgraphs/name/zestymarket/zesty-market-graph-rinkeby" }, re = { uri: void 0 }, pr = { name: "Default banner", description: "This is the default banner that would be displayed ipsum", image: "https://ipfs.zesty.market/ipfs/QmWBNfP8roDrwz3XQo4qpu9fMxvUSTn8LB7d4JK7ybrfZ2/assets/zesty-ad-square.png", url: "https://www.zesty.market" }, pt = async (t, e, r = "polygon") => {
-    let s = Math.floor(Date.now() / 1e3); return v.default.post(cr[r], {
-      query: `
-      query {
-        tokenDatas (
-          where: {
-            id: "${t}"
-            creator: "${e}"
-          }
-        )
-        { 
-          sellerNFTSetting {
-            sellerAuctions (
-              first: 5
-              where: {
-                contractTimeStart_lte: ${s}
-                contractTimeEnd_gte: ${s}
-                cancelled: false
-              }
-            ) {
-              id
-              buyerCampaigns {
-                id
-                uri
-              }
-              buyerCampaignsApproved
-            }
-          }
-          id
-        }
-      }
-    `}).then(n => fr(n)).catch(n => (console.log(n), re))
-  }, fr = t => { if (t.status != 200) return re; let r = t.data.data.tokenDatas[0]?.sellerNFTSetting?.sellerAuctions?.find((s, n) => { if (s.buyerCampaigns.length > 0 && s.buyerCampaignsApproved[n]) return s })?.buyerCampaigns[0]; return r ?? re }, ft = async (t, e, r, s, n) => { if (!t) { let a = { uri: "DEFAULT_URI", data: pr }, u = e || z, i = r || ut, l = n || C; return a.data.image = l[u].style[i], a } return v.default.get(B(t)).then(a => (it(a.data.url) || (a.data.url = ot(a.data.url, s)), a.status == 200 ? { uri: t, data: a.data } : null)) }, dt = async t => { try { let e = lt + `/api/v1/space/${t}`; await v.default.put(e), await v.default.post(ct, { query: `mutation { increment(eventType: visits, spaceId: "${t}") { message } }` }, { headers: { "Content-Type": "application/json" } }) } catch (e) { console.log("Failed to emit onload event", e.message) } }, ht = async t => { try { let e = lt + `/api/v1/space/click/${t}`; await v.default.put(e), await v.default.post(ct, { query: `mutation { increment(eventType: clicks, spaceId: "${t}") { message } }` }, { headers: { "Content-Type": "application/json" } }) } catch (e) { console.log("Failed to emit onclick event", e.message) } }; WL.registerComponent("zesty-banner", { creator: { type: WL.Type.String }, space: { type: WL.Type.Int }, network: { type: WL.Type.Enum, values: ["rinkeby", "polygon"], default: "polygon" }, format: { type: WL.Type.Enum, values: Object.keys(C), default: z }, style: { type: WL.Type.Enum, values: ["standard", "minimal", "transparent"], default: "transparent" }, scaleToRatio: { type: WL.Type.Bool, default: !0 }, textureProperty: { type: WL.Type.String, default: "auto" }, beacon: { type: WL.Type.Bool, default: !1 }, dynamicFormats: { type: WL.Type.Bool, default: !0 }, createAutomaticCollision: { type: WL.Type.Bool, default: !0 } }, { init: function () { this.formats = Object.values(C), this.formatKeys = Object.keys(C), this.styleKeys = ["standard", "minimal", "transparent"] }, start: function () { if (this.mesh = this.object.getComponent("mesh"), !this.mesh) throw new Error("'zesty-banner ' missing mesh component"); if (this.createAutomaticCollision && (this.collision = this.object.getComponent("collision") || this.object.addComponent("collision", { collider: WL.Collider.Box, group: 2 }), this.cursorTarget = this.object.getComponent("cursor-target") || this.object.addComponent("cursor-target"), this.cursorTarget.addClickFunction(this.onClick.bind(this))), this.dynamicFormats) { let t = document.createElement("script"); t.onload = () => { this.formatsOverride = zestyFormats.formats, this.startLoading() }, t.setAttribute("src", "https://ipfs.io/ipns/lib.zesty.market/zesty-formats.js"), t.setAttribute("crossorigin", "anonymous"), document.body.appendChild(t) } else this.startLoading() }, startLoading: function () { this.loadBanner(this.space, this.creator, this.network, this.formatKeys[this.format], this.styleKeys[this.style]).then(t => { this.banner = t, this.scaleToRatio && (this.height = this.object.scalingLocal[1], this.object.resetScaling(), this.createAutomaticCollision && (this.collision.extents = [this.formats[this.format].width * this.height, this.height, .1]), this.object.scale([this.formats[this.format].width * this.height, this.height, 1])); let e = this.mesh.material; if (this.textureProperty === "auto") { let r = e.pipeline || e.shader; if (r === "Phong Opaque Textured") e.diffuseTexture = t.texture, e.alphaMaskThreshold = .3; else if (r === "Flat Opaque Textured") e.flatTexture = t.texture, e.alphaMaskThreshold = .8; else throw Error("'zesty-banner ' unable to apply banner texture: unsupported pipeline " + e.shader); this.mesh.material = e } else this.mesh.material[this.textureProperty] = t.texture; this.beacon && dt(this.space) }) }, onClick: function () { this.banner?.url && (WL.xrSession ? WL.xrSession.end().then(this.executeClick.bind(this)) : this.executeClick()) }, executeClick: function () { at(this.banner.url), this.beacon && ht(this.space) }, loadBanner: async function (t, e, r, s, n) { r = r ? "polygon" : "rinkeby"; let a = await pt(t, e, r), u = await ft(a.uri, s, n, t, this.formatsOverride), i = u.data.url; i = i.match(/^http[s]?:\/\//) ? i : "https://" + i, i === "https://www.zesty.market" && (i = `https://app.zesty.market/space/${t}`); let l = u.data.image; return l = l.match(/^.+\.(png|jpe?g)/i) ? l : B(l), WL.textures.load(l, "").then(g => (u.texture = g, u.imageSrc = l, u.url = i, u)) } });
-})();
-//# sourceMappingURL=zesty-wonderland-sdk.js.map
+(()=>{var Kt=Object.create;var Ee=Object.defineProperty;var Xt=Object.getOwnPropertyDescriptor;var Gt=Object.getOwnPropertyNames;var Qt=Object.getPrototypeOf,Zt=Object.prototype.hasOwnProperty;var l=(t,e)=>()=>(e||t((e={exports:{}}).exports,e),e.exports);var Yt=(t,e,r,i)=>{if(e&&typeof e=="object"||typeof e=="function")for(let n of Gt(e))!Zt.call(t,n)&&n!==r&&Ee(t,n,{get:()=>e[n],enumerable:!(i=Xt(e,n))||i.enumerable});return t};var xe=(t,e,r)=>(r=t!=null?Kt(Qt(t)):{},Yt(e||!t||!t.__esModule?Ee(r,"default",{value:t,enumerable:!0}):r,t));var V=l((cn,Oe)=>{"use strict";Oe.exports=function(e,r){return function(){for(var n=new Array(arguments.length),s=0;s<n.length;s++)n[s]=arguments[s];return e.apply(r,n)}}});var f=l((ln,Ae)=>{"use strict";var er=V(),X=Object.prototype.toString,G=function(t){return function(e){var r=X.call(e);return t[r]||(t[r]=r.slice(8,-1).toLowerCase())}}(Object.create(null));function C(t){return t=t.toLowerCase(),function(r){return G(r)===t}}function Q(t){return Array.isArray(t)}function j(t){return typeof t>"u"}function tr(t){return t!==null&&!j(t)&&t.constructor!==null&&!j(t.constructor)&&typeof t.constructor.isBuffer=="function"&&t.constructor.isBuffer(t)}var Re=C("ArrayBuffer");function rr(t){var e;return typeof ArrayBuffer<"u"&&ArrayBuffer.isView?e=ArrayBuffer.isView(t):e=t&&t.buffer&&Re(t.buffer),e}function nr(t){return typeof t=="string"}function ir(t){return typeof t=="number"}function Ce(t){return t!==null&&typeof t=="object"}function U(t){if(G(t)!=="object")return!1;var e=Object.getPrototypeOf(t);return e===null||e===Object.prototype}var sr=C("Date"),ar=C("File"),or=C("Blob"),ur=C("FileList");function Z(t){return X.call(t)==="[object Function]"}function cr(t){return Ce(t)&&Z(t.pipe)}function lr(t){var e="[object FormData]";return t&&(typeof FormData=="function"&&t instanceof FormData||X.call(t)===e||Z(t.toString)&&t.toString()===e)}var dr=C("URLSearchParams");function fr(t){return t.trim?t.trim():t.replace(/^\s+|\s+$/g,"")}function pr(){return typeof navigator<"u"&&(navigator.product==="ReactNative"||navigator.product==="NativeScript"||navigator.product==="NS")?!1:typeof window<"u"&&typeof document<"u"}function Y(t,e){if(!(t===null||typeof t>"u"))if(typeof t!="object"&&(t=[t]),Q(t))for(var r=0,i=t.length;r<i;r++)e.call(null,t[r],r,t);else for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&e.call(null,t[n],n,t)}function K(){var t={};function e(n,s){U(t[s])&&U(n)?t[s]=K(t[s],n):U(n)?t[s]=K({},n):Q(n)?t[s]=n.slice():t[s]=n}for(var r=0,i=arguments.length;r<i;r++)Y(arguments[r],e);return t}function hr(t,e,r){return Y(e,function(n,s){r&&typeof n=="function"?t[s]=er(n,r):t[s]=n}),t}function mr(t){return t.charCodeAt(0)===65279&&(t=t.slice(1)),t}function yr(t,e,r,i){t.prototype=Object.create(e.prototype,i),t.prototype.constructor=t,r&&Object.assign(t.prototype,r)}function vr(t,e,r){var i,n,s,a={};e=e||{};do{for(i=Object.getOwnPropertyNames(t),n=i.length;n-- >0;)s=i[n],a[s]||(e[s]=t[s],a[s]=!0);t=Object.getPrototypeOf(t)}while(t&&(!r||r(t,e))&&t!==Object.prototype);return e}function wr(t,e,r){t=String(t),(r===void 0||r>t.length)&&(r=t.length),r-=e.length;var i=t.indexOf(e,r);return i!==-1&&i===r}function gr(t){if(!t)return null;var e=t.length;if(j(e))return null;for(var r=new Array(e);e-- >0;)r[e]=t[e];return r}var br=function(t){return function(e){return t&&e instanceof t}}(typeof Uint8Array<"u"&&Object.getPrototypeOf(Uint8Array));Ae.exports={isArray:Q,isArrayBuffer:Re,isBuffer:tr,isFormData:lr,isArrayBufferView:rr,isString:nr,isNumber:ir,isObject:Ce,isPlainObject:U,isUndefined:j,isDate:sr,isFile:ar,isBlob:or,isFunction:Z,isStream:cr,isURLSearchParams:dr,isStandardBrowserEnv:pr,forEach:Y,merge:K,extend:hr,trim:fr,stripBOM:mr,inherits:yr,toFlatObject:vr,kindOf:G,kindOfTest:C,endsWith:wr,toArray:gr,isTypedArray:br,isFileList:ur}});var ee=l((dn,qe)=>{"use strict";var q=f();function Te(t){return encodeURIComponent(t).replace(/%3A/gi,":").replace(/%24/g,"$").replace(/%2C/gi,",").replace(/%20/g,"+").replace(/%5B/gi,"[").replace(/%5D/gi,"]")}qe.exports=function(e,r,i){if(!r)return e;var n;if(i)n=i(r);else if(q.isURLSearchParams(r))n=r.toString();else{var s=[];q.forEach(r,function(c,h){c===null||typeof c>"u"||(q.isArray(c)?h=h+"[]":c=[c],q.forEach(c,function(d){q.isDate(d)?d=d.toISOString():q.isObject(d)&&(d=JSON.stringify(d)),s.push(Te(h)+"="+Te(d))}))}),n=s.join("&")}if(n){var a=e.indexOf("#");a!==-1&&(e=e.slice(0,a)),e+=(e.indexOf("?")===-1?"?":"&")+n}return e}});var Ne=l((fn,Se)=>{"use strict";var Er=f();function F(){this.handlers=[]}F.prototype.use=function(e,r,i){return this.handlers.push({fulfilled:e,rejected:r,synchronous:i?i.synchronous:!1,runWhen:i?i.runWhen:null}),this.handlers.length-1};F.prototype.eject=function(e){this.handlers[e]&&(this.handlers[e]=null)};F.prototype.forEach=function(e){Er.forEach(this.handlers,function(i){i!==null&&e(i)})};Se.exports=F});var Pe=l((pn,ke)=>{"use strict";var xr=f();ke.exports=function(e,r){xr.forEach(e,function(n,s){s!==r&&s.toUpperCase()===r.toUpperCase()&&(e[r]=n,delete e[s])})}});var A=l((hn,De)=>{"use strict";var _e=f();function S(t,e,r,i,n){Error.call(this),this.message=t,this.name="AxiosError",e&&(this.code=e),r&&(this.config=r),i&&(this.request=i),n&&(this.response=n)}_e.inherits(S,Error,{toJSON:function(){return{message:this.message,name:this.name,description:this.description,number:this.number,fileName:this.fileName,lineNumber:this.lineNumber,columnNumber:this.columnNumber,stack:this.stack,config:this.config,code:this.code,status:this.response&&this.response.status?this.response.status:null}}});var Le=S.prototype,Be={};["ERR_BAD_OPTION_VALUE","ERR_BAD_OPTION","ECONNABORTED","ETIMEDOUT","ERR_NETWORK","ERR_FR_TOO_MANY_REDIRECTS","ERR_DEPRECATED","ERR_BAD_RESPONSE","ERR_BAD_REQUEST","ERR_CANCELED"].forEach(function(t){Be[t]={value:t}});Object.defineProperties(S,Be);Object.defineProperty(Le,"isAxiosError",{value:!0});S.from=function(t,e,r,i,n,s){var a=Object.create(Le);return _e.toFlatObject(t,a,function(c){return c!==Error.prototype}),S.call(a,t.message,e,r,i,n),a.name=t.name,s&&Object.assign(a,s),a};De.exports=S});var te=l((mn,Ue)=>{"use strict";Ue.exports={silentJSONParsing:!0,forcedJSONParsing:!0,clarifyTimeoutError:!1}});var re=l((yn,je)=>{"use strict";var b=f();function Or(t,e){e=e||new FormData;var r=[];function i(s){return s===null?"":b.isDate(s)?s.toISOString():b.isArrayBuffer(s)||b.isTypedArray(s)?typeof Blob=="function"?new Blob([s]):Buffer.from(s):s}function n(s,a){if(b.isPlainObject(s)||b.isArray(s)){if(r.indexOf(s)!==-1)throw Error("Circular reference detected in "+a);r.push(s),b.forEach(s,function(c,h){if(!b.isUndefined(c)){var o=a?a+"."+h:h,d;if(c&&!a&&typeof c=="object"){if(b.endsWith(h,"{}"))c=JSON.stringify(c);else if(b.endsWith(h,"[]")&&(d=b.toArray(c))){d.forEach(function(v){!b.isUndefined(v)&&e.append(o,i(v))});return}}n(c,o)}}),r.pop()}else e.append(a,i(s))}return n(t),e}je.exports=Or});var ze=l((vn,Fe)=>{"use strict";var ne=A();Fe.exports=function(e,r,i){var n=i.config.validateStatus;!i.status||!n||n(i.status)?e(i):r(new ne("Request failed with status code "+i.status,[ne.ERR_BAD_REQUEST,ne.ERR_BAD_RESPONSE][Math.floor(i.status/100)-4],i.config,i.request,i))}});var Me=l((wn,Ie)=>{"use strict";var z=f();Ie.exports=z.isStandardBrowserEnv()?function(){return{write:function(r,i,n,s,a,u){var c=[];c.push(r+"="+encodeURIComponent(i)),z.isNumber(n)&&c.push("expires="+new Date(n).toGMTString()),z.isString(s)&&c.push("path="+s),z.isString(a)&&c.push("domain="+a),u===!0&&c.push("secure"),document.cookie=c.join("; ")},read:function(r){var i=document.cookie.match(new RegExp("(^|;\\s*)("+r+")=([^;]*)"));return i?decodeURIComponent(i[3]):null},remove:function(r){this.write(r,"",Date.now()-864e5)}}}():function(){return{write:function(){},read:function(){return null},remove:function(){}}}()});var We=l((gn,$e)=>{"use strict";$e.exports=function(e){return/^([a-z][a-z\d+\-.]*:)?\/\//i.test(e)}});var Je=l((bn,He)=>{"use strict";He.exports=function(e,r){return r?e.replace(/\/+$/,"")+"/"+r.replace(/^\/+/,""):e}});var ie=l((En,Ve)=>{"use strict";var Rr=We(),Cr=Je();Ve.exports=function(e,r){return e&&!Rr(r)?Cr(e,r):r}});var Xe=l((xn,Ke)=>{"use strict";var se=f(),Ar=["age","authorization","content-length","content-type","etag","expires","from","host","if-modified-since","if-unmodified-since","last-modified","location","max-forwards","proxy-authorization","referer","retry-after","user-agent"];Ke.exports=function(e){var r={},i,n,s;return e&&se.forEach(e.split(`
+`),function(u){if(s=u.indexOf(":"),i=se.trim(u.substr(0,s)).toLowerCase(),n=se.trim(u.substr(s+1)),i){if(r[i]&&Ar.indexOf(i)>=0)return;i==="set-cookie"?r[i]=(r[i]?r[i]:[]).concat([n]):r[i]=r[i]?r[i]+", "+n:n}}),r}});var Ze=l((On,Qe)=>{"use strict";var Ge=f();Qe.exports=Ge.isStandardBrowserEnv()?function(){var e=/(msie|trident)/i.test(navigator.userAgent),r=document.createElement("a"),i;function n(s){var a=s;return e&&(r.setAttribute("href",a),a=r.href),r.setAttribute("href",a),{href:r.href,protocol:r.protocol?r.protocol.replace(/:$/,""):"",host:r.host,search:r.search?r.search.replace(/^\?/,""):"",hash:r.hash?r.hash.replace(/^#/,""):"",hostname:r.hostname,port:r.port,pathname:r.pathname.charAt(0)==="/"?r.pathname:"/"+r.pathname}}return i=n(window.location.href),function(a){var u=Ge.isString(a)?n(a):a;return u.protocol===i.protocol&&u.host===i.host}}():function(){return function(){return!0}}()});var B=l((Rn,et)=>{"use strict";var ae=A(),Tr=f();function Ye(t){ae.call(this,t??"canceled",ae.ERR_CANCELED),this.name="CanceledError"}Tr.inherits(Ye,ae,{__CANCEL__:!0});et.exports=Ye});var rt=l((Cn,tt)=>{"use strict";tt.exports=function(e){var r=/^([-+\w]{1,25})(:?\/\/|:)/.exec(e);return r&&r[1]||""}});var oe=l((An,nt)=>{"use strict";var D=f(),qr=ze(),Sr=Me(),Nr=ee(),kr=ie(),Pr=Xe(),_r=Ze(),Lr=te(),E=A(),Br=B(),Dr=rt();nt.exports=function(e){return new Promise(function(i,n){var s=e.data,a=e.headers,u=e.responseType,c;function h(){e.cancelToken&&e.cancelToken.unsubscribe(c),e.signal&&e.signal.removeEventListener("abort",c)}D.isFormData(s)&&D.isStandardBrowserEnv()&&delete a["Content-Type"];var o=new XMLHttpRequest;if(e.auth){var d=e.auth.username||"",v=e.auth.password?unescape(encodeURIComponent(e.auth.password)):"";a.Authorization="Basic "+btoa(d+":"+v)}var m=kr(e.baseURL,e.url);o.open(e.method.toUpperCase(),Nr(m,e.params,e.paramsSerializer),!0),o.timeout=e.timeout;function ge(){if(o){var g="getAllResponseHeaders"in o?Pr(o.getAllResponseHeaders()):null,T=!u||u==="text"||u==="json"?o.responseText:o.response,R={data:T,status:o.status,statusText:o.statusText,headers:g,config:e,request:o};qr(function(J){i(J),h()},function(J){n(J),h()},R),o=null}}if("onloadend"in o?o.onloadend=ge:o.onreadystatechange=function(){!o||o.readyState!==4||o.status===0&&!(o.responseURL&&o.responseURL.indexOf("file:")===0)||setTimeout(ge)},o.onabort=function(){o&&(n(new E("Request aborted",E.ECONNABORTED,e,o)),o=null)},o.onerror=function(){n(new E("Network Error",E.ERR_NETWORK,e,o,o)),o=null},o.ontimeout=function(){var T=e.timeout?"timeout of "+e.timeout+"ms exceeded":"timeout exceeded",R=e.transitional||Lr;e.timeoutErrorMessage&&(T=e.timeoutErrorMessage),n(new E(T,R.clarifyTimeoutError?E.ETIMEDOUT:E.ECONNABORTED,e,o)),o=null},D.isStandardBrowserEnv()){var be=(e.withCredentials||_r(m))&&e.xsrfCookieName?Sr.read(e.xsrfCookieName):void 0;be&&(a[e.xsrfHeaderName]=be)}"setRequestHeader"in o&&D.forEach(a,function(T,R){typeof s>"u"&&R.toLowerCase()==="content-type"?delete a[R]:o.setRequestHeader(R,T)}),D.isUndefined(e.withCredentials)||(o.withCredentials=!!e.withCredentials),u&&u!=="json"&&(o.responseType=e.responseType),typeof e.onDownloadProgress=="function"&&o.addEventListener("progress",e.onDownloadProgress),typeof e.onUploadProgress=="function"&&o.upload&&o.upload.addEventListener("progress",e.onUploadProgress),(e.cancelToken||e.signal)&&(c=function(g){o&&(n(!g||g&&g.type?new Br:g),o.abort(),o=null)},e.cancelToken&&e.cancelToken.subscribe(c),e.signal&&(e.signal.aborted?c():e.signal.addEventListener("abort",c))),s||(s=null);var H=Dr(m);if(H&&["http","https","file"].indexOf(H)===-1){n(new E("Unsupported protocol "+H+":",E.ERR_BAD_REQUEST,e));return}o.send(s)})}});var st=l((Tn,it)=>{it.exports=null});var M=l((qn,ct)=>{"use strict";var p=f(),at=Pe(),ot=A(),Ur=te(),jr=re(),Fr={"Content-Type":"application/x-www-form-urlencoded"};function ut(t,e){!p.isUndefined(t)&&p.isUndefined(t["Content-Type"])&&(t["Content-Type"]=e)}function zr(){var t;return typeof XMLHttpRequest<"u"?t=oe():typeof process<"u"&&Object.prototype.toString.call(process)==="[object process]"&&(t=oe()),t}function Ir(t,e,r){if(p.isString(t))try{return(e||JSON.parse)(t),p.trim(t)}catch(i){if(i.name!=="SyntaxError")throw i}return(r||JSON.stringify)(t)}var I={transitional:Ur,adapter:zr(),transformRequest:[function(e,r){if(at(r,"Accept"),at(r,"Content-Type"),p.isFormData(e)||p.isArrayBuffer(e)||p.isBuffer(e)||p.isStream(e)||p.isFile(e)||p.isBlob(e))return e;if(p.isArrayBufferView(e))return e.buffer;if(p.isURLSearchParams(e))return ut(r,"application/x-www-form-urlencoded;charset=utf-8"),e.toString();var i=p.isObject(e),n=r&&r["Content-Type"],s;if((s=p.isFileList(e))||i&&n==="multipart/form-data"){var a=this.env&&this.env.FormData;return jr(s?{"files[]":e}:e,a&&new a)}else if(i||n==="application/json")return ut(r,"application/json"),Ir(e);return e}],transformResponse:[function(e){var r=this.transitional||I.transitional,i=r&&r.silentJSONParsing,n=r&&r.forcedJSONParsing,s=!i&&this.responseType==="json";if(s||n&&p.isString(e)&&e.length)try{return JSON.parse(e)}catch(a){if(s)throw a.name==="SyntaxError"?ot.from(a,ot.ERR_BAD_RESPONSE,this,null,this.response):a}return e}],timeout:0,xsrfCookieName:"XSRF-TOKEN",xsrfHeaderName:"X-XSRF-TOKEN",maxContentLength:-1,maxBodyLength:-1,env:{FormData:st()},validateStatus:function(e){return e>=200&&e<300},headers:{common:{Accept:"application/json, text/plain, */*"}}};p.forEach(["delete","get","head"],function(e){I.headers[e]={}});p.forEach(["post","put","patch"],function(e){I.headers[e]=p.merge(Fr)});ct.exports=I});var dt=l((Sn,lt)=>{"use strict";var Mr=f(),$r=M();lt.exports=function(e,r,i){var n=this||$r;return Mr.forEach(i,function(a){e=a.call(n,e,r)}),e}});var ue=l((Nn,ft)=>{"use strict";ft.exports=function(e){return!!(e&&e.__CANCEL__)}});var mt=l((kn,ht)=>{"use strict";var pt=f(),ce=dt(),Wr=ue(),Hr=M(),Jr=B();function le(t){if(t.cancelToken&&t.cancelToken.throwIfRequested(),t.signal&&t.signal.aborted)throw new Jr}ht.exports=function(e){le(e),e.headers=e.headers||{},e.data=ce.call(e,e.data,e.headers,e.transformRequest),e.headers=pt.merge(e.headers.common||{},e.headers[e.method]||{},e.headers),pt.forEach(["delete","get","head","post","put","patch","common"],function(n){delete e.headers[n]});var r=e.adapter||Hr.adapter;return r(e).then(function(n){return le(e),n.data=ce.call(e,n.data,n.headers,e.transformResponse),n},function(n){return Wr(n)||(le(e),n&&n.response&&(n.response.data=ce.call(e,n.response.data,n.response.headers,e.transformResponse))),Promise.reject(n)})}});var de=l((Pn,yt)=>{"use strict";var w=f();yt.exports=function(e,r){r=r||{};var i={};function n(o,d){return w.isPlainObject(o)&&w.isPlainObject(d)?w.merge(o,d):w.isPlainObject(d)?w.merge({},d):w.isArray(d)?d.slice():d}function s(o){if(w.isUndefined(r[o])){if(!w.isUndefined(e[o]))return n(void 0,e[o])}else return n(e[o],r[o])}function a(o){if(!w.isUndefined(r[o]))return n(void 0,r[o])}function u(o){if(w.isUndefined(r[o])){if(!w.isUndefined(e[o]))return n(void 0,e[o])}else return n(void 0,r[o])}function c(o){if(o in r)return n(e[o],r[o]);if(o in e)return n(void 0,e[o])}var h={url:a,method:a,data:a,baseURL:u,transformRequest:u,transformResponse:u,paramsSerializer:u,timeout:u,timeoutMessage:u,withCredentials:u,adapter:u,responseType:u,xsrfCookieName:u,xsrfHeaderName:u,onUploadProgress:u,onDownloadProgress:u,decompress:u,maxContentLength:u,maxBodyLength:u,beforeRedirect:u,transport:u,httpAgent:u,httpsAgent:u,cancelToken:u,socketPath:u,responseEncoding:u,validateStatus:c};return w.forEach(Object.keys(e).concat(Object.keys(r)),function(d){var v=h[d]||s,m=v(d);w.isUndefined(m)&&v!==c||(i[d]=m)}),i}});var fe=l((_n,vt)=>{vt.exports={version:"0.27.2"}});var bt=l((Ln,gt)=>{"use strict";var Vr=fe().version,O=A(),pe={};["object","boolean","number","function","string","symbol"].forEach(function(t,e){pe[t]=function(i){return typeof i===t||"a"+(e<1?"n ":" ")+t}});var wt={};pe.transitional=function(e,r,i){function n(s,a){return"[Axios v"+Vr+"] Transitional option '"+s+"'"+a+(i?". "+i:"")}return function(s,a,u){if(e===!1)throw new O(n(a," has been removed"+(r?" in "+r:"")),O.ERR_DEPRECATED);return r&&!wt[a]&&(wt[a]=!0,console.warn(n(a," has been deprecated since v"+r+" and will be removed in the near future"))),e?e(s,a,u):!0}};function Kr(t,e,r){if(typeof t!="object")throw new O("options must be an object",O.ERR_BAD_OPTION_VALUE);for(var i=Object.keys(t),n=i.length;n-- >0;){var s=i[n],a=e[s];if(a){var u=t[s],c=u===void 0||a(u,s,t);if(c!==!0)throw new O("option "+s+" must be "+c,O.ERR_BAD_OPTION_VALUE);continue}if(r!==!0)throw new O("Unknown option "+s,O.ERR_BAD_OPTION)}}gt.exports={assertOptions:Kr,validators:pe}});var At=l((Bn,Ct)=>{"use strict";var Ot=f(),Xr=ee(),Et=Ne(),xt=mt(),$=de(),Gr=ie(),Rt=bt(),N=Rt.validators;function k(t){this.defaults=t,this.interceptors={request:new Et,response:new Et}}k.prototype.request=function(e,r){typeof e=="string"?(r=r||{},r.url=e):r=e||{},r=$(this.defaults,r),r.method?r.method=r.method.toLowerCase():this.defaults.method?r.method=this.defaults.method.toLowerCase():r.method="get";var i=r.transitional;i!==void 0&&Rt.assertOptions(i,{silentJSONParsing:N.transitional(N.boolean),forcedJSONParsing:N.transitional(N.boolean),clarifyTimeoutError:N.transitional(N.boolean)},!1);var n=[],s=!0;this.interceptors.request.forEach(function(m){typeof m.runWhen=="function"&&m.runWhen(r)===!1||(s=s&&m.synchronous,n.unshift(m.fulfilled,m.rejected))});var a=[];this.interceptors.response.forEach(function(m){a.push(m.fulfilled,m.rejected)});var u;if(!s){var c=[xt,void 0];for(Array.prototype.unshift.apply(c,n),c=c.concat(a),u=Promise.resolve(r);c.length;)u=u.then(c.shift(),c.shift());return u}for(var h=r;n.length;){var o=n.shift(),d=n.shift();try{h=o(h)}catch(v){d(v);break}}try{u=xt(h)}catch(v){return Promise.reject(v)}for(;a.length;)u=u.then(a.shift(),a.shift());return u};k.prototype.getUri=function(e){e=$(this.defaults,e);var r=Gr(e.baseURL,e.url);return Xr(r,e.params,e.paramsSerializer)};Ot.forEach(["delete","get","head","options"],function(e){k.prototype[e]=function(r,i){return this.request($(i||{},{method:e,url:r,data:(i||{}).data}))}});Ot.forEach(["post","put","patch"],function(e){function r(i){return function(s,a,u){return this.request($(u||{},{method:e,headers:i?{"Content-Type":"multipart/form-data"}:{},url:s,data:a}))}}k.prototype[e]=r(),k.prototype[e+"Form"]=r(!0)});Ct.exports=k});var qt=l((Dn,Tt)=>{"use strict";var Qr=B();function P(t){if(typeof t!="function")throw new TypeError("executor must be a function.");var e;this.promise=new Promise(function(n){e=n});var r=this;this.promise.then(function(i){if(r._listeners){var n,s=r._listeners.length;for(n=0;n<s;n++)r._listeners[n](i);r._listeners=null}}),this.promise.then=function(i){var n,s=new Promise(function(a){r.subscribe(a),n=a}).then(i);return s.cancel=function(){r.unsubscribe(n)},s},t(function(n){r.reason||(r.reason=new Qr(n),e(r.reason))})}P.prototype.throwIfRequested=function(){if(this.reason)throw this.reason};P.prototype.subscribe=function(e){if(this.reason){e(this.reason);return}this._listeners?this._listeners.push(e):this._listeners=[e]};P.prototype.unsubscribe=function(e){if(this._listeners){var r=this._listeners.indexOf(e);r!==-1&&this._listeners.splice(r,1)}};P.source=function(){var e,r=new P(function(n){e=n});return{token:r,cancel:e}};Tt.exports=P});var Nt=l((Un,St)=>{"use strict";St.exports=function(e){return function(i){return e.apply(null,i)}}});var Pt=l((jn,kt)=>{"use strict";var Zr=f();kt.exports=function(e){return Zr.isObject(e)&&e.isAxiosError===!0}});var Bt=l((Fn,he)=>{"use strict";var _t=f(),Yr=V(),W=At(),en=de(),tn=M();function Lt(t){var e=new W(t),r=Yr(W.prototype.request,e);return _t.extend(r,W.prototype,e),_t.extend(r,e),r.create=function(n){return Lt(en(t,n))},r}var y=Lt(tn);y.Axios=W;y.CanceledError=B();y.CancelToken=qt();y.isCancel=ue();y.VERSION=fe().version;y.toFormData=re();y.AxiosError=A();y.Cancel=y.CanceledError;y.all=function(e){return Promise.all(e)};y.spread=Nt();y.isAxiosError=Pt();he.exports=y;he.exports.default=y});var me=l((zn,Dt)=>{Dt.exports=Bt()});var L=xe(me(),1);var x="https://zesty-storage-prod.s3.amazonaws.com/images/zesty",_={tall:{width:.75,height:1,style:{standard:`${x}/zesty-banner-tall.png`,minimal:`${x}/zesty-banner-tall-minimal.png`,transparent:`${x}/zesty-banner-tall-transparent.png`}},wide:{width:4,height:1,style:{standard:`${x}/zesty-banner-wide.png`,minimal:`${x}/zesty-banner-wide-minimal.png`,transparent:`${x}/zesty-banner-wide-transparent.png`}},square:{width:1,height:1,style:{standard:`${x}/zesty-banner-square.png`,minimal:`${x}/zesty-banner-square-minimal.png`,transparent:`${x}/zesty-banner-square-transparent.png`}}},Ut="square";var rn=xe(me(),1);var ye=()=>{let t=window.XRHand!=null&&window.XRMediaBinding!=null,e=navigator.userAgent.includes("OculusBrowser"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},ve=()=>{let t=window.mozInnerScreenX!=null&&window.speechSynthesis==null,e=navigator.userAgent.includes("Mobile VR")&&!navigator.userAgent.includes("OculusBrowser"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},jt=async()=>{let t=navigator.xr&&await navigator.xr.isSessionSupported("immersive-vr")&&await navigator.xr.isSessionSupported("immersive-ar"),e=navigator.userAgent.includes("Pico Neo 3 Link"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},Ft=()=>{let t=navigator.maxTouchPoints===0||navigator.msMaxTouchPoints===0,e=!navigator.userAgent.includes("Android")&&!navigator.userAgent.includes("Mobile"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},we=async()=>{let t={platform:"",confidence:""};return ye().match?t={platform:"Oculus",confidence:ye().confidence}:ve().match?t={platform:"Wolvic",confidence:ve().confidence}:await jt().match?t={platform:"Pico",confidence:await jt().confidence}:Ft().match?t={platform:"Desktop",confidence:Ft().confidence}:t={platform:"Unknown",confidence:"None"},t},zt=t=>{if(t){if(ye().match){if(t.includes("https://www.oculus.com/experiences/quest/")){setTimeout(()=>{window.open(t,"_blank")},1e3);return}}else if(ve().match){let e=document.createElement("div"),r=document.createElement("div"),i=document.createElement("p"),n=document.createElement("button"),s=document.createElement("button");e.style.backgroundColor="rgb(0, 0, 0, 0.75)",e.style.color="white",e.style.textAlign="center",e.style.position="fixed",e.style.top="50%",e.style.left="50%",e.style.padding="5%",e.style.borderRadius="5%",e.style.transform="translate(-50%, -50%)",i.innerHTML=`<b>This billboard leads to ${t}. Continue?</b>`,n.innerText="Move cursor back into window.",n.style.width="100vw",n.style.height="100vh",n.onmouseenter=()=>{n.style.width="auto",n.style.height="auto",n.innerText="Yes"},n.onclick=()=>{window.open(t,"_blank"),e.remove()},s.innerText="No",s.onclick=()=>{e.remove()},e.append(r),r.append(i),r.append(n),r.append(s),document.body.append(e);return}window.open(t,"_blank")}};var It="https://beacon.zesty.market",Mt="https://beacon2.zesty.market/zgraphql",nn="https://api.zesty.market/api";var $t=async(t,e="tall",r="standard")=>{try{let i=encodeURI(window.top.location.href).replace(/\/$/,"");return(await L.default.get(`${nn}/ad?ad_unit_id=${t}&url=${i}`)).data}catch{return console.warn("No active campaign banner could be located. Displaying default banner."),{Ads:[{asset_url:_[e].style[r],cta_url:"https://www.zesty.market"}],CampaignId:"TestCampaign"}}},Wt=async(t,e=null)=>{let{platform:r,confidence:i}=await we();try{let n=It+`/api/v1/space/${t}`;await L.default.put(n),await L.default.post(Mt,{query:`mutation { increment(eventType: visits, spaceId: "${t}", campaignId: "${e}", platform: { name: ${r}, confidence: ${i} }) { message } }`},{headers:{"Content-Type":"application/json"}})}catch(n){console.log("Failed to emit onload event",n.message)}},Ht=async(t,e=null)=>{let{platform:r,confidence:i}=await we();try{let n=It+`/api/v1/space/click/${t}`;await L.default.put(n),await L.default.post(Mt,{query:`mutation { increment(eventType: clicks, spaceId: "${t}", campaignId: "${e}", platform: { name: ${r}, confidence: ${i} }) { message } }`},{headers:{"Content-Type":"application/json"}})}catch(n){console.log("Failed to emit onclick event",n.message)}};var Jt="2.0.6";console.log(`Zesty SDK Version: ${Jt} (compatibility)`);var an="https://cdn.zesty.xyz/sdk/zesty-formats.js",on="https://cdn.zesty.xyz/sdk/zesty-networking.js";WL.registerComponent("zesty-banner",{adUnit:{type:WL.Type.String},format:{type:WL.Type.Enum,values:Object.keys(_),default:Ut},style:{type:WL.Type.Enum,values:["standard","minimal","transparent"],default:"transparent"},scaleToRatio:{type:WL.Type.Bool,default:!0},textureProperty:{type:WL.Type.String,default:"auto"},beacon:{type:WL.Type.Bool,default:!0},dynamicFormats:{type:WL.Type.Bool,default:!0},createAutomaticCollision:{type:WL.Type.Bool,default:!0},dynamicNetworking:{type:WL.Type.Bool,default:!0}},{init:function(){this.formats=Object.values(_),this.formatKeys=Object.keys(_),this.styleKeys=["standard","minimal","transparent"]},start:function(){if(this.mesh=this.object.getComponent("mesh"),!this.mesh)throw new Error("'zesty-banner ' missing mesh component");if(this.createAutomaticCollision&&(this.collision=this.object.getComponent("collision")||this.object.addComponent("collision",{collider:WL.Collider.Box,group:2}),this.cursorTarget=this.object.getComponent("cursor-target")||this.object.addComponent("cursor-target"),this.cursorTarget.addClickFunction(this.onClick.bind(this))),this.dynamicFormats){let t=document.createElement("script");t.onload=()=>{this.formatsOverride=zestyFormats.formats},t.setAttribute("src",an),t.setAttribute("crossorigin","anonymous"),document.body.appendChild(t)}this.dynamicNetworking?import(on).then(t=>{this.zestyNetworking=Object.assign({},t),this.startLoading()}).catch(()=>{console.error("Failed to dynamically retrieve networking code, falling back to bundled version."),this.dynamicNetworking=null,this.startLoading()}):this.startLoading()},startLoading:function(){this.loadBanner(this.adUnit,this.formatKeys[this.format],this.styleKeys[this.style]).then(t=>{this.banner=t,this.scaleToRatio&&(this.height=this.object.scalingLocal[1],this.object.resetScaling(),this.createAutomaticCollision&&(this.collision.extents=[this.formats[this.format].width*this.height,this.height,.1]),this.object.scale([this.formats[this.format].width*this.height,this.height,1]));let e=this.mesh.material;if(this.textureProperty==="auto"){let r=e.pipeline||e.shader;if(r==="Phong Opaque Textured")e.diffuseTexture=t.texture,e.alphaMaskThreshold=.3;else if(r==="Flat Opaque Textured")e.flatTexture=t.texture,e.alphaMaskThreshold=.8;else throw Error("'zesty-banner ' unable to apply banner texture: unsupported pipeline "+e.shader);this.mesh.material=e}else this.mesh.material[this.textureProperty]=t.texture;this.beacon&&(this.dynamicNetworking?this.zestyNetworking.sendOnLoadMetric(this.adUnit,this.banner.campaignId):Wt(this.adUnit,this.banner.campaignId))})},onClick:function(){this.banner?.url&&(WL.xrSession?WL.xrSession.end().then(this.executeClick.bind(this)):this.executeClick())},executeClick:function(){this.beacon&&(this.dynamicNetworking?this.zestyNetworking.sendOnClickMetric(this.adUnit,this.banner.campaignId):Ht(this.adUnit,this.banner.campaignId))},loadBanner:async function(t,e,r){let i=this.dynamicNetworking?await this.zestyNetworking.fetchCampaignAd(t,e,r):await $t(t,e,r),{asset_url:n,cta_url:s}=i.Ads[0];return WL.textures.load(n,"").then(a=>({texture:a,imageSrc:n,url:s,campaignId:i.CampaignId}))}});})();
+//# sourceMappingURL=zesty-wonderland-sdk-compat.js.map
 
 WL.registerComponent("pp-easy-light-attenuation", {
     _myVariableName: { type: WL.Type.String, default: "" },
