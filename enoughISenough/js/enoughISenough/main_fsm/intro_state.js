@@ -204,13 +204,5 @@ class IntroState extends PP.State {
 
     _onXRSessionStart(session) {
         this._myXRSessionStartCalled = true;
-
-        if (session.supportedFrameRates && session.updateTargetFrameRate) {
-            let targetFramerate = 72;
-
-            let supportedFrameRates = session.supportedFrameRates;
-            supportedFrameRates.sort((first, second) => Math.abs(first - targetFramerate) - Math.abs(second - targetFramerate));
-            session.updateTargetFrameRate(supportedFrameRates[0]);
-        }
     }
 }

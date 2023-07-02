@@ -387,6 +387,12 @@
                         "_mySpecularMultiplier": 2.0
                     },
                     "active": true
+                },
+                {
+                    "type": "target-framerate",
+                    "target-framerate": {
+                        "framerate": 72.0
+                    }
                 }
             ]
         },
@@ -1828,9 +1834,6 @@
                 null,
                 null,
                 {
-                    "type": "vr-mode-active-switch"
-                },
-                {
                     "type": "hand-animator",
                     "hand-animator": {
                         "_myHandPieceMesh": "128",
@@ -1904,9 +1907,6 @@
                 null,
                 null,
                 null,
-                {
-                    "type": "vr-mode-active-switch"
-                },
                 {
                     "type": "hand-animator",
                     "hand-animator": {
@@ -10753,12 +10753,11 @@
                 {
                     "type": "zesty-banner",
                     "zesty-banner": {
-                        "creator": "0x7f0b3f1CFb2B35433EFde2419B4Fa27D1094d7AF",
+                        "createAutomaticCollision": false,
                         "format": "tall",
                         "style": "standard",
-                        "beacon": true,
-                        "space": 129,
-                        "createAutomaticCollision": false
+                        "textureProperty": "diffuseTexture",
+                        "adUnit": "fe866e85-0faf-4d17-b7a0-ac19d9210438"
                     }
                 }
             ],
@@ -22102,6 +22101,12 @@
                 "name": "icon.png",
                 "file": "assets\\icons\\icon.png"
             }
+        },
+        "1431": {
+            "link": {
+                "name": "zesty-banner-tall.png",
+                "file": "assets\\textures\\zesty-banner-tall.png"
+            }
         }
     },
     "images": {
@@ -22122,6 +22127,13 @@
             "link": {
                 "name": "icon.png",
                 "file": "assets\\icons\\icon.png"
+            },
+            "compress": false
+        },
+        "1430": {
+            "link": {
+                "name": "zesty-banner-tall.png",
+                "file": "assets\\textures\\zesty-banner-tall.png"
             },
             "compress": false
         }
@@ -23188,7 +23200,8 @@
                     0.0,
                     0.0,
                     0.3294117
-                ]
+                ],
+                "diffuseTexture": "1431"
             },
             "pipeline": "79"
         },
@@ -25451,14 +25464,14 @@
             "usePreZ": false
         },
         "runtime": {
-            "xrButtonColor": "553388",
+            "xrButtonColor": "#492d85",
             "webxr": {
                 "requiredFeatures": {
                     "local-floor": false
                 },
                 "optionalFeatures": {
                     "local-floor": false,
-                    "hand-tracking": false
+                    "hand-tracking": true
                 }
             },
             "visualizeColliders": false,
@@ -25467,8 +25480,8 @@
             "googleAnalytics": "G-KN2L5E21YD",
             "pwa": {
                 "appIcon": "1428",
-                "customManifest": true,
                 "customServiceWorker": true,
+                "customManifest": true,
                 "enable": true
             }
         },
@@ -25553,7 +25566,8 @@
         "assets/models/evidences/arcade_stick_f.fbx",
         "assets/models/evidences/frame_f.fbx",
         "assets/models/evidences/floppy_f.fbx",
-        "assets/icons/icon.png"
+        "assets/icons/icon.png",
+        "assets/textures/zesty-banner-tall.png"
     ],
     "pipelines": {
         "69": {
@@ -25590,6 +25604,19 @@
             "link": {
                 "name": "Phong Opaque Textured",
                 "file": "default"
+            },
+            "blending": true,
+            "sampleAlphaToCoverage": true,
+            "blendSrc": "source alpha",
+            "blendDest": "one minus source alpha",
+            "blendEqAlpha": "add",
+            "depthFunction": "less or equal",
+            "features": {
+                "TEXTURED": true,
+                "ALPHA": true,
+                "ALPHA_MASKED": false,
+                "WITH_FOG": true,
+                "WITH_EMISSIVE": true
             }
         },
         "82": {

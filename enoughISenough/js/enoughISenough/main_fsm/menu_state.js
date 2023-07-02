@@ -377,7 +377,29 @@ class MenuState extends PP.State {
                     this._myResetCount = 0;
                     let zestyComponent = this._myZestyObject.getObject().pp_getComponentHierarchy("zesty-banner");
                     if (zestyComponent) {
-                        Global.myZestyToClick = zestyComponent;
+                        if (Global.myGoogleAnalytics) {
+                            gtag("event", "zesty_market_opened", {
+                                "value": 1
+                            });
+                        }
+
+                        if (zestyComponent.banner != null) {
+                            let onZestySuccess = function () {
+                                Global.myUnmute = true;
+                                Howler.mute(true);
+
+                                zestyComponent.executeClick();
+                            }.bind(this);
+
+                            PP.XRUtils.openLinkPersistent(zestyComponent.banner.url, true, true, 15, onZestySuccess);
+                        } else {
+                            PP.XRUtils.openLinkPersistent("https://www.zesty.market", true, true, 15,
+                                function () {
+                                    Global.myUnmute = true;
+                                    Howler.mute(true);
+                                }.bind(this)
+                            );
+                        }
                     }
                 }
             }.bind(this));
@@ -407,7 +429,12 @@ class MenuState extends PP.State {
                     });
                 }
 
-                PP.XRUtils.openLinkPersistent("https://signor-pipo.itch.io/not-enough", true, true, 10);
+                PP.XRUtils.openLinkPersistent("https://signor-pipo.itch.io/not-enough", true, true, 15,
+                    function () {
+                        Global.myUnmute = true;
+                        Howler.mute(true);
+                    }.bind(this)
+                );
             }.bind(this));
             this._myMenuItems.push(wondermelon);
         }
@@ -611,7 +638,7 @@ class MenuItem {
         if (this._myTimer.isDone()) {
             Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myParticlesRadius, this._myScale, this._myObjectType);
             this._myFSM.perform("end");
-            if (this._myCallbackOnFall && WL.xrSession && this._myThrowTimer.isRunning()) {
+            if (this._myCallbackOnFall && PP.XRUtils.isXRSessionActive() && Global.myXRSessionActiveOpenLinkExtraCheck && this._myThrowTimer.isRunning()) {
                 this._myCallbackOnFall();
             }
         }

@@ -17,6 +17,12 @@ PP.HandPose = class HandPose {
 
         this._myLinearVelocity = [0, 0, 0];
         this._myAngularVelocity = [0, 0, 0]; // Radians
+
+        this._myValid = false;
+    }
+
+    isValid() {
+        return this._myValid;
     }
 
     getReferenceSpace() {
@@ -40,13 +46,7 @@ PP.HandPose = class HandPose {
     }
 
     getRotationQuat() {
-        let out = this._myRotation.slice(0);
-
-        if (this._myFixForward) {
-            out = glMatrix.quat.rotateY(out, out, Math.PI);
-        }
-
-        return out;
+        // Implemented outside class definition
     }
 
     getTransform() {
@@ -130,6 +130,8 @@ PP.HandPose = class HandPose {
                 } else {
                     this._computeEmulatedAngularVelocity(dt);
                 }
+
+                this._myValid = true;
             } else {
                 //keep previous position and rotation but reset velocity because reasons
 
@@ -140,6 +142,8 @@ PP.HandPose = class HandPose {
                 this._myAngularVelocity[0] = 0;
                 this._myAngularVelocity[1] = 0;
                 this._myAngularVelocity[2] = 0;
+
+                this._myValid = false;
             }
         } else {
             //keep previous position and rotation but reset velocity because reasons
@@ -151,6 +155,8 @@ PP.HandPose = class HandPose {
             this._myAngularVelocity[0] = 0;
             this._myAngularVelocity[1] = 0;
             this._myAngularVelocity[2] = 0;
+
+            this._myValid = false;
         }
     }
 
@@ -211,3 +217,23 @@ PP.HandPose = class HandPose {
         this._myInputSource = null;
     }
 };
+
+PP.HandPose.prototype.getRotationQuat = function () {
+    let up = glMatrix.vec3.create();
+    let right = glMatrix.vec3.create();
+    return function getRotationQuat() {
+        let out = this._myRotation.slice(0);
+
+        if (PP.InputUtils.getInputSourceType(this._myHandedness) == PP.InputSourceType.HAND) {
+            if (this._myFixForward) {
+                out.quat_rotateAxisDegrees(180, out.quat_getUp(up), out);
+            }
+
+            out.quat_rotateAxisDegrees(-90, out.quat_getRight(right), out);
+        } else if (this._myFixForward) {
+            out = glMatrix.quat.rotateY(out, out, Math.PI);
+        }
+
+        return out;
+    };
+}();

@@ -13,7 +13,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         Global.myMeshNoFogObjectPoolMap = new PP.ObjectPoolManager();
         Global.myGameObjectPoolMap = new PP.ObjectPoolManager();
         Global.mySaveManager = new PP.SaveManager();
-        //Global.mySaveManager.clear();
+        //Global.mySaveManager.clear(); 
         Global.myScene = this.object;
 
         Global.myPlayerRumbleObject = this._myPlayerRumbleObject;
@@ -34,7 +34,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
     },
     start: function () {
         let version = Global.mySaveManager.loadNumber("game_version", 0);
-        Global.myGameVersion = 13;
+        Global.myGameVersion = 14;
 
         let minVersionToReset = 6;
         if (version < minVersionToReset) {
@@ -48,6 +48,12 @@ WL.registerComponent("enough-IS-enough-gateway", {
         let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
         let trialCompleted = Global.mySaveManager.loadBool("trial_completed", false);
         Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialPhase >= 2);
+
+        if (WL.xrSession) {
+            this._onXRSessionStart(WL.xrSession);
+        }
+        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
+        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
     },
     update: function (dt) {
         if (this._myFirstUpdate) {
@@ -82,15 +88,9 @@ WL.registerComponent("enough-IS-enough-gateway", {
                 Global.mySaveManager.update(dt * Global.myDeltaTimeSpeed);
             }
 
-            if (Global.myZestyToClick != null) {
-                if (Global.myGoogleAnalytics) {
-                    gtag("event", "zesty_market_opened", {
-                        "value": 1
-                    });
-                }
-
-                Global.myZestyToClick.onClick();
-                Global.myZestyToClick = null;
+            if (Global.myUnmute && PP.XRUtils.isXRSessionActive() && Global.myXRSessionActiveOpenLinkExtraCheck) {
+                Global.myUnmute = false;
+                Howler.mute(false);
             }
         }
     },
@@ -219,6 +219,12 @@ WL.registerComponent("enough-IS-enough-gateway", {
                 console.clear();
             }
         }
+    },
+    _onXRSessionStart(session) {
+        Global.myXRSessionActiveOpenLinkExtraCheck = true;
+    },
+    _onXRSessionEnd() {
+        Global.myXRSessionActiveOpenLinkExtraCheck = false;
     }
 });
 
@@ -261,12 +267,13 @@ var Global = {
     myStatistics: null,
     myIsInMenu: false,
     myIsInArcadeResult: false,
-    myZestyToClick: null,
     myEnableSelectPhysx: false,
     mySaveManager: null,
     myDebugCurrentVentObject: null,
     myPlayMusic: false,
     myStopMusic: false,
     myGameVersion: 0,
-    myGoogleAnalytics: false
+    myGoogleAnalytics: false,
+    myUnmute: false,
+    myXRSessionActiveOpenLinkExtraCheck: false
 };

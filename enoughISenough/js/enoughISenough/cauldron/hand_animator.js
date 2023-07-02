@@ -59,10 +59,26 @@ WL.registerComponent("hand-animator", {
         this._myStarted = false;
 
         this._myPulseTimer = new PP.Timer(0.25);
+
+        this._myHandPose = new PP.HandPose(PP.InputUtils.getHandednessByIndex(this._myHandedness));
+        this._myHandPose.start();
     },
     update: function (dt) {
+        this._myHandPose.update(dt);
+
         for (let piece of this._myHandPieces) {
-            piece.update(dt, this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).myValue);
+            if (PP.InputUtils.getInputSourceType(this._myHandPose._myHandedness) == PP.InputSourceType.GAMEPAD) {
+                piece.update(dt, this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).myValue);
+            } else {
+                let pressValue = 0;
+                if (this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).myIsPressed || this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).myIsPressed) {
+                    pressValue = 1;
+                }
+
+                piece.update(dt, pressValue);
+            }
+
+            piece.setVisible(this._myHandPose.isValid());
         }
 
         if (this._myAppearList.length > 0) {
@@ -130,8 +146,9 @@ class HandPiece {
 
         this._myCurrentPosition = startPosition.slice(0);
 
+        this._myIsVisible = false;
         this._myIsActive = false;
-        this._myObject.pp_setActive(this._myIsActive);
+        this._myObject.pp_setActive(this._myIsVisible);
 
         this._myScale = 0;
         this._myObject.pp_setScale(this._myScale);
@@ -144,7 +161,6 @@ class HandPiece {
 
     start() {
         this._myIsActive = true;
-        this._myObject.pp_setActive(this._myIsActive);
 
         this._myAudio.play();
     }
@@ -171,7 +187,6 @@ class HandPiece {
 
     skip() {
         this._myIsActive = true;
-        this._myObject.pp_setActive(this._myIsActive);
 
         this._myTimer.reset();
 
@@ -179,5 +194,12 @@ class HandPiece {
 
         this._myScale = 1;
         this._myObject.pp_setScale(this._myScale);
+    }
+
+    setVisible(visible) {
+        if (this._myIsVisible != (this._myIsActive && visible)) {
+            this._myIsVisible = this._myIsActive && visible;
+            this._myObject.pp_setActive(this._myIsVisible);
+        }
     }
 }

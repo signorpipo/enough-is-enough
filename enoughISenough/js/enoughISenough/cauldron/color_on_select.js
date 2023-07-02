@@ -17,6 +17,8 @@ WL.registerComponent("color-on-select", {
 
         this._myFirstUpdate = true;
         this._myPrevSelectValue = -1;
+
+        this._myHandednessType = PP.InputUtils.getHandednessByIndex(this._myHandedness);
     },
     update() {
         if (this._myFirstUpdate) {
@@ -34,7 +36,7 @@ WL.registerComponent("color-on-select", {
             PP.MeshUtils.setMaterial(this.object, this._myMaterial);
         } else {
             let selectValue = Math.pp_mapToRange(this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).getValue(), 0.1, 0.85, 0, 1);
-            if (!Global.myEnableSelectPhysx) {
+            if (!Global.myEnableSelectPhysx || PP.InputUtils.getInputSourceType(this._myHandednessType) != PP.InputSourceType.GAMEPAD) {
                 selectValue = 0;
             }
 

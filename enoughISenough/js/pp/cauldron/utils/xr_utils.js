@@ -10,6 +10,7 @@ PP.XRUtils = {
         if (exitXRSession) {
             if (WL.xrSession) {
                 WL.xrSession.end();
+                Global.myXRSessionActiveOpenLinkExtraCheck = false;
             }
         }
 
