@@ -112,7 +112,15 @@ WL.registerComponent("enough-IS-enough-gateway", {
             if (entry[0] != GameObjectType.STARING_CUBE && entry[0] != GameObjectType.ZESTY_MARKET) {
                 PP.MeshUtils.setClonedMaterials(entry[1]);
                 PP.TextUtils.setClonedMaterials(entry[1]);
+            } else if (entry[0] == GameObjectType.ZESTY_MARKET) {
+                let zestyMeshes = entry[1].pp_getComponentsHierarchy("mesh");
+                for (let zestyMesh of zestyMeshes) {
+                    if (zestyMesh.material.diffuseTexture == null) {
+                        zestyMesh.material = zestyMesh.material.clone();
+                    }
+                }
             }
+
             entry[1].pp_setActive(false);
 
             let clonedMesh = entry[1].pp_clone();
@@ -126,7 +134,15 @@ WL.registerComponent("enough-IS-enough-gateway", {
             if (entry[0] != GameObjectType.STARING_CUBE && entry[0] != GameObjectType.ZESTY_MARKET) {
                 PP.MeshUtils.setClonedMaterials(entry[1]);
                 PP.TextUtils.setClonedMaterials(entry[1]);
+            } else if (entry[0] == GameObjectType.ZESTY_MARKET) {
+                let zestyMeshes = entry[1].pp_getComponentsHierarchy("mesh");
+                for (let zestyMesh of zestyMeshes) {
+                    if (zestyMesh.material.diffuseTexture == null) {
+                        zestyMesh.material = zestyMesh.material.clone();
+                    }
+                }
             }
+
             entry[1].pp_setActive(false);
         }
 
