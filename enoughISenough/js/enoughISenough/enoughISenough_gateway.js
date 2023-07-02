@@ -13,7 +13,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         Global.myMeshNoFogObjectPoolMap = new PP.ObjectPoolManager();
         Global.myGameObjectPoolMap = new PP.ObjectPoolManager();
         Global.mySaveManager = new PP.SaveManager();
-        //Global.mySaveManager.clear();
+        //Global.mySaveManager.clear(); 
         Global.myScene = this.object;
 
         Global.myPlayerRumbleObject = this._myPlayerRumbleObject;
@@ -82,15 +82,9 @@ WL.registerComponent("enough-IS-enough-gateway", {
                 Global.mySaveManager.update(dt * Global.myDeltaTimeSpeed);
             }
 
-            if (Global.myZestyToClick != null) {
-                if (Global.myGoogleAnalytics) {
-                    gtag("event", "zesty_market_opened", {
-                        "value": 1
-                    });
-                }
-
-                Global.myZestyToClick.onClick();
-                Global.myZestyToClick = null;
+            if (Global.myUnmute && PP.XRUtils.isXRSessionActive()) {
+                Global.myUnmute = false;
+                Howler.mute(false);
             }
         }
     },
@@ -261,12 +255,12 @@ var Global = {
     myStatistics: null,
     myIsInMenu: false,
     myIsInArcadeResult: false,
-    myZestyToClick: null,
     myEnableSelectPhysx: false,
     mySaveManager: null,
     myDebugCurrentVentObject: null,
     myPlayMusic: false,
     myStopMusic: false,
     myGameVersion: 0,
-    myGoogleAnalytics: false
+    myGoogleAnalytics: false,
+    myUnmute: false
 };
