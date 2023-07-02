@@ -11,24 +11,31 @@ WL.registerComponent("text-color-fog", {
         this._myFirstUpdate = true;
     },
     update: function (dt) {
-        if (this._myFirstUpdate) {
-            this._myFirstUpdate = false;
-            this._myTextComponents = this.object.pp_getComponentsHierarchy("text");
-            this._myColor = this._myTextComponents[0].material.color.pp_clone();
-        }
+        if (Global.myUpdateReady) {
+            if (this._myFirstUpdate) {
+                this._myFirstUpdate = false;
+                this._myTextComponents = this.object.pp_getComponentsHierarchy("text");
 
-        let distance = Global.myPlayerPosition.vec3_sub(this.object.pp_getPosition(this._myTempVec3), this._myTempVec3).vec3_length();
-        let fogFactor = this.fogFactorExp2(distance, this._myFogAlpha * 0.2);
+                for (let textComponent of this._myTextComponents) {
+                    textComponent.material = textComponent.material.clone();
+                }
 
-        for (let textComponent of this._myTextComponents) {
-            let color = this._computeLightColor(this._myTempVec4.pp_copy(this._myColor), textComponent.object.pp_getForward(this._myTempVec3));
+                this._myColor = this._myTextComponents[0].material.color.pp_clone();
+            }
 
-            this._myTempVec4[0] = Math.pp_lerp(color[0], 0, fogFactor);
-            this._myTempVec4[1] = Math.pp_lerp(color[1], 0, fogFactor);
-            this._myTempVec4[2] = Math.pp_lerp(color[2], 0, fogFactor);
-            this._myTempVec4[3] = textComponent.material.color[3];
+            let distance = Global.myPlayerPosition.vec3_sub(this.object.pp_getPosition(this._myTempVec3), this._myTempVec3).vec3_length();
+            let fogFactor = this._fogFactorExp2(distance, this._myFogAlpha * 0.2);
 
-            textComponent.material.color = this._myTempVec4;
+            for (let textComponent of this._myTextComponents) {
+                let color = this._computeLightColor(this._myTempVec4.pp_copy(this._myColor), textComponent.object.pp_getForward(this._myTempVec3));
+
+                this._myTempVec4[0] = Math.pp_lerp(color[0], 0, fogFactor);
+                this._myTempVec4[1] = Math.pp_lerp(color[1], 0, fogFactor);
+                this._myTempVec4[2] = Math.pp_lerp(color[2], 0, fogFactor);
+                this._myTempVec4[3] = textComponent.material.color[3];
+
+                textComponent.material.color = this._myTempVec4;
+            }
         }
     },
     _computeLightColor(color, forward) {
@@ -45,11 +52,12 @@ WL.registerComponent("text-color-fog", {
 
         return color;
     },
-    fogFactorExp2(dist, density) {
+    _fogFactorExp2(dist, density) {
         let LOG2 = -1.442695;
         let d = density * dist;
         return 1.0 - Math.pp_clamp(Math.pow(2, d * d * LOG2), 0.0, 1.0);
     },
-    pp_clone() {
+    pp_clone(clone) {
+        clone._myShadeFactorMaxAngle = this._myShadeFactorMaxAngle;
     }
 });
