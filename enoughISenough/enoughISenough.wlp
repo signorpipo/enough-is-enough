@@ -25552,7 +25552,8 @@
                 "TEXTURED": true,
                 "ALPHA": true,
                 "ALPHA_MASKED": false,
-                "WITH_FOG": true
+                "WITH_FOG": true,
+                "WITH_EMISSIVE": true
             }
         },
         "82": {
