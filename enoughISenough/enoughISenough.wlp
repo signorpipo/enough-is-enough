@@ -22032,6 +22032,18 @@
                 "name": "P8_palette.png",
                 "file": "assets\\textures\\P8_palette.png"
             }
+        },
+        "1429": {
+            "link": {
+                "name": "icon.png",
+                "file": "assets\\icons\\icon.png"
+            }
+        },
+        "1431": {
+            "link": {
+                "name": "zesty-banner-tall.png",
+                "file": "assets\\textures\\zesty-banner-tall.png"
+            }
         }
     },
     "images": {
@@ -22045,7 +22057,22 @@
             "link": {
                 "name": "P8_palette.png",
                 "file": "assets\\textures\\P8_palette.png"
-            }
+            },
+            "compress": false
+        },
+        "1428": {
+            "link": {
+                "name": "icon.png",
+                "file": "assets\\icons\\icon.png"
+            },
+            "compress": false
+        },
+        "1430": {
+            "link": {
+                "name": "zesty-banner-tall.png",
+                "file": "assets\\textures\\zesty-banner-tall.png"
+            },
+            "compress": false
         }
     },
     "materials": {
@@ -23110,7 +23137,8 @@
                     0.0,
                     0.0,
                     0.3294117
-                ]
+                ],
+                "diffuseTexture": "1431"
             },
             "pipeline": "79"
         },
@@ -25386,7 +25414,13 @@
             "visualizeColliders": false,
             "enableRuntimeGltf": false,
             "visualizePhysX": false,
-            "googleAnalytics": ""
+            "googleAnalytics": "G-KN2L5E21YD",
+            "pwa": {
+                "appIcon": "1428",
+                "customServiceWorker": true,
+                "customManifest": true,
+                "enable": true
+            }
         },
         "physx": {
             "enable": true,
@@ -25468,7 +25502,9 @@
         "assets/models/evidences/ethereum_physx.fbx",
         "assets/models/evidences/arcade_stick_f.fbx",
         "assets/models/evidences/frame_f.fbx",
-        "assets/models/evidences/floppy_f.fbx"
+        "assets/models/evidences/floppy_f.fbx",
+        "assets/icons/icon.png",
+        "assets/textures/zesty-banner-tall.png"
     ],
     "pipelines": {
         "69": {
@@ -25505,6 +25541,18 @@
             "link": {
                 "name": "Phong Opaque Textured",
                 "file": "default"
+            },
+            "blending": true,
+            "sampleAlphaToCoverage": true,
+            "blendSrc": "source alpha",
+            "blendDest": "one minus source alpha",
+            "blendEqAlpha": "add",
+            "depthFunction": "less or equal",
+            "features": {
+                "TEXTURED": true,
+                "ALPHA": true,
+                "ALPHA_MASKED": false,
+                "WITH_FOG": true
             }
         },
         "82": {
