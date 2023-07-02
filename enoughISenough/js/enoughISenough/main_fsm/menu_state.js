@@ -638,7 +638,7 @@ class MenuItem {
         if (this._myTimer.isDone()) {
             Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myParticlesRadius, this._myScale, this._myObjectType);
             this._myFSM.perform("end");
-            if (this._myCallbackOnFall && WL.xrSession && this._myThrowTimer.isRunning()) {
+            if (this._myCallbackOnFall && PP.XRUtils.isXRSessionActive() && Global.myXRSessionActiveOpenLinkExtraCheck && this._myThrowTimer.isRunning()) {
                 this._myCallbackOnFall();
             }
         }

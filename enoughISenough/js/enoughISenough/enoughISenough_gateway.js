@@ -48,6 +48,12 @@ WL.registerComponent("enough-IS-enough-gateway", {
         let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
         let trialCompleted = Global.mySaveManager.loadBool("trial_completed", false);
         Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialPhase >= 2);
+
+        if (WL.xrSession) {
+            this._onXRSessionStart(WL.xrSession);
+        }
+        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
+        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
     },
     update: function (dt) {
         if (this._myFirstUpdate) {
@@ -82,7 +88,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
                 Global.mySaveManager.update(dt * Global.myDeltaTimeSpeed);
             }
 
-            if (Global.myUnmute && PP.XRUtils.isXRSessionActive()) {
+            if (Global.myUnmute && PP.XRUtils.isXRSessionActive() && Global.myXRSessionActiveOpenLinkExtraCheck) {
                 Global.myUnmute = false;
                 Howler.mute(false);
             }
@@ -213,6 +219,12 @@ WL.registerComponent("enough-IS-enough-gateway", {
                 console.clear();
             }
         }
+    },
+    _onXRSessionStart(session) {
+        Global.myXRSessionActiveOpenLinkExtraCheck = true;
+    },
+    _onXRSessionEnd() {
+        Global.myXRSessionActiveOpenLinkExtraCheck = false;
     }
 });
 
@@ -262,5 +274,6 @@ var Global = {
     myStopMusic: false,
     myGameVersion: 0,
     myGoogleAnalytics: false,
-    myUnmute: false
+    myUnmute: false,
+    myXRSessionActiveOpenLinkExtraCheck: false
 };
