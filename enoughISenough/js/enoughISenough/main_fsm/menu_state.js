@@ -377,18 +377,18 @@ class MenuState extends PP.State {
                     this._myResetCount = 0;
                     let zestyComponent = this._myZestyObject.getObject().pp_getComponentHierarchy("zesty-banner");
                     if (zestyComponent) {
-                        if (Global.myGoogleAnalytics) {
-                            gtag("event", "zesty_market_opened", {
-                                "value": 1
-                            });
-                        }
-
                         if (zestyComponent.banner != null) {
                             let onZestySuccess = function () {
                                 Global.myUnmute = true;
                                 Howler.mute(true);
 
                                 zestyComponent.executeClick();
+
+                                if (Global.myGoogleAnalytics) {
+                                    gtag("event", "zesty_market_opened", {
+                                        "value": 1
+                                    });
+                                }
                             }.bind(this);
 
                             PP.XRUtils.openLinkPersistent(zestyComponent.banner.url, true, true, 15, onZestySuccess);
@@ -397,6 +397,12 @@ class MenuState extends PP.State {
                                 function () {
                                     Global.myUnmute = true;
                                     Howler.mute(true);
+
+                                    if (Global.myGoogleAnalytics) {
+                                        gtag("event", "zesty_market_opened", {
+                                            "value": 1
+                                        });
+                                    }
                                 }.bind(this)
                             );
                         }
@@ -423,16 +429,16 @@ class MenuState extends PP.State {
 
         {
             let wondermelon = new MenuItem(Global.myGameObjects.get(GameObjectType.WONDERMELON), GameObjectType.WONDERMELON, positions[7], function () {
-                if (Global.myGoogleAnalytics) {
-                    gtag("event", "not_enough_opened", {
-                        "value": 1
-                    });
-                }
-
                 PP.XRUtils.openLinkPersistent("https://signor-pipo.itch.io/not-enough", true, true, 15,
                     function () {
                         Global.myUnmute = true;
                         Howler.mute(true);
+
+                        if (Global.myGoogleAnalytics) {
+                            gtag("event", "not_enough_opened", {
+                                "value": 1
+                            });
+                        }
                     }.bind(this)
                 );
             }.bind(this));
