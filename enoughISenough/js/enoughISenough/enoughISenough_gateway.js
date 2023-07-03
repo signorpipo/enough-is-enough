@@ -115,7 +115,8 @@ WL.registerComponent("enough-IS-enough-gateway", {
             } else if (entry[0] == GameObjectType.ZESTY_MARKET) {
                 let zestyMeshes = entry[1].pp_getComponentsHierarchy("mesh");
                 for (let zestyMesh of zestyMeshes) {
-                    if (zestyMesh.material.diffuseTexture == null) {
+                    let zestyMeshName = zestyMesh.object.pp_getName();
+                    if (zestyMeshName != null && zestyMeshName.includes("Frame")) {
                         zestyMesh.material = zestyMesh.material.clone();
                     }
                 }
@@ -137,7 +138,8 @@ WL.registerComponent("enough-IS-enough-gateway", {
             } else if (entry[0] == GameObjectType.ZESTY_MARKET) {
                 let zestyMeshes = entry[1].pp_getComponentsHierarchy("mesh");
                 for (let zestyMesh of zestyMeshes) {
-                    if (zestyMesh.material.diffuseTexture == null) {
+                    let zestyMeshName = zestyMesh.object.pp_getName();
+                    if (zestyMeshName != null && zestyMeshName.includes("Frame")) {
                         zestyMesh.material = zestyMesh.material.clone();
                     }
                 }
