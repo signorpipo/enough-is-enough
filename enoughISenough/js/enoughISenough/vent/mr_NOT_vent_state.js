@@ -48,6 +48,10 @@ class MrNOTVentState extends PP.State {
     update(dt, fsm) {
         Global.myVentDuration += dt;
 
+        if (Global.myIsUsingTrackedHands) {
+            Global.myVentDurationWithTrackedHands += dt;
+        }
+
         this._myFSM.update(dt);
         this._myEvidenceManager.update(dt);
         this._myVent.update(dt);
@@ -75,6 +79,7 @@ class MrNOTVentState extends PP.State {
     _prepareState(fsm, transition) {
         Global.myLightFadeInTime = 0;
         Global.myVentDuration = 0;
+        Global.myVentDurationWithTrackedHands = 0;
         this._myNotEnough.stop();
     }
 

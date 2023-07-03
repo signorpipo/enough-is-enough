@@ -83,6 +83,14 @@ WL.registerComponent("enough-IS-enough-gateway", {
             if (this._myIncreasePool) {
                 this._increasePools();
             } else {
+                if (PP.InputUtils.getInputSourceType(PP.Handedness.LEFT) == PP.InputSourceType.HAND &&
+                    PP.InputUtils.getInputSourceType(PP.Handedness.RIGHT) == PP.InputSourceType.HAND
+                ) {
+                    Global.myIsUsingTrackedHands = true;
+                } else {
+                    Global.myIsUsingTrackedHands = false;
+                }
+
                 this.enoughISenough.update(dt * Global.myDeltaTimeSpeed);
                 Global.myParticlesManager.update(dt * Global.myDeltaTimeSpeed);
                 Global.mySaveManager.update(dt * Global.myDeltaTimeSpeed);
@@ -91,6 +99,18 @@ WL.registerComponent("enough-IS-enough-gateway", {
             if (Global.myUnmute && PP.XRUtils.isXRSessionActive() && Global.myXRSessionActiveOpenLinkExtraCheck) {
                 Global.myUnmute = false;
                 Howler.mute(false);
+            }
+
+            if (!Global.myIsUsingTrackedHandsVentEventSent) {
+                if (Global.myVentDurationWithTrackedHands >= 40) {
+                    Global.myIsUsingTrackedHandsVentEventSent = true;
+
+                    if (Global.myGoogleAnalytics) {
+                        gtag("event", "is_using_tracked_hands_vent", {
+                            "value": 1
+                        });
+                    }
+                }
             }
         }
     },
@@ -296,5 +316,6 @@ var Global = {
     myXRSessionActiveOpenLinkExtraCheck: false,
     myIsUsingTrackedHands: false,
     myHasGrabbedTrackedHandsEventSent: false,
-    myIsUsingTrackedHandsVentEventSent: false
+    myIsUsingTrackedHandsVentEventSent: false,
+    myVentDurationWithTrackedHands: 0
 };
