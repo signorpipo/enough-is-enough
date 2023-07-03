@@ -116,7 +116,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
                 let zestyMeshes = entry[1].pp_getComponentsHierarchy("mesh");
                 for (let zestyMesh of zestyMeshes) {
                     let zestyMeshName = zestyMesh.object.pp_getName();
-                    if (zestyMeshName != null && zestyMeshName.includes("Frame")) {
+                    if (zestyMeshName.includes("Frame")) {
                         zestyMesh.material = zestyMesh.material.clone();
                     }
                 }
@@ -139,7 +139,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
                 let zestyMeshes = entry[1].pp_getComponentsHierarchy("mesh");
                 for (let zestyMesh of zestyMeshes) {
                     let zestyMeshName = zestyMesh.object.pp_getName();
-                    if (zestyMeshName != null && zestyMeshName.includes("Frame")) {
+                    if (zestyMeshName.includes("Frame")) {
                         zestyMesh.material = zestyMesh.material.clone();
                     }
                 }
