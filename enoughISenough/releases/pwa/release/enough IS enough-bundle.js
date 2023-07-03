@@ -5326,7 +5326,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
     },
     start: function () {
         let version = Global.mySaveManager.loadNumber("game_version", 0);
-        Global.myGameVersion = 14;
+        Global.myGameVersion = 16;
 
         let minVersionToReset = 6;
         if (version < minVersionToReset) {
@@ -5375,6 +5375,14 @@ WL.registerComponent("enough-IS-enough-gateway", {
             if (this._myIncreasePool) {
                 this._increasePools();
             } else {
+                if (PP.InputUtils.getInputSourceType(PP.Handedness.LEFT) == PP.InputSourceType.HAND &&
+                    PP.InputUtils.getInputSourceType(PP.Handedness.RIGHT) == PP.InputSourceType.HAND
+                ) {
+                    Global.myIsUsingTrackedHands = true;
+                } else {
+                    Global.myIsUsingTrackedHands = false;
+                }
+
                 this.enoughISenough.update(dt * Global.myDeltaTimeSpeed);
                 Global.myParticlesManager.update(dt * Global.myDeltaTimeSpeed);
                 Global.mySaveManager.update(dt * Global.myDeltaTimeSpeed);
@@ -5383,6 +5391,18 @@ WL.registerComponent("enough-IS-enough-gateway", {
             if (Global.myUnmute && PP.XRUtils.isXRSessionActive() && Global.myXRSessionActiveOpenLinkExtraCheck) {
                 Global.myUnmute = false;
                 Howler.mute(false);
+            }
+
+            if (!Global.myIsUsingTrackedHandsVentEventSent) {
+                if (Global.myVentDurationWithTrackedHands >= 40) {
+                    Global.myIsUsingTrackedHandsVentEventSent = true;
+
+                    if (Global.myGoogleAnalytics) {
+                        gtag("event", "is_using_tracked_hands_vent", {
+                            "value": 1
+                        });
+                    }
+                }
             }
         }
     },
@@ -5404,7 +5424,16 @@ WL.registerComponent("enough-IS-enough-gateway", {
             if (entry[0] != GameObjectType.STARING_CUBE && entry[0] != GameObjectType.ZESTY_MARKET) {
                 PP.MeshUtils.setClonedMaterials(entry[1]);
                 PP.TextUtils.setClonedMaterials(entry[1]);
+            } else if (entry[0] == GameObjectType.ZESTY_MARKET) {
+                let zestyMeshes = entry[1].pp_getComponentsHierarchy("mesh");
+                for (let zestyMesh of zestyMeshes) {
+                    let zestyMeshName = zestyMesh.object.pp_getName();
+                    if (zestyMeshName.includes("Frame")) {
+                        zestyMesh.material = zestyMesh.material.clone();
+                    }
+                }
             }
+
             entry[1].pp_setActive(false);
 
             let clonedMesh = entry[1].pp_clone();
@@ -5418,7 +5447,16 @@ WL.registerComponent("enough-IS-enough-gateway", {
             if (entry[0] != GameObjectType.STARING_CUBE && entry[0] != GameObjectType.ZESTY_MARKET) {
                 PP.MeshUtils.setClonedMaterials(entry[1]);
                 PP.TextUtils.setClonedMaterials(entry[1]);
+            } else if (entry[0] == GameObjectType.ZESTY_MARKET) {
+                let zestyMeshes = entry[1].pp_getComponentsHierarchy("mesh");
+                for (let zestyMesh of zestyMeshes) {
+                    let zestyMeshName = zestyMesh.object.pp_getName();
+                    if (zestyMeshName.includes("Frame")) {
+                        zestyMesh.material = zestyMesh.material.clone();
+                    }
+                }
             }
+
             entry[1].pp_setActive(false);
         }
 
@@ -5567,7 +5605,11 @@ var Global = {
     myGameVersion: 0,
     myGoogleAnalytics: false,
     myUnmute: false,
-    myXRSessionActiveOpenLinkExtraCheck: false
+    myXRSessionActiveOpenLinkExtraCheck: false,
+    myIsUsingTrackedHands: false,
+    myHasGrabbedTrackedHandsEventSent: false,
+    myIsUsingTrackedHandsVentEventSent: false,
+    myVentDurationWithTrackedHands: 0
 };
 WL.registerComponent('pp-tool-cursor', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
@@ -13732,24 +13774,26 @@ WL.registerComponent("mr_not_mirror", {
     start: function () {
     },
     update: function (dt) {
-        let difference = this.object.pp_getPosition().vec3_sub(Global.myPlayerPosition);
-        let diffLength = difference.vec3_length();
+        if (Global.myUpdateReady) {
+            let difference = this.object.pp_getPosition().vec3_sub(Global.myPlayerPosition);
+            let diffLength = difference.vec3_length();
 
-        let distanceFactor = Math.pp_mapToRange(diffLength, 0.1, 0.5, 0.9, 0);
+            let distanceFactor = Math.pp_mapToRange(diffLength, 0.1, 0.5, 0.9, 0);
 
-        let forward = this.object.pp_getUp();
-        let playerForward = Global.myPlayerForward;
-        if (!forward.vec3_isConcordant(playerForward)) {
-            playerForward = playerForward.vec3_negate();
+            let forward = this.object.pp_getUp();
+            let playerForward = Global.myPlayerForward;
+            if (!forward.vec3_isConcordant(playerForward)) {
+                playerForward = playerForward.vec3_negate();
+            }
+
+            let angle = Math.pp_toDegrees(forward.vec3_angleRadians(playerForward));
+
+            let angleFactor = Math.pp_mapToRange(angle, 10, 45, 0.9, 0);
+
+            let alpha = Math.pp_clamp(angleFactor * distanceFactor, 0, 0.6);
+
+            PP.MeshUtils.setAlpha(this.object, alpha);
         }
-
-        let angle = Math.pp_toDegrees(forward.vec3_angleRadians(playerForward));
-
-        let angleFactor = Math.pp_mapToRange(angle, 10, 45, 0.9, 0);
-
-        let alpha = Math.pp_clamp(angleFactor * distanceFactor, 0, 0.6);
-
-        PP.MeshUtils.setAlpha(this.object, alpha);
     }
 });
 class NotEnough {
@@ -14309,6 +14353,8 @@ WL.registerComponent("pulse-on-grab", {
 
         this._myGrabPitch = this._myGrabAudio.getPitch();
         this._myThrowPitch = this._myThrowAudio.getPitch();
+
+        this._myHandednessType = PP.InputUtils.getHandednessByIndex(this._myHandedness);
     },
     _onGrab() {
         let intensity = 0.2;
@@ -14320,6 +14366,18 @@ WL.registerComponent("pulse-on-grab", {
         this._myGrabAudio.setPosition(this.object.pp_getPosition());
         this._myGrabAudio.setPitch(Math.pp_random(this._myGrabPitch - 0.15, this._myGrabPitch + 0.05));
         this._myGrabAudio.play();
+
+        if (!Global.myHasGrabbedTrackedHandsEventSent) {
+            if (PP.InputUtils.getInputSourceType(this._myHandednessType) == PP.InputSourceType.HAND) {
+                Global.myHasGrabbedTrackedHandsEventSent = true;
+
+                if (Global.myGoogleAnalytics) {
+                    gtag("event", "has_grabbed_with_tracked_hands", {
+                        "value": 1
+                    });
+                }
+            }
+        }
     },
     _onThrow() {
         let intensity = 0.09;
@@ -14848,24 +14906,31 @@ WL.registerComponent("text-color-fog", {
         this._myFirstUpdate = true;
     },
     update: function (dt) {
-        if (this._myFirstUpdate) {
-            this._myFirstUpdate = false;
-            this._myTextComponents = this.object.pp_getComponentsHierarchy("text");
-            this._myColor = this._myTextComponents[0].material.color.pp_clone();
-        }
+        if (Global.myUpdateReady) {
+            if (this._myFirstUpdate) {
+                this._myFirstUpdate = false;
+                this._myTextComponents = this.object.pp_getComponentsHierarchy("text");
 
-        let distance = Global.myPlayerPosition.vec3_sub(this.object.pp_getPosition(this._myTempVec3), this._myTempVec3).vec3_length();
-        let fogFactor = this.fogFactorExp2(distance, this._myFogAlpha * 0.2);
+                for (let textComponent of this._myTextComponents) {
+                    textComponent.material = textComponent.material.clone();
+                }
 
-        for (let textComponent of this._myTextComponents) {
-            let color = this._computeLightColor(this._myTempVec4.pp_copy(this._myColor), textComponent.object.pp_getForward(this._myTempVec3));
+                this._myColor = this._myTextComponents[0].material.color.pp_clone();
+            }
 
-            this._myTempVec4[0] = Math.pp_lerp(color[0], 0, fogFactor);
-            this._myTempVec4[1] = Math.pp_lerp(color[1], 0, fogFactor);
-            this._myTempVec4[2] = Math.pp_lerp(color[2], 0, fogFactor);
-            this._myTempVec4[3] = textComponent.material.color[3];
+            let distance = Global.myPlayerPosition.vec3_sub(this.object.pp_getPosition(this._myTempVec3), this._myTempVec3).vec3_length();
+            let fogFactor = this._fogFactorExp2(distance, this._myFogAlpha * 0.2);
 
-            textComponent.material.color = this._myTempVec4;
+            for (let textComponent of this._myTextComponents) {
+                let color = this._computeLightColor(this._myTempVec4.pp_copy(this._myColor), textComponent.object.pp_getForward(this._myTempVec3));
+
+                this._myTempVec4[0] = Math.pp_lerp(color[0], 0, fogFactor);
+                this._myTempVec4[1] = Math.pp_lerp(color[1], 0, fogFactor);
+                this._myTempVec4[2] = Math.pp_lerp(color[2], 0, fogFactor);
+                this._myTempVec4[3] = textComponent.material.color[3];
+
+                textComponent.material.color = this._myTempVec4;
+            }
         }
     },
     _computeLightColor(color, forward) {
@@ -14882,12 +14947,13 @@ WL.registerComponent("text-color-fog", {
 
         return color;
     },
-    fogFactorExp2(dist, density) {
+    _fogFactorExp2(dist, density) {
         let LOG2 = -1.442695;
         let d = density * dist;
         return 1.0 - Math.pp_clamp(Math.pow(2, d * d * LOG2), 0.0, 1.0);
     },
-    pp_clone() {
+    pp_clone(clone) {
+        clone._myShadeFactorMaxAngle = this._myShadeFactorMaxAngle;
     }
 });
 WL.registerComponent("toggle-active", {
@@ -21580,6 +21646,10 @@ class MrNOTVentState extends PP.State {
     update(dt, fsm) {
         Global.myVentDuration += dt;
 
+        if (Global.myIsUsingTrackedHands) {
+            Global.myVentDurationWithTrackedHands += dt;
+        }
+
         this._myFSM.update(dt);
         this._myEvidenceManager.update(dt);
         this._myVent.update(dt);
@@ -21607,6 +21677,7 @@ class MrNOTVentState extends PP.State {
     _prepareState(fsm, transition) {
         Global.myLightFadeInTime = 0;
         Global.myVentDuration = 0;
+        Global.myVentDurationWithTrackedHands = 0;
         this._myNotEnough.stop();
     }
 
@@ -23165,6 +23236,10 @@ class VentState extends PP.State {
     update(dt, fsm) {
         Global.myVentDuration += dt;
 
+        if (Global.myIsUsingTrackedHands) {
+            Global.myVentDurationWithTrackedHands += dt;
+        }
+
         this._myFSM.update(dt);
         this._myEvidenceManager.update(dt);
         this._myVent.update(dt);
@@ -23189,6 +23264,7 @@ class VentState extends PP.State {
 
     _prepareState(fsm, transition) {
         Global.myVentDuration = 0;
+        Global.myVentDurationWithTrackedHands = 0;
     }
 
     _prepareVent() {
