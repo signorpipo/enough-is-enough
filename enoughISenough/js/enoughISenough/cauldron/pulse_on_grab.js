@@ -20,7 +20,7 @@ WL.registerComponent("pulse-on-grab", {
         this._myGrabPitch = this._myGrabAudio.getPitch();
         this._myThrowPitch = this._myThrowAudio.getPitch();
 
-        this._myHandednessType = PP.InputUtils.getHandednessByIndex(this._myHandedness)
+        this._myHandednessType = PP.InputUtils.getHandednessByIndex(this._myHandedness);
     },
     _onGrab() {
         let intensity = 0.2;
