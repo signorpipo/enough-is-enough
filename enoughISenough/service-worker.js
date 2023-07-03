@@ -6,7 +6,7 @@ let _NO_RESOURCE = [];
 let _ANY_RESOURCE_FROM_CURRENT_LOCATION = ["^" + _escapeRegexSpecialCharacters(_getCurrentLocation()) + ".*"];
 let _ANY_RESOURCE_FROM_CURRENT_ORIGIN = ["^" + _escapeRegexSpecialCharacters(_getCurrentOrigin()) + ".*"];
 
-let _LOCALHOST = ["localhost"];
+let _LOCALHOST = ["localhost:8080"];
 let _NO_LOCATION = [];
 
 // #endregion Service Worker Constants
@@ -108,8 +108,7 @@ let _myResourceURLsToPrecache = [
     "assets/audio/sfx/ring_rise.wav",
     "assets/audio/sfx/throw.wav",
     "assets/audio/sfx/title_appear.wav",
-    "assets/audio/sfx/title_disappear.wav",
-    "https://ipfs.filebase.io/ipfs/QmSasURHs9AHTmJA7W98QsZ884zb6VVgFfF85Wf3HpNcBb"
+    "assets/audio/sfx/title_disappear.wav"
 ];
 
 
@@ -118,7 +117,7 @@ let _myResourceURLsToPrecache = [
 // Note that, as of now, only requests made with a GET method can be cached
 //
 // The resources URLs can also be a regex
-let _myCacheResourceURLsToInclude = [..._ANY_RESOURCE_FROM_CURRENT_LOCATION, "https://ipfs.filebase.io/ipfs/QmSasURHs9AHTmJA7W98QsZ884zb6VVgFfF85Wf3HpNcBb"];
+let _myCacheResourceURLsToInclude = _ANY_RESOURCE_FROM_CURRENT_LOCATION;
 let _myCacheResourceURLsToExclude = _NO_RESOURCE;
 
 
