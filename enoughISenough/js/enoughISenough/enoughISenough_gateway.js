@@ -293,5 +293,8 @@ var Global = {
     myGameVersion: 0,
     myGoogleAnalytics: false,
     myUnmute: false,
-    myXRSessionActiveOpenLinkExtraCheck: false
+    myXRSessionActiveOpenLinkExtraCheck: false,
+    myIsUsingTrackedHands: false,
+    myHasGrabbedTrackedHandsEventSent: false,
+    myIsUsingTrackedHandsVentEventSent: false
 };
