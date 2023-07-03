@@ -673,7 +673,7 @@ function shouldResourceBeCached(request, response) {
 async function _install() {
     let rejectServiceWorker = _shouldResourceURLBeIncluded(_getCurrentLocation(), _myRejectServiceWorkerLocationURLsToInclude, _myRejectServiceWorkerLocationURLsToExclude);
     if (rejectServiceWorker) {
-        throw new Error("The service worker is not allowed on current location: " + _getCurrentLocation());
+        throw new Error("The service worker is not allowed to be installed on the current location: " + _getCurrentLocation());
     }
 
     if (_myImmediatelyActivateNewServiceWorker) {
