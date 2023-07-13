@@ -31,10 +31,10 @@ let _myAppName = "enoughISenough";
 
 
 // U should increment this everytime u update the service worker, since it is used by some features to not collide
-// with previous service workers
+// with other service workers, especially during the installation and activation phases
 //
 // It must be an incremental integer greater than 0
-let _myServiceWorkerVersion = 1;
+let _myServiceWorkerVersion = 2;
 
 
 
@@ -45,7 +45,7 @@ let _myServiceWorkerVersion = 1;
 // since u could get a mix of old (from the cache) and new (from the network) resources
 //
 // It must be an incremental integer greater than 0
-let _myCacheVersion = 1;
+let _myCacheVersion = 2;
 
 
 
@@ -76,8 +76,8 @@ let _myResourceURLsToPrecache = [
     //"WonderlandRuntime-physx-simd-threads.wasm",
     //"WonderlandRuntime-physx-simd-threads.js",
     //"WonderlandRuntime-physx-simd-threads.worker.js",
-    "enough IS enough-bundle.js",
-    "enough IS enough.bin",
+    "enoughISenough-bundle.js",
+    "enoughISenough.bin",
     "manifest.json",
     "favicon.ico",
     //"icon512.png",
@@ -167,6 +167,14 @@ let _myLogEnabled = false;
 
 
 
+// Which resources can be fetched from the cache
+//
+// The resources URLs can also be a regex
+let _myAllowFetchFromCacheResourceURLsToInclude = _ANY_RESOURCE;
+let _myAllowFetchFromCacheResourceURLsToExclude = _NO_RESOURCE;
+
+
+
 // If a network error happens on any request, this enables the force try cache first on network error feature
 //
 // The resources URLs can also be a regex
@@ -202,8 +210,7 @@ let _myForceTryCacheFirstOnNetworkErrorResourceURLsToExclude = _NO_RESOURCE;
 //
 // The resources URLs can also be a regex
 let _myTryCacheIgnoringURLParamsResourceURLsToInclude = [
-    "bundle\\.js",
-    "wonderland.min\\.js"
+    "^" + _escapeRegexSpecialCharacters(_getCurrentLocation()) + "/\\?"
 ];
 let _myTryCacheIgnoringURLParamsResourceURLsToExclude = _NO_RESOURCE;
 
@@ -277,13 +284,32 @@ let _myCacheOpaqueResponseResourceURLsToExclude = _NO_RESOURCE;
 // u might want to use this
 //
 // This is safe to use as long as the new resources are compatible with the current cached ones
+//
 // Beware that, until u increase the cache version, the included resource URLs should only "grow",
 // because a user might be coming from an even older service worker version which still has the same cache version,
 // and should therefore able to refetch every needed resources, not just the one changed between the current and the very last version
 //
+// When u update the cache version, u should instead clean this list
+// This is not mandatory, but makes it easier to keep track of the resources that should actually be refetched since the last cache version update
+//
 // The resources URLs can also be a regex
 let _myRefetchFromNetworkResourceURLsToInclude = _NO_RESOURCE;
 let _myRefetchFromNetworkResourceURLsToExclude = _NO_RESOURCE;
+
+// U should increment this everytime u want to make the service worker refetch all the resource URLs
+// specified through @_myRefetchFromNetworkResourceURLsToInclude again
+// Normally, the service worker keeps track of which resource have already been refetched,
+// and, if u add some URLs to the list, will just refetch the new ones,
+// but if u want the service worker to refetch every resource URL again, u have to increment the refetch version
+//
+// The complete refetch version is tied to the current cache, this means that every time the cache version is updated,
+// it's also like updating the refetch version, which will not cause any issue anyway, since every resource needs to be fetched anyway
+// when the cache version is updated
+// This means, that, if u want, when updating the cache version u can reset the @_myRefetchFromNetworkVersion to 1
+// 
+//
+// It must be an incremental integer greater than 0
+let _myRefetchFromNetworkVersion = 1;
 
 
 
@@ -301,6 +327,27 @@ let _myRejectServiceWorkerOnPrecacheFailResourceURLsToExclude = _NO_RESOURCE;
 // Use this to check that the resoruces have been precached on the first fetch of the current service worker session
 // If some resources have not been precached, a fetch request will be performed to cache them in background
 let _myCheckResourcesHaveBeenPrecachedOnFirstFetch = false;
+
+
+
+// If the service worker installation fails or do not manage to complete, for example because the tab is closed while installing,
+// on the next page load the service worker will attempt to install again
+//
+// This make it so that the installation can recover from the last attempt, so that, for example, it will not fetch the data
+// that was already fetched the last time and has been already cached in a temporary cache
+//
+// The main reason to disable this is because u want to be 100% sure that the data
+// that will be precached belongs to the same version of your app, which might not be true if the precache happens at different time
+// Note that this is useful only if u want to try the cache first and never update it in background, otherwise there is no point
+// in being sure it's the same version, since the resources will be updated anyway
+//
+// Besides, even in that case, it might not be needed anyway, since with this setup u usually update the service worker version together with
+// the app, which should install the new service worker instead of recovering from the previous one
+// On this last thing though, I'm not sure about the actual flow of the service worker installation
+// and if the previous one installation is actually aborted if a new one is found, or if the previous one can manage to complete
+// If that can happen (and is not considered a bug), than this would prevent getting a mix of old and new resources
+// Otherwise there is honestly no point in setting this to false
+let _myInstallationShouldRecoverFromLastAttempt = true;
 
 
 
@@ -346,6 +393,8 @@ let _myAllowHEADRequestsToUpdateCacheInBackground = false;
 //
 // Note that this js code should be put in your app so that it is executed as soon as possible (for example in the first lines of your index.html),
 // so to avoid missing the controller change event
+// To be as safe as possible, u should put this before the line where u register
+// the service worker inside your app (window.navigator.serviceWorker.register)
 //
 // Be aware that the reload might happen while the user is using your app and not just at the beginning,
 // which could be annoying (but I'm not sure what the chances are of this actually happening or how to reproduce it)
@@ -406,6 +455,8 @@ let _myImmediatelyActivateNewServiceWorker = false;
 //
 // Note that this js code should be put in your app so that it is executed as soon as possible (for example in the first lines of your index.html),
 // so to avoid missing the controller change event
+// To be as safe as possible, u should put this before the line where u register
+// the service worker inside your app (window.navigator.serviceWorker.register)
 //
 // Be aware that the reload might happen while the user is using your app and not just at the beginning,
 // which could be annoying (but I'm not sure what the chances are of this actually happening or how to reproduce it)
@@ -416,13 +467,99 @@ let _myImmediatelyActivateNewServiceWorker = false;
 // like, for example, asking the user if they want to reload or not
 //
 // Use this with caution
-let _myImmediatelyTakeControlOfThePageWhenNotControlled = true;
+let _myImmediatelyTakeControlOfThePageWhenNotControlled = false;
+
+
+
+// Normally, every service worker (defined by its version) works on its own temp data, for example when
+// installing or activating
+// This make it so there is no collision between service workers
+//
+// The downside is that, if u keep updating the service worker, a user might find themselves having to get every resource from scratch,
+// because the new service worker can't resume from where the previous service worker left
+// Enabling this make this possible, at least when the temp data is actually compatible (for example the cache version is the same),
+// which will result in avoiding getting from the network some precache resource which was already being partially fetched by a previous service worker
+//
+// In general, I don't think it should cause too many issues, but I'm not sure about the actual flow of service workers regarding the
+// installation and activation phases, and there might be issues if 2 service workers are installing at the same time, or one is activating
+// while another is installing, and they share temp data
+//
+// This is actually useful only if u are updating your service worker very often, otherwise it's not worth the risk
+//
+// Use this with caution
+let _myShareInstallationTemporaryDataBetweenServiceWorkers = false;
 
 
 
 // #endregion ADVANCED SETUP ----------------------------------------------------------------------------------------------------
 
 // #endregion Service Worker Setup
+
+
+
+// #region Known Issues
+//
+// - If a service worker only partially manage to cache the data (both during precache or normal fetch phase),
+//   and u update both your app and the service worker (to clean the current cache and build a new one),
+//   while the new service worker install itself the current service worker might start to use the new data while serving
+//   some of the current cached one too, mixing the 2 versions
+//   As soon as the new service worker is activated the app will be fixed, so it's not permanent, but in the meantime u could have errors
+//   in your app due to this
+//   You should not worry too much about this tho, since it should not be an issue happening often, especially if you are not
+//   updating your app every other day, and also eventually fix itself
+//
+//   The easiest way to avoid having this, if u are really worried about it, is to have an empty @_myResourceURLsToPrecache list,
+//   so to complete the install as fast as possible, enable @_myImmediatelyActivateNewServiceWorker
+//   and reload the page when the service worker change
+//   This will basically switch to the new service worker as soon as possible, therefore fetching the new version of your app
+//
+//   If u instead care about precaching, an idea would be to find out that a new service worker is trying to install inside your app code,
+//   and "block" your app (possibly displaying a banner saying that the new version is been downloaded) until the installation has been completed
+//   U should also enable @_myImmediatelyActivateNewServiceWorker and reload the page when the controller change
+//   I honestly think this would be an overkill unless it's really important, for example for a multiplayer experience where a glitch could give an advantage
+//
+//   // This should be done before window.navigator.serviceWorker.register
+//   window.navigator.serviceWorker?.getRegistration().then(function (registration) {
+//      if(registration != null) {
+//          registration.addEventListener("updatefound", function () {
+//              // Block your app, when the new service worker will finish install the controller change event
+//              // will then make your page reload
+//              // See @_myImmediatelyActivateNewServiceWorker doc for more info about that
+//          });
+//      }
+//   });
+//
+//   Another solution, if u want to precache, is to unregister the current service worker when a new one is trying to install and reload the page
+//   The main difference here is that u don't have to wait for the new service worker to complete, since, by unregistering the current service worker,
+//   on reload u will get the new data immediately, while the new service worker is installing
+//
+//   // This should be done before window.navigator.serviceWorker.register
+//   // I'm not 100% sure about the behavior of the unregister function, so use this with caution, even though it seems to work
+//   window.navigator.serviceWorker?.getRegistration().then(function (registration) {
+//      if(registration != null) {
+//          registration.addEventListener("updatefound", function () {
+//              registration.unregister().then(function () {
+//                  window.location.reload();
+//              });
+//          });
+//      }
+//   });
+//
+//   Yet another solution would be to disable @_myInstallationShouldRecoverFromLastAttempt (or at least disable @_myShareInstallationTemporaryDataBetweenServiceWorkers),
+//   and enable @_myRejectServiceWorkerOnPrecacheFailResourceURLsToInclude on any resource
+//   This will make it so that only when all the precached resources have been precached during the same session the service worker is activated
+//   If all the cachable resources (or at least the core ones) are in the precache list, u can then be safe that no collision will happen because
+//   there will be no risk that they will be cached again later on
+//
+//   A thing to note is that u might think that if u always fetch first from the network, or update the cache in background,
+//   u should not have this issue, but this is not correct
+//   For example, even if u always fetch from network first and u might manage to fetch new resources,
+//   u might also fail to fetch some of them (due to network issue for example), fallbacking to the cache,
+//   resulting in a mix of old and new resources
+//   This means that, if u want to be sure to not have this issue, even when u are using these kinds of setups u have to use one of the above solutions,
+//   or another one that better fits your needs
+//
+// #endregion Known Issues
 
 
 
@@ -462,7 +599,7 @@ self.addEventListener("fetch", function (event) {
 async function fetchFromServiceWorker(request) {
     if (_myCheckResourcesHaveBeenPrecachedOnFirstFetch && !_myCheckResourcesHaveBeenPrecachedOnFirstFetchAlreadyPerformed) {
         _myCheckResourcesHaveBeenPrecachedOnFirstFetchAlreadyPerformed = true;
-        _cacheResourcesToPrecache(false, false); // Do not await for this, just do it in background
+        _cacheResourcesToPrecache(false, false, false); // Do not await for this, just do it in background
     }
 
     if (!_shouldHandleRequest(request)) {
@@ -472,8 +609,9 @@ async function fetchFromServiceWorker(request) {
     let cacheAlreadyTried = false;
 
     let refetchFromNetwork = await _shouldResourceBeRefetchedFromNetwork(request.url);
+    let allowFetchFromCache = _shouldResourceURLBeIncluded(request.url, _myAllowFetchFromCacheResourceURLsToInclude, _myAllowFetchFromCacheResourceURLsToExclude);
 
-    if (!refetchFromNetwork) {
+    if (!refetchFromNetwork && allowFetchFromCache) {
         let tryCacheFirst = _shouldResourceURLBeIncluded(request.url, _myTryCacheFirstResourceURLsToInclude, _myTryCacheFirstResourceURLsToExclude);
         let forceTryCacheFirstOnNetworkError = _myForceTryCacheFirstOnNetworkErrorEnabled && _shouldResourceURLBeIncluded(request.url, _myForceTryCacheFirstOnNetworkErrorResourceURLsToInclude, _myForceTryCacheFirstOnNetworkErrorResourceURLsToExclude);
 
@@ -521,25 +659,27 @@ async function fetchFromServiceWorker(request) {
             }
         }
 
-        if (!cacheAlreadyTried) {
-            let ignoreURLParams = _shouldResourceURLBeIncluded(request.url, _myTryCacheIgnoringURLParamsResourceURLsToInclude, _myTryCacheIgnoringURLParamsResourceURLsToExclude);
-            let ignoreVaryHeader = _shouldResourceURLBeIncluded(request.url, _myTryCacheIgnoringVaryHeaderResourceURLsToInclude, _myTryCacheIgnoringVaryHeaderResourceURLsToExclude);
-            let responseFromCache = await fetchFromCache(request.url, ignoreURLParams, ignoreVaryHeader);
-            if (responseFromCache != null) {
-                return responseFromCache;
-            }
-        }
-
-        let ignoreURLParamsAsFallback = _shouldResourceURLBeIncluded(request.url, _myTryCacheIgnoringURLParamsAsFallbackResourceURLsToInclude, _myTryCacheIgnoringURLParamsAsFallbackResourceURLsToExclude);
-        let ignoreVaryHeaderAsFallback = _shouldResourceURLBeIncluded(request.url, _myTryCacheIgnoringVaryHeaderAsFallbackResourceURLsToInclude, _myTryCacheIgnoringVaryHeaderAsFallbackResourceURLsToExclude);
-        if (ignoreURLParamsAsFallback || ignoreVaryHeaderAsFallback) {
-            let fallbackResponseFromCache = await fetchFromCache(request.url, ignoreURLParamsAsFallback, ignoreVaryHeaderAsFallback);
-            if (fallbackResponseFromCache != null) {
-                if (_myLogEnabled) {
-                    console.warn("Get from cache using a fallback: " + request.url);
+        if (allowFetchFromCache) {
+            if (!cacheAlreadyTried) {
+                let ignoreURLParams = _shouldResourceURLBeIncluded(request.url, _myTryCacheIgnoringURLParamsResourceURLsToInclude, _myTryCacheIgnoringURLParamsResourceURLsToExclude);
+                let ignoreVaryHeader = _shouldResourceURLBeIncluded(request.url, _myTryCacheIgnoringVaryHeaderResourceURLsToInclude, _myTryCacheIgnoringVaryHeaderResourceURLsToExclude);
+                let responseFromCache = await fetchFromCache(request.url, ignoreURLParams, ignoreVaryHeader);
+                if (responseFromCache != null) {
+                    return responseFromCache;
                 }
+            }
 
-                return fallbackResponseFromCache;
+            let ignoreURLParamsAsFallback = _shouldResourceURLBeIncluded(request.url, _myTryCacheIgnoringURLParamsAsFallbackResourceURLsToInclude, _myTryCacheIgnoringURLParamsAsFallbackResourceURLsToExclude);
+            let ignoreVaryHeaderAsFallback = _shouldResourceURLBeIncluded(request.url, _myTryCacheIgnoringVaryHeaderAsFallbackResourceURLsToInclude, _myTryCacheIgnoringVaryHeaderAsFallbackResourceURLsToExclude);
+            if (ignoreURLParamsAsFallback || ignoreVaryHeaderAsFallback) {
+                let fallbackResponseFromCache = await fetchFromCache(request.url, ignoreURLParamsAsFallback, ignoreVaryHeaderAsFallback);
+                if (fallbackResponseFromCache != null) {
+                    if (_myLogEnabled) {
+                        console.warn("Get from cache using a fallback: " + request.url);
+                    }
+
+                    return fallbackResponseFromCache;
+                }
             }
         }
 
@@ -554,8 +694,8 @@ async function fetchFromServiceWorker(request) {
     }
 }
 
-async function cacheResourcesToPrecache(rejectOnPrecacheFail = false) {
-    return await _cacheResourcesToPrecache(rejectOnPrecacheFail, false);
+async function cacheResourcesToPrecache(allowRejectOnPrecacheFail = false) {
+    return await _cacheResourcesToPrecache(allowRejectOnPrecacheFail, false, false);
 }
 
 async function fetchFromNetworkAndPutInCache(request, awaitOnlyFetchFromNetwork = false) {
@@ -676,15 +816,17 @@ async function _install() {
         throw new Error("The service worker is not allowed to be installed on the current location: " + _getCurrentLocation());
     }
 
+    await _cacheResourcesToPrecache(true, true, true);
+
     if (_myImmediatelyActivateNewServiceWorker) {
         self.skipWaiting();
     }
-
-    await _cacheResourcesToPrecache();
 }
 
 async function _activate() {
     await _copyTempCacheToCurrentCache();
+
+    await _copyTempRefetchFromNetworkChecklistToCurrentRefetchFromNetworkChecklist();
 
     await _deletePreviousCaches();
 
@@ -695,25 +837,27 @@ async function _activate() {
     }
 }
 
-async function _cacheResourcesToPrecache(rejectOnPrecacheFail = true, useTempCacheIfAlreadyExists = true) {
+async function _cacheResourcesToPrecache(allowRejectOnPrecacheFail = true, useTemps = false, installPhase = false) {
     if (getResourceURLsToPrecache().length == 0) return;
 
-    let cacheAlreadyExists = false;
     let currentCache = null;
+
     try {
-        cacheAlreadyExists = await caches.has(_getCacheID());
+        let cacheAlreadyExists = await caches.has(_getCacheID());
         if (cacheAlreadyExists) {
             currentCache = await caches.open(_getCacheID());
         }
     } catch (error) {
-        cacheAlreadyExists = false;
         currentCache = null;
     }
 
-    let useTempCache = useTempCacheIfAlreadyExists && cacheAlreadyExists;
-
     let currentTempCache = null;
-    if (useTempCache) {
+    if (useTemps) {
+        if (installPhase && !_myInstallationShouldRecoverFromLastAttempt) {
+            await caches.delete(_getTempCacheID());
+            await caches.delete(_getTempRefetchFromNetworkChecklistID());
+        }
+
         try {
             let tempCacheAlreadyExists = await caches.has(_getTempCacheID());
             if (tempCacheAlreadyExists) {
@@ -734,28 +878,34 @@ async function _cacheResourcesToPrecache(rejectOnPrecacheFail = true, useTempCac
             try {
                 let resourceHaveToBeCached = false;
 
-                let refetchFromNetwork = await _shouldResourceBeRefetchedFromNetwork(resourceCompleteURLToPrecache);
+                let refetchFromNetwork = await _shouldResourceBeRefetchedFromNetwork(resourceCompleteURLToPrecache, useTemps);
 
                 if (refetchFromNetwork) {
                     resourceHaveToBeCached = true
-                } else if (!cacheAlreadyExists) {
-                    resourceHaveToBeCached = true;
                 } else {
-                    let resourceAlreadyInCache = await currentCache.match(resourceCompleteURLToPrecache) != null;
-                    if (!resourceAlreadyInCache) {
-                        let resourceAlreadyInTempCache = false;
-                        if (useTempCache && currentTempCache != null) {
-                            resourceAlreadyInTempCache = await currentTempCache.match(resourceCompleteURLToPrecache) != null;
-                        }
+                    let resourceAlreadyInCache = false;
+                    if (currentCache != null) {
+                        resourceAlreadyInCache = await currentCache.match(resourceCompleteURLToPrecache) != null;
+                    }
 
-                        if (!resourceAlreadyInTempCache) {
+                    if (!resourceAlreadyInCache) {
+                        if (!useTemps) {
                             resourceHaveToBeCached = true;
+                        } else {
+                            let resourceAlreadyInTempCache = false;
+                            if (currentTempCache != null) {
+                                resourceAlreadyInTempCache = await currentTempCache.match(resourceCompleteURLToPrecache) != null;
+                            }
+
+                            if (!resourceAlreadyInTempCache) {
+                                resourceHaveToBeCached = true;
+                            }
                         }
                     }
                 }
 
                 if (resourceHaveToBeCached) {
-                    let [responseFromNetwork, responseHasBeenCached] = await _fetchFromNetworkAndPutInCache(new Request(resourceCompleteURLToPrecache), false, refetchFromNetwork, useTempCache);
+                    let [responseFromNetwork, responseHasBeenCached] = await _fetchFromNetworkAndPutInCache(new Request(resourceCompleteURLToPrecache), false, refetchFromNetwork, useTemps);
                     resourceHasBeenPrecached = responseHasBeenCached;
                 } else {
                     resourceHasBeenPrecached = true; // The resource has been already precached
@@ -766,7 +916,7 @@ async function _cacheResourcesToPrecache(rejectOnPrecacheFail = true, useTempCac
                 }
             }
 
-            if (resourceHasBeenPrecached || !rejectOnPrecacheFail) {
+            if (resourceHasBeenPrecached || !allowRejectOnPrecacheFail) {
                 resolve();
             } else {
                 let rejectServiceWorkerOnPrecacheFail = _shouldResourceURLBeIncluded(resourceCompleteURLToPrecache, _myRejectServiceWorkerOnPrecacheFailResourceURLsToInclude, _myRejectServiceWorkerOnPrecacheFailResourceURLsToExclude);
@@ -783,22 +933,22 @@ async function _cacheResourcesToPrecache(rejectOnPrecacheFail = true, useTempCac
     await Promise.all(promisesToAwait);
 }
 
-async function _fetchFromNetworkAndPutInCache(request, awaitOnlyFetchFromNetwork = false, refetchFromNetwork = false, useTempCache = false) {
+async function _fetchFromNetworkAndPutInCache(request, awaitOnlyFetchFromNetwork = false, refetchFromNetwork = false, useTemps = false) {
     let responseFromNetwork = await fetchFromNetwork(request);
     let responseHasBeenCached = false;
 
     if (isResponseOk(responseFromNetwork) || isResponseOpaque(responseFromNetwork)) {
         if (shouldResourceBeCached(request, responseFromNetwork)) {
             if (!awaitOnlyFetchFromNetwork) {
-                responseHasBeenCached = await _putInCache(request, responseFromNetwork, useTempCache);
+                responseHasBeenCached = await _putInCache(request, responseFromNetwork, useTemps);
 
                 if (refetchFromNetwork) {
-                    await _tickOffFromRefetchFromNetworkChecklist(request.url);
+                    await _tickOffFromRefetchFromNetworkChecklist(request.url, useTemps);
                 }
             } else {
-                _putInCache(request, responseFromNetwork, useTempCache).then(function (putInCacheSucceeded) {
+                _putInCache(request, responseFromNetwork, useTemps).then(function (putInCacheSucceeded) {
                     if (putInCacheSucceeded && refetchFromNetwork) {
-                        _tickOffFromRefetchFromNetworkChecklist(request.url);
+                        _tickOffFromRefetchFromNetworkChecklist(request.url, useTemps);
                     }
                 });
 
@@ -832,11 +982,10 @@ async function _putInCache(request, response, useTempCache = false) {
 
 async function _deletePreviousCaches() {
     let cachesIDs = await caches.keys();
-    let currentCacheID = _getCacheID();
 
     for (let cacheID of cachesIDs) {
         try {
-            if (_isCacheID(cacheID) && cacheID != currentCacheID) {
+            if (_shouldDeleteCacheID(cacheID)) {
                 await caches.delete(cacheID);
             }
         } catch (error) {
@@ -845,9 +994,10 @@ async function _deletePreviousCaches() {
     }
 }
 
-async function _tickOffFromRefetchFromNetworkChecklist(resourceURL) {
+async function _tickOffFromRefetchFromNetworkChecklist(resourceURL, useTempRefetchFromNetworkChecklist = false) {
     try {
-        let refetchChecklist = await caches.open(_getRefetchFromNetworkChecklistID());
+        let refetechChecklistID = (useTempRefetchFromNetworkChecklist) ? _getTempRefetchFromNetworkChecklistID() : _getRefetchFromNetworkChecklistID();
+        let refetchChecklist = await caches.open(refetechChecklistID);
         await refetchChecklist.put(new Request(resourceURL), new Response(null));
     } catch (error) {
         if (_myLogEnabled) {
@@ -858,11 +1008,10 @@ async function _tickOffFromRefetchFromNetworkChecklist(resourceURL) {
 
 async function _deletePreviousRefetchFromNetworkChecklists() {
     let cachesIDs = await caches.keys();
-    let currentRefetchFromNetworkChecklistID = _getRefetchFromNetworkChecklistID();
 
     for (let cacheID of cachesIDs) {
         try {
-            if (_isRefetchFromNetworkChecklistID(cacheID) && cacheID != currentRefetchFromNetworkChecklistID) {
+            if (_shouldDeleteRefetchFromNetworkChecklistID(cacheID)) {
                 await caches.delete(cacheID);
             }
         } catch (error) {
@@ -894,7 +1043,39 @@ async function _copyTempCacheToCurrentCache() {
     let cachesIDs = await caches.keys();
     for (let cacheID of cachesIDs) {
         try {
-            if (_isTempCacheID(cacheID)) {
+            if (_shouldDeleteTempCacheID(cacheID)) {
+                await caches.delete(cacheID);
+            }
+        } catch (error) {
+            // Do nothing
+        }
+    }
+}
+
+async function _copyTempRefetchFromNetworkChecklistToCurrentRefetchFromNetworkChecklist() {
+    let currentTempRefetchFromNetworkChecklistID = _getTempRefetchFromNetworkChecklistID();
+
+    try {
+        let hasTempRefetchFromNetworkChecklist = await caches.has(currentTempRefetchFromNetworkChecklistID);
+
+        if (hasTempRefetchFromNetworkChecklist) {
+            let currentTempRefetchFromNetworkChecklist = await caches.open(currentTempRefetchFromNetworkChecklistID);
+            let currentRefetchFromNetworkChecklist = await caches.open(_getRefetchFromNetworkChecklistID());
+
+            let currentTempRefetchFromNetworkChecklistResourceRequests = await currentTempRefetchFromNetworkChecklist.keys();
+            for (let currentTempRefetchFromNetworkChecklistResourceRequest of currentTempRefetchFromNetworkChecklistResourceRequests) {
+                let currentTempRefetchFromNetworkChecklistResource = await currentTempRefetchFromNetworkChecklist.match(currentTempRefetchFromNetworkChecklistResourceRequest);
+                await currentRefetchFromNetworkChecklist.put(currentTempRefetchFromNetworkChecklistResourceRequest, currentTempRefetchFromNetworkChecklistResource);
+            }
+        }
+    } catch (error) {
+        // Do nothing
+    }
+
+    let cachesIDs = await caches.keys();
+    for (let cacheID of cachesIDs) {
+        try {
+            if (_shouldDeleteTempRefetchFromNetworkChecklistID(cacheID)) {
                 await caches.delete(cacheID);
             }
         } catch (error) {
@@ -918,12 +1099,18 @@ function _getCacheID(cacheVersion = _myCacheVersion) {
     return _myAppName + "_cache_v" + cacheVersion.toFixed(0);
 }
 
-function _getTempCacheID(serviceWorkerVersion = _myServiceWorkerVersion, cacheVersion = _myCacheVersion) {
+function _getTempCacheID(cacheVersion = _myCacheVersion, serviceWorkerVersion = _myServiceWorkerVersion) {
+    serviceWorkerVersion = (_myShareInstallationTemporaryDataBetweenServiceWorkers && _myInstallationShouldRecoverFromLastAttempt) ? 0 : serviceWorkerVersion;
     return _getCacheID(cacheVersion) + "_temp_v" + serviceWorkerVersion.toFixed(0);
 }
 
-function _getRefetchFromNetworkChecklistID(serviceWorkerVersion = _myServiceWorkerVersion) {
-    return _myAppName + "_refetch_checklist_v" + serviceWorkerVersion.toFixed(0);
+function _getRefetchFromNetworkChecklistID(cacheVersion = _myCacheVersion, refetchFromNetworkVersion = _myRefetchFromNetworkVersion) {
+    return _getCacheID(cacheVersion) + "_refetch_checklist_v" + refetchFromNetworkVersion.toFixed(0);
+}
+
+function _getTempRefetchFromNetworkChecklistID(cacheVersion = _myCacheVersion, refetchFromNetworkVersion = _myRefetchFromNetworkVersion, serviceWorkerVersion = _myServiceWorkerVersion) {
+    serviceWorkerVersion = (_myShareInstallationTemporaryDataBetweenServiceWorkers && _myInstallationShouldRecoverFromLastAttempt) ? 0 : serviceWorkerVersion;
+    return _getRefetchFromNetworkChecklistID(cacheVersion, refetchFromNetworkVersion) + "_temp_v" + serviceWorkerVersion.toFixed(0);
 }
 
 function _isCacheID(cacheID) {
@@ -937,11 +1124,83 @@ function _isTempCacheID(tempCacheID) {
 }
 
 function _isRefetchFromNetworkChecklistID(refetchFromNetworkChecklistID) {
-    let matchRefetchFromNetworkChecklistID = new RegExp("^" + _escapeRegexSpecialCharacters(_myAppName) + "_refetch_checklist_v\\d+$");
+    let matchRefetchFromNetworkChecklistID = new RegExp("^" + _escapeRegexSpecialCharacters(_myAppName) + "_cache_v\\d+_refetch_checklist_v\\d+$");
     return refetchFromNetworkChecklistID.match(matchRefetchFromNetworkChecklistID) != null;
 }
 
-async function _shouldResourceBeRefetchedFromNetwork(resourceURL) {
+function _isTempRefetchFromNetworkChecklistID(tempRefetchFromNetworkChecklistID) {
+    let matchRefetchFromNetworkChecklistID = new RegExp("^" + _escapeRegexSpecialCharacters(_myAppName) + "_cache_v\\d+_refetch_checklist_v\\d+_temp_v\\d+$");
+    return tempRefetchFromNetworkChecklistID.match(matchRefetchFromNetworkChecklistID) != null;
+}
+
+function _shouldDeleteCacheID(cacheID) {
+    let deleteCacheID = false;
+
+    let validCacheID = _isCacheID(cacheID);
+    if (validCacheID) {
+        let cacheIDWithoutAppName = cacheID.replace(new RegExp("^" + _escapeRegexSpecialCharacters(_myAppName)), "");
+
+        let versions = cacheIDWithoutAppName.match(new RegExp("(?<=_v)\\d+(?=_|$)", "g"));
+
+        deleteCacheID = parseInt(versions[0]) < _myCacheVersion;
+    }
+
+    return deleteCacheID;
+}
+
+function _shouldDeleteTempCacheID(tempCacheID) {
+    let deleteTempCacheID = false;
+
+    let validTempCacheID = _isTempCacheID(tempCacheID);
+    if (validTempCacheID) {
+        let tempCacheIDWithoutAppName = tempCacheID.replace(new RegExp("^" + _escapeRegexSpecialCharacters(_myAppName)), "");
+
+        let versions = tempCacheIDWithoutAppName.match(new RegExp("(?<=_v)\\d+(?=_|$)", "g"));
+
+        deleteTempCacheID =
+            parseInt(versions[0]) < _myCacheVersion ||
+            (parseInt(versions[0]) == _myCacheVersion && parseInt(versions[1]) <= _myServiceWorkerVersion);
+    }
+
+    return deleteTempCacheID;
+}
+
+function _shouldDeleteRefetchFromNetworkChecklistID(refetchFromNetworkChecklistID) {
+    let deleteRefetchFromNetworkChecklistID = false;
+
+    let validRefetchFromNetworkChecklistID = _isRefetchFromNetworkChecklistID(refetchFromNetworkChecklistID);
+    if (validRefetchFromNetworkChecklistID) {
+        let refetchFromNetworkChecklistIDWithoutAppName = refetchFromNetworkChecklistID.replace(new RegExp("^" + _escapeRegexSpecialCharacters(_myAppName)), "");
+
+        let versions = refetchFromNetworkChecklistIDWithoutAppName.match(new RegExp("(?<=_v)\\d+(?=_|$)", "g"));
+
+        deleteRefetchFromNetworkChecklistID =
+            parseInt(versions[0]) < _myCacheVersion ||
+            (parseInt(versions[0]) == _myCacheVersion && parseInt(versions[1]) < _myRefetchFromNetworkVersion);
+    }
+
+    return deleteRefetchFromNetworkChecklistID;
+}
+
+function _shouldDeleteTempRefetchFromNetworkChecklistID(tempRefetchFromNetworkChecklistID) {
+    let deleteTempRefetchFromNetworkChecklistID = false;
+
+    let validTempRefetchFromNetworkChecklistID = _isTempRefetchFromNetworkChecklistID(tempRefetchFromNetworkChecklistID);
+    if (validTempRefetchFromNetworkChecklistID) {
+        let tempRefetchFromNetworkChecklistIDWithoutAppName = tempRefetchFromNetworkChecklistID.replace(new RegExp("^" + _escapeRegexSpecialCharacters(_myAppName)), "");
+
+        let versions = tempRefetchFromNetworkChecklistIDWithoutAppName.match(new RegExp("(?<=_v)\\d+(?=_|$)", "g"));
+
+        deleteTempRefetchFromNetworkChecklistID =
+            parseInt(versions[0]) < _myCacheVersion ||
+            (parseInt(versions[0]) == _myCacheVersion && parseInt(versions[1]) < _myRefetchFromNetworkVersion) ||
+            (parseInt(versions[0]) == _myCacheVersion && parseInt(versions[1]) == _myRefetchFromNetworkVersion && parseInt(versions[2]) <= _myServiceWorkerVersion);
+    }
+
+    return deleteTempRefetchFromNetworkChecklistID;
+}
+
+async function _shouldResourceBeRefetchedFromNetwork(resourceURL, checkTempRefetchFromNetworkChecklist = false) {
     let refetchResourceFromNetwork = false;
 
     try {
@@ -949,6 +1208,20 @@ async function _shouldResourceBeRefetchedFromNetwork(resourceURL) {
 
         if (refetchResourceFromNetwork) {
             let refetechChecklistID = _getRefetchFromNetworkChecklistID();
+
+            let hasChecklist = await caches.has(refetechChecklistID); // Avoid creating the checklist when opening it if it has not already been created
+            if (hasChecklist) {
+                let refetchChecklist = await caches.open(refetechChecklistID);
+                let refetchChecklistResult = await refetchChecklist.match(resourceURL);
+
+                if (refetchChecklistResult != null) {
+                    refetchResourceFromNetwork = false; // It has already been ticked off since it is in the checklist "cache"
+                }
+            }
+        }
+
+        if (refetchResourceFromNetwork && checkTempRefetchFromNetworkChecklist) {
+            let refetechChecklistID = _getTempRefetchFromNetworkChecklistID();
 
             let hasChecklist = await caches.has(refetechChecklistID); // Avoid creating the checklist when opening it if it has not already been created
             if (hasChecklist) {
