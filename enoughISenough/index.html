@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <link rel="preload" href="enough IS enough-bundle.js" as="script">
+    <link rel="preload" href="enoughISenough-bundle.js" as="script">
     <title>mr NOT - enough IS enough</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -52,7 +52,7 @@
         }
 
         /* If not supported, we dim out */
-        [data-supported='0'] {
+        [data-supported="0"] {
             opacity: 0.25;
         }
 
@@ -64,20 +64,22 @@
             stroke: #492d85;
         }
     </style>
+
     <script>
         var Module = {
-            scene: "enough IS enough.bin",
+            scene: "enoughISenough.bin",
             webxr_framebuffer_scale_factor: 1.000
         };
     </script>
 
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="homescreen192.png">
+
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js')
-                .then(reg => console.log('Service worker registered!', reg))
-                .catch(err => console.log('Unable to register service worker!', err));
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js")
+                .then(reg => console.log("Service worker registered!", reg))
+                .catch(err => console.log("Unable to register service worker!", err));
         }
     </script>
 
@@ -87,27 +89,27 @@
 
         function loadRuntime(simd, threads) {
 
-            let runtime = 'WonderlandRuntime-physx' + (simd ? '-simd' : '') + (threads ? '-threads' : '')
+            let runtime = "WonderlandRuntime-physx" + (simd ? "-simd" : "") + (threads ? "-threads" : "")
 
-            const s = document.createElement('script');
+            const s = document.createElement("script");
             document.body.appendChild(s);
-            const bundle = document.createElement('script');
-            bundle.id = 'bundle';
+            const bundle = document.createElement("script");
+            bundle.id = "bundle";
             document.body.appendChild(bundle);
 
             /* We need to ensure the bundle is loaded after the runtime js always */
             Module.preRun = function () {
-                addRunDependency('bundle');
+                addRunDependency("bundle");
                 bundle.onload = () => {
-                    removeRunDependency('bundle');
+                    removeRunDependency("bundle");
                 };
-                bundle.src = "enough IS enough-bundle.js";
+                bundle.src = "enoughISenough-bundle.js";
             }
-            s.src = runtime + '.js';
+            s.src = runtime + ".js";
         }
 
         WL.onXRSupported.push((type, supported) => {
-            const button = document.getElementById(type + '-button');
+            const button = document.getElementById(type + "-button");
             if (button) button.dataset.supported = supported;
         })
 
@@ -138,9 +140,9 @@
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
+        gtag("js", new Date());
 
-        gtag('config', 'G-KN2L5E21YD');
+        gtag("config", "G-KN2L5E21YD");
 
     </script>
 </head>
