@@ -169,6 +169,15 @@ class IntroState extends PP.State {
         this._myParentFSM.perform(MainTransitions.End);
 
         let introViewed = Global.mySaveManager.loadNumber("intro_viewed", 0);
+
+        if (introViewed == 0) {
+            if (Global.myGoogleAnalytics) {
+                gtag("event", "intro_done_first_time", {
+                    "value": 1
+                });
+            }
+        }
+
         introViewed += 1;
         Global.mySaveManager.save("intro_viewed", introViewed);
 

@@ -202,6 +202,12 @@ class TrialState extends PP.State {
             }
         }
 
+        if (Global.myGoogleAnalytics) {
+            gtag("event", "trial_completed", {
+                "value": 1
+            });
+        }
+
         Global.mySaveManager.save("trial_phase", 1);
         Global.mySaveManager.save("trial_completed", true);
         Global.myStatistics.myTrialCompletedCount += 1;
