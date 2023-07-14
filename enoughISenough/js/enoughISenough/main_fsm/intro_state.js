@@ -196,6 +196,8 @@ class IntroState extends PP.State {
                 });
             }
         }
+
+        Global.myIntroDone = true;
     }
 
     skipIntro(fsm, transition) {
@@ -209,6 +211,8 @@ class IntroState extends PP.State {
                 });
             }
         }
+
+        Global.myIntroDone = true;
     }
 
     _onXRSessionStart(session) {
