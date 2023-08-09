@@ -25542,18 +25542,17 @@
                 "name": "Phong Opaque Textured",
                 "file": "default"
             },
-            "blending": true,
+            "blending": false,
             "sampleAlphaToCoverage": true,
             "blendSrc": "source alpha",
             "blendDest": "one minus source alpha",
-            "blendEqAlpha": "add",
+            "blendEqAlpha": "max",
             "depthFunction": "less or equal",
             "features": {
                 "TEXTURED": true,
                 "ALPHA": true,
                 "ALPHA_MASKED": false,
-                "WITH_FOG": true,
-                "WITH_EMISSIVE": true
+                "WITH_FOG": true
             }
         },
         "82": {
