@@ -3,7 +3,11 @@
 
 <head>
     <link rel="preload" href="enoughISenough-bundle.js" as="script">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon192.png">
+
     <title>mr NOT - enough IS enough</title>
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#492d85">
@@ -81,21 +85,25 @@
     </style>
 
     <script>
+        if (navigator.serviceWorker != null) {
+            navigator.serviceWorker.register("service-worker.js");
+        }
+    </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KN2L5E21YD"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag("js", new Date());
+
+        gtag("config", "G-KN2L5E21YD");
+    </script>
+
+    <script>
         var Module = {
             scene: "enoughISenough.bin",
             webxr_framebuffer_scale_factor: 1.000
         };
-    </script>
-
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="homescreen192.png">
-
-    <script>
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("service-worker.js")
-                .then(reg => console.log("Service worker registered!", reg))
-                .catch(err => console.log("Unable to register service worker!", err));
-        }
     </script>
 
     <script src="wonderland.min.js"></script>
@@ -103,12 +111,11 @@
         import { simd, threads } from "./wasm-featuredetect.js";
 
         function loadRuntime(simd, threads) {
-
             let runtime = "WonderlandRuntime-physx" + (simd ? "-simd" : "") + (threads ? "-threads" : "")
 
-            const s = document.createElement("script");
-            document.body.appendChild(s);
-            const bundle = document.createElement("script");
+            let script = document.createElement("script");
+            document.body.appendChild(script);
+            let bundle = document.createElement("script");
             bundle.id = "bundle";
             document.body.appendChild(bundle);
 
@@ -120,17 +127,20 @@
                 };
                 bundle.src = "enoughISenough-bundle.js";
             }
-            s.src = runtime + ".js";
+
+            script.src = runtime + ".js";
         }
 
         WL.onXRSupported.push((type, supported) => {
-            const button = document.getElementById(type + "-button");
-            if (button) button.dataset.supported = supported;
+            let button = document.getElementById(type + "-button");
+            if (button != null) {
+                button.dataset.supported = supported;
+            }
         })
 
         Promise.all([simd(), threads()]).then((support) => {
-            const simdSupported = support[0];
-            const threadsSupported = support[1];
+            let simdSupported = support[0];
+            let threadsSupported = support[1];
             if (simdSupported) {
                 console.log("WASM SIMD is supported");
             } else {
@@ -150,20 +160,11 @@
             loadRuntime(simdSupported, threadsSupported && self.crossOriginIsolated);
         });
     </script>
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KN2L5E21YD"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag("js", new Date());
-
-        gtag("config", "G-KN2L5E21YD");
-
-    </script>
 </head>
 
 <body>
     <canvas id="canvas" style="width: 100%; height: 100%; display: block;" tabindex="0"></canvas>
+
     <div class="xr-button-container">
         <a id="vr-button"
             onclick="Module['webxr_request_session_func']('immersive-vr', ['local',], ['local','hand-tracking','hit-test',])">
