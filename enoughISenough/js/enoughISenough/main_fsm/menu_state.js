@@ -615,7 +615,7 @@ class MenuItem {
     }
 
     _readyUpdate(dt) {
-        if (this._myObject.pp_getPosition()[1] <= -10 || this._myObject.pp_getPosition()[1] > 20 || this._myObject.pp_getPosition().vec3_length() > 50) {
+        if (this._myObject.pp_getPosition()[1] <= -10 || this._myObject.pp_getPosition().vec3_length() > 50) {
             this._myHitFloor = true;
             this._myFSM.perform("unspawn");
         }
