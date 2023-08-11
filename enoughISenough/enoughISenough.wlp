@@ -384,7 +384,9 @@
                         "_my15": "286",
                         "_my16": "287",
                         "_myFogAlpha": 0.33,
-                        "_mySpecularMultiplier": 2.0
+                        "_mySpecularMultiplier": 2.0,
+                        "_my17": "1434",
+                        "_my18": "933"
                     },
                     "active": true
                 },
@@ -23572,9 +23574,9 @@
                     0.0
                 ],
                 "specularColor": [
-                    9.999999974752428e-7,
-                    9.999899930335233e-7,
-                    9.999899930335233e-7,
+                    0.0,
+                    0.0,
+                    0.0,
                     1.0
                 ],
                 "ambientColor": [
