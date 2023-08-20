@@ -391,9 +391,9 @@ class MenuState extends PP.State {
                                 }
                             }.bind(this);
 
-                            PP.XRUtils.openLinkPersistent(zestyComponent.banner.url, true, true, 15, onZestySuccess);
+                            PP.XRUtils.openLink(zestyComponent.banner.url, true, true, false, false, onZestySuccess);
                         } else {
-                            PP.XRUtils.openLinkPersistent("https://www.zesty.market", true, true, 15,
+                            PP.XRUtils.openLink("https://www.zesty.market", true, true, false, false,
                                 function () {
                                     Global.myUnmute = true;
                                     Howler.mute(true);
@@ -429,7 +429,7 @@ class MenuState extends PP.State {
 
         {
             let wondermelon = new MenuItem(Global.myGameObjects.get(GameObjectType.WONDERMELON), GameObjectType.WONDERMELON, positions[7], function () {
-                PP.XRUtils.openLinkPersistent("https://signor-pipo.itch.io/not-enough", true, true, 15,
+                PP.XRUtils.openLink("https://signor-pipo.itch.io/not-enough", true, true, false, false,
                     function () {
                         Global.myUnmute = true;
                         Howler.mute(true);
