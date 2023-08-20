@@ -56,40 +56,38 @@ class StatisticsManager {
     }
 
     _sendAnalytics() {
-        if (Global.myGoogleAnalytics) {
-            gtag("event", "play_time", {
-                "value": (Global.myStatistics.myTotalPlayTime - Global.myStatistics.myTotalPlayTimeOnLoad).toFixed(2)
+        Global.sendAnalytics("event", "play_time", {
+            "value": (Global.myStatistics.myTotalPlayTime - Global.myStatistics.myTotalPlayTimeOnLoad).toFixed(2)
+        });
+
+        if ((Global.myStatistics.myEvidencesThrown - Global.myStatistics.myEvidencesThrownOnLoad) > 0) {
+            Global.sendAnalytics("event", "evidences_thrown", {
+                "value": (Global.myStatistics.myEvidencesThrown - Global.myStatistics.myEvidencesThrownOnLoad)
             });
+        }
 
-            if ((Global.myStatistics.myEvidencesThrown - Global.myStatistics.myEvidencesThrownOnLoad) > 0) {
-                gtag("event", "evidences_thrown", {
-                    "value": (Global.myStatistics.myEvidencesThrown - Global.myStatistics.myEvidencesThrownOnLoad)
-                });
-            }
+        if ((Global.myStatistics.myEvidencesMissed - Global.myStatistics.myEvidencesMissedOnLoad) > 0) {
+            Global.sendAnalytics("event", "evidences_missed", {
+                "value": (Global.myStatistics.myEvidencesMissed - Global.myStatistics.myEvidencesMissedOnLoad)
+            });
+        }
 
-            if ((Global.myStatistics.myEvidencesMissed - Global.myStatistics.myEvidencesMissedOnLoad) > 0) {
-                gtag("event", "evidences_missed", {
-                    "value": (Global.myStatistics.myEvidencesMissed - Global.myStatistics.myEvidencesMissedOnLoad)
-                });
-            }
+        if ((Global.myStatistics.myEvidencesPunched - Global.myStatistics.myEvidencesPunchedOnLoad) > 0) {
+            Global.sendAnalytics("event", "evidences_punched", {
+                "value": (Global.myStatistics.myEvidencesPunched - Global.myStatistics.myEvidencesPunchedOnLoad)
+            });
+        }
 
-            if ((Global.myStatistics.myEvidencesPunched - Global.myStatistics.myEvidencesPunchedOnLoad) > 0) {
-                gtag("event", "evidences_punched", {
-                    "value": (Global.myStatistics.myEvidencesPunched - Global.myStatistics.myEvidencesPunchedOnLoad)
-                });
-            }
+        if ((Global.myStatistics.myMrNOTDismissed - Global.myStatistics.myMrNOTDismissedOnLoad) > 0) {
+            Global.sendAnalytics("event", "mr_NOT_dismissed", {
+                "value": (Global.myStatistics.myMrNOTDismissed - Global.myStatistics.myMrNOTDismissedOnLoad)
+            });
+        }
 
-            if ((Global.myStatistics.myMrNOTDismissed - Global.myStatistics.myMrNOTDismissedOnLoad) > 0) {
-                gtag("event", "mr_NOT_dismissed", {
-                    "value": (Global.myStatistics.myMrNOTDismissed - Global.myStatistics.myMrNOTDismissedOnLoad)
-                });
-            }
-
-            if ((Global.myStatistics.myMrNOTClonesDismissed - Global.myStatistics.myMrNOTClonesDismissedOnLoad) > 0) {
-                gtag("event", "mr_NOT_clones_dismissed", {
-                    "value": (Global.myStatistics.myMrNOTClonesDismissed - Global.myStatistics.myMrNOTClonesDismissedOnLoad)
-                });
-            }
+        if ((Global.myStatistics.myMrNOTClonesDismissed - Global.myStatistics.myMrNOTClonesDismissedOnLoad) > 0) {
+            Global.sendAnalytics("event", "mr_NOT_clones_dismissed", {
+                "value": (Global.myStatistics.myMrNOTClonesDismissed - Global.myStatistics.myMrNOTClonesDismissedOnLoad)
+            });
         }
 
         Global.myStatistics.syncOnLoadVariables();

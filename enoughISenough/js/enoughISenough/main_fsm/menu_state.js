@@ -60,11 +60,9 @@ class MenuState extends PP.State {
                     this._myButtonPressed = true;
                     Global.mySaveManager.save("button_pressed", true);
 
-                    if (Global.myGoogleAnalytics) {
-                        gtag("event", "button_pressed", {
-                            "value": 1
-                        });
-                    }
+                    Global.sendAnalytics("event", "button_pressed", {
+                        "value": 1
+                    });
 
                     break;
                 }
@@ -129,11 +127,9 @@ class MenuState extends PP.State {
     }
 
     end() {
-        if (Global.myGoogleAnalytics) {
-            gtag("event", "menu_time", {
-                "value": this._myMenuDuration.toFixed(2)
-            });
-        }
+        Global.sendAnalytics("event", "menu_time", {
+            "value": this._myMenuDuration.toFixed(2)
+        });
 
         Global.myIsInMenu = false;
     }
@@ -203,11 +199,9 @@ class MenuState extends PP.State {
         let fullReset = this._myFloppyDisk.getGrabTime() >= 5;
         if (!fullReset) {
 
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "save_reset", {
-                    "value": 1
-                });
-            }
+            Global.sendAnalytics("event", "save_reset", {
+                "value": 1
+            });
 
             Global.mySaveManager.save("trial_started_once", false);
             Global.mySaveManager.save("trial_completed", false);
@@ -220,11 +214,9 @@ class MenuState extends PP.State {
 
             this._myNotEnough.start();
         } else {
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "save_reset_full", {
-                    "value": 1
-                });
-            }
+            Global.sendAnalytics("event", "save_reset_full", {
+                "value": 1
+            });
 
             Global.mySaveManager.clear();
             Global.mySaveManager.save("game_version", Global.myGameVersion);
@@ -388,11 +380,9 @@ class MenuState extends PP.State {
                                     // Do nothing
                                 }
 
-                                if (Global.myGoogleAnalytics) {
-                                    gtag("event", "zesty_market_opened", {
-                                        "value": 1
-                                    });
-                                }
+                                Global.sendAnalytics("event", "zesty_market_opened", {
+                                    "value": 1
+                                });
                             }.bind(this);
 
                             PP.XRUtils.openLink(zestyComponent.banner.url, true, true, false, false, onZestySuccess);
@@ -402,11 +392,9 @@ class MenuState extends PP.State {
                                     Global.myUnmute = true;
                                     Howler.mute(true);
 
-                                    if (Global.myGoogleAnalytics) {
-                                        gtag("event", "zesty_market_opened", {
-                                            "value": 1
-                                        });
-                                    }
+                                    Global.sendAnalytics("event", "zesty_market_opened", {
+                                        "value": 1
+                                    });
                                 }.bind(this)
                             );
                         }
@@ -438,11 +426,9 @@ class MenuState extends PP.State {
                         Global.myUnmute = true;
                         Howler.mute(true);
 
-                        if (Global.myGoogleAnalytics) {
-                            gtag("event", "not_enough_opened", {
-                                "value": 1
-                            });
-                        }
+                        Global.sendAnalytics("event", "not_enough_opened", {
+                            "value": 1
+                        });
                     }.bind(this)
                 );
             }.bind(this));

@@ -715,11 +715,9 @@ class Vent {
         if (!Global.mySaveManager.loadBool("mr_NOT_encountered", false)) {
             Global.mySaveManager.save("mr_NOT_encountered", true);
 
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "mr_NOT_encountered_before_trial", {
-                    "value": 1
-                });
-            }
+            Global.sendAnalytics("event", "mr_NOT_encountered_before_trial", {
+                "value": 1
+            });
         }
     }
 

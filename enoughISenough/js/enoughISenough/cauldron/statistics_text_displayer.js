@@ -78,11 +78,10 @@ WL.registerComponent("statistics-text-displayer", {
 
                         let angleToText = Math.abs(this._myTempDirection1.vec3_angle(this._myTempDirection2));
                         if (angleToText < 70) {
-                            if (Global.myGoogleAnalytics) {
-                                gtag("event", "statistics_viewed", {
-                                    "value": 1
-                                });
-                            }
+                            Global.sendAnalytics("event", "statistics_viewed", {
+                                "value": 1
+                            });
+
                             this._mySendAnalytics = false;
                             this._myAnalyticsTimer.start(20);
                         }

@@ -37,11 +37,9 @@ WL.registerComponent("pulse-on-grab", {
             if (PP.InputUtils.getInputSourceType(this._myHandednessType) == PP.InputSourceType.HAND) {
                 Global.myHasGrabbedTrackedHandsEventSent = true;
 
-                if (Global.myGoogleAnalytics) {
-                    gtag("event", "has_grabbed_with_tracked_hands", {
-                        "value": 1
-                    });
-                }
+                Global.sendAnalytics("event", "has_grabbed_with_tracked_hands", {
+                    "value": 1
+                });
             }
         }
     },
