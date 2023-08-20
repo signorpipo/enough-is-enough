@@ -421,16 +421,18 @@ class MenuState extends PP.State {
 
         {
             let wondermelon = new MenuItem(Global.myGameObjects.get(GameObjectType.WONDERMELON), GameObjectType.WONDERMELON, positions[7], function () {
-                PP.XRUtils.openLink("https://signor-pipo.itch.io/not-enough", true, true, false, false,
-                    function () {
-                        Global.myUnmute = true;
-                        Howler.mute(true);
+                if (this._myFSM.isInState("ready")) {
+                    PP.XRUtils.openLink("https://signor-pipo.itch.io/not-enough", true, true, false, false,
+                        function () {
+                            Global.myUnmute = true;
+                            Howler.mute(true);
 
-                        Global.sendAnalytics("event", "not_enough_opened", {
-                            "value": 1
-                        });
-                    }.bind(this)
-                );
+                            Global.sendAnalytics("event", "not_enough_opened", {
+                                "value": 1
+                            });
+                        }.bind(this)
+                    );
+                }
             }.bind(this));
             this._myMenuItems.push(wondermelon);
         }
