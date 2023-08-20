@@ -376,13 +376,17 @@ class MenuState extends PP.State {
                 if (this._myFSM.isInState("ready")) {
                     this._myResetCount = 0;
                     let zestyComponent = this._myZestyObject.getObject().pp_getComponentHierarchy("zesty-banner");
-                    if (zestyComponent) {
-                        if (zestyComponent.banner != null) {
+                    if (zestyComponent != null) {
+                        if (zestyComponent.banner != null && zestyComponent.banner.url != null) {
                             let onZestySuccess = function () {
                                 Global.myUnmute = true;
                                 Howler.mute(true);
 
-                                zestyComponent.executeClick();
+                                try {
+                                    zestyComponent.executeClick();
+                                } catch (error) {
+                                    // Do nothing
+                                }
 
                                 if (Global.myGoogleAnalytics) {
                                     gtag("event", "zesty_market_opened", {
