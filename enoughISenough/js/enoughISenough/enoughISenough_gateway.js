@@ -32,6 +32,10 @@ WL.registerComponent("enough-IS-enough-gateway", {
         this._myLoadTimeSent = false;
 
         this._myTimeUsingTrackedHands = 0;
+
+        if (window.location != null && window.location.host != null) {
+            Global.myIsLocalhost = window.location.host == "localhost:8080";
+        }
     },
     start: function () {
         let version = Global.mySaveManager.loadNumber("game_version", 0);
@@ -325,7 +329,8 @@ var Global = {
     myIsUsingTrackedHandsVentEventSent: false,
     myVentDurationWithTrackedHands: 0,
     myIntroDone: false,
-    myAnalyticsEnabled: false
+    myAnalyticsEnabled: false,
+    myIsLocalhost: false
 };
 
 Global.sendAnalytics = function sendAnalytics(...args) {
