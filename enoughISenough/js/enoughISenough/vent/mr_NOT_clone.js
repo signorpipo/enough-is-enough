@@ -113,12 +113,14 @@ class MrNOTClone {
             this._myTimerBeforeCheckingSeen.update(dt);
             if (this._myTimerBeforeCheckingSeen.isDone()) {
                 if (!this._myTimerBeforeSettingSeen.isRunning()) {
-                    let directionToClone = this._myObject.pp_getPosition();
-                    directionToClone.vec3_sub(Global.myPlayerPosition, directionToClone).vec3_normalize(directionToClone);
+                    if (PP.XRUtils.isXRSessionActive()) {
+                        let directionToClone = this._myObject.pp_getPosition();
+                        directionToClone.vec3_sub(Global.myPlayerPosition, directionToClone).vec3_normalize(directionToClone);
 
-                    let angle = Global.myPlayerForward.vec3_angle(directionToClone);
-                    if (angle < 20) {
-                        this._myTimerBeforeSettingSeen.start();
+                        let angle = Global.myPlayerForward.vec3_angle(directionToClone);
+                        if (angle < 20) {
+                            this._myTimerBeforeSettingSeen.start();
+                        }
                     }
                 } else {
                     this._myTimerBeforeSettingSeen.update(dt);
