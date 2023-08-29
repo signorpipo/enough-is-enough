@@ -171,7 +171,7 @@ WL.registerComponent('pp-grabber-hand', {
                         grabbableToGrab.object.resetTranslation();
                     }
 
-                    this._myGrabCallbacks.forEach(function (callback) { callback(this, grabbableToGrab); }.bind(this));
+                    this._myGrabCallbacks.forEach(function (callback) { callback(this, grabbableToGrab, grabButton); }.bind(this));
                 }
 
                 if (this._myGrabbables.length >= this._myMaxNumberOfObjects) {
