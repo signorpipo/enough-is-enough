@@ -351,6 +351,25 @@ PP.Gamepad = class Gamepad {
         this._updateSingleButtonInfo(PP.ButtonType.THUMBSTICK, true);
         this._updateSingleButtonInfo(PP.ButtonType.BOTTOM_BUTTON, true);
         this._updateSingleButtonInfo(PP.ButtonType.TOP_BUTTON, true);
+
+        let inputSourceType = PP.InputUtils.getInputSourceType(this._myHandedness);
+        if (inputSourceType != PP.InputSourceType.GAMEPAD) {
+            if (inputSourceType == PP.InputSourceType.HAND) {
+                this._updateHandSqueeze();
+            }
+
+            if (this._myButtonInfos[PP.ButtonType.SELECT].myIsPressed && this._myButtonInfos[PP.ButtonType.SELECT].myValue == 0) {
+                this._myButtonInfos[PP.ButtonType.SELECT].myValue = 1;
+            }
+
+            if (this._myButtonInfos[PP.ButtonType.SQUEEZE].myIsPressed && this._myButtonInfos[PP.ButtonType.SQUEEZE].myValue == 0) {
+                this._myButtonInfos[PP.ButtonType.SQUEEZE].myValue = 1;
+            }
+        }
+    }
+
+    _updateHandSqueeze() {
+
     }
 
     //This sadly must be done this way to be the most compatible
