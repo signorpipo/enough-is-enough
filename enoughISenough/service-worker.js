@@ -1104,13 +1104,13 @@ async function _tickOffFromRefetchFromNetworkChecklist(resourceURL, useTempRefet
     } catch (error) {
         let logEnabled = _shouldResourceURLBeIncluded(_getCurrentLocation(), _myLogEnabledLocationURLsToInclude, _myLogEnabledLocationURLsToExclude);
         if (logEnabled) {
-            console.error("An error occurred while trying to put the response in the cache: " + request.url);
+            console.error("An error occurred while trying to tick off the resource URL from the network refetch checklist: " + resourceURL);
             console.error(error);
         }
     }
 }
 
-async function _cacheResourcesToPrecache(rejectOnPrecacheFailed = false, useTemps = false, installPhase = false) {
+async function _cacheResourcesToPrecache(rejectServiceWorkerOnPrecacheFailEnabled = false, useTemps = false, installPhase = false) {
     if (_getResourceURLsToPrecache().length == 0) return;
 
     let currentCache = null;
@@ -1152,68 +1152,68 @@ async function _cacheResourcesToPrecache(rejectOnPrecacheFailed = false, useTemp
         }
     }
 
-    let promisesToAwait = [];
-    for (let resourceURLToPrecache of _getResourceURLsToPrecache()) {
-        let resourceCompleteURLToPrecache = new Request(resourceURLToPrecache).url;
+    let precacheResourceAsyncCallback = async function precacheResourceAsyncCallback(resourceFullURLToPrecache) {
+        let resourceHasBeenPrecached = false;
 
-        promisesToAwait.push(new Promise(async function (resolve, reject) {
-            let resourceHasBeenPrecached = false;
+        try {
+            let resourceHaveToBeCached = false;
 
-            try {
-                let resourceHaveToBeCached = false;
+            let refetchFromNetwork = await _shouldResourceBeRefetchedFromNetwork(resourceFullURLToPrecache, useTemps);
 
-                let refetchFromNetwork = await _shouldResourceBeRefetchedFromNetwork(resourceCompleteURLToPrecache, useTemps);
+            if (refetchFromNetwork) {
+                resourceHaveToBeCached = true;
+            } else {
+                let resourceAlreadyInCache = false;
+                if (currentCache != null) {
+                    resourceAlreadyInCache = await currentCache.match(resourceFullURLToPrecache) != null;
+                }
 
-                if (refetchFromNetwork) {
-                    resourceHaveToBeCached = true
-                } else {
-                    let resourceAlreadyInCache = false;
-                    if (currentCache != null) {
-                        resourceAlreadyInCache = await currentCache.match(resourceCompleteURLToPrecache) != null;
-                    }
+                if (!resourceAlreadyInCache) {
+                    if (!useTemps) {
+                        resourceHaveToBeCached = true;
+                    } else {
+                        let resourceAlreadyInTempCache = false;
+                        if (currentTempCache != null) {
+                            resourceAlreadyInTempCache = await currentTempCache.match(resourceFullURLToPrecache) != null;
+                        }
 
-                    if (!resourceAlreadyInCache) {
-                        if (!useTemps) {
+                        if (!resourceAlreadyInTempCache) {
                             resourceHaveToBeCached = true;
-                        } else {
-                            let resourceAlreadyInTempCache = false;
-                            if (currentTempCache != null) {
-                                resourceAlreadyInTempCache = await currentTempCache.match(resourceCompleteURLToPrecache) != null;
-                            }
-
-                            if (!resourceAlreadyInTempCache) {
-                                resourceHaveToBeCached = true;
-                            }
                         }
                     }
                 }
-
-                if (resourceHaveToBeCached) {
-                    let [responseFromNetwork, responseHasBeenCached] = await _fetchFromNetworkAndPutInCache(new Request(resourceCompleteURLToPrecache), false, refetchFromNetwork, useTemps, installPhase);
-                    resourceHasBeenPrecached = responseHasBeenCached != null && responseHasBeenCached;
-                } else {
-                    resourceHasBeenPrecached = true; // The resource has been already precached
-                }
-            } catch (error) {
-                let logEnabled = _shouldResourceURLBeIncluded(_getCurrentLocation(), _myLogEnabledLocationURLsToInclude, _myLogEnabledLocationURLsToExclude);
-                if (logEnabled) {
-                    console.error("Failed to fetch resource to precache: " + resourceCompleteURLToPrecache);
-                    console.error(error);
-                }
             }
 
-            if (resourceHasBeenPrecached || !rejectOnPrecacheFailed) {
-                resolve();
+            if (resourceHaveToBeCached) {
+                let [responseFromNetwork, responseHasBeenCached] = await _fetchFromNetworkAndPutInCache(new Request(resourceFullURLToPrecache), false, refetchFromNetwork, useTemps, installPhase);
+                resourceHasBeenPrecached = responseHasBeenCached != null && responseHasBeenCached;
             } else {
-                let rejectServiceWorkerOnPrecacheFail = _shouldResourceURLBeIncluded(resourceCompleteURLToPrecache, _myRejectServiceWorkerOnPrecacheFailResourceURLsToInclude, _myRejectServiceWorkerOnPrecacheFailResourceURLsToExclude);
-
-                if (!rejectServiceWorkerOnPrecacheFail) {
-                    resolve();
-                } else {
-                    reject("Failed to fetch resource to precache: " + resourceCompleteURLToPrecache);
-                }
+                resourceHasBeenPrecached = true; // The resource has been already precached
             }
-        }));
+        } catch (error) {
+            resourceHasBeenPrecached = false;
+
+            let logEnabled = _shouldResourceURLBeIncluded(_getCurrentLocation(), _myLogEnabledLocationURLsToInclude, _myLogEnabledLocationURLsToExclude);
+            if (logEnabled) {
+                console.error("Failed to fetch the resource to precache: " + resourceFullURLToPrecache);
+                console.error(error);
+            }
+        }
+
+        if (!resourceHasBeenPrecached && rejectServiceWorkerOnPrecacheFailEnabled) {
+            let rejectServiceWorkerOnPrecacheFail = _shouldResourceURLBeIncluded(resourceFullURLToPrecache, _myRejectServiceWorkerOnPrecacheFailResourceURLsToInclude, _myRejectServiceWorkerOnPrecacheFailResourceURLsToExclude);
+
+            if (rejectServiceWorkerOnPrecacheFail) {
+                throw new Error("Failed to fetch the resource to precache: " + resourceFullURLToPrecache);
+            }
+        }
+    };
+
+    let promisesToAwait = [];
+    for (let resourceURLToPrecache of _getResourceURLsToPrecache()) {
+        let resourceFullURLToPrecache = new Request(resourceURLToPrecache).url;
+
+        promisesToAwait.push(precacheResourceAsyncCallback(resourceFullURLToPrecache));
     }
 
     await Promise.all(promisesToAwait);
@@ -1524,7 +1524,7 @@ async function _shouldResourceBeRefetchedFromNetwork(resourceURL, checkTempRefet
 
         let logEnabled = _shouldResourceURLBeIncluded(_getCurrentLocation(), _myLogEnabledLocationURLsToInclude, _myLogEnabledLocationURLsToExclude);
         if (logEnabled) {
-            console.error("An error occurred while trying to check if the resource should be refetched: " + request.url);
+            console.error("An error occurred while trying to check if the resource should be refetched from network: " + resourceURL);
             console.error(error);
         }
     }
