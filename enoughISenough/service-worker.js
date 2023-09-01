@@ -8,7 +8,7 @@ let _EVERY_RESOURCE_FROM_CURRENT_ORIGIN = ["^" + _escapeRegexSpecialCharacters(_
 
 let _EVERY_LOCATION = [".*"];
 let _NO_LOCATION = [];
-let _LOCALHOST = ["localhost:8080"];
+let _LOCALHOST = ["localhost:\\d\\d\\d\\d", "127\\.0\\.0\\.1:\\d\\d\\d\\d"];
 
 let _IGNORE_INDEX_URL_PARAMS = [
     "^" + _escapeRegexSpecialCharacters(_getCurrentLocation()) + "$",
