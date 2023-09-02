@@ -31,6 +31,8 @@ WL.registerComponent("enough-IS-enough-gateway", {
         this._myGameObjectPoolSize = 40;
         this._myUpdateReadyCountdown = 10;
         this._myLoadTimeSent = false;
+
+        this._myTimeUsingTrackedHands = 0;
     },
     start: function () {
         let version = Global.mySaveManager.loadNumber("game_version", 0);
@@ -94,6 +96,17 @@ WL.registerComponent("enough-IS-enough-gateway", {
                 this.enoughISenough.update(dt * Global.myDeltaTimeSpeed);
                 Global.myParticlesManager.update(dt * Global.myDeltaTimeSpeed);
                 Global.mySaveManager.update(dt * Global.myDeltaTimeSpeed);
+
+                if (Global.myIntroDone && Global.myIsUsingTrackedHands && this._myTimeUsingTrackedHands < 7) {
+                    this._myTimeUsingTrackedHands += dt;
+                    if (this._myTimeUsingTrackedHands >= 7) {
+                        if (Global.myGoogleAnalytics) {
+                            gtag("event", "is_using_tracked_hands", {
+                                "value": 1
+                            });
+                        }
+                    }
+                }
             }
 
             if (Global.myUnmute && PP.XRUtils.isXRSessionActive() && Global.myXRSessionActiveOpenLinkExtraCheck) {
@@ -317,5 +330,6 @@ var Global = {
     myIsUsingTrackedHands: false,
     myHasGrabbedTrackedHandsEventSent: false,
     myIsUsingTrackedHandsVentEventSent: false,
-    myVentDurationWithTrackedHands: 0
+    myVentDurationWithTrackedHands: 0,
+    myIntroDone: false
 };

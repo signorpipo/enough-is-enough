@@ -100,16 +100,16 @@
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                -1.1920820242039554e-7,
+                -0.9999908,
                 0.0,
                 0.0,
+                1.000014,
+                -1.1921098064249237e-7,
                 0.0,
                 0.0,
-                1.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
+                -49.9999961,
+                50.0,
                 1.0
             ]
         },
@@ -384,7 +384,9 @@
                         "_my15": "286",
                         "_my16": "287",
                         "_myFogAlpha": 0.33,
-                        "_mySpecularMultiplier": 2.0
+                        "_mySpecularMultiplier": 2.0,
+                        "_my17": "1434",
+                        "_my18": "933"
                     },
                     "active": true
                 },
@@ -16089,7 +16091,7 @@
             "components": [
                 {
                     "mesh": {
-                        "material": "274"
+                        "material": "1434"
                     }
                 }
             ]
@@ -23635,9 +23637,9 @@
                     0.0
                 ],
                 "specularColor": [
-                    9.999999974752428e-7,
-                    9.999899930335233e-7,
-                    9.999899930335233e-7,
+                    0.0,
+                    0.0,
+                    0.0,
                     1.0
                 ],
                 "ambientColor": [
@@ -23647,7 +23649,7 @@
                     1.0
                 ]
             },
-            "pipeline": "194"
+            "pipeline": "1436"
         },
         "934": {
             "link": {
@@ -25331,6 +25333,30 @@
                     1.0
                 ]
             }
+        },
+        "1434": {
+            "name": "P8 Dark Red Ring Out",
+            "Phong": {
+                "diffuseColor": [
+                    0.4509803,
+                    0.0990388,
+                    0.2804523,
+                    1.0
+                ],
+                "specularColor": [
+                    0.2117647,
+                    0.2117647,
+                    0.2117647,
+                    1.0
+                ],
+                "ambientColor": [
+                    0.1764705,
+                    0.0196078,
+                    0.0980392,
+                    1.0
+                ]
+            },
+            "pipeline": "1432"
         }
     },
     "shaders": {
@@ -25391,7 +25417,7 @@
     },
     "settings": {
         "project": {
-            "name": "enough IS enough",
+            "name": "enoughISenough",
             "version": [
                 0,
                 8,
@@ -25605,18 +25631,17 @@
                 "name": "Phong Opaque Textured",
                 "file": "default"
             },
-            "blending": true,
+            "blending": false,
             "sampleAlphaToCoverage": true,
             "blendSrc": "source alpha",
             "blendDest": "one minus source alpha",
-            "blendEqAlpha": "add",
+            "blendEqAlpha": "max",
             "depthFunction": "less or equal",
             "features": {
                 "TEXTURED": true,
                 "ALPHA": true,
                 "ALPHA_MASKED": false,
-                "WITH_FOG": true,
-                "WITH_EMISSIVE": true
+                "WITH_FOG": true
             }
         },
         "82": {
@@ -25631,12 +25656,48 @@
                 "file": "default"
             }
         },
+        "1432": {
+            "link": {
+                "name": "Phong Opaque",
+                "file": "default"
+            },
+            "name": "Phong Alpha Pre",
+            "features": {
+                "ALPHA": true,
+                "ALPHA_MASKED": true,
+                "WITH_FOG": true
+            },
+            "blending": true,
+            "blendSrc": "source alpha",
+            "blendDest": "one minus source alpha",
+            "depthFunction": "less or equal",
+            "sampleAlphaToCoverage": false,
+            "blendEqAlpha": "max"
+        },
         "194": {
             "link": {
                 "name": "Phong Opaque",
                 "file": "default"
             },
             "name": "Phong Alpha",
+            "features": {
+                "ALPHA": true,
+                "ALPHA_MASKED": true,
+                "WITH_FOG": true
+            },
+            "blending": true,
+            "blendSrc": "source alpha",
+            "blendDest": "one minus source alpha",
+            "depthFunction": "less or equal",
+            "sampleAlphaToCoverage": false,
+            "blendEqAlpha": "max"
+        },
+        "1436": {
+            "link": {
+                "name": "Phong Opaque",
+                "file": "default"
+            },
+            "name": "Phong Alpha Post",
             "features": {
                 "ALPHA": true,
                 "ALPHA_MASKED": true,
