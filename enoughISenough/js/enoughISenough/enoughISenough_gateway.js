@@ -33,6 +33,8 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
         this._myTimeUsingTrackedHands = 0;
 
+        this._myResetXRSessionActiveOpenLinkExtraCheckTimer = new PP.Timer(2);
+
         if (window.location != null && window.location.host != null) {
             Global.myIsLocalhost = window.location.host == "localhost:8080";
         }
@@ -92,6 +94,16 @@ WL.registerComponent("enough-IS-enough-gateway", {
                     Global.myIsUsingTrackedHands = true;
                 } else {
                     Global.myIsUsingTrackedHands = false;
+                }
+
+                if (PP.XRUtils.isXRSessionActive() && !Global.myXRSessionActiveOpenLinkExtraCheck) {
+                    this._myResetXRSessionActiveOpenLinkExtraCheckTimer.update(dt);
+                    if (this._myResetXRSessionActiveOpenLinkExtraCheckTimer.isDone()) {
+                        Global.myXRSessionActiveOpenLinkExtraCheck = true;
+                        this._myResetXRSessionActiveOpenLinkExtraCheckTimer.start();
+                    }
+                } else {
+                    this._myResetXRSessionActiveOpenLinkExtraCheckTimer.start();
                 }
 
                 this.enoughISenough.update(dt * Global.myDeltaTimeSpeed);
@@ -227,7 +239,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         /*
         let componentAmountMapAfterLoad = Global.myScene.pp_getComponentAmountMapHierarchy();
         //console.error(componentAmountMapAfterLoad);
-
+ 
         let componentAmountMapDifference = new Map();
         for (let entry of componentAmountMapAfterLoad.entries()) {
             valueBefore = componentAmountMapBeforeLoad.get(entry[0]);
