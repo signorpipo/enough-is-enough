@@ -5,8 +5,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
     _myRightHandAnimator: { type: WL.Type.Object },
 }, {
     init: function () {
-        Global.myGoogleAnalytics = window.gtag != null;
-        //Global.myGoogleAnalytics = false;
+        Global.myAnalyticsEnabled = true;
         Global.myAudioManager = new PP.AudioManager();
         Global.myParticlesManager = new ParticlesManager();
         Global.myMeshObjectPoolMap = new PP.ObjectPoolManager();
@@ -65,11 +64,9 @@ WL.registerComponent("enough-IS-enough-gateway", {
         } else if (!Global.myUpdateReady) {
             if (!this._myLoadTimeSent) {
                 if (window.performance) {
-                    if (Global.myGoogleAnalytics) {
-                        gtag("event", "load_time", {
-                            "value": (performance.now() / 1000).toFixed(2)
-                        });
-                    }
+                    Global.sendAnalytics("event", "load_time", {
+                        "value": (performance.now() / 1000).toFixed(2)
+                    });
                 }
 
                 this._myLoadTimeSent = true;
@@ -100,11 +97,9 @@ WL.registerComponent("enough-IS-enough-gateway", {
                 if (Global.myIntroDone && Global.myIsUsingTrackedHands && this._myTimeUsingTrackedHands < 7) {
                     this._myTimeUsingTrackedHands += dt;
                     if (this._myTimeUsingTrackedHands >= 7) {
-                        if (Global.myGoogleAnalytics) {
-                            gtag("event", "is_using_tracked_hands", {
-                                "value": 1
-                            });
-                        }
+                        Global.sendAnalytics("event", "is_using_tracked_hands", {
+                            "value": 1
+                        });
                     }
                 }
             }
@@ -118,11 +113,9 @@ WL.registerComponent("enough-IS-enough-gateway", {
                 if (Global.myVentDurationWithTrackedHands >= 40) {
                     Global.myIsUsingTrackedHandsVentEventSent = true;
 
-                    if (Global.myGoogleAnalytics) {
-                        gtag("event", "is_using_tracked_hands_vent", {
-                            "value": 1
-                        });
-                    }
+                    Global.sendAnalytics("event", "is_using_tracked_hands_vent", {
+                        "value": 1
+                    });
                 }
             }
         }
@@ -331,5 +324,18 @@ var Global = {
     myHasGrabbedTrackedHandsEventSent: false,
     myIsUsingTrackedHandsVentEventSent: false,
     myVentDurationWithTrackedHands: 0,
-    myIntroDone: false
+    myIntroDone: false,
+    myAnalyticsEnabled: false
 };
+
+Global.sendAnalytics = function sendAnalytics(...args) {
+    try {
+        if (Global.myAnalyticsEnabled) {
+            if (window.gtag != null) {
+                window.gtag(...args);
+            }
+        }
+    } catch (error) {
+        // Do nothing
+    }
+}

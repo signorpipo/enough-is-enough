@@ -52,11 +52,9 @@ WL.registerComponent("credits-visualizer", {
                 this._myAppearAudio.play();
                 this._myFSM.perform("spawn");
 
-                if (Global.myGoogleAnalytics) {
-                    gtag("event", "credits_shown", {
-                        "value": 1
-                    });
-                }
+                Global.sendAnalytics("event", "credits_shown", {
+                    "value": 1
+                });
             }
         } else {
             this._myWondermelonGrabTime = 0;

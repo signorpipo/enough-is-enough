@@ -45,11 +45,9 @@ WL.registerComponent("activate-on-select", {
             if (this._myAnalyticsTimer.isDone()) {
                 this._myAnalyticsTimer.start(20);
 
-                if (Global.myGoogleAnalytics) {
-                    gtag("event", "select_physx_actived", {
-                        "value": 1
-                    });
-                }
+                Global.sendAnalytics("event", "select_physx_actived", {
+                    "value": 1
+                });
             }
         }
     },

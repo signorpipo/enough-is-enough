@@ -97,22 +97,18 @@ class TrialState extends PP.State {
         if (giveHint) {
             transition = transition.concat("_hint");
 
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "trial_hint_viewed_phase_".concat(trialPhase), {
-                    "value": 1
-                });
-            }
-        }
-
-        if (Global.myGoogleAnalytics) {
-            gtag("event", "trial_started", {
-                "value": 1
-            });
-
-            gtag("event", "trial_started_phase_".concat(trialPhase), {
+            Global.sendAnalytics("event", "trial_hint_viewed_phase_".concat(trialPhase), {
                 "value": 1
             });
         }
+
+        Global.sendAnalytics("event", "trial_started", {
+            "value": 1
+        });
+
+        Global.sendAnalytics("event", "trial_started_phase_".concat(trialPhase), {
+            "value": 1
+        });
 
         this._myFSM.perform(transition);
     }
@@ -122,61 +118,55 @@ class TrialState extends PP.State {
     }
 
     _trialPhaseCompleted(trialPhase, fsm) {
-        if (Global.myGoogleAnalytics) {
-            gtag("event", "trial_completed_phase_".concat(trialPhase), {
-                "value": 1
-            });
-        }
+        Global.sendAnalytics("event", "trial_completed_phase_".concat(trialPhase), {
+            "value": 1
+        });
 
         if (trialPhase == 4) {
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "trial_time", {
-                    "value": Global.myTrialDuration.toFixed(2)
-                });
-            }
+            Global.sendAnalytics("event", "trial_time", {
+                "value": Global.myTrialDuration.toFixed(2)
+            });
         }
     }
 
     _trialPhaseLost(trialPhase, fsm) {
-        if (Global.myGoogleAnalytics) {
-            gtag("event", "trial_lost_phase_".concat(trialPhase), {
-                "value": 1
-            });
+        Global.sendAnalytics("event", "trial_lost_phase_".concat(trialPhase), {
+            "value": 1
+        });
 
-            gtag("event", "trial_lost_time_phase_".concat(trialPhase), {
+        Global.sendAnalytics("event", "trial_lost_time_phase_".concat(trialPhase), {
+            "value": Global.myVentDuration.toFixed(2)
+        });
+
+        Global.sendAnalytics("event", "trial_time", {
+            "value": Global.myTrialDuration.toFixed(2)
+        });
+
+        if (Global.myStatistics.myTrialCompletedCount <= 0) {
+            Global.sendAnalytics("event", "trial_lost_time_before_completed_phase_".concat(trialPhase), {
                 "value": Global.myVentDuration.toFixed(2)
             });
+        }
 
-            gtag("event", "trial_time", {
-                "value": Global.myTrialDuration.toFixed(2)
-            });
-
-            if (Global.myStatistics.myTrialCompletedCount <= 0) {
-                gtag("event", "trial_lost_time_before_completed_phase_".concat(trialPhase), {
-                    "value": Global.myVentDuration.toFixed(2)
-                });
-            }
-
-            if (trialPhase == 1 && Global.myStatistics.myTrialCompletedCount <= 0) {
-                let clonesOnlyPunched = Global.myStatistics.myMrNOTClonesDismissed > 0 && Global.myStatistics.myMrNOTClonesDismissed == Global.myStatistics.myEvidencesPunched;
-                if (Global.myStatistics.myMrNOTClonesDismissed <= 0 || clonesOnlyPunched) {
-                    gtag("event", "trial_lost_before_first_dismiss", {
-                        "value": 1
-                    });
-
-                    if (clonesOnlyPunched) {
-                        gtag("event", "trial_lost_only_punched", {
-                            "value": 1
-                        });
-                    }
-                }
-            }
-
-            if (trialPhase == 1 && !Global.mySaveManager.loadBool("mr_NOT_clones_seen", false)) {
-                gtag("event", "trial_lost_before_first_clone_seen", {
+        if (trialPhase == 1 && Global.myStatistics.myTrialCompletedCount <= 0) {
+            let clonesOnlyPunched = Global.myStatistics.myMrNOTClonesDismissed > 0 && Global.myStatistics.myMrNOTClonesDismissed == Global.myStatistics.myEvidencesPunched;
+            if (Global.myStatistics.myMrNOTClonesDismissed <= 0 || clonesOnlyPunched) {
+                Global.sendAnalytics("event", "trial_lost_before_first_dismiss", {
                     "value": 1
                 });
+
+                if (clonesOnlyPunched) {
+                    Global.sendAnalytics("event", "trial_lost_only_punched", {
+                        "value": 1
+                    });
+                }
             }
+        }
+
+        if (trialPhase == 1 && !Global.mySaveManager.loadBool("mr_NOT_clones_seen", false)) {
+            Global.sendAnalytics("event", "trial_lost_before_first_clone_seen", {
+                "value": 1
+            });
         }
     }
 
@@ -191,22 +181,18 @@ class TrialState extends PP.State {
                 Global.myStatistics.myTrialBestTime = Global.myTrialDuration;
             }
 
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "trial_completed_from_start", {
-                    "value": 1
-                });
-
-                gtag("event", "trial_completed_from_start_time", {
-                    "value": Global.myTrialDuration.toFixed(2)
-                });
-            }
-        }
-
-        if (Global.myGoogleAnalytics) {
-            gtag("event", "trial_completed", {
+            Global.sendAnalytics("event", "trial_completed_from_start", {
                 "value": 1
             });
+
+            Global.sendAnalytics("event", "trial_completed_from_start_time", {
+                "value": Global.myTrialDuration.toFixed(2)
+            });
         }
+
+        Global.sendAnalytics("event", "trial_completed", {
+            "value": 1
+        });
 
         Global.mySaveManager.save("trial_phase", 1);
         Global.mySaveManager.save("trial_completed", true);

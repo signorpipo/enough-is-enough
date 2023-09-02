@@ -82,21 +82,17 @@ class ArcadeResultState extends PP.State {
                 Global.myStatistics.myDisputeBestTime = Global.myVentDuration;
             }
 
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "arcade_dispute_time", {
-                    "value": Global.myVentDuration.toFixed(2)
-                });
-            }
+            Global.sendAnalytics("event", "arcade_dispute_time", {
+                "value": Global.myVentDuration.toFixed(2)
+            });
         } else {
             if (Global.myStatistics.myChatBestTime < 0 || Global.myVentDuration > Global.myStatistics.myChatBestTime) {
                 Global.myStatistics.myChatBestTime = Global.myVentDuration;
             }
 
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "arcade_chat_time", {
-                    "value": Global.myVentDuration.toFixed(2)
-                });
-            }
+            Global.sendAnalytics("event", "arcade_chat_time", {
+                "value": Global.myVentDuration.toFixed(2)
+            });
         }
 
         let leaderboardID = "enough-is-enough";

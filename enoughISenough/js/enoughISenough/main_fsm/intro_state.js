@@ -51,19 +51,17 @@ class IntroState extends PP.State {
                     this._myFSM.perform("skip");
                 }
 
-                if (Global.myGoogleAnalytics) {
-                    gtag("event", "intro_skipped", {
-                        "value": 1
-                    });
+                Global.sendAnalytics("event", "intro_skipped", {
+                    "value": 1
+                });
 
-                    gtag("event", "intro_done", {
-                        "value": 1
-                    });
+                Global.sendAnalytics("event", "intro_done", {
+                    "value": 1
+                });
 
-                    gtag("event", "intro_skipped_time", {
-                        "value": this._myIntroDuration.toFixed(2)
-                    });
-                }
+                Global.sendAnalytics("event", "intro_skipped_time", {
+                    "value": this._myIntroDuration.toFixed(2)
+                });
             }
         }
     }
@@ -78,19 +76,15 @@ class IntroState extends PP.State {
             let currentVersion = Global.mySaveManager.loadNumber("game_version", 0);
             console.log("Game Version:", currentVersion);
 
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "xr_enter_session", {
+            Global.sendAnalytics("event", "xr_enter_session", {
+                "value": 1
+            });
+
+            PP.CAUtils.getUser(function () {
+                Global.sendAnalytics("event", "xr_enter_session_logged_in", {
                     "value": 1
                 });
-
-                PP.CAUtils.getUser(function () {
-                    if (Global.myGoogleAnalytics) {
-                        gtag("event", "xr_enter_session_logged_in", {
-                            "value": 1
-                        });
-                    }
-                }, null, false);
-            }
+            }, null, false);
 
             fsm.perform("end");
         }
@@ -171,30 +165,26 @@ class IntroState extends PP.State {
         let introViewed = Global.mySaveManager.loadNumber("intro_viewed", 0);
 
         if (introViewed == 0) {
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "intro_done_first_time", {
-                    "value": 1
-                });
-            }
+            Global.sendAnalytics("event", "intro_done_first_time", {
+                "value": 1
+            });
         }
 
         introViewed += 1;
         Global.mySaveManager.save("intro_viewed", introViewed);
 
-        if (Global.myGoogleAnalytics) {
-            gtag("event", "intro_viewed", {
+        Global.sendAnalytics("event", "intro_viewed", {
+            "value": 1
+        });
+
+        Global.sendAnalytics("event", "intro_done", {
+            "value": 1
+        });
+
+        if (!this._myXRSessionStartCalled) {
+            Global.sendAnalytics("event", "xr_session_not_started", {
                 "value": 1
             });
-
-            gtag("event", "intro_done", {
-                "value": 1
-            });
-
-            if (!this._myXRSessionStartCalled) {
-                gtag("event", "xr_session_not_started", {
-                    "value": 1
-                });
-            }
         }
 
         Global.myIntroDone = true;
@@ -204,12 +194,10 @@ class IntroState extends PP.State {
         transition.myFromState.myObject.end(fsm, transition);
         this._myParentFSM.perform(MainTransitions.Skip);
 
-        if (Global.myGoogleAnalytics) {
-            if (!this._myXRSessionStartCalled) {
-                gtag("event", "xr_session_not_started", {
-                    "value": 1
-                });
-            }
+        if (!this._myXRSessionStartCalled) {
+            Global.sendAnalytics("event", "xr_session_not_started", {
+                "value": 1
+            });
         }
 
         Global.myIntroDone = true;
