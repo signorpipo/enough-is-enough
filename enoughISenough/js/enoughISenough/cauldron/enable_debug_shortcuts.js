@@ -15,7 +15,7 @@ WL.registerComponent("enable-debug-shortcuts", {
     update: function (dt) {
     },
     _onXRSessionStart: function (session) {
-        if (PP.XRUtils.isDeviceEmulated()) {
+        if (PP.XRUtils.isDeviceEmulated() && Global.myIsLocalhost) {
             Global.myDebugShortcutsPress = 1;
         } else {
             Global.myDebugShortcutsPress = 2;

@@ -25490,7 +25490,7 @@
             "usePreZ": false
         },
         "runtime": {
-            "xrButtonColor": "#492d85",
+            "xrButtonColor": "#472777",
             "webxr": {
                 "requiredFeatures": {
                     "local-floor": false

@@ -46,7 +46,7 @@ class IntroState extends PP.State {
         let introViewed = Global.mySaveManager.loadNumber("intro_viewed", 0);
 
         if ((trialStartedOnce && introViewed >= 3) || Global.myDebugShortcutsEnabled) {
-            if (!this._myFSM.isInState("wait_session") && PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd((PP.XRUtils.isDeviceEmulated()) ? 1 : 3)) {
+            if (!this._myFSM.isInState("wait_session") && PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd((PP.XRUtils.isDeviceEmulated() && Global.myIsLocalhost) ? 1 : 3)) {
                 while (!this._myFSM.isInState("done") && !this._myFSM.isInState("test")) {
                     this._myFSM.perform("skip");
                 }
@@ -165,7 +165,7 @@ class IntroState extends PP.State {
         let introViewed = Global.mySaveManager.loadNumber("intro_viewed", 0);
 
         if (introViewed == 0) {
-            Global.sendAnalytics("event", "intro_done_first_time", {
+            Global.sendAnalytics("event", "intro_done_first", {
                 "value": 1
             });
         }

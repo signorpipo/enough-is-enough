@@ -22,7 +22,7 @@ WL.registerComponent("pulse-on-grab", {
 
         this._myHandednessType = PP.InputUtils.getHandednessByIndex(this._myHandedness);
     },
-    _onGrab() {
+    _onGrab(grabber, grabbable, grabButton) {
         let intensity = 0.2;
         let pulseInfo = this._myGamepad.getPulseInfo();
         if (pulseInfo.myIntensity <= intensity) {
@@ -40,6 +40,20 @@ WL.registerComponent("pulse-on-grab", {
                 Global.sendAnalytics("event", "has_grabbed_with_tracked_hands", {
                     "value": 1
                 });
+
+                if (grabButton == PP.ButtonType.SELECT) {
+                    Global.sendAnalytics("event", "has_grabbed_with_tracked_hands_select", {
+                        "value": 1
+                    });
+                } else if (grabButton == PP.ButtonType.SQUEEZE) {
+                    Global.sendAnalytics("event", "has_grabbed_with_tracked_hands_squeeze", {
+                        "value": 1
+                    });
+                } else {
+                    Global.sendAnalytics("event", "has_grabbed_with_tracked_hands_unknown", {
+                        "value": 1
+                    });
+                }
             }
         }
     },

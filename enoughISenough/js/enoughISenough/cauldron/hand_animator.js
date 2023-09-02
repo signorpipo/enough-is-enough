@@ -70,10 +70,7 @@ WL.registerComponent("hand-animator", {
             if (PP.InputUtils.getInputSourceType(this._myHandPose._myHandedness) == PP.InputSourceType.GAMEPAD) {
                 piece.update(dt, this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).myValue);
             } else {
-                let pressValue = 0;
-                if (this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).myIsPressed || this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).myIsPressed) {
-                    pressValue = 1;
-                }
+                let pressValue = Math.max(this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).myValue, this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).myValue);
 
                 piece.update(dt, pressValue);
             }
