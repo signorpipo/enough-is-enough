@@ -642,7 +642,13 @@ PP.Gamepad = class Gamepad {
                 this._myPulseInfo.myIsDevicePulsing = true;
             } else if (this._myPulseInfo.myIsDevicePulsing) {
                 hapticActuator.pulse(0, 1);
-                hapticActuator.reset();
+
+                try {
+                    hapticActuator.reset();
+                } catch (error) {
+                    // Do nothing
+                }
+
                 this._myPulseInfo.myIsDevicePulsing = false;
             }
         }
