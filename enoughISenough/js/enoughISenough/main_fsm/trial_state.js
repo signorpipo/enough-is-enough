@@ -127,6 +127,16 @@ class TrialState extends PP.State {
                 "value": Global.myTrialDuration.toFixed(2)
             });
         }
+
+        if (trialPhase == 1 && Global.myStatistics.myTrialPlayCount == 1 && Global.myStatistics.myMrNOTClonesDismissed > 0) {
+            Global.sendAnalytics("event", "mr_NOT_clones_dismissed_phase_1_first", {
+                "value": 1
+            });
+
+            Global.sendAnalytics("event", "trial_completed_phase_1_first", {
+                "value": 1
+            });
+        }
     }
 
     _trialPhaseLost(trialPhase, fsm) {
@@ -165,6 +175,12 @@ class TrialState extends PP.State {
 
         if (trialPhase == 1 && !Global.mySaveManager.loadBool("mr_NOT_clones_seen", false)) {
             Global.sendAnalytics("event", "trial_lost_before_first_clone_seen", {
+                "value": 1
+            });
+        }
+
+        if (trialPhase == 1 && Global.myStatistics.myTrialPlayCount == 1 && Global.myStatistics.myMrNOTClonesDismissed > 0) {
+            Global.sendAnalytics("event", "mr_NOT_clones_dismissed_phase_1_first", {
                 "value": 1
             });
         }
