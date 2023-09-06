@@ -132,15 +132,15 @@ class TrialState extends PP.State {
             });
         }
 
-        if (Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount == Global.myStatistics.myTrialPlayCountResettable
-            && Global.myStatistics.myTrialPlayCount <= 3 && Global.myStatistics.myMrNOTClonesDismissed > 0 && this._myMrNotClonesDismissedOnStart == 0) {
+        if (Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount == Global.myStatistics.myTrialPlayCountResettable &&
+            Global.myStatistics.myTrialPlayCount <= 3 && Global.myStatistics.myMrNOTClonesDismissed > 0 && this._myMrNotClonesDismissedOnStart == 0) {
             Global.sendAnalytics("event", "mr_NOT_clones_dismissed_first_attempt_" + Global.myStatistics.myTrialPlayCount, {
                 "value": 1
             });
         }
 
-        if (Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount == Global.myStatistics.myTrialPlayCountResettable
-            && Global.myStatistics.myTrialPlayCount <= 3) {
+        if (Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount == Global.myStatistics.myTrialPlayCountResettable &&
+            Global.myStatistics.myTrialPlayCount <= 3) {
             Global.sendAnalytics("event", "trial_completed_phase_1_first_attempt_" + Global.myStatistics.myTrialPlayCount, {
                 "value": 1
             });
