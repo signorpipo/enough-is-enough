@@ -185,31 +185,27 @@ PP.HandPose = class HandPose {
     _onXRSessionStart(manualStart, session) {
         session.requestReferenceSpace(WebXR.refSpace).then(function (referenceSpace) { this._myReferenceSpace = referenceSpace; }.bind(this));
 
-        session.addEventListener('inputsourceschange', function (event) {
-            if (event.removed) {
-                for (let item of event.removed) {
-                    if (item == this._myInputSource) {
-                        this._myInputSource = null;
-                    }
-                }
-            }
+        this._myInputSource = null;
 
-            if (event.added) {
-                for (let item of event.added) {
-                    if (item.handedness == this._myHandedness) {
-                        this._myInputSource = item;
-                    }
-                }
-            }
-        }.bind(this));
-
-        if (manualStart && this._myInputSource == null && session.inputSources) {
+        if (session.inputSources != null && session.inputSources.length > 0) {
             for (let item of session.inputSources) {
                 if (item.handedness == this._myHandedness) {
                     this._myInputSource = item;
                 }
             }
         }
+
+        session.addEventListener('inputsourceschange', function () {
+            this._myInputSource = null;
+
+            if (session.inputSources != null && session.inputSources.length > 0) {
+                for (let item of session.inputSources) {
+                    if (item.handedness == this._myHandedness) {
+                        this._myInputSource = item;
+                    }
+                }
+            }
+        }.bind(this));
     }
 
     _onXRSessionEnd(session) {

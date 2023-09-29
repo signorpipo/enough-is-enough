@@ -675,27 +675,10 @@ PP.Gamepad = class Gamepad {
     }
 
     _onXRSessionStart(manualStart, session) {
-        session.addEventListener("inputsourceschange", function (event) {
-            if (event.removed) {
-                for (let item of event.removed) {
-                    if (item.gamepad == this._myGamepad) {
-                        this._myInputSource = null;
-                        this._myGamepad = null;
-                    }
-                }
-            }
+        this._myInputSource = null;
+        this._myGamepad = null;
 
-            if (event.added) {
-                for (let item of event.added) {
-                    if (item.handedness == this._myHandedness) {
-                        this._myInputSource = item;
-                        this._myGamepad = item.gamepad;
-                    }
-                }
-            }
-        }.bind(this));
-
-        if (manualStart && this._myInputSource == null && session.inputSources) {
+        if (session.inputSources != null && session.inputSources.length > 0) {
             for (let item of session.inputSources) {
                 if (item.handedness == this._myHandedness) {
                     this._myInputSource = item;
@@ -703,6 +686,20 @@ PP.Gamepad = class Gamepad {
                 }
             }
         }
+
+        session.addEventListener("inputsourceschange", function () {
+            this._myInputSource = null;
+            this._myGamepad = null;
+
+            if (session.inputSources != null && session.inputSources.length > 0) {
+                for (let item of session.inputSources) {
+                    if (item.handedness == this._myHandedness) {
+                        this._myInputSource = item;
+                        this._myGamepad = item.gamepad;
+                    }
+                }
+            }
+        }.bind(this));
 
         session.addEventListener("selectstart", this._selectStart.bind(this));
         session.addEventListener("selectend", this._selectEnd.bind(this));
