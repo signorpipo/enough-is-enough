@@ -359,7 +359,7 @@
                 },
                 {
                     "type": "clear-console-on-session",
-                    "active": true
+                    "active": false
                 },
                 {
                     "type": "pp-gamepad-manager"
