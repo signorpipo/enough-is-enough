@@ -11,7 +11,6 @@ class StatisticsManager {
             this._onXRSessionStart(WL.xrSession);
         }
         WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
-
         WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
 
         this._mySaveTimer = new PP.Timer(20);
@@ -42,9 +41,12 @@ class StatisticsManager {
     }
 
     _onXRSessionInterrupt() {
+        Global.myStatistics.save();
+        Global.mySaveManager.commitSaves();
+
         if (this._myCommitOnEndTimer.isDone()) {
             this._myCommitOnEndTimer.start(20);
-            Global.myStatistics.save();
+
             this._sendAnalytics();
         }
     }
