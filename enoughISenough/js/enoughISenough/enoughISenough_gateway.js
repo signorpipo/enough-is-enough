@@ -88,6 +88,24 @@ WL.registerComponent("enough-IS-enough-gateway", {
             if (this._myIncreasePool) {
                 this._increasePools();
             } else {
+                if (Global.myDebugShortcutsEnabled) {
+                    if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.BOTTOM_BUTTON).isPressEnd(Global.myDebugShortcutsPress)) {
+                        if (Global.myDeltaTimeSpeed == 1) {
+                            Global.myDeltaTimeSpeed = 3;
+                        } else if (Global.myDeltaTimeSpeed == 3) {
+                            Global.myDeltaTimeSpeed = 10;
+                        } else if (Global.myDeltaTimeSpeed == 10) {
+                            Global.myDeltaTimeSpeed = 50;
+                        } else {
+                            Global.myDeltaTimeSpeed = 1;
+                        }
+                    }
+
+                    if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isPressEnd(Global.myDebugShortcutsPress)) {
+                        PP.myEasyTuneVariables.set("Prevent Vent Lost", !PP.myEasyTuneVariables.get("Prevent Vent Lost"));
+                    }
+                }
+
                 if (PP.InputUtils.getInputSourceType(PP.Handedness.LEFT) == PP.InputSourceType.HAND &&
                     PP.InputUtils.getInputSourceType(PP.Handedness.RIGHT) == PP.InputSourceType.HAND
                 ) {
