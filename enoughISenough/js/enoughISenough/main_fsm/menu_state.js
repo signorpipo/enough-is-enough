@@ -119,6 +119,8 @@ class MenuState extends PP.State {
 
         Global.myIsInMenu = true;
 
+        Global.myIsTrialPhase1 = false;
+
         Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialPhase >= 2);
 
         Global.myPlayMusic = true;
@@ -196,9 +198,10 @@ class MenuState extends PP.State {
     _startUnspawningReset(fsm) {
         this._myResetCount = 0;
 
+        Global.myMrNOTCloneNotDismissedPhase1PlayCount = 0;
+
         let fullReset = this._myFloppyDisk.getGrabTime() >= 5;
         if (!fullReset) {
-
             Global.sendAnalytics("event", "save_reset", {
                 "value": 1
             });

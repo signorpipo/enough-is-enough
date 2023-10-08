@@ -45,6 +45,8 @@ class ArcadeState extends PP.State {
         this._myFSM.perform("start");
         Global.myArcadeDuration = 0;
 
+        Global.myIsTrialPhase1 = false;
+
         if (this._myIsDispute) {
             Global.sendAnalytics("event", "arcade_dispute_started", {
                 "value": 1

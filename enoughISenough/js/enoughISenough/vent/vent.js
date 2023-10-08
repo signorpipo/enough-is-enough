@@ -615,12 +615,7 @@ class Vent {
     }
 
     _mrNOTReachYou() {
-        if (PP.myEasyTuneVariables.get("Prevent Vent Lost")) {
-            this._mrNOTDismissed();
-            //this._mrNOTCloneReachYou();
-        } else {
-            this._mrNOTCloneReachYou();
-        }
+        this._mrNOTCloneReachYou();
     }
 
     _updateClones(dt) {

@@ -51,7 +51,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
             Global.mySaveManager.save("game_version", Global.myGameVersion);
         }
 
-        let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false);
+        let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false); // This is actually trial ended once, don't want to change name tho
         let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
         let trialCompleted = Global.mySaveManager.loadBool("trial_completed", false);
         Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialPhase >= 2);
@@ -102,7 +102,15 @@ WL.registerComponent("enough-IS-enough-gateway", {
                     }
 
                     if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isPressEnd(Global.myDebugShortcutsPress)) {
-                        PP.myEasyTuneVariables.set("Prevent Vent Lost", !PP.myEasyTuneVariables.get("Prevent Vent Lost"));
+                        if (!PP.myEasyTuneVariables.get("Prevent Vent Lost") && !PP.myEasyTuneVariables.get("Prevent Vent Lost Only Clone")) {
+                            PP.myEasyTuneVariables.set("Prevent Vent Lost Only Clone", true);
+                        } else if (!PP.myEasyTuneVariables.get("Prevent Vent Lost") && PP.myEasyTuneVariables.get("Prevent Vent Lost Only Clone")) {
+                            PP.myEasyTuneVariables.set("Prevent Vent Lost", true);
+                            PP.myEasyTuneVariables.set("Prevent Vent Lost Only Clone", false);
+                        } else {
+                            PP.myEasyTuneVariables.set("Prevent Vent Lost", false);
+                            PP.myEasyTuneVariables.set("Prevent Vent Lost Only Clone", false);
+                        }
                     }
                 }
 
@@ -242,6 +250,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("mr NOT Clone Scale", 0.35, 0.1, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Prevent Vent Lost", false));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Prevent Vent Lost Only Clone", false));
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Explosion Particle Life", 0.15, 0.5, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Explosion Particles Duration", 0.5, 0.5, 3));
@@ -360,7 +369,9 @@ var Global = {
     myVentDurationWithTrackedHands: 0,
     myIntroDone: false,
     myAnalyticsEnabled: false,
-    myIsLocalhost: false
+    myIsLocalhost: false,
+    myIsTrialPhase1: false,
+    myMrNOTCloneNotDismissedPhase1PlayCount: 0
 };
 
 Global.sendAnalytics = function sendAnalytics(...args) {

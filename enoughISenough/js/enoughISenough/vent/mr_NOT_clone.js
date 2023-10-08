@@ -191,9 +191,8 @@ class MrNOTClone {
         let distanceToCurrentFromStart = this._myStartPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myCurrentPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
 
         if (distanceToTarget < this._myReachTargetDistance || distanceToTargetFromStart < distanceToCurrentFromStart) {
-            if (PP.myEasyTuneVariables.get("Prevent Vent Lost")) {
-                this._myCallbackOnDismiss(this, null);
-                this.unspawn();
+            if (PP.myEasyTuneVariables.get("Prevent Vent Lost") || PP.myEasyTuneVariables.get("Prevent Vent Lost Only Clone")) {
+                this._checkHit(false, true);
             } else {
                 if (this._myCallbackOnReach) {
                     this._myCallbackOnReach(this);
@@ -208,7 +207,7 @@ class MrNOTClone {
         this._checkHit(true);
     }
 
-    _checkHit(avoidCallbacks = false) {
+    _checkHit(avoidCallbacks = false, alwaysHit = false) {
         let hit = false;
         let hittingObject = null;
 
@@ -241,9 +240,12 @@ class MrNOTClone {
             }
         }
 
-        if (hit) {
-            let evidence = hittingObject.pp_getComponent("evidence-component");
-            evidence.hit(this._myObject);
+        if (hit || alwaysHit) {
+            if (hittingObject != null) {
+                let evidence = hittingObject.pp_getComponent("evidence-component");
+                evidence.hit(this._myObject);
+            }
+
             this.unspawn();
             this._myHitAudio.setPosition(this._myObject.pp_getPosition());
             this._myHitAudio.setPitch(Math.pp_random(0.85, 1.05));
@@ -254,6 +256,10 @@ class MrNOTClone {
 
             Global.myStatistics.myMrNOTClonesDismissed += 1;
             Global.myStatistics.myMrNOTClonesDismissedResettable += 1;
+
+            if (Global.myIsTrialPhase1) {
+                Global.myMrNOTCloneNotDismissedPhase1PlayCount = 0;
+            }
         }
     }
 

@@ -90,14 +90,18 @@ class TrialState extends PP.State {
 
         let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
 
+        Global.myIsTrialPhase1 = false;
         if (trialPhase == 1) {
             this._myTrialStartedFromBegin = true;
+
+            Global.myIsTrialPhase1 = true;
+            Global.myMrNOTCloneNotDismissedPhase1PlayCount++;
         }
 
         let transition = "start_".concat(trialPhase);
 
         let giveHint = false;
-        giveHint = trialPhase == 1 && Global.myStatistics.myTrialPlayCountResettable >= 7 && Global.myStatistics.myMrNOTClonesDismissedResettable <= 0;
+        giveHint = trialPhase == 1 && Global.myMrNOTCloneNotDismissedPhase1PlayCount >= 7;
         if (giveHint) {
             transition = transition.concat("_hint");
 
@@ -118,11 +122,16 @@ class TrialState extends PP.State {
     }
 
     end(fsm, transitionID) {
+        Global.myIsTrialPhase1 = false;
+
         Global.mySaveManager.save("trial_started_once", true);
     }
 
     _trialPhaseCompleted(trialPhase, nextTrialPhase, fsm) {
         Global.mySaveManager.save("trial_phase", nextTrialPhase);
+
+        Global.myIsTrialPhase1 = false;
+        Global.myMrNOTCloneNotDismissedPhase1PlayCount = 0;
 
         Global.sendAnalytics("event", "trial_completed_phase_".concat(trialPhase), {
             "value": 1
@@ -150,6 +159,8 @@ class TrialState extends PP.State {
     }
 
     _trialPhaseLost(trialPhase, fsm) {
+        Global.myIsTrialPhase1 = false;
+
         Global.sendAnalytics("event", "trial_lost_phase_".concat(trialPhase), {
             "value": 1
         });
@@ -222,7 +233,11 @@ class TrialState extends PP.State {
 
         Global.mySaveManager.save("trial_phase", 1);
         Global.mySaveManager.save("trial_completed", true);
+
         Global.myStatistics.myTrialCompletedCount += 1;
+
+        Global.myMrNOTCloneNotDismissedPhase1PlayCount = 0;
+
         this._myParentFSM.perform(MainTransitions.End);
     }
 
