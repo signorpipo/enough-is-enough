@@ -198,7 +198,7 @@ class MenuState extends PP.State {
     _startUnspawningReset(fsm) {
         this._myResetCount = 0;
 
-        Global.myMrNOTCloneNotDismissedPhase1PlayCount = 0;
+        Global.myMrNOTClonesNotDismissedPhase1PlayCount = 0;
 
         let fullReset = this._myFloppyDisk.getGrabTime() >= 5;
         if (!fullReset) {

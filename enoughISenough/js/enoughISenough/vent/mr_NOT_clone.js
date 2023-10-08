@@ -258,7 +258,7 @@ class MrNOTClone {
             Global.myStatistics.myMrNOTClonesDismissedResettable += 1;
 
             if (Global.myIsTrialPhase1) {
-                Global.myMrNOTCloneNotDismissedPhase1PlayCount = 0;
+                Global.myMrNOTClonesNotDismissedPhase1PlayCount = 0;
             }
         }
     }

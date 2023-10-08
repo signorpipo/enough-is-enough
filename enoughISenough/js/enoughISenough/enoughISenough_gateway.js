@@ -371,7 +371,7 @@ var Global = {
     myAnalyticsEnabled: false,
     myIsLocalhost: false,
     myIsTrialPhase1: false,
-    myMrNOTCloneNotDismissedPhase1PlayCount: 0
+    myMrNOTClonesNotDismissedPhase1PlayCount: 0
 };
 
 Global.sendAnalytics = function sendAnalytics(...args) {
