@@ -30,19 +30,19 @@ class TrialState extends PP.State {
         this._myFSM.addTransition("first_blather", "first_vent", "end");
         this._myFSM.addTransition("first_blather_hint", "first_vent", "end");
         this._myFSM.addTransition("first_vent", "first_defeat_blather", "lost", this._trialPhaseLost.bind(this, 1));
-        this._myFSM.addTransition("first_vent", "second_blather", "completed", this._trialPhaseCompleted.bind(this, 1));
+        this._myFSM.addTransition("first_vent", "second_blather", "completed", this._trialPhaseCompleted.bind(this, 1, 2));
 
         this._myFSM.addTransition("second_blather", "second_vent", "end");
         this._myFSM.addTransition("second_vent", "second_defeat_blather", "lost", this._trialPhaseLost.bind(this, 2));
-        this._myFSM.addTransition("second_vent", "third_blather", "completed", this._trialPhaseCompleted.bind(this, 2));
+        this._myFSM.addTransition("second_vent", "third_blather", "completed", this._trialPhaseCompleted.bind(this, 2, 3));
 
         this._myFSM.addTransition("third_blather", "third_vent", "end");
         this._myFSM.addTransition("third_vent", "third_defeat_blather", "lost", this._trialPhaseLost.bind(this, 3));
-        this._myFSM.addTransition("third_vent", "MrNOT_blather", "completed", this._trialPhaseCompleted.bind(this, 3));
+        this._myFSM.addTransition("third_vent", "MrNOT_blather", "completed", this._trialPhaseCompleted.bind(this, 3, 4));
 
         this._myFSM.addTransition("MrNOT_blather", "MrNOT_vent", "end");
         this._myFSM.addTransition("MrNOT_vent", "MrNOT_defeat_blather", "lost", this._trialPhaseLost.bind(this, 4));
-        this._myFSM.addTransition("MrNOT_vent", "it_will_always_be_not_enough", "completed", this._trialPhaseCompleted.bind(this, 4));
+        this._myFSM.addTransition("MrNOT_vent", "it_will_always_be_not_enough", "completed", this._trialPhaseCompleted.bind(this, 4, 4));
 
         this._myFSM.addTransition("it_will_always_be_not_enough", "done", "end", this._gameCompleted.bind(this));
 
@@ -121,7 +121,9 @@ class TrialState extends PP.State {
         Global.mySaveManager.save("trial_started_once", true);
     }
 
-    _trialPhaseCompleted(trialPhase, fsm) {
+    _trialPhaseCompleted(trialPhase, nextTrialPhase, fsm) {
+        Global.mySaveManager.save("trial_phase", nextTrialPhase);
+
         Global.sendAnalytics("event", "trial_completed_phase_".concat(trialPhase), {
             "value": 1
         });
@@ -196,7 +198,6 @@ class TrialState extends PP.State {
     }
 
     _backToMenu(trialPhase, fsm) {
-        Global.mySaveManager.save("trial_phase", trialPhase);
         this._myParentFSM.perform(MainTransitions.End);
     }
 
