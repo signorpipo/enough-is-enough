@@ -7,7 +7,7 @@ class StatisticsManager {
         Global.myStatistics = new Statistics();
         Global.myStatistics.load();
 
-        this._mySaveTimer = new PP.Timer(20);
+        this._mySaveTimer = new PP.Timer(Math.pp_random(15, 25));
         this._myCommitOnEndTimer = new PP.Timer(0);
 
         Global.mySaveManager.registerClearEventListener(this, this._onClear.bind(this));
@@ -33,7 +33,7 @@ class StatisticsManager {
         this._myCommitOnEndTimer.update(dt);
         this._mySaveTimer.update(dt);
         if (this._mySaveTimer.isDone()) {
-            this._mySaveTimer.start();
+            this._mySaveTimer.start(Math.pp_random(15, 25));
             Global.myStatistics.save();
         }
     }
@@ -55,14 +55,14 @@ class StatisticsManager {
         Global.mySaveManager.commitSaves();
 
         if (this._myCommitOnEndTimer.isDone()) {
-            this._myCommitOnEndTimer.start(20);
+            this._myCommitOnEndTimer.start(Math.pp_random(15, 25));
 
             this._sendAnalytics();
         }
     }
 
     _onClear() {
-        this._myCommitOnEndTimer.start(20);
+        this._myCommitOnEndTimer.start(Math.pp_random(15, 25));
         this._sendAnalytics();
         Global.myStatistics.load();
     }
