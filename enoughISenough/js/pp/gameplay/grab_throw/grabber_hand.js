@@ -144,6 +144,9 @@ WL.registerComponent('pp-grabber-hand', {
             this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this);
         }
     },
+    getHandPose() {
+        return this._myHandPose;
+    },
     _grab: function (grabButton) {
         if (this._myGrabbables.length >= this._myMaxNumberOfObjects) {
             return;

@@ -18357,7 +18357,8 @@
                 {
                     "type": "activate-on-select",
                     "activate-on-select": {
-                        "_myTrigger": "1391"
+                        "_myTrigger": "1391",
+                        "_myGrabberHandObject": "314"
                     }
                 }
             ],
@@ -18400,7 +18401,8 @@
                     "type": "activate-on-select",
                     "activate-on-select": {
                         "_myHandedness": "right",
-                        "_myTrigger": "1389"
+                        "_myTrigger": "1389",
+                        "_myGrabberHandObject": "150"
                     }
                 }
             ],

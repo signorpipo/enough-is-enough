@@ -1,6 +1,7 @@
 WL.registerComponent("activate-on-select", {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
     _myTrigger: { type: WL.Type.Object },
+    _myGrabberHandObject: { type: WL.Type.Object }
 }, {
     init: function () {
     },
@@ -9,6 +10,11 @@ WL.registerComponent("activate-on-select", {
             this._myGamepad = PP.myLeftGamepad;
         } else {
             this._myGamepad = PP.myRightGamepad;
+        }
+
+        this._myGrabberHand = null;
+        if (this._myGrabberHandObject != null) {
+            this._myGrabberHand = this._myGrabberHandObject.pp_getComponent("pp-grabber-hand");
         }
 
         this._myPhysx = this.object.pp_getComponent("physx");
@@ -32,7 +38,9 @@ WL.registerComponent("activate-on-select", {
     update(dt) {
         this._myAnalyticsTimer.update(dt);
 
-        if (!Global.myEnableSelectPhysx || PP.InputUtils.getInputSourceType(this._myHandednessType) != PP.InputSourceType.GAMEPAD) {
+        if (!Global.myEnableSelectPhysx ||
+            PP.InputUtils.getInputSourceType(this._myHandednessType) != PP.InputSourceType.GAMEPAD ||
+            (this._myGrabberHand != null && this._myGrabberHand.getHandPose() != null && !this._myGrabberHand.getHandPose().isValid())) {
             this._myPhysx.active = false;
             this._myTriggerPhysx.active = false;
         }
