@@ -212,8 +212,7 @@ class MenuState extends PP.State {
 
             Global.myStatistics.myTrialPlayCountResettable = 0;
             Global.myStatistics.myMrNOTClonesDismissedResettable = 0;
-            Global.mySaveManager.save("trial_play_count_resettable", 0);
-            Global.mySaveManager.save("mr_NOT_clones_dismissed_resettable", 0);
+            Global.myStatistics.save();
 
             this._myNotEnough.start();
         } else {
