@@ -26,7 +26,7 @@ class Evidence {
 
         this._myTimer = new PP.Timer(0);
         this._mySpawnTimer = new PP.Timer(0);
-        this._myThrowTimer = new PP.Timer(5, false);
+        this._myThrowTimer = new PP.Timer(6, false);
         WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
 
         this._myFSM = new PP.FSM();

@@ -459,7 +459,7 @@ class MenuItem {
 
         this._myAutoSpawn = true;
 
-        this._myThrowTimer = new PP.Timer(5, false);
+        this._myThrowTimer = new PP.Timer(6, false);
         WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
 
         this._myFSM = new PP.FSM();
