@@ -73,6 +73,11 @@ class TrialState extends PP.State {
         Global.myTrialDuration += dt;
         Global.myStatistics.myTrialPlayTime += dt;
 
+        if (!Global.myTotalTimeUpdated) {
+            Global.myTotalTimeUpdated = true;
+            Global.myStatistics.myTotalPlayTime += dt;
+        }
+
         this._myFSM.update(dt);
     }
 

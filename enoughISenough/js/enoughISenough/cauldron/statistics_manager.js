@@ -173,10 +173,6 @@ class Statistics {
     }
 
     save() {
-        if (this.myTotalPlayTime < this.myTrialPlayTime + this.myChatPlayTime + this.myDisputePlayTime) {
-            this.myTotalPlayTime = this.myTrialPlayTime + this.myChatPlayTime + this.myDisputePlayTime;
-        }
-
         Global.mySaveManager.save("total_play_time", this.myTotalPlayTime);
 
         Global.mySaveManager.save("trial_play_time", this.myTrialPlayTime);
