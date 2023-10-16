@@ -1,6 +1,6 @@
 PP.XRUtils = {
     isDeviceEmulated: function () {
-        let isEmulated = ('CustomWebXRPolyfill' in window);
+        let isEmulated = window.CustomWebXRPolyfill != null;
         return isEmulated;
     },
     isXRSessionActive: function () {
