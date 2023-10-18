@@ -123,7 +123,8 @@ class ArcadeResultState extends PP.State {
     }
 
     _onTimerUnspawned(evidence) {
-        if (PP.XRUtils.isXRSessionActive() && evidence.hasBeenThrown()) {
+        if (PP.XRUtils.isXRSessionActive() && evidence.hasBeenThrown() &&
+            (WL.xrSession == null || WL.xrSession.visibilityState == null || WL.xrSession.visibilityState == "visible")) {
             this._myFSM.perform("end");
         }
     }
