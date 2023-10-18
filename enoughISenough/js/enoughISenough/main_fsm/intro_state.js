@@ -28,11 +28,11 @@ class IntroState extends PP.State {
 
         this._myIntroDuration = 0;
 
+        this._myXRSessionManuallyStarted = false;
+
         if (WL.xrSession) {
-            this._onXRSessionStart(WL.xrSession);
+            this._myXRSessionManuallyStarted = true;
         }
-        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
-        this._myXRSessionStartCalled = false;
     }
 
     update(dt, fsm) {
@@ -86,6 +86,12 @@ class IntroState extends PP.State {
                     "value": 1
                 });
             }, null, false);
+
+            if (this._myXRSessionManuallyStarted) {
+                Global.sendAnalytics("event", "xr_session_manually_started", {
+                    "value": 1
+                });
+            }
 
             fsm.perform("end");
         }
@@ -182,12 +188,6 @@ class IntroState extends PP.State {
             "value": 1
         });
 
-        if (!this._myXRSessionStartCalled) {
-            Global.sendAnalytics("event", "xr_session_not_started", {
-                "value": 1
-            });
-        }
-
         Global.myIntroDone = true;
     }
 
@@ -195,16 +195,6 @@ class IntroState extends PP.State {
         transition.myFromState.myObject.end(fsm, transition);
         this._myParentFSM.perform(MainTransitions.Skip);
 
-        if (!this._myXRSessionStartCalled) {
-            Global.sendAnalytics("event", "xr_session_not_started", {
-                "value": 1
-            });
-        }
-
         Global.myIntroDone = true;
-    }
-
-    _onXRSessionStart(session) {
-        this._myXRSessionStartCalled = true;
     }
 }
