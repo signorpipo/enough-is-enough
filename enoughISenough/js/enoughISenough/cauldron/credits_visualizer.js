@@ -25,8 +25,6 @@ WL.registerComponent("credits-visualizer", {
 
         this._myGrabbable = this._myWondermelon.pp_getComponent("pp-grabbable");
 
-        this._myCreditsShownEventSent = false;
-
         this._myWondermelonGrabTime = 0;
         this._mySpawnTimer = new PP.Timer(1.5);
         this._myHideScale = 0.85;
@@ -54,12 +52,9 @@ WL.registerComponent("credits-visualizer", {
                 this._myAppearAudio.play();
                 this._myFSM.perform("spawn");
 
-                if (!this._myCreditsShownEventSent) {
-                    this._myCreditsShownEventSent = true;
-                    Global.sendAnalytics("event", "credits_shown", {
-                        "value": 1
-                    });
-                }
+                Global.sendAnalytics("event", "credits_shown", {
+                    "value": 1
+                });
             }
         } else {
             this._myWondermelonGrabTime = 0;

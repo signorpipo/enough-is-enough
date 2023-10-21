@@ -32,6 +32,8 @@ WL.registerComponent("activate-on-select", {
         this._myCollisionPitch = this._myCollisionAudio.getPitch();
 
         this._myHandednessType = PP.InputUtils.getHandednessByIndex(this._myHandedness);
+
+        this._mySentEventActiveTimer = new PP.Timer(7);
     },
     update(dt) {
         if (!Global.myEnableSelectPhysx ||
@@ -40,18 +42,23 @@ WL.registerComponent("activate-on-select", {
             this._myPhysx.active = false;
             this._myTriggerPhysx.active = false;
         }
+
+        if (!Global.myActivatePhysXHandEventSent) {
+            if (this._myPhysx.active) {
+                this._mySentEventActiveTimer.update(dt);
+                if (this._mySentEventActiveTimer.isDone()) {
+                    Global.myActivatePhysXHandEventSent = true;
+                    Global.sendAnalytics("event", "select_physx_actived", {
+                        "value": 1
+                    });
+                }
+            }
+        }
     },
     _selectPressStart() {
         if (Global.myEnableSelectPhysx && PP.InputUtils.getInputSourceType(this._myHandednessType) == PP.InputSourceType.GAMEPAD) {
             this._myPhysx.active = true;
             this._myTriggerPhysx.active = true;
-
-            if (!Global.myActivatePhysXHandEventSent) {
-                Global.myActivatePhysXHandEventSent = true;
-                Global.sendAnalytics("event", "select_physx_actived", {
-                    "value": 1
-                });
-            }
         }
     },
     _selectPressEnd() {
