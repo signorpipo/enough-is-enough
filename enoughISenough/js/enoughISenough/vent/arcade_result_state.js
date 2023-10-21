@@ -104,7 +104,12 @@ class ArcadeResultState extends PP.State {
 
         let score = Math.floor(Global.myVentDuration * 1000);
 
-        PP.CAUtils.submitScore(leaderboardID, score);
+        let scoreSubmittedEventID = (this._myIsDispute ? "arcade_dispute" : "arcade_chat") + "_score_submitted";
+        PP.CAUtils.submitScore(leaderboardID, score, function () {
+            Global.sendAnalytics("event", scoreSubmittedEventID, {
+                "value": 1
+            });
+        }, null, false);
 
         Global.myIsInArcadeResult = true;
     }

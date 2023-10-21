@@ -92,6 +92,12 @@
             "components": [
                 {
                     "type": "view"
+                },
+                {
+                    "type": "occlusion-sphere-activator",
+                    "occlusion-sphere-activator": {
+                        "_myOcclusionSphere": "1438"
+                    }
                 }
             ],
             "transformation": [
@@ -100,16 +106,16 @@
                 0.0,
                 0.0,
                 0.0,
-                -1.1920820242039554e-7,
-                -0.9999908,
+                -1.1920776188389937e-7,
+                -0.9999871,
                 0.0,
                 0.0,
-                1.000014,
-                -1.1921098064249237e-7,
+                1.0000065,
+                -1.192100853586453e-7,
                 0.0,
                 0.0,
-                -49.9999961,
-                50.0,
+                -57.0,
+                62.0,
                 1.0
             ]
         },
@@ -20052,6 +20058,37 @@
                 -186.7598266,
                 1.0
             ]
+        },
+        "1438": {
+            "name": "Occlusion Sphere",
+            "parent": "17",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "9",
+                        "material": "1439"
+                    }
+                }
+            ],
+            "transformation": [
+                0.15,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.15,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.15,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ]
         }
     },
     "meshes": {
@@ -25357,6 +25394,18 @@
                 ]
             },
             "pipeline": "1432"
+        },
+        "1439": {
+            "name": "Non VR Camera Occlusion Sphere",
+            "pipeline": "1437",
+            "Flat": {
+                "color": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7,
+                    1.0
+                ]
+            }
         }
     },
     "shaders": {
@@ -25601,6 +25650,14 @@
                 "name": "DistanceFieldVector",
                 "file": "default"
             }
+        },
+        "1437": {
+            "link": {
+                "name": "Flat Opaque",
+                "file": "default"
+            },
+            "name": "Flat Opaque Double Sided",
+            "doubleSided": true
         },
         "72": {
             "link": {
