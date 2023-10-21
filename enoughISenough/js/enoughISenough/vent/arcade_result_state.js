@@ -77,6 +77,10 @@ class ArcadeResultState extends PP.State {
         this._myParentFSM = fsm;
         this._myFSM.perform("start");
 
+        Global.sendAnalytics("event", "arcade_time", {
+            "value": Global.myVentDuration.toFixed(2)
+        });
+
         if (this._myIsDispute) {
             if (Global.myStatistics.myDisputeBestTime < 0 || Global.myVentDuration > Global.myStatistics.myDisputeBestTime) {
                 Global.myStatistics.myDisputeBestTime = Global.myVentDuration;
@@ -106,6 +110,10 @@ class ArcadeResultState extends PP.State {
 
         let scoreSubmittedEventID = (this._myIsDispute ? "arcade_dispute" : "arcade_chat") + "_score_submitted";
         PP.CAUtils.submitScore(leaderboardID, score, function () {
+            Global.sendAnalytics("event", "arcade_score_submitted", {
+                "value": 1
+            });
+
             Global.sendAnalytics("event", scoreSubmittedEventID, {
                 "value": 1
             });

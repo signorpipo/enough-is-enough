@@ -198,9 +198,13 @@ class MenuState extends PP.State {
 
         Global.myMrNOTClonesNotDismissedPhase1PlayCount = 0;
 
+        Global.sendAnalytics("event", "save_reset", {
+            "value": 1
+        });
+
         let fullReset = this._myFloppyDisk.getGrabTime() >= 5;
         if (!fullReset) {
-            Global.sendAnalytics("event", "save_reset", {
+            Global.sendAnalytics("event", "save_reset_normal", {
                 "value": 1
             });
 

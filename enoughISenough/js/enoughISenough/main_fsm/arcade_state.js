@@ -53,6 +53,10 @@ class ArcadeState extends PP.State {
 
         Global.myIsTrialPhase1 = false;
 
+        Global.sendAnalytics("event", "arcade_started", {
+            "value": 1
+        });
+
         if (this._myIsDispute) {
             Global.sendAnalytics("event", "arcade_dispute_started", {
                 "value": 1
