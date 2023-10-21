@@ -372,7 +372,8 @@ var Global = {
     myIsLocalhost: false,
     myIsTrialPhase1: false,
     myMrNOTClonesNotDismissedPhase1PlayCount: 0,
-    myTotalTimeUpdated: false
+    myTotalTimeUpdated: false,
+    myActivatePhysXHandEventSent: false
 };
 
 Global.sendAnalytics = function sendAnalytics(...args) {

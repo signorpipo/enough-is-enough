@@ -43,7 +43,7 @@ class MenuState extends PP.State {
         this._myMenuDuration = 0;
         this._myFirstTime = true;
 
-        this._myButtonPressed = Global.mySaveManager.loadBool("button_pressed", false);
+        this._myButtonPressedEventSent = false;
     }
 
     update(dt, fsm) {
@@ -51,15 +51,13 @@ class MenuState extends PP.State {
         this._myFSM.update(dt);
         this._myNotEnough.update(dt);
 
-        if (!this._myButtonPressed) {
+        if (!this._myButtonPressedEventSent) {
             for (let key in PP.ButtonType) {
                 let resultLeft = PP.myLeftGamepad.getButtonInfo(PP.ButtonType[key]).isPressStart();
                 let resultRight = PP.myRightGamepad.getButtonInfo(PP.ButtonType[key]).isPressStart();
 
                 if (resultLeft || resultRight) {
-                    this._myButtonPressed = true;
-                    Global.mySaveManager.save("button_pressed", true);
-
+                    this._myButtonPressedEventSent = true;
                     Global.sendAnalytics("event", "button_pressed", {
                         "value": 1
                     });

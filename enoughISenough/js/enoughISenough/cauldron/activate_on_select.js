@@ -31,13 +31,9 @@ WL.registerComponent("activate-on-select", {
         this._myCollisionAudio = Global.myAudioManager.createAudioPlayer(SfxID.COLLISION);
         this._myCollisionPitch = this._myCollisionAudio.getPitch();
 
-        this._myAnalyticsTimer = new PP.Timer(0);
-
         this._myHandednessType = PP.InputUtils.getHandednessByIndex(this._myHandedness);
     },
     update(dt) {
-        this._myAnalyticsTimer.update(dt);
-
         if (!Global.myEnableSelectPhysx ||
             PP.InputUtils.getInputSourceType(this._myHandednessType) != PP.InputSourceType.GAMEPAD ||
             (this._myGrabberHand != null && this._myGrabberHand.getHandPose() != null && !this._myGrabberHand.getHandPose().isValid())) {
@@ -50,9 +46,8 @@ WL.registerComponent("activate-on-select", {
             this._myPhysx.active = true;
             this._myTriggerPhysx.active = true;
 
-            if (this._myAnalyticsTimer.isDone()) {
-                this._myAnalyticsTimer.start(20);
-
+            if (!Global.myActivatePhysXHandEventSent) {
+                Global.myActivatePhysXHandEventSent = true;
                 Global.sendAnalytics("event", "select_physx_actived", {
                     "value": 1
                 });
