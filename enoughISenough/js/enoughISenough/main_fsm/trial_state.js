@@ -30,19 +30,19 @@ class TrialState extends PP.State {
         this._myFSM.addTransition("first_blather", "first_vent", "end");
         this._myFSM.addTransition("first_blather_hint", "first_vent", "end");
         this._myFSM.addTransition("first_vent", "first_defeat_blather", "lost", this._trialPhaseLost.bind(this, 1));
-        this._myFSM.addTransition("first_vent", "second_blather", "completed", this._trialPhaseCompleted.bind(this, 1));
+        this._myFSM.addTransition("first_vent", "second_blather", "completed", this._trialPhaseCompleted.bind(this, 1, 2));
 
         this._myFSM.addTransition("second_blather", "second_vent", "end");
         this._myFSM.addTransition("second_vent", "second_defeat_blather", "lost", this._trialPhaseLost.bind(this, 2));
-        this._myFSM.addTransition("second_vent", "third_blather", "completed", this._trialPhaseCompleted.bind(this, 2));
+        this._myFSM.addTransition("second_vent", "third_blather", "completed", this._trialPhaseCompleted.bind(this, 2, 3));
 
         this._myFSM.addTransition("third_blather", "third_vent", "end");
         this._myFSM.addTransition("third_vent", "third_defeat_blather", "lost", this._trialPhaseLost.bind(this, 3));
-        this._myFSM.addTransition("third_vent", "MrNOT_blather", "completed", this._trialPhaseCompleted.bind(this, 3));
+        this._myFSM.addTransition("third_vent", "MrNOT_blather", "completed", this._trialPhaseCompleted.bind(this, 3, 4));
 
         this._myFSM.addTransition("MrNOT_blather", "MrNOT_vent", "end");
         this._myFSM.addTransition("MrNOT_vent", "MrNOT_defeat_blather", "lost", this._trialPhaseLost.bind(this, 4));
-        this._myFSM.addTransition("MrNOT_vent", "it_will_always_be_not_enough", "completed", this._trialPhaseCompleted.bind(this, 4));
+        this._myFSM.addTransition("MrNOT_vent", "it_will_always_be_not_enough", "completed", this._trialPhaseCompleted.bind(this, 4, 4));
 
         this._myFSM.addTransition("it_will_always_be_not_enough", "done", "end", this._gameCompleted.bind(this));
 
@@ -73,6 +73,11 @@ class TrialState extends PP.State {
         Global.myTrialDuration += dt;
         Global.myStatistics.myTrialPlayTime += dt;
 
+        if (!Global.myTotalTimeUpdated) {
+            Global.myTotalTimeUpdated = true;
+            Global.myStatistics.myTotalPlayTime += dt;
+        }
+
         this._myFSM.update(dt);
     }
 
@@ -90,14 +95,18 @@ class TrialState extends PP.State {
 
         let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
 
+        Global.myIsTrialPhase1 = false;
         if (trialPhase == 1) {
             this._myTrialStartedFromBegin = true;
+
+            Global.myIsTrialPhase1 = true;
+            Global.myMrNOTClonesNotDismissedPhase1PlayCount++;
         }
 
         let transition = "start_".concat(trialPhase);
 
         let giveHint = false;
-        giveHint = trialPhase == 1 && Global.myStatistics.myTrialPlayCountResettable >= 7 && Global.myStatistics.myMrNOTClonesDismissedResettable <= 0;
+        giveHint = trialPhase == 1 && Global.myMrNOTClonesNotDismissedPhase1PlayCount >= 7;
         if (giveHint) {
             transition = transition.concat("_hint");
 
@@ -118,10 +127,17 @@ class TrialState extends PP.State {
     }
 
     end(fsm, transitionID) {
+        Global.myIsTrialPhase1 = false;
+
         Global.mySaveManager.save("trial_started_once", true);
     }
 
-    _trialPhaseCompleted(trialPhase, fsm) {
+    _trialPhaseCompleted(trialPhase, nextTrialPhase, fsm) {
+        Global.mySaveManager.save("trial_phase", nextTrialPhase);
+
+        Global.myIsTrialPhase1 = false;
+        Global.myMrNOTClonesNotDismissedPhase1PlayCount = 0;
+
         Global.sendAnalytics("event", "trial_completed_phase_".concat(trialPhase), {
             "value": 1
         });
@@ -148,6 +164,8 @@ class TrialState extends PP.State {
     }
 
     _trialPhaseLost(trialPhase, fsm) {
+        Global.myIsTrialPhase1 = false;
+
         Global.sendAnalytics("event", "trial_lost_phase_".concat(trialPhase), {
             "value": 1
         });
@@ -196,7 +214,6 @@ class TrialState extends PP.State {
     }
 
     _backToMenu(trialPhase, fsm) {
-        Global.mySaveManager.save("trial_phase", trialPhase);
         this._myParentFSM.perform(MainTransitions.End);
     }
 
@@ -221,7 +238,12 @@ class TrialState extends PP.State {
 
         Global.mySaveManager.save("trial_phase", 1);
         Global.mySaveManager.save("trial_completed", true);
+
         Global.myStatistics.myTrialCompletedCount += 1;
+
+        Global.myIsTrialPhase1 = false;
+        Global.myMrNOTClonesNotDismissedPhase1PlayCount = 0;
+
         this._myParentFSM.perform(MainTransitions.End);
     }
 

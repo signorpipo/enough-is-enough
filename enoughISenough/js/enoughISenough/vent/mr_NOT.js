@@ -145,7 +145,9 @@ class MrNOT {
         let distanceToCurrentFromStart = this._myStartPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myCurrentPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
 
         if (distanceToTarget < this._myReachTargetDistance || distanceToTargetFromStart < distanceToCurrentFromStart) {
-            if (this._myCallbackOnReach) {
+            if (PP.myEasyTuneVariables.get("Prevent Vent Lost")) {
+                this._checkHit(false, true);
+            } else if (this._myCallbackOnReach) {
                 this._myCallbackOnReach(this);
             }
         } else {
@@ -161,7 +163,7 @@ class MrNOT {
         }
     }
 
-    _checkHit(avoidCallbacks = false) {
+    _checkHit(avoidCallbacks = false, alwaysHit = false) {
         let hit = false;
         let hittingObjects = [];
 
@@ -210,7 +212,7 @@ class MrNOT {
             }
         }
 
-        if (hit) {
+        if (hit || alwaysHit) {
             let patienceToRemove = 0;
             for (let object of hittingObjects) {
                 this._myHitAudio.setPosition(object.pp_getPosition());
@@ -232,7 +234,7 @@ class MrNOT {
                     this._myPatience = Math.max(this._myPatience, this._myPatienceRefill);
                 }
 
-                if (this._myPatience <= 0) {
+                if (this._myPatience <= 0 || alwaysHit) {
                     if (this._myDebugActive) {
                         console.log("mr NOT dismissed - Duration -", Global.myVentDuration.toFixed(3));
                     }

@@ -7,24 +7,33 @@ class StatisticsManager {
         Global.myStatistics = new Statistics();
         Global.myStatistics.load();
 
+        this._mySaveTimer = new PP.Timer(Math.pp_random(15, 25));
+        this._myCommitOnEndTimer = new PP.Timer(0);
+
+        Global.mySaveManager.registerClearEventListener(this, this._onClear.bind(this));
+
+        window.addEventListener('visibilitychange', function () {
+            try {
+                if (document.visibilityState != "visible") {
+                    this._onXRSessionInterrupt();
+                }
+            } catch (error) {
+                // Do Nothing
+            }
+        }.bind(this));
+
         if (WL.xrSession) {
             this._onXRSessionStart(WL.xrSession);
         }
         WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
-
         WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
-
-        this._mySaveTimer = new PP.Timer(20);
-        this._myCommitOnEndTimer = new PP.Timer(0);
-
-        Global.mySaveManager.registerClearEventListener(this, this._onClear.bind(this));
     }
 
     update(dt) {
         this._myCommitOnEndTimer.update(dt);
         this._mySaveTimer.update(dt);
         if (this._mySaveTimer.isDone()) {
-            this._mySaveTimer.start();
+            this._mySaveTimer.start(Math.pp_random(15, 25));
             Global.myStatistics.save();
         }
     }
@@ -42,15 +51,18 @@ class StatisticsManager {
     }
 
     _onXRSessionInterrupt() {
+        Global.myStatistics.save();
+        Global.mySaveManager.commitSaves();
+
         if (this._myCommitOnEndTimer.isDone()) {
-            this._myCommitOnEndTimer.start(20);
-            Global.myStatistics.save();
+            this._myCommitOnEndTimer.start(Math.pp_random(15, 25));
+
             this._sendAnalytics();
         }
     }
 
     _onClear() {
-        this._myCommitOnEndTimer.start(20);
+        this._myCommitOnEndTimer.start(Math.pp_random(15, 25));
         this._sendAnalytics();
         Global.myStatistics.load();
     }
@@ -161,10 +173,6 @@ class Statistics {
     }
 
     save() {
-        if (this.myTotalPlayTime < this.myTrialPlayTime + this.myChatPlayTime + this.myDisputePlayTime) {
-            this.myTotalPlayTime = this.myTrialPlayTime + this.myChatPlayTime + this.myDisputePlayTime;
-        }
-
         Global.mySaveManager.save("total_play_time", this.myTotalPlayTime);
 
         Global.mySaveManager.save("trial_play_time", this.myTrialPlayTime);

@@ -8,12 +8,6 @@ PP.SaveManager = class SaveManager {
 
         this._myCacheDefaultValueOnFail = true;
 
-        if (WL.xrSession) {
-            this._onXRSessionStart(WL.xrSession);
-        }
-        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
-        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
-
         this._myClearCallbacks = new Map();                 // Signature: callback()
         this._myDeleteCallbacks = new Map();                // Signature: callback(id)
         this._myDeleteIDCallbacks = new Map();              // Signature: callback(id)
@@ -250,22 +244,6 @@ PP.SaveManager = class SaveManager {
         }
 
         return value;
-    }
-
-    _onXRSessionStart(session) {
-        session.addEventListener('visibilitychange', function (event) {
-            if (event.session.visibilityState != "visible") {
-                this._onXRSessionInterrupt();
-            }
-        }.bind(this));
-    }
-
-    _onXRSessionEnd() {
-        this._onXRSessionInterrupt();
-    }
-
-    _onXRSessionInterrupt() {
-        this.commitSaves();
     }
 
     registerClearEventListener(callbackID, callback) {

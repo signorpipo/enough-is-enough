@@ -1,6 +1,7 @@
 WL.registerComponent("activate-on-select", {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
     _myTrigger: { type: WL.Type.Object },
+    _myGrabberHandObject: { type: WL.Type.Object }
 }, {
     init: function () {
     },
@@ -9,6 +10,11 @@ WL.registerComponent("activate-on-select", {
             this._myGamepad = PP.myLeftGamepad;
         } else {
             this._myGamepad = PP.myRightGamepad;
+        }
+
+        this._myGrabberHand = null;
+        if (this._myGrabberHandObject != null) {
+            this._myGrabberHand = this._myGrabberHandObject.pp_getComponent("pp-grabber-hand");
         }
 
         this._myPhysx = this.object.pp_getComponent("physx");
@@ -25,30 +31,34 @@ WL.registerComponent("activate-on-select", {
         this._myCollisionAudio = Global.myAudioManager.createAudioPlayer(SfxID.COLLISION);
         this._myCollisionPitch = this._myCollisionAudio.getPitch();
 
-        this._myAnalyticsTimer = new PP.Timer(0);
-
         this._myHandednessType = PP.InputUtils.getHandednessByIndex(this._myHandedness);
+
+        this._mySentEventActiveTimer = new PP.Timer(7);
     },
     update(dt) {
-        this._myAnalyticsTimer.update(dt);
-
-        if (!Global.myEnableSelectPhysx || PP.InputUtils.getInputSourceType(this._myHandednessType) != PP.InputSourceType.GAMEPAD) {
+        if (!Global.myEnableSelectPhysx ||
+            PP.InputUtils.getInputSourceType(this._myHandednessType) != PP.InputSourceType.GAMEPAD ||
+            (this._myGrabberHand != null && this._myGrabberHand.getHandPose() != null && !this._myGrabberHand.getHandPose().isValid())) {
             this._myPhysx.active = false;
             this._myTriggerPhysx.active = false;
+        }
+
+        if (!Global.myActivatePhysXHandEventSent) {
+            if (this._myPhysx.active) {
+                this._mySentEventActiveTimer.update(dt);
+                if (this._mySentEventActiveTimer.isDone()) {
+                    Global.myActivatePhysXHandEventSent = true;
+                    Global.sendAnalytics("event", "select_physx_actived", {
+                        "value": 1
+                    });
+                }
+            }
         }
     },
     _selectPressStart() {
         if (Global.myEnableSelectPhysx && PP.InputUtils.getInputSourceType(this._myHandednessType) == PP.InputSourceType.GAMEPAD) {
             this._myPhysx.active = true;
             this._myTriggerPhysx.active = true;
-
-            if (this._myAnalyticsTimer.isDone()) {
-                this._myAnalyticsTimer.start(20);
-
-                Global.sendAnalytics("event", "select_physx_actived", {
-                    "value": 1
-                });
-            }
         }
     },
     _selectPressEnd() {

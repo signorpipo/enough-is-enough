@@ -12,9 +12,12 @@ class enoughISenough {
     }
 
     update(dt) {
+        Global.myTotalTimeUpdated = false;
+
         this._myMainFSM.update(dt);
 
-        if (PP.XRUtils.isXRSessionActive()) {
+        if (PP.XRUtils.isXRSessionActive() && !Global.myTotalTimeUpdated) {
+            Global.myTotalTimeUpdated = true;
             Global.myStatistics.myTotalPlayTime += dt;
         }
 

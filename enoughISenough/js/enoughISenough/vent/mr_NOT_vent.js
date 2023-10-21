@@ -154,7 +154,9 @@ class MrNOTVent {
 
         if (distanceToTarget < this._myReachTargetDistance || distanceToTargetFromStart < distanceToCurrentFromStart) {
             //console.log("mr NOT Hits Received -", this._myHitsReceived);
-            if (this._myCallbackOnReach) {
+            if (PP.myEasyTuneVariables.get("Prevent Vent Lost")) {
+                this._checkHit(false, true);
+            } else if (this._myCallbackOnReach) {
                 this._myCallbackOnReach(this);
             }
         } else {
@@ -174,7 +176,7 @@ class MrNOTVent {
         this._checkHit(true);
     }
 
-    _checkHit(avoidCallbacks = false) {
+    _checkHit(avoidCallbacks = false, alwaysHit = false) {
         let hit = false;
         let hittingObjects = [];
 
@@ -223,7 +225,7 @@ class MrNOTVent {
             }
         }
 
-        if (hit) {
+        if (hit || alwaysHit) {
             let patienceToRemove = 0;
             for (let object of hittingObjects) {
                 this._myHitAudio.setPosition(object.pp_getPosition());
@@ -248,7 +250,7 @@ class MrNOTVent {
                     this._myPatience = Math.max(this._myPatience, this._myPatienceRefill);
                 }
 
-                if (this._myPatience <= 0) {
+                if (this._myPatience <= 0 || alwaysHit) {
                     Global.myStatistics.myMrNOTDismissed += 1;
                     this._myFSM.perform("disappear");
                     this._myCallbackOnPatienceOver();

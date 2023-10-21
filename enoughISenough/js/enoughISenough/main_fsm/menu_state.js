@@ -43,7 +43,7 @@ class MenuState extends PP.State {
         this._myMenuDuration = 0;
         this._myFirstTime = true;
 
-        this._myButtonPressed = Global.mySaveManager.loadBool("button_pressed", false);
+        this._myButtonPressedEventSent = false;
     }
 
     update(dt, fsm) {
@@ -51,15 +51,13 @@ class MenuState extends PP.State {
         this._myFSM.update(dt);
         this._myNotEnough.update(dt);
 
-        if (!this._myButtonPressed) {
+        if (!this._myButtonPressedEventSent) {
             for (let key in PP.ButtonType) {
                 let resultLeft = PP.myLeftGamepad.getButtonInfo(PP.ButtonType[key]).isPressStart();
                 let resultRight = PP.myRightGamepad.getButtonInfo(PP.ButtonType[key]).isPressStart();
 
                 if (resultLeft || resultRight) {
-                    this._myButtonPressed = true;
-                    Global.mySaveManager.save("button_pressed", true);
-
+                    this._myButtonPressedEventSent = true;
                     Global.sendAnalytics("event", "button_pressed", {
                         "value": 1
                     });
@@ -118,6 +116,8 @@ class MenuState extends PP.State {
         this._myResetCount = 0;
 
         Global.myIsInMenu = true;
+
+        Global.myIsTrialPhase1 = false;
 
         Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialPhase >= 2);
 
@@ -196,10 +196,15 @@ class MenuState extends PP.State {
     _startUnspawningReset(fsm) {
         this._myResetCount = 0;
 
+        Global.myMrNOTClonesNotDismissedPhase1PlayCount = 0;
+
+        Global.sendAnalytics("event", "save_reset", {
+            "value": 1
+        });
+
         let fullReset = this._myFloppyDisk.getGrabTime() >= 5;
         if (!fullReset) {
-
-            Global.sendAnalytics("event", "save_reset", {
+            Global.sendAnalytics("event", "save_reset_normal", {
                 "value": 1
             });
 
@@ -209,8 +214,7 @@ class MenuState extends PP.State {
 
             Global.myStatistics.myTrialPlayCountResettable = 0;
             Global.myStatistics.myMrNOTClonesDismissedResettable = 0;
-            Global.mySaveManager.save("trial_play_count_resettable", 0);
-            Global.mySaveManager.save("mr_NOT_clones_dismissed_resettable", 0);
+            Global.myStatistics.save();
 
             this._myNotEnough.start();
         } else {
@@ -456,7 +460,7 @@ class MenuItem {
 
         this._myAutoSpawn = true;
 
-        this._myThrowTimer = new PP.Timer(5, false);
+        this._myThrowTimer = new PP.Timer(6, false);
         WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
 
         this._myFSM = new PP.FSM();
@@ -636,7 +640,8 @@ class MenuItem {
         if (this._myTimer.isDone()) {
             Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myParticlesRadius, this._myScale, this._myObjectType);
             this._myFSM.perform("end");
-            if (this._myCallbackOnFall && PP.XRUtils.isXRSessionActive() && Global.myXRSessionActiveOpenLinkExtraCheck && this._myThrowTimer.isRunning()) {
+            if (this._myCallbackOnFall && PP.XRUtils.isXRSessionActive() && Global.myXRSessionActiveOpenLinkExtraCheck && this._myThrowTimer.isRunning() &&
+                (WL.xrSession == null || WL.xrSession.visibilityState == null || WL.xrSession.visibilityState == "visible")) {
                 this._myCallbackOnFall();
             }
         }
