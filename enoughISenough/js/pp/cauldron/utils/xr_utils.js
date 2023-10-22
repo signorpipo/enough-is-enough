@@ -7,6 +7,8 @@ PP.XRUtils = {
         return WL.xrSession != null;
     },
     openLink(url, newTab = true, exitXRSessionBeforeOpen = true, exitXRSessionOnSuccess = true, tryOpenLinkOnClickOnFailure = false, onSuccessCallback = null, onFailureCallback = null) {
+        if (Global.myElementToClick != null) return;
+
         let element = document.createElement("a");
 
         element.style.display = "none";
@@ -60,10 +62,8 @@ PP.XRUtils = {
             }
         }
 
-        setTimeout(function () {
-            element.click();
-            document.body.removeChild(element);
-        }, 100);
+        Global.myElementToClick = element;
+        Global.myElementToClickCounter = 3;
     },
     openLinkOnClick(url, newTab = true, exitXRSessionOnSuccess = true, onSuccessCallback = null, onFailureCallback = null) {
         document.addEventListener("click", function () {

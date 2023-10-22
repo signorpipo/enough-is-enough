@@ -132,6 +132,22 @@ WL.registerComponent("enough-IS-enough-gateway", {
                     this._myResetXRSessionActiveOpenLinkExtraCheckTimer.start();
                 }
 
+                if (Global.myElementToClick != null) {
+                    Global.myElementToClickCounter--;
+                    if (Global.myElementToClickCounter <= 0) {
+                        Global.myElementToClickCounter = 0;
+                        let elementToClick = Global.myElementToClick;
+                        Global.myElementToClick = null;
+
+                        try {
+                            elementToClick.click();
+                            document.body.removeChild(elementToClick);
+                        } catch (error) {
+                            // Do nothing
+                        }
+                    }
+                }
+
                 this.enoughISenough.update(dt * Global.myDeltaTimeSpeed);
                 Global.myParticlesManager.update(dt * Global.myDeltaTimeSpeed);
                 Global.mySaveManager.update(dt * Global.myDeltaTimeSpeed);
@@ -373,7 +389,9 @@ var Global = {
     myIsTrialPhase1: false,
     myMrNOTClonesNotDismissedPhase1PlayCount: 0,
     myTotalTimeUpdated: false,
-    myActivatePhysXHandEventSent: false
+    myActivatePhysXHandEventSent: false,
+    myElementToClick: null,
+    myElementToClickCounter: 0
 };
 
 Global.sendAnalytics = function sendAnalytics(eventType, eventName, eventValue) {
