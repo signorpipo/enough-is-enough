@@ -596,7 +596,7 @@ class MenuItem {
         let scaleMultiplier = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
 
-        this._myAppearAudio.updatePosition(this._myObject.pp_getPosition());
+        this._myAppearAudio.updatePosition(this._myObject.pp_getPosition(), true);
 
         if (this._myTimer.isDone()) {
             this._myFSM.perform("end");
@@ -635,7 +635,7 @@ class MenuItem {
         let scaleMultiplier = Math.pp_interpolate(1, PP.myEasyTuneVariables.get("Unspawn Menu Scale"), this._myTimer.getPercentage());
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
 
-        //this._myDisappearAudio.updatePosition(this._myObject.pp_getPosition());
+        //this._myDisappearAudio.updatePosition(this._myObject.pp_getPosition(), true);
 
         if (this._myTimer.isDone()) {
             Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myParticlesRadius, this._myScale, this._myObjectType);

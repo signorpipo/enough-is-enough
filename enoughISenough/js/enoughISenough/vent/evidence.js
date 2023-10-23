@@ -173,7 +173,7 @@ class Evidence {
         let scaleMultiplier = PP.EasingFunction.easeInOut(this._mySpawnTimer.getPercentage());
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
 
-        this._myAppearAudio.updatePosition(this._myObject.pp_getPosition());
+        this._myAppearAudio.updatePosition(this._myObject.pp_getPosition(), true);
 
         if (this._mySpawnTimer.isDone()) {
             this._myFSM.perform("end");

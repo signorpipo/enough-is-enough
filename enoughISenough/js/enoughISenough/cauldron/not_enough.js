@@ -93,7 +93,7 @@ class NotEnough {
         let position = Global.myPlayerPosition.vec3_clone();
         position.vec3_add(Global.myPlayerUp.vec3_scale(0.15), position);
         position.vec3_add(Global.myPlayerForward.vec3_scale(0.5), position);
-        this._myNotEnoughAudio.updatePosition(position);
+        this._myNotEnoughAudio.updatePosition(position, true);
     }
 
     isNotEnoughing() {
