@@ -813,7 +813,8 @@ WL.registerComponent('test-prototype', {
             let initialPos = [];
             this.object.getTranslationWorld(initialPos);
             for (let i = 0; i < 100; i++) {
-                this.object.transformWorld = this.object.transformWorld;
+                let currentTransformWorld = this.object.transformWorld;
+                this.object.transformWorld = currentTransformWorld;
                 this.object.setDirty();
             }
             let finalPos = [];

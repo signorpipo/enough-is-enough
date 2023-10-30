@@ -17,7 +17,7 @@ PP.AudioEvent = {
 PP.AudioPlayer = class AudioPlayer {
     constructor(audioSetupOrAudioFilePath) {
         if (typeof audioSetupOrAudioFilePath === 'string') {
-            this._myAudioSetup = new PP.AudioSetup(audioSetupOrAudioFile);
+            this._myAudioSetup = new PP.AudioSetup(audioSetupOrAudioFilePath);
         } else {
             this._myAudioSetup = audioSetupOrAudioFilePath.clone();
         }

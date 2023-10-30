@@ -103,6 +103,7 @@ PP.HandPose = class HandPose {
             try {
                 xrPose = xrFrame.getPose(this._myInputSource.gripSpace, this._myReferenceSpace);
             } catch (error) {
+                // Do nothing
             }
 
             if (xrPose) {

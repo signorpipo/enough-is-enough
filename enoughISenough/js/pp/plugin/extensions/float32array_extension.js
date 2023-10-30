@@ -717,15 +717,15 @@ Float32Array.prototype.vec3_addRotation = function (rotation, out) {
 };
 
 Float32Array.prototype.vec3_addRotationDegrees = function (rotation, out) {
-    return quat.vec3_degreesAddRotationDegrees(rotation, out);
+    return this.vec3_degreesAddRotationDegrees(rotation, out);
 };
 
 Float32Array.prototype.vec3_addRotationRadians = function (rotation, out) {
-    return quat.vec3_degreesAddRotationRadians(rotation, out);
+    return this.vec3_degreesAddRotationRadians(rotation, out);
 };
 
 Float32Array.prototype.vec3_addRotationQuat = function (rotation, out) {
-    return quat.vec3_degreesAddRotationQuat(rotation, out);
+    return this.vec3_degreesAddRotationQuat(rotation, out);
 };
 
 Float32Array.prototype.vec3_degreesAddRotation = function (rotation, out) {

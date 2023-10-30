@@ -100,6 +100,7 @@ PP.HeadPose = class HeadPose {
             try {
                 xrPose = xrFrame.getViewerPose(this._myReferenceSpace);
             } catch (error) {
+                // Do nothing
             }
 
             if (xrPose) {

@@ -404,4 +404,4 @@ Global.sendAnalytics = function sendAnalytics(eventType, eventName, eventValue) 
     } catch (error) {
         // Do nothing
     }
-}
+};

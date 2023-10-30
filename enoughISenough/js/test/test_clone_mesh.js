@@ -22,7 +22,7 @@ WL.registerComponent('test-clone-mesh', {
 
     },
     update: function (dt) {
-        let a = 2;
-        a += 2;
+        //let a = 2;
+        //a += 2;
     }
 });
