@@ -1,7 +1,9 @@
 {
 	"name": "mr NOT - enough IS enough",
-	"short_name": "mr NOT - enoush IS enough",
+	"short_name": "mr NOT - enough IS enough",
+	"author": "Pipo",
 	"description": "don't make me wait",
+	"homepage_url": "https://signor-pipo.itch.io/enough-is-enough",
 	"lang": "en-US",
 	"display": "standalone",
 	"ovr_package_name": "com.pipo.enoughISenough",
@@ -9,7 +11,7 @@
 	"scope": "./",
 	"focusaware": true,
 	"orientation": "landscape",
-	"theme_color": "#492d85",
+	"theme_color": "#472777",
 	"background_color": "#000000",
 	"icons": [
 		{
