@@ -300,6 +300,9 @@ WL.registerComponent('pp-grabber-hand', {
             this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this);
         }
     },
+    getHandPose() {
+        return this._myHandPose;
+    },
     _grab: function (grabButton) {
         if (this._myGrabbables.length >= this._myMaxNumberOfObjects) {
             return;
@@ -327,7 +330,7 @@ WL.registerComponent('pp-grabber-hand', {
                         grabbableToGrab.object.resetTranslation();
                     }
 
-                    this._myGrabCallbacks.forEach(function (callback) { callback(this, grabbableToGrab); }.bind(this));
+                    this._myGrabCallbacks.forEach(function (callback) { callback(this, grabbableToGrab, grabButton); }.bind(this));
                 }
 
                 if (this._myGrabbables.length >= this._myMaxNumberOfObjects) {
@@ -847,31 +850,27 @@ PP.HandPose = class HandPose {
     _onXRSessionStart(manualStart, session) {
         session.requestReferenceSpace(WebXR.refSpace).then(function (referenceSpace) { this._myReferenceSpace = referenceSpace; }.bind(this));
 
-        session.addEventListener('inputsourceschange', function (event) {
-            if (event.removed) {
-                for (let item of event.removed) {
-                    if (item == this._myInputSource) {
-                        this._myInputSource = null;
-                    }
-                }
-            }
+        this._myInputSource = null;
 
-            if (event.added) {
-                for (let item of event.added) {
-                    if (item.handedness == this._myHandedness) {
-                        this._myInputSource = item;
-                    }
-                }
-            }
-        }.bind(this));
-
-        if (manualStart && this._myInputSource == null && session.inputSources) {
+        if (session.inputSources != null && session.inputSources.length > 0) {
             for (let item of session.inputSources) {
                 if (item.handedness == this._myHandedness) {
                     this._myInputSource = item;
                 }
             }
         }
+
+        session.addEventListener('inputsourceschange', function () {
+            this._myInputSource = null;
+
+            if (session.inputSources != null && session.inputSources.length > 0) {
+                for (let item of session.inputSources) {
+                    if (item.handedness == this._myHandedness) {
+                        this._myInputSource = item;
+                    }
+                }
+            }
+        }.bind(this));
     }
 
     _onXRSessionEnd(session) {
@@ -1497,6 +1496,25 @@ PP.Gamepad = class Gamepad {
         this._updateSingleButtonInfo(PP.ButtonType.THUMBSTICK, true);
         this._updateSingleButtonInfo(PP.ButtonType.BOTTOM_BUTTON, true);
         this._updateSingleButtonInfo(PP.ButtonType.TOP_BUTTON, true);
+
+        let inputSourceType = PP.InputUtils.getInputSourceType(this._myHandedness);
+        if (inputSourceType != PP.InputSourceType.GAMEPAD) {
+            if (inputSourceType == PP.InputSourceType.HAND) {
+                this._updateHandSqueeze();
+            }
+
+            if (this._myButtonInfos[PP.ButtonType.SELECT].myIsPressed && this._myButtonInfos[PP.ButtonType.SELECT].myValue == 0) {
+                this._myButtonInfos[PP.ButtonType.SELECT].myValue = 1;
+            }
+
+            if (this._myButtonInfos[PP.ButtonType.SQUEEZE].myIsPressed && this._myButtonInfos[PP.ButtonType.SQUEEZE].myValue == 0) {
+                this._myButtonInfos[PP.ButtonType.SQUEEZE].myValue = 1;
+            }
+        }
+    }
+
+    _updateHandSqueeze() {
+
     }
 
     //This sadly must be done this way to be the most compatible
@@ -1765,10 +1783,17 @@ PP.Gamepad = class Gamepad {
         let hapticActuator = this._getHapticActuator();
         if (hapticActuator) {
             if (this._myPulseInfo.myIntensity > 0) {
-                hapticActuator.pulse(this._myPulseInfo.myIntensity, 1000); //duration is managed by this class
+                hapticActuator.pulse(this._myPulseInfo.myIntensity, Math.max(250, this._myPulseInfo.myDuration * 1000)); //duration is managed by this class
                 this._myPulseInfo.myIsDevicePulsing = true;
             } else if (this._myPulseInfo.myIsDevicePulsing) {
-                hapticActuator.reset();
+                hapticActuator.pulse(0, 1);
+
+                try {
+                    hapticActuator.reset();
+                } catch (error) {
+                    // Do nothing
+                }
+
                 this._myPulseInfo.myIsDevicePulsing = false;
             }
         }
@@ -1795,27 +1820,10 @@ PP.Gamepad = class Gamepad {
     }
 
     _onXRSessionStart(manualStart, session) {
-        session.addEventListener("inputsourceschange", function (event) {
-            if (event.removed) {
-                for (let item of event.removed) {
-                    if (item.gamepad == this._myGamepad) {
-                        this._myInputSource = null;
-                        this._myGamepad = null;
-                    }
-                }
-            }
+        this._myInputSource = null;
+        this._myGamepad = null;
 
-            if (event.added) {
-                for (let item of event.added) {
-                    if (item.handedness == this._myHandedness) {
-                        this._myInputSource = item;
-                        this._myGamepad = item.gamepad;
-                    }
-                }
-            }
-        }.bind(this));
-
-        if (manualStart && this._myInputSource == null && session.inputSources) {
+        if (session.inputSources != null && session.inputSources.length > 0) {
             for (let item of session.inputSources) {
                 if (item.handedness == this._myHandedness) {
                     this._myInputSource = item;
@@ -1823,6 +1831,20 @@ PP.Gamepad = class Gamepad {
                 }
             }
         }
+
+        session.addEventListener("inputsourceschange", function () {
+            this._myInputSource = null;
+            this._myGamepad = null;
+
+            if (session.inputSources != null && session.inputSources.length > 0) {
+                for (let item of session.inputSources) {
+                    if (item.handedness == this._myHandedness) {
+                        this._myInputSource = item;
+                        this._myGamepad = item.gamepad;
+                    }
+                }
+            }
+        }.bind(this));
 
         session.addEventListener("selectstart", this._selectStart.bind(this));
         session.addEventListener("selectend", this._selectEnd.bind(this));
@@ -3616,6 +3638,8 @@ WL.registerComponent('pp-set-head-transform', {
     _myFixForward: { type: WL.Type.Bool, default: true }
 }, {
     init: function () {
+        this._myUp = [0, 1, 0];
+
         this._myHeadPose = new PP.HeadPose(this._myFixForward);
     },
     start: function () {
@@ -3623,7 +3647,13 @@ WL.registerComponent('pp-set-head-transform', {
     },
     update: function (dt) {
         this._myHeadPose.update(dt);
-        this.object.pp_setTransformLocalQuat(this._myHeadPose.getTransformQuat());
+
+        if (PP.XRUtils.isXRSessionActive()) {
+            this.object.pp_setTransformLocalQuat(this._myHeadPose.getTransformQuat());
+        } else {
+            this.object.pp_resetTransformLocal();
+            this.object.pp_rotateAxisLocal(180, this._myUp);
+        }
     },
 });
 WL.registerComponent('pp-set-hierarchy-active', {
@@ -3671,238 +3701,327 @@ PP.CAUtils = {
         return PP.CAUtils._myDummyServer;
     },
     isSDKAvailable: function () {
-        return "casdk" in window;
+        return window.heyVR != null;
     },
-    getLeaderboard: function (leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError, overrideUseDummyServer = null) {
+    getSDK: function () {
+        return window.heyVR;
+    },
+    getLeaderboard: function (leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback = null, onErrorCallback = null, useDummyServerOverride = null) {
         if (PP.CAUtils.isSDKAvailable()) {
-            if (!isAroundPlayer) {
-                casdk.getLeaderboard(leaderboardID, isAscending, isAroundPlayer, scoresAmount).then(function (result) {
-                    if (result.leaderboard) {
-                        if (callbackOnDone) {
-                            callbackOnDone(result.leaderboard);
+            try {
+                PP.CAUtils._getLeaderboard(leaderboardID, ascending, aroundPlayer, scoresAmount).then(function (result) {
+                    if (result.leaderboard != null) {
+                        if (!aroundPlayer) {
+                            if (onDoneCallback != null) {
+                                onDoneCallback(result.leaderboard);
+                            }
+                        } else {
+                            let userLeaderboard = result.leaderboard;
+                            PP.CAUtils.getUser(
+                                function (user) {
+                                    let userName = user.displayName;
+                                    let userValid = false;
+                                    for (let userLeaderboardEntry of userLeaderboard) {
+                                        if (userLeaderboardEntry.displayName == userName) {
+                                            userValid = true;
+                                            break;
+                                        }
+                                    }
+                                    if (userValid) {
+                                        if (onDoneCallback != null) {
+                                            onDoneCallback(userLeaderboard);
+                                        }
+                                    } else {
+                                        if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
+                                            (PP.CAUtils._myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                                            PP.CAUtils.getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback, PP.CAUtils.CAError.USER_HAS_NO_SCORE);
+                                        } else if (onErrorCallback != null) {
+                                            let error = {};
+                                            error.reason = "Searching for around player but the user has not submitted a score yet";
+                                            error.type = PP.CAUtils.CAError.USER_HAS_NO_SCORE;
+                                            onErrorCallback(error, null);
+                                        }
+                                    }
+                                },
+                                function (error, result) {
+                                    if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
+                                        (PP.CAUtils._myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                                        PP.CAUtils.getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback, error.type);
+                                    } else if (onErrorCallback != null) {
+                                        onErrorCallback(error, result);
+                                    }
+                                },
+                                false);
                         }
                     } else {
                         if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
-                            (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
-                            PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
-                        } else if (callbackOnError) {
+                            (PP.CAUtils._myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                            PP.CAUtils.getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback, PP.CAUtils.CAError.GET_LEADERBOARD_FAILED);
+                        } else if (onErrorCallback != null) {
                             let error = {};
                             error.reason = "Get leaderboard failed";
-                            error.type = PP.CAUtils.ErrorType.GET_LEADERBOARD_FAILED;
-                            callbackOnError(error, result);
+                            error.type = PP.CAUtils.CAError.GET_LEADERBOARD_FAILED;
+                            onErrorCallback(error, result);
                         }
                     }
                 }).catch(function (result) {
                     if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
-                        (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
-                        PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
-                    } else if (callbackOnError) {
+                        (PP.CAUtils._myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                        PP.CAUtils.getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback, PP.CAUtils.CAError.GET_LEADERBOARD_FAILED);
+                    } else if (onErrorCallback != null) {
                         let error = {};
                         error.reason = "Get leaderboard failed";
-                        error.type = PP.CAUtils.ErrorType.GET_LEADERBOARD_FAILED;
-                        callbackOnError(error, result);
+                        error.type = PP.CAUtils.CAError.GET_LEADERBOARD_FAILED;
+                        onErrorCallback(error, result);
                     }
                 });
-            } else {
-                PP.CAUtils.getUser(
-                    function (user) {
-                        let userName = user.displayName;
-                        casdk.getLeaderboard(leaderboardID, isAscending, isAroundPlayer, scoresAmount).then(function (result) {
-                            if (result.leaderboard) {
-                                let userValid = false;
-                                for (let value of result.leaderboard) {
-                                    if (value.displayName == userName && value.score != 0) {
-                                        userValid = true;
-                                        break;
-                                    }
-                                }
-                                if (userValid) {
-                                    if (callbackOnDone) {
-                                        callbackOnDone(result.leaderboard);
-                                    }
-                                } else {
-                                    if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
-                                        (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
-                                        PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
-                                    } else if (callbackOnError) {
-                                        let error = {};
-                                        error.reason = "Searching for around player but the user has not submitted a score yet";
-                                        error.type = PP.CAUtils.ErrorType.USER_HAS_NO_SCORE;
-                                        callbackOnError(error, result);
-                                    }
-                                }
-                            } else {
-                                if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
-                                    (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
-                                    PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
-                                } else if (callbackOnError) {
-                                    let error = {};
-                                    error.reason = "Get leaderboard failed";
-                                    error.type = PP.CAUtils.ErrorType.GET_LEADERBOARD_FAILED;
-                                    callbackOnError(error, result);
-                                }
-                            }
-                        }).catch(function (result) {
-                            if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
-                                (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
-                                PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
-                            } else if (callbackOnError) {
-                                let error = {};
-                                error.reason = "Get leaderboard failed";
-                                error.type = PP.CAUtils.ErrorType.GET_LEADERBOARD_FAILED;
-                                callbackOnError(error, result);
-                            }
-                        });
-
-                    },
-                    function () {
-                        if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
-                            (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
-                            PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
-                        } else if (callbackOnError) {
-                            let error = {};
-                            error.reason = "Searching for around player but the user can't be retrieved";
-                            error.type = PP.CAUtils.ErrorType.GET_USER_FAILED;
-                            callbackOnError(error, result);
-                        }
-                    },
-                    false);
+            } catch (error) {
+                if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
+                    (PP.CAUtils._myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                    PP.CAUtils.getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback, PP.CAUtils.CAError.GET_LEADERBOARD_FAILED);
+                } else if (onErrorCallback != null) {
+                    let error = {};
+                    error.reason = "Get leaderboard failed";
+                    error.type = PP.CAUtils.CAError.GET_LEADERBOARD_FAILED;
+                    onErrorCallback(error, null);
+                }
             }
         } else {
             if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
-                (PP.CAUtils._myUseDummyServerOnSDKMissing && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
-                PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
-            } else if (callbackOnError) {
+                (PP.CAUtils._myUseDummyServerOnSDKMissing && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                PP.CAUtils.getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback, PP.CAUtils.CAError.CA_SDK_MISSING);
+            } else if (onErrorCallback != null) {
                 let error = {};
                 error.reason = "Construct Arcade SDK missing";
-                error.type = PP.CAUtils.ErrorType.CA_SDK_MISSING;
-                callbackOnError(error, null);
+                error.type = PP.CAUtils.CAError.CA_SDK_MISSING;
+                onErrorCallback(error, null);
             }
         }
     },
-    getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError) {
+    getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback = null, onErrorCallback = null, caError = PP.CAUtils.CAError.NONE) {
         if (PP.CAUtils._myDummyServer) {
-            PP.CAUtils._myDummyServer.getLeaderboard(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
+            PP.CAUtils._myDummyServer.getLeaderboard(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback, caError);
         } else {
-            if (callbackOnError) {
+            if (onErrorCallback != null) {
                 let error = {};
                 error.reason = "Dummy server not initialized";
-                error.type = PP.CAUtils.ErrorType.DUMMY_NOT_INITIALIZED;
-                callbackOnError(error);
+                error.type = PP.CAUtils.CAError.DUMMY_NOT_INITIALIZED;
+                onErrorCallback(error, null);
             }
         }
     },
-    submitScore: function (leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError, overrideUseDummyServer = null) {
+    submitScore(leaderboardID, scoreToSubmit, onDoneCallback = null, onErrorCallback = null, useDummyServerOverride = null) {
         if (PP.CAUtils.isSDKAvailable()) {
-            casdk.submitScore(leaderboardID, scoreToSubmit).then(function (result) {
-                if (result.error) {
+            try {
+                PP.CAUtils._submitScore(leaderboardID, scoreToSubmit).then(function (result) {
+                    if (result.scoreSubmitted) {
+                        if (onDoneCallback != null) {
+                            onDoneCallback();
+                        }
+                    } else if (result.scoreSubmitted != null) {
+                        if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.submitScore != null &&
+                            (PP.CAUtils._myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                            PP.CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, onDoneCallback, onErrorCallback, PP.CAUtils.CAError.USER_NOT_LOGGED_IN);
+                        } else if (onErrorCallback != null) {
+                            let error = {};
+                            error.reason = "The score can't be submitted because the user is not logged in";
+                            error.type = PP.CAUtils.CAError.USER_NOT_LOGGED_IN;
+                            onErrorCallback(error, result);
+                        }
+                    } else {
+                        if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.submitScore != null &&
+                            (PP.CAUtils._myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                            PP.CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, onDoneCallback, onErrorCallback, PP.CAUtils.CAError.SUBMIT_SCORE_FAILED);
+                        } else if (onErrorCallback != null) {
+                            let error = {};
+                            error.reason = "Submit score failed";
+                            error.type = PP.CAUtils.CAError.SUBMIT_SCORE_FAILED;
+                            onErrorCallback(error, result);
+                        }
+                    }
+                }).catch(function (result) {
                     if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.submitScore != null &&
-                        (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
-                        PP.CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError);
-                    } else if (callbackOnError) {
+                        (PP.CAUtils._myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                        PP.CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, onDoneCallback, onErrorCallback, PP.CAUtils.CAError.SUBMIT_SCORE_FAILED);
+                    } else if (onErrorCallback != null) {
                         let error = {};
                         error.reason = "Submit score failed";
-                        error.type = PP.CAUtils.ErrorType.SUBMIT_SCORE_FAILED;
-                        callbackOnError(error, result);
+                        error.type = PP.CAUtils.CAError.SUBMIT_SCORE_FAILED;
+                        onErrorCallback(error, result);
                     }
-                } else {
-                    callbackOnDone();
-                }
-            }).catch(function (result) {
+                });
+            } catch (error) {
                 if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.submitScore != null &&
-                    (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
-                    PP.CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError);
-                } else if (callbackOnError) {
+                    (PP.CAUtils._myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                    PP.CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, onDoneCallback, onErrorCallback, PP.CAUtils.CAError.SUBMIT_SCORE_FAILED);
+                } else if (onErrorCallback != null) {
                     let error = {};
                     error.reason = "Submit score failed";
-                    error.type = PP.CAUtils.ErrorType.SUBMIT_SCORE_FAILED;
-                    callbackOnError(error, result);
+                    error.type = PP.CAUtils.CAError.SUBMIT_SCORE_FAILED;
+                    onErrorCallback(error, null);
                 }
-            });
+            }
         } else {
             if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.submitScore != null &&
-                (PP.CAUtils._myUseDummyServerOnSDKMissing && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
-                PP.CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError);
-            } else if (callbackOnError) {
+                (PP.CAUtils._myUseDummyServerOnSDKMissing && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                PP.CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, onDoneCallback, onErrorCallback, PP.CAUtils.CAError.CA_SDK_MISSING);
+            } else if (onErrorCallback != null) {
                 let error = {};
                 error.reason = "Construct Arcade SDK missing";
-                error.type = PP.CAUtils.ErrorType.CA_SDK_MISSING;
-                callbackOnError(error, null);
+                error.type = PP.CAUtils.CAError.CA_SDK_MISSING;
+                onErrorCallback(error, null);
             }
         }
     },
-    submitScoreDummy(leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError) {
+    submitScoreDummy(leaderboardID, scoreToSubmit, onDoneCallback = null, onErrorCallback = null, caError = PP.CAUtils.CAError.NONE) {
         if (PP.CAUtils._myDummyServer) {
-            PP.CAUtils._myDummyServer.submitScore(leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError);
+            PP.CAUtils._myDummyServer.submitScore(leaderboardID, scoreToSubmit, onDoneCallback, onErrorCallback, caError);
         } else {
-            if (callbackOnError) {
+            if (onErrorCallback != null) {
                 let error = {};
                 error.reason = "Dummy server not initialized";
-                error.type = PP.CAUtils.ErrorType.DUMMY_NOT_INITIALIZED;
-                callbackOnError(error);
+                error.type = PP.CAUtils.CAError.DUMMY_NOT_INITIALIZED;
+                onErrorCallback(error, null);
             }
         }
     },
-    getUser: function (callbackOnDone, callbackOnError, overrideUseDummyServer = null) {
+    getUser(onDoneCallback = null, onErrorCallback = null, useDummyServerOverride = null) {
         if (PP.CAUtils.isSDKAvailable()) {
-            casdk.getUser().then(function (result) {
-                if (result.user) {
-                    if (callbackOnDone) {
-                        callbackOnDone(result.user);
+            try {
+                PP.CAUtils_getUser().then(function (result) {
+                    if (result.user != null && result.user.displayName != null) {
+                        if (onDoneCallback != null) {
+                            onDoneCallback(result.user);
+                        }
+                    } else if (result.user != null) {
+                        if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getUser != null &&
+                            (PP.CAUtils._myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                            PP.CAUtils.getUserDummy(onDoneCallback, onErrorCallback, PP.CAUtils.CAError.USER_NOT_LOGGED_IN);
+                        } else if (onErrorCallback != null) {
+                            let error = {};
+                            error.reason = "User not logged in";
+                            error.type = PP.CAUtils.CAError.USER_NOT_LOGGED_IN;
+                            onErrorCallback(error, result);
+                        }
+                    } else {
+                        if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getUser != null &&
+                            (PP.CAUtils._myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                            PP.CAUtils.getUserDummy(onDoneCallback, onErrorCallback, PP.CAUtils.CAError.GET_USER_FAILED);
+                        } else if (onErrorCallback != null) {
+                            let error = {};
+                            error.reason = "Get user failed";
+                            error.type = PP.CAUtils.CAError.GET_USER_FAILED;
+                            onErrorCallback(error, result);
+                        }
                     }
-                } else {
+                }).catch(function (result) {
                     if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getUser != null &&
-                        (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
-                        PP.CAUtils.getUserDummy(callbackOnDone, callbackOnError);
-                    } else if (callbackOnError) {
+                        (PP.CAUtils._myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                        PP.CAUtils.getUserDummy(onDoneCallback, onErrorCallback, PP.CAUtils.CAError.GET_USER_FAILED);
+                    } else if (onErrorCallback != null) {
                         let error = {};
                         error.reason = "Get user failed";
-                        error.type = PP.CAUtils.ErrorType.GET_USER_FAILED;
-                        callbackOnError(error, result);
+                        error.type = PP.CAUtils.CAError.GET_USER_FAILED;
+                        onErrorCallback(error, result);
                     }
-                }
-            }).catch(function (result) {
+                });
+            } catch (error) {
                 if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getUser != null &&
-                    (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
-                    PP.CAUtils.getUserDummy(callbackOnDone, callbackOnError);
-                } else if (callbackOnError) {
+                    (PP.CAUtils._myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                    PP.CAUtils.getUserDummy(onDoneCallback, onErrorCallback, PP.CAUtils.CAError.GET_USER_FAILED);
+                } else if (onErrorCallback != null) {
                     let error = {};
                     error.reason = "Get user failed";
-                    error.type = PP.CAUtils.ErrorType.GET_USER_FAILED;
-                    callbackOnError(error, result);
+                    error.type = PP.CAUtils.CAError.GET_USER_FAILED;
+                    onErrorCallback(error, null);
+                }
+            }
+        } else {
+            if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getUser != null &&
+                (PP.CAUtils._myUseDummyServerOnSDKMissing && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                PP.CAUtils.getUserDummy(onDoneCallback, onErrorCallback, PP.CAUtils.CAError.CA_SDK_MISSING);
+            } else if (onErrorCallback != null) {
+                let error = {};
+                error.reason = "Construct Arcade SDK missing";
+                error.type = PP.CAUtils.CAError.CA_SDK_MISSING;
+                onErrorCallback(error, null);
+            }
+        }
+    },
+    getUserDummy(onDoneCallback = null, onErrorCallback = null, caError = PP.CAUtils.CAError.NONE) {
+        if (PP.CAUtils._myDummyServer) {
+            PP.CAUtils._myDummyServer.getUser(onDoneCallback, onErrorCallback, caError);
+        } else {
+            if (onErrorCallback != null) {
+                let error = {};
+                error.reason = "Dummy server not initialized";
+                error.type = PP.CAUtils.CAError.DUMMY_NOT_INITIALIZED;
+                onErrorCallback(error, null);
+            }
+        }
+    },
+    _getLeaderboard(leaderboardID, ascending, aroundPlayer, scoresAmount) {
+        let heyVR = PP.CAUtils.getSDK();
+
+        if (aroundPlayer) {
+            return heyVR.leaderboard.getMy(leaderboardID, scoresAmount).then(function (result) {
+                let adjustedLeaderboard = [];
+                for (let leaderboardEntry of result) {
+                    adjustedLeaderboard.push({ rank: leaderboardEntry.rank - 1, displayName: leaderboardEntry.user, score: leaderboardEntry.score });
+                }
+                return { leaderboard: adjustedLeaderboard };
+            }).catch(function (error) {
+                if (error != null && error.status != null && error.status.debug == "err_unauthenticated") {
+                    return { leaderboard: [] };
+                } else {
+                    return { leaderboard: null };
                 }
             });
         } else {
-            if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getUser != null &&
-                (PP.CAUtils._myUseDummyServerOnSDKMissing && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
-                PP.CAUtils.getUserDummy(callbackOnDone, callbackOnError);
-            } else if (callbackOnError) {
-                let error = {};
-                error.reason = "Construct Arcade SDK missing";
-                error.type = PP.CAUtils.ErrorType.CA_SDK_MISSING;
-                callbackOnError(error, null);
-            }
+            return heyVR.leaderboard.get(leaderboardID, scoresAmount).then(function (result) {
+                let adjustedLeaderboard = [];
+                for (let leaderboardEntry of result) {
+                    adjustedLeaderboard.push({ rank: leaderboardEntry.rank - 1, displayName: leaderboardEntry.user, score: leaderboardEntry.score });
+                }
+                return { leaderboard: adjustedLeaderboard };
+            }).catch(function () {
+                return { leaderboard: null };
+            });
         }
     },
-    getUserDummy(callbackOnDone, callbackOnError) {
-        if (PP.CAUtils._myDummyServer) {
-            PP.CAUtils._myDummyServer.getUser(callbackOnDone, callbackOnError);
-        } else {
-            if (callbackOnError) {
-                let error = {};
-                error.reason = "Dummy server not initialized";
-                error.type = PP.CAUtils.ErrorType.DUMMY_NOT_INITIALIZED;
-                callbackOnError(error);
+    _submitScore(leaderboardID, scoreToSubmit) {
+        let heyVR = PP.CAUtils.getSDK();
+        return heyVR.leaderboard.postScore(leaderboardID, scoreToSubmit).then(function () {
+            return { scoreSubmitted: true };
+        }).catch(function (error) {
+            if (error != null && error.status != null && error.status.debug == "err_unauthenticated") {
+                return { scoreSubmitted: false };
+            } else {
+                return { scoreSubmitted: null };
             }
-        }
+        });
     },
-    ErrorType: {
-        DUMMY_NOT_INITIALIZED: 0,
+    _getUser() {
+        let heyVR = PP.CAUtils.getSDK();
+        return heyVR.user.getName().then(result => {
+            return { user: { displayName: result } };
+        }).catch(function (error) {
+            if (error != null && error.status != null && error.status.debug == "err_unauthenticated") {
+                return { user: { displayName: null } };
+            } else {
+                return { user: null };
+            }
+        });
+    },
+    CAError: {
+        NONE: 0,
         CA_SDK_MISSING: 1,
-        SUBMIT_SCORE_FAILED: 2,
+        DUMMY_NOT_INITIALIZED: 2,
         GET_LEADERBOARD_FAILED: 3,
-        GET_USER_FAILED: 4,
-        USER_HAS_NO_SCORE: 5
+        SUBMIT_SCORE_FAILED: 4,
+        GET_USER_FAILED: 5,
+        USER_NOT_LOGGED_IN: 6,
+        USER_HAS_NO_SCORE: 7
     }
 };
 
@@ -3911,24 +4030,39 @@ PP.CADummyServer = class CADummyServer {
     constructor() {
     }
 
-    getLeaderboard(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError) {
+    getLeaderboard(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback = null, onErrorCallback = null, caError = PP.CAUtils.CAError.NONE) {
         let leaderboard = null;
 
-        if (PP.CAUtils.isSDKAvailable()) {
-            leaderboard = [
-                { rank: 0, displayName: "An", score: 0 },
-                { rank: 1, displayName: "Error", score: 0 },
-                { rank: 2, displayName: "Has", score: 0 },
-                { rank: 3, displayName: "Occurred", score: 0 },
-                { rank: 4, displayName: "While", score: 0 },
-                { rank: 5, displayName: "Trying", score: 0 },
-                { rank: 6, displayName: "To", score: 0 },
-                { rank: 7, displayName: "Retrieve", score: 0 },
-                { rank: 8, displayName: "The", score: 0 },
-                { rank: 9, displayName: "Leaderboard", score: 0 }
-            ];
+        if (caError != PP.CAUtils.CAError.CA_SDK_MISSING) {
+            if (aroundPlayer && (caError == PP.CAUtils.CAError.USER_NOT_LOGGED_IN || caError == PP.CAUtils.CAError.USER_HAS_NO_SCORE)) {
+                leaderboard = [
+                    { rank: 0, displayName: "Sign In", score: 0 },
+                    { rank: 1, displayName: "And", score: 0 },
+                    { rank: 2, displayName: "Play", score: 0 },
+                    { rank: 3, displayName: "On", score: 0 },
+                    { rank: 4, displayName: "HeyVR", score: 0 },
+                    { rank: 5, displayName: "To", score: 0 },
+                    { rank: 6, displayName: "Submit", score: 0 },
+                    { rank: 7, displayName: "Your", score: 0 },
+                    { rank: 8, displayName: "Own", score: 0 },
+                    { rank: 9, displayName: "Score", score: 0 }
+                ];
+            } else {
+                leaderboard = [
+                    { rank: 0, displayName: "An", score: 0 },
+                    { rank: 1, displayName: "Error", score: 0 },
+                    { rank: 2, displayName: "Has", score: 0 },
+                    { rank: 3, displayName: "Occurred", score: 0 },
+                    { rank: 4, displayName: "While", score: 0 },
+                    { rank: 5, displayName: "Trying", score: 0 },
+                    { rank: 6, displayName: "To", score: 0 },
+                    { rank: 7, displayName: "Retrieve", score: 0 },
+                    { rank: 8, displayName: "The", score: 0 },
+                    { rank: 9, displayName: "Leaderboard", score: 0 }
+                ];
+            }
         } else {
-            if (isAroundPlayer) {
+            if (aroundPlayer) {
                 leaderboard = [
                     { rank: 0, displayName: "Sign In", score: 0 },
                     { rank: 1, displayName: "And", score: 0 },
@@ -3961,23 +4095,23 @@ PP.CADummyServer = class CADummyServer {
             leaderboard.pop();
         }
 
-        if (callbackOnDone) {
-            callbackOnDone(leaderboard);
+        if (onDoneCallback != null) {
+            onDoneCallback(leaderboard);
         }
     }
 
-    submitScore(leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError) {
-        if (callbackOnDone) {
-            callbackOnDone();
+    submitScore(leaderboardID, scoreToSubmit, onDoneCallback = null, onErrorCallback = null, caError = PP.CAUtils.CAError.NONE) {
+        if (onDoneCallback != null) {
+            onDoneCallback();
         }
     }
 
-    getUser(callbackOnDone, callbackOnError) {
+    getUser(onDoneCallback = null, onErrorCallback = null, caError = PP.CAUtils.CAError.NONE) {
         let user = {};
         user.displayName = "Jonathan";
 
-        if (callbackOnDone) {
-            callbackOnDone(user);
+        if (onDoneCallback != null) {
+            onDoneCallback(user);
         }
     }
 };
@@ -4228,19 +4362,14 @@ PP.TextUtils = {
 };
 PP.XRUtils = {
     isDeviceEmulated: function () {
-        let isEmulated = ('CustomWebXRPolyfill' in window);
+        let isEmulated = window.CustomWebXRPolyfill != null;
         return isEmulated;
     },
     isXRSessionActive: function () {
         return WL.xrSession != null;
     },
-    openLink(url, newTab = true, exitXRSession = true, onSuccessCallback = null, onFailureCallback = null) {
-        if (exitXRSession) {
-            if (WL.xrSession) {
-                WL.xrSession.end();
-                Global.myXRSessionActiveOpenLinkExtraCheck = false;
-            }
-        }
+    openLink(url, newTab = true, exitXRSessionBeforeOpen = true, exitXRSessionOnSuccess = true, tryOpenLinkOnClickOnFailure = false, onSuccessCallback = null, onFailureCallback = null) {
+        if (Global.myElementToClick != null) return;
 
         let element = document.createElement("a");
 
@@ -4252,11 +4381,75 @@ PP.XRUtils = {
             let targetPage = undefined;
             if (newTab) {
                 targetPage = "_blank";
+            } else {
+                targetPage = "_top";
             }
 
             let result = window.open(url, targetPage);
 
             if (result != null) {
+                if (!exitXRSessionBeforeOpen && exitXRSessionOnSuccess) {
+                    if (WL.xrSession) {
+                        try {
+                            WL.xrSession.end();
+                            Global.myXRSessionActiveOpenLinkExtraCheck = false;
+                        } catch (error) {
+                            // Do nothing
+                        }
+                    }
+                }
+
+                if (onSuccessCallback != null) {
+                    onSuccessCallback();
+                }
+            } else {
+                if (tryOpenLinkOnClickOnFailure) {
+                    setTimeout(function () {
+                        PP.XRUtils.openLinkOnClick(url, newTab, exitXRSessionOnSuccess, onSuccessCallback, onFailureCallback);
+                    }, 100);
+                } else if (onFailureCallback != null) {
+                    onFailureCallback();
+                }
+            }
+        });
+
+        if (exitXRSessionBeforeOpen) {
+            if (WL.xrSession) {
+                try {
+                    WL.xrSession.end();
+                    Global.myXRSessionActiveOpenLinkExtraCheck = false;
+                } catch (error) {
+                    // Do nothing
+                }
+            }
+        }
+
+        Global.myElementToClick = element;
+        Global.myElementToClickCounter = 3;
+    },
+    openLinkOnClick(url, newTab = true, exitXRSessionOnSuccess = true, onSuccessCallback = null, onFailureCallback = null) {
+        document.addEventListener("click", function () {
+            let targetPage = undefined;
+            if (newTab) {
+                targetPage = "_blank";
+            } else {
+                targetPage = "_top";
+            }
+
+            let result = window.open(url, targetPage);
+
+            if (result != null) {
+                if (exitXRSessionOnSuccess) {
+                    if (WL.xrSession) {
+                        try {
+                            WL.xrSession.end();
+                            Global.myXRSessionActiveOpenLinkExtraCheck = false;
+                        } catch (error) {
+                            // Do nothing
+                        }
+                    }
+                }
+
                 if (onSuccessCallback != null) {
                     onSuccessCallback();
                 }
@@ -4265,29 +4458,7 @@ PP.XRUtils = {
                     onFailureCallback();
                 }
             }
-        });
-
-        element.click();
-
-        document.body.removeChild(element);
-    },
-    openLinkPersistent(url, newTab = true, exitXRSession = true, timeOutSeconds = null, onSuccessCallback = null, onFailureCallback = null) {
-        let totalSeconds = 0;
-        let secondsTillNextAttempt = 0.5;
-        let onPersistentFailureCallback = function (...args) {
-            if (timeOutSeconds != null && totalSeconds >= timeOutSeconds) {
-                if (onFailureCallback != null) {
-                    onFailureCallback(...args);
-                }
-            } else {
-                totalSeconds += secondsTillNextAttempt;
-                setTimeout(function () {
-                    PP.XRUtils.openLink(url, newTab, exitXRSession, onSuccessCallback, onPersistentFailureCallback);
-                }, secondsTillNextAttempt * 1000);
-            }
-        };
-
-        PP.XRUtils.openLink(url, newTab, exitXRSession, onSuccessCallback, onPersistentFailureCallback);
+        }, { once: true });
     }
 };
 PP.DebugAxes = class DebugAxes {
@@ -5096,9 +5267,12 @@ class enoughISenough {
     }
 
     update(dt) {
+        Global.myTotalTimeUpdated = false;
+
         this._myMainFSM.update(dt);
 
-        if (PP.XRUtils.isXRSessionActive()) {
+        if (PP.XRUtils.isXRSessionActive() && !Global.myTotalTimeUpdated) {
+            Global.myTotalTimeUpdated = true;
             Global.myStatistics.myTotalPlayTime += dt;
         }
 
@@ -5297,8 +5471,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
     _myRightHandAnimator: { type: WL.Type.Object },
 }, {
     init: function () {
-        Global.myGoogleAnalytics = window.gtag != null;
-        //Global.myGoogleAnalytics = false;
+        Global.myAnalyticsEnabled = true;
         Global.myAudioManager = new PP.AudioManager();
         Global.myParticlesManager = new ParticlesManager();
         Global.myMeshObjectPoolMap = new PP.ObjectPoolManager();
@@ -5323,6 +5496,14 @@ WL.registerComponent("enough-IS-enough-gateway", {
         this._myGameObjectPoolSize = 40;
         this._myUpdateReadyCountdown = 10;
         this._myLoadTimeSent = false;
+
+        this._myTimeUsingTrackedHands = 0;
+
+        this._myResetXRSessionActiveOpenLinkExtraCheckTimer = new PP.Timer(2);
+
+        if (window.location != null && window.location.host != null) {
+            Global.myIsLocalhost = window.location.host == "localhost:8080";
+        }
     },
     start: function () {
         let version = Global.mySaveManager.loadNumber("game_version", 0);
@@ -5336,7 +5517,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
             Global.mySaveManager.save("game_version", Global.myGameVersion);
         }
 
-        let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false);
+        let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false); // This is actually trial ended once, don't want to change name tho
         let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
         let trialCompleted = Global.mySaveManager.loadBool("trial_completed", false);
         Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialPhase >= 2);
@@ -5355,11 +5536,9 @@ WL.registerComponent("enough-IS-enough-gateway", {
         } else if (!Global.myUpdateReady) {
             if (!this._myLoadTimeSent) {
                 if (window.performance) {
-                    if (Global.myGoogleAnalytics) {
-                        gtag("event", "load_time", {
-                            "value": (performance.now() / 1000).toFixed(2)
-                        });
-                    }
+                    Global.sendAnalytics("event", "load_time", {
+                        "value": (performance.now() / 1000).toFixed(2)
+                    });
                 }
 
                 this._myLoadTimeSent = true;
@@ -5375,6 +5554,32 @@ WL.registerComponent("enough-IS-enough-gateway", {
             if (this._myIncreasePool) {
                 this._increasePools();
             } else {
+                if (Global.myDebugShortcutsEnabled) {
+                    if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.BOTTOM_BUTTON).isPressEnd(Global.myDebugShortcutsPress)) {
+                        if (Global.myDeltaTimeSpeed == 1) {
+                            Global.myDeltaTimeSpeed = 3;
+                        } else if (Global.myDeltaTimeSpeed == 3) {
+                            Global.myDeltaTimeSpeed = 10;
+                        } else if (Global.myDeltaTimeSpeed == 10) {
+                            Global.myDeltaTimeSpeed = 50;
+                        } else {
+                            Global.myDeltaTimeSpeed = 1;
+                        }
+                    }
+
+                    if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isPressEnd(Global.myDebugShortcutsPress)) {
+                        if (!PP.myEasyTuneVariables.get("Prevent Vent Lost") && !PP.myEasyTuneVariables.get("Prevent Vent Lost Only Clone")) {
+                            PP.myEasyTuneVariables.set("Prevent Vent Lost Only Clone", true);
+                        } else if (!PP.myEasyTuneVariables.get("Prevent Vent Lost") && PP.myEasyTuneVariables.get("Prevent Vent Lost Only Clone")) {
+                            PP.myEasyTuneVariables.set("Prevent Vent Lost", true);
+                            PP.myEasyTuneVariables.set("Prevent Vent Lost Only Clone", false);
+                        } else {
+                            PP.myEasyTuneVariables.set("Prevent Vent Lost", false);
+                            PP.myEasyTuneVariables.set("Prevent Vent Lost Only Clone", false);
+                        }
+                    }
+                }
+
                 if (PP.InputUtils.getInputSourceType(PP.Handedness.LEFT) == PP.InputSourceType.HAND &&
                     PP.InputUtils.getInputSourceType(PP.Handedness.RIGHT) == PP.InputSourceType.HAND
                 ) {
@@ -5383,9 +5588,44 @@ WL.registerComponent("enough-IS-enough-gateway", {
                     Global.myIsUsingTrackedHands = false;
                 }
 
+                if (PP.XRUtils.isXRSessionActive() && !Global.myXRSessionActiveOpenLinkExtraCheck) {
+                    this._myResetXRSessionActiveOpenLinkExtraCheckTimer.update(dt);
+                    if (this._myResetXRSessionActiveOpenLinkExtraCheckTimer.isDone()) {
+                        Global.myXRSessionActiveOpenLinkExtraCheck = true;
+                        this._myResetXRSessionActiveOpenLinkExtraCheckTimer.start();
+                    }
+                } else {
+                    this._myResetXRSessionActiveOpenLinkExtraCheckTimer.start();
+                }
+
+                if (Global.myElementToClick != null) {
+                    Global.myElementToClickCounter--;
+                    if (Global.myElementToClickCounter <= 0) {
+                        Global.myElementToClickCounter = 0;
+                        let elementToClick = Global.myElementToClick;
+                        Global.myElementToClick = null;
+
+                        try {
+                            elementToClick.click();
+                            document.body.removeChild(elementToClick);
+                        } catch (error) {
+                            // Do nothing
+                        }
+                    }
+                }
+
                 this.enoughISenough.update(dt * Global.myDeltaTimeSpeed);
                 Global.myParticlesManager.update(dt * Global.myDeltaTimeSpeed);
                 Global.mySaveManager.update(dt * Global.myDeltaTimeSpeed);
+
+                if (Global.myIntroDone && Global.myIsUsingTrackedHands && this._myTimeUsingTrackedHands < 7) {
+                    this._myTimeUsingTrackedHands += dt;
+                    if (this._myTimeUsingTrackedHands >= 7) {
+                        Global.sendAnalytics("event", "is_using_tracked_hands", {
+                            "value": 1
+                        });
+                    }
+                }
             }
 
             if (Global.myUnmute && PP.XRUtils.isXRSessionActive() && Global.myXRSessionActiveOpenLinkExtraCheck) {
@@ -5397,11 +5637,9 @@ WL.registerComponent("enough-IS-enough-gateway", {
                 if (Global.myVentDurationWithTrackedHands >= 40) {
                     Global.myIsUsingTrackedHandsVentEventSent = true;
 
-                    if (Global.myGoogleAnalytics) {
-                        gtag("event", "is_using_tracked_hands_vent", {
-                            "value": 1
-                        });
-                    }
+                    Global.sendAnalytics("event", "is_using_tracked_hands_vent", {
+                        "value": 1
+                    });
                 }
             }
         }
@@ -5494,6 +5732,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("mr NOT Clone Scale", 0.35, 0.1, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Prevent Vent Lost", false));
+        PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Prevent Vent Lost Only Clone", false));
 
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Explosion Particle Life", 0.15, 0.5, 3));
         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Explosion Particles Duration", 0.5, 0.5, 3));
@@ -5509,7 +5748,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         /*
         let componentAmountMapAfterLoad = Global.myScene.pp_getComponentAmountMapHierarchy();
         //console.error(componentAmountMapAfterLoad);
-
+ 
         let componentAmountMapDifference = new Map();
         for (let entry of componentAmountMapAfterLoad.entries()) {
             valueBefore = componentAmountMapBeforeLoad.get(entry[0]);
@@ -5609,8 +5848,29 @@ var Global = {
     myIsUsingTrackedHands: false,
     myHasGrabbedTrackedHandsEventSent: false,
     myIsUsingTrackedHandsVentEventSent: false,
-    myVentDurationWithTrackedHands: 0
+    myVentDurationWithTrackedHands: 0,
+    myIntroDone: false,
+    myAnalyticsEnabled: false,
+    myIsLocalhost: false,
+    myIsTrialPhase1: false,
+    myMrNOTClonesNotDismissedPhase1PlayCount: 0,
+    myTotalTimeUpdated: false,
+    myActivatePhysXHandEventSent: false,
+    myElementToClick: null,
+    myElementToClickCounter: 0
 };
+
+Global.sendAnalytics = function sendAnalytics(eventType, eventName, eventValue) {
+    try {
+        if (Global.myAnalyticsEnabled) {
+            if (window.gtag != null) {
+                window.gtag(eventType, eventName, eventValue);
+            }
+        }
+    } catch (error) {
+        // Do nothing
+    }
+}
 WL.registerComponent('pp-tool-cursor', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
     _myPulseOnHover: { type: WL.Type.Bool, default: true },
@@ -11911,12 +12171,6 @@ PP.SaveManager = class SaveManager {
 
         this._myCacheDefaultValueOnFail = true;
 
-        if (WL.xrSession) {
-            this._onXRSessionStart(WL.xrSession);
-        }
-        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
-        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
-
         this._myClearCallbacks = new Map();                 // Signature: callback()
         this._myDeleteCallbacks = new Map();                // Signature: callback(id)
         this._myDeleteIDCallbacks = new Map();              // Signature: callback(id)
@@ -12153,22 +12407,6 @@ PP.SaveManager = class SaveManager {
         }
 
         return value;
-    }
-
-    _onXRSessionStart(session) {
-        session.addEventListener('visibilitychange', function (event) {
-            if (event.session.visibilityState != "visible") {
-                this._onXRSessionInterrupt();
-            }
-        }.bind(this));
-    }
-
-    _onXRSessionEnd() {
-        this._onXRSessionInterrupt();
-    }
-
-    _onXRSessionInterrupt() {
-        this.commitSaves();
     }
 
     registerClearEventListener(callbackID, callback) {
@@ -12730,6 +12968,7 @@ WL.registerComponent('pp-mute-all', {
 WL.registerComponent("activate-on-select", {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
     _myTrigger: { type: WL.Type.Object },
+    _myGrabberHandObject: { type: WL.Type.Object }
 }, {
     init: function () {
     },
@@ -12738,6 +12977,11 @@ WL.registerComponent("activate-on-select", {
             this._myGamepad = PP.myLeftGamepad;
         } else {
             this._myGamepad = PP.myRightGamepad;
+        }
+
+        this._myGrabberHand = null;
+        if (this._myGrabberHandObject != null) {
+            this._myGrabberHand = this._myGrabberHandObject.pp_getComponent("pp-grabber-hand");
         }
 
         this._myPhysx = this.object.pp_getComponent("physx");
@@ -12754,32 +12998,34 @@ WL.registerComponent("activate-on-select", {
         this._myCollisionAudio = Global.myAudioManager.createAudioPlayer(SfxID.COLLISION);
         this._myCollisionPitch = this._myCollisionAudio.getPitch();
 
-        this._myAnalyticsTimer = new PP.Timer(0);
-
         this._myHandednessType = PP.InputUtils.getHandednessByIndex(this._myHandedness);
+
+        this._mySentEventActiveTimer = new PP.Timer(7);
     },
     update(dt) {
-        this._myAnalyticsTimer.update(dt);
-
-        if (!Global.myEnableSelectPhysx || PP.InputUtils.getInputSourceType(this._myHandednessType) != PP.InputSourceType.GAMEPAD) {
+        if (!Global.myEnableSelectPhysx ||
+            PP.InputUtils.getInputSourceType(this._myHandednessType) != PP.InputSourceType.GAMEPAD ||
+            (this._myGrabberHand != null && this._myGrabberHand.getHandPose() != null && !this._myGrabberHand.getHandPose().isValid())) {
             this._myPhysx.active = false;
             this._myTriggerPhysx.active = false;
+        }
+
+        if (!Global.myActivatePhysXHandEventSent) {
+            if (this._myPhysx.active) {
+                this._mySentEventActiveTimer.update(dt);
+                if (this._mySentEventActiveTimer.isDone()) {
+                    Global.myActivatePhysXHandEventSent = true;
+                    Global.sendAnalytics("event", "select_physx_actived", {
+                        "value": 1
+                    });
+                }
+            }
         }
     },
     _selectPressStart() {
         if (Global.myEnableSelectPhysx && PP.InputUtils.getInputSourceType(this._myHandednessType) == PP.InputSourceType.GAMEPAD) {
             this._myPhysx.active = true;
             this._myTriggerPhysx.active = true;
-
-            if (this._myAnalyticsTimer.isDone()) {
-                this._myAnalyticsTimer.start(20);
-
-                if (Global.myGoogleAnalytics) {
-                    gtag("event", "select_physx_actived", {
-                        "value": 1
-                    });
-                }
-            }
         }
     },
     _selectPressEnd() {
@@ -12820,19 +13066,25 @@ WL.registerComponent("adjust-materials", {
     _my13: { type: WL.Type.Material },
     _my14: { type: WL.Type.Material },
     _my15: { type: WL.Type.Material },
-    _my16: { type: WL.Type.Material }
+    _my16: { type: WL.Type.Material },
+    _my17: { type: WL.Type.Material },
+    _my18: { type: WL.Type.Material }
 }, {
     init: function () {
         if (this.active) {
             this._myMaterials = [];
             this._mySpecularColors = [];
-            for (let i = 1; i < 17; i++) {
+            for (let i = 1; i < 19; i++) {
                 let material = "_my".concat(i);
                 this[material].fogColor = [0, 0, 0, this._myFogAlpha];
                 this._myMaterials.push(this[material]);
 
                 this._mySpecularColors.push(this[material].specularColor.pp_clone());
                 let specularColor = this[material].specularColor.vec_scale(this._mySpecularMultiplier);
+
+                specularColor[0] = Math.min(specularColor[0], 1);
+                specularColor[1] = Math.min(specularColor[1], 1);
+                specularColor[2] = Math.min(specularColor[2], 1);
                 specularColor[3] = this[material].specularColor[3];
 
                 this[material].specularColor = specularColor;
@@ -13004,11 +13256,9 @@ WL.registerComponent("credits-visualizer", {
                 this._myAppearAudio.play();
                 this._myFSM.perform("spawn");
 
-                if (Global.myGoogleAnalytics) {
-                    gtag("event", "credits_shown", {
-                        "value": 1
-                    });
-                }
+                Global.sendAnalytics("event", "credits_shown", {
+                    "value": 1
+                });
             }
         } else {
             this._myWondermelonGrabTime = 0;
@@ -13153,24 +13403,39 @@ class EIECADummyServer {
     constructor() {
     }
 
-    getLeaderboard(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError) {
+    getLeaderboard(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback = null, onErrorCallback = null, caError = PP.CAUtils.CAError.NONE) {
         let leaderboard = null;
 
-        if (PP.CAUtils.isSDKAvailable()) {
-            leaderboard = [
-                { rank: 0, displayName: "An", score: 0 },
-                { rank: 1, displayName: "Error", score: 0 },
-                { rank: 2, displayName: "Has", score: 0 },
-                { rank: 3, displayName: "Occurred", score: 0 },
-                { rank: 4, displayName: "While", score: 0 },
-                { rank: 5, displayName: "Trying", score: 0 },
-                { rank: 6, displayName: "To", score: 0 },
-                { rank: 7, displayName: "Retrieve", score: 0 },
-                { rank: 8, displayName: "The", score: 0 },
-                { rank: 9, displayName: "Leaderboard", score: 0 }
-            ];
+        if (caError != PP.CAUtils.CAError.CA_SDK_MISSING) {
+            if (aroundPlayer && (caError == PP.CAUtils.CAError.USER_NOT_LOGGED_IN || caError == PP.CAUtils.CAError.USER_HAS_NO_SCORE)) {
+                leaderboard = [
+                    { rank: 0, displayName: "Login", score: 0 },
+                    { rank: 1, displayName: "And", score: 0 },
+                    { rank: 2, displayName: "Play", score: 0 },
+                    { rank: 3, displayName: "On", score: 0 },
+                    { rank: 4, displayName: "Construct", score: 0 },
+                    { rank: 5, displayName: "Arcade", score: 0 },
+                    { rank: 6, displayName: "To", score: 0 },
+                    { rank: 7, displayName: "Submit", score: 0 },
+                    { rank: 8, displayName: "Your", score: 0 },
+                    { rank: 9, displayName: "Score", score: 0 }
+                ];
+            } else {
+                leaderboard = [
+                    { rank: 0, displayName: "An", score: 0 },
+                    { rank: 1, displayName: "Error", score: 0 },
+                    { rank: 2, displayName: "Has", score: 0 },
+                    { rank: 3, displayName: "Occurred", score: 0 },
+                    { rank: 4, displayName: "While", score: 0 },
+                    { rank: 5, displayName: "Trying", score: 0 },
+                    { rank: 6, displayName: "To", score: 0 },
+                    { rank: 7, displayName: "Retrieve", score: 0 },
+                    { rank: 8, displayName: "The", score: 0 },
+                    { rank: 9, displayName: "Leaderboard", score: 0 }
+                ];
+            }
         } else {
-            if (isAroundPlayer) {
+            if (aroundPlayer) {
                 leaderboard = [
                     { rank: 0, displayName: "Login", score: 0 },
                     { rank: 1, displayName: "And", score: 0 },
@@ -13203,23 +13468,23 @@ class EIECADummyServer {
             leaderboard.pop();
         }
 
-        if (callbackOnDone) {
-            callbackOnDone(leaderboard);
+        if (onDoneCallback != null) {
+            onDoneCallback(leaderboard);
         }
     }
 
-    submitScore(leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError) {
-        if (callbackOnDone) {
-            callbackOnDone();
+    submitScore(leaderboardID, scoreToSubmit, onDoneCallback = null, onErrorCallback = null, caError = PP.CAUtils.CAError.NONE) {
+        if (onDoneCallback != null) {
+            onDoneCallback();
         }
     }
 
-    getUser(callbackOnDone, callbackOnError) {
+    getUser(onDoneCallback = null, onErrorCallback = null, caError = PP.CAUtils.CAError.NONE) {
         let user = {};
         user.displayName = "mr NOT";
 
-        if (callbackOnDone) {
-            callbackOnDone(user);
+        if (onDoneCallback != null) {
+            onDoneCallback(user);
         }
     }
 }
@@ -13241,7 +13506,7 @@ WL.registerComponent("enable-debug-shortcuts", {
     update: function (dt) {
     },
     _onXRSessionStart: function (session) {
-        if (PP.XRUtils.isDeviceEmulated()) {
+        if (PP.XRUtils.isDeviceEmulated() && Global.myIsLocalhost && Global.myDebugShortcutsEnabled) {
             Global.myDebugShortcutsPress = 1;
         } else {
             Global.myDebugShortcutsPress = 2;
@@ -13417,9 +13682,6 @@ WL.registerComponent('get-player-transform', {
         Global.myPlayerPosition = this.object.pp_getPosition();
         Global.myPlayerRotation = this.object.pp_getRotation();
         Global.myPlayerForward = this.object.pp_getForward();
-        if (PP.XRUtils.isDeviceEmulated()) {
-            Global.myPlayerForward = [0, 0, -1];
-        }
         Global.myPlayerUp = this.object.pp_getUp();
     },
 });
@@ -13495,10 +13757,7 @@ WL.registerComponent("hand-animator", {
             if (PP.InputUtils.getInputSourceType(this._myHandPose._myHandedness) == PP.InputSourceType.GAMEPAD) {
                 piece.update(dt, this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).myValue);
             } else {
-                let pressValue = 0;
-                if (this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).myIsPressed || this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).myIsPressed) {
-                    pressValue = 1;
-                }
+                let pressValue = Math.max(this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).myValue, this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).myValue);
 
                 piece.update(dt, pressValue);
             }
@@ -13598,7 +13857,7 @@ class HandPiece {
                 this._myScale = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
                 this._myObject.pp_setScale(this._myScale);
 
-                this._myAudio.updatePosition(this._myObject.pp_getPosition());
+                this._myAudio.updatePosition(this._myObject.pp_getPosition(), true);
             }
 
             glMatrix.vec3.lerp(this._myCurrentPosition, this._myEndPosition, this._myStartPosition, interpolateValue);
@@ -13891,13 +14150,30 @@ class NotEnough {
         let position = Global.myPlayerPosition.vec3_clone();
         position.vec3_add(Global.myPlayerUp.vec3_scale(0.15), position);
         position.vec3_add(Global.myPlayerForward.vec3_scale(0.5), position);
-        this._myNotEnoughAudio.updatePosition(position);
+        this._myNotEnoughAudio.updatePosition(position, true);
     }
 
     isNotEnoughing() {
         return this._myTimer.isRunning();
     }
 }
+WL.registerComponent('occlusion-sphere-activator', {
+    _myOcclusionSphere: { type: WL.Type.Object }
+}, {
+    start: function () {
+        if (WL.xrSession) {
+            this._onXRSessionStart(WL.xrSession);
+        }
+        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
+        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
+    },
+    _onXRSessionStart(session) {
+        this._myOcclusionSphere.pp_setActive(false);
+    },
+    _onXRSessionEnd() {
+        this._myOcclusionSphere.pp_setActive(true);
+    }
+});
 WL.registerComponent("palette-visualizer", {
     _myPaletteObject: { type: WL.Type.Object },
     _myPaletteObjectScaleFactor: { type: WL.Type.Float, default: 1 },
@@ -14356,7 +14632,7 @@ WL.registerComponent("pulse-on-grab", {
 
         this._myHandednessType = PP.InputUtils.getHandednessByIndex(this._myHandedness);
     },
-    _onGrab() {
+    _onGrab(grabber, grabbable, grabButton) {
         let intensity = 0.2;
         let pulseInfo = this._myGamepad.getPulseInfo();
         if (pulseInfo.myIntensity <= intensity) {
@@ -14371,8 +14647,20 @@ WL.registerComponent("pulse-on-grab", {
             if (PP.InputUtils.getInputSourceType(this._myHandednessType) == PP.InputSourceType.HAND) {
                 Global.myHasGrabbedTrackedHandsEventSent = true;
 
-                if (Global.myGoogleAnalytics) {
-                    gtag("event", "has_grabbed_with_tracked_hands", {
+                Global.sendAnalytics("event", "has_grabbed_with_tracked_hands", {
+                    "value": 1
+                });
+
+                if (grabButton == PP.ButtonType.SELECT) {
+                    Global.sendAnalytics("event", "has_grabbed_with_tracked_hands_select", {
+                        "value": 1
+                    });
+                } else if (grabButton == PP.ButtonType.SQUEEZE) {
+                    Global.sendAnalytics("event", "has_grabbed_with_tracked_hands_squeeze", {
+                        "value": 1
+                    });
+                } else {
+                    Global.sendAnalytics("event", "has_grabbed_with_tracked_hands_unknown", {
                         "value": 1
                     });
                 }
@@ -14502,7 +14790,7 @@ WL.registerComponent("ring-animator", {
         this._myRingOut.pp_setPosition([0, Math.pp_interpolate(startPositionRingOut, this._myRingHeight, this._myTimer.getPercentage(), PP.EasingFunction.easeOut), 0]);
         this._myRingMiddle.pp_setPosition([0, Math.pp_interpolate(startPositionRingMiddle, this._myRingHeight, this._myTimer.getPercentage(), PP.EasingFunction.easeOut), 0]);
 
-        this._myRingOutAudio.updatePosition(this._myRingOut.pp_getPosition());
+        this._myRingOutAudio.updatePosition(this._myRingOut.pp_getPosition(), true);
 
         if (this._myTimer.isDone()) {
             this._myTimer.reset();
@@ -14610,24 +14898,33 @@ class StatisticsManager {
         Global.myStatistics = new Statistics();
         Global.myStatistics.load();
 
+        this._mySaveTimer = new PP.Timer(Math.pp_random(15, 25));
+        this._myCommitOnEndTimer = new PP.Timer(0);
+
+        Global.mySaveManager.registerClearEventListener(this, this._onClear.bind(this));
+
+        window.addEventListener('visibilitychange', function () {
+            try {
+                if (document.visibilityState != "visible") {
+                    this._onXRSessionInterrupt();
+                }
+            } catch (error) {
+                // Do Nothing
+            }
+        }.bind(this));
+
         if (WL.xrSession) {
             this._onXRSessionStart(WL.xrSession);
         }
         WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
-
         WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
-
-        this._mySaveTimer = new PP.Timer(20);
-        this._myCommitOnEndTimer = new PP.Timer(0);
-
-        Global.mySaveManager.registerClearEventListener(this, this._onClear.bind(this));
     }
 
     update(dt) {
         this._myCommitOnEndTimer.update(dt);
         this._mySaveTimer.update(dt);
         if (this._mySaveTimer.isDone()) {
-            this._mySaveTimer.start();
+            this._mySaveTimer.start(Math.pp_random(15, 25));
             Global.myStatistics.save();
         }
     }
@@ -14645,54 +14942,55 @@ class StatisticsManager {
     }
 
     _onXRSessionInterrupt() {
+        Global.myStatistics.save();
+        Global.mySaveManager.commitSaves();
+
         if (this._myCommitOnEndTimer.isDone()) {
-            this._myCommitOnEndTimer.start(20);
-            Global.myStatistics.save();
+            this._myCommitOnEndTimer.start(Math.pp_random(15, 25));
+
             this._sendAnalytics();
         }
     }
 
     _onClear() {
-        this._myCommitOnEndTimer.start(20);
+        this._myCommitOnEndTimer.start(Math.pp_random(15, 25));
         this._sendAnalytics();
         Global.myStatistics.load();
     }
 
     _sendAnalytics() {
-        if (Global.myGoogleAnalytics) {
-            gtag("event", "play_time", {
-                "value": (Global.myStatistics.myTotalPlayTime - Global.myStatistics.myTotalPlayTimeOnLoad).toFixed(2)
+        Global.sendAnalytics("event", "play_time", {
+            "value": (Global.myStatistics.myTotalPlayTime - Global.myStatistics.myTotalPlayTimeOnLoad).toFixed(2)
+        });
+
+        if ((Global.myStatistics.myEvidencesThrown - Global.myStatistics.myEvidencesThrownOnLoad) > 0) {
+            Global.sendAnalytics("event", "evidences_thrown", {
+                "value": (Global.myStatistics.myEvidencesThrown - Global.myStatistics.myEvidencesThrownOnLoad)
             });
+        }
 
-            if ((Global.myStatistics.myEvidencesThrown - Global.myStatistics.myEvidencesThrownOnLoad) > 0) {
-                gtag("event", "evidences_thrown", {
-                    "value": (Global.myStatistics.myEvidencesThrown - Global.myStatistics.myEvidencesThrownOnLoad)
-                });
-            }
+        if ((Global.myStatistics.myEvidencesMissed - Global.myStatistics.myEvidencesMissedOnLoad) > 0) {
+            Global.sendAnalytics("event", "evidences_missed", {
+                "value": (Global.myStatistics.myEvidencesMissed - Global.myStatistics.myEvidencesMissedOnLoad)
+            });
+        }
 
-            if ((Global.myStatistics.myEvidencesMissed - Global.myStatistics.myEvidencesMissedOnLoad) > 0) {
-                gtag("event", "evidences_missed", {
-                    "value": (Global.myStatistics.myEvidencesMissed - Global.myStatistics.myEvidencesMissedOnLoad)
-                });
-            }
+        if ((Global.myStatistics.myEvidencesPunched - Global.myStatistics.myEvidencesPunchedOnLoad) > 0) {
+            Global.sendAnalytics("event", "evidences_punched", {
+                "value": (Global.myStatistics.myEvidencesPunched - Global.myStatistics.myEvidencesPunchedOnLoad)
+            });
+        }
 
-            if ((Global.myStatistics.myEvidencesPunched - Global.myStatistics.myEvidencesPunchedOnLoad) > 0) {
-                gtag("event", "evidences_punched", {
-                    "value": (Global.myStatistics.myEvidencesPunched - Global.myStatistics.myEvidencesPunchedOnLoad)
-                });
-            }
+        if ((Global.myStatistics.myMrNOTDismissed - Global.myStatistics.myMrNOTDismissedOnLoad) > 0) {
+            Global.sendAnalytics("event", "mr_NOT_dismissed", {
+                "value": (Global.myStatistics.myMrNOTDismissed - Global.myStatistics.myMrNOTDismissedOnLoad)
+            });
+        }
 
-            if ((Global.myStatistics.myMrNOTDismissed - Global.myStatistics.myMrNOTDismissedOnLoad) > 0) {
-                gtag("event", "mr_NOT_dismissed", {
-                    "value": (Global.myStatistics.myMrNOTDismissed - Global.myStatistics.myMrNOTDismissedOnLoad)
-                });
-            }
-
-            if ((Global.myStatistics.myMrNOTClonesDismissed - Global.myStatistics.myMrNOTClonesDismissedOnLoad) > 0) {
-                gtag("event", "mr_NOT_clones_dismissed", {
-                    "value": (Global.myStatistics.myMrNOTClonesDismissed - Global.myStatistics.myMrNOTClonesDismissedOnLoad)
-                });
-            }
+        if ((Global.myStatistics.myMrNOTClonesDismissed - Global.myStatistics.myMrNOTClonesDismissedOnLoad) > 0) {
+            Global.sendAnalytics("event", "mr_NOT_clones_dismissed", {
+                "value": (Global.myStatistics.myMrNOTClonesDismissed - Global.myStatistics.myMrNOTClonesDismissedOnLoad)
+            });
         }
 
         Global.myStatistics.syncOnLoadVariables();
@@ -14766,10 +15064,6 @@ class Statistics {
     }
 
     save() {
-        if (this.myTotalPlayTime < this.myTrialPlayTime + this.myChatPlayTime + this.myDisputePlayTime) {
-            this.myTotalPlayTime = this.myTrialPlayTime + this.myChatPlayTime + this.myDisputePlayTime;
-        }
-
         Global.mySaveManager.save("total_play_time", this.myTotalPlayTime);
 
         Global.mySaveManager.save("trial_play_time", this.myTrialPlayTime);
@@ -14874,11 +15168,10 @@ WL.registerComponent("statistics-text-displayer", {
 
                         let angleToText = Math.abs(this._myTempDirection1.vec3_angle(this._myTempDirection2));
                         if (angleToText < 70) {
-                            if (Global.myGoogleAnalytics) {
-                                gtag("event", "statistics_viewed", {
-                                    "value": 1
-                                });
-                            }
+                            Global.sendAnalytics("event", "statistics_viewed", {
+                                "value": 1
+                            });
+
                             this._mySendAnalytics = false;
                             this._myAnalyticsTimer.start(20);
                         }
@@ -15020,10 +15313,16 @@ class ArcadeState extends PP.State {
     update(dt, fsm) {
         if (!this._myFSM.isInState("defeat")) {
             Global.myArcadeDuration += dt;
+
             if (this._myIsDispute) {
                 Global.myStatistics.myDisputePlayTime += dt;
             } else {
                 Global.myStatistics.myChatPlayTime += dt;
+            }
+
+            if (!Global.myTotalTimeUpdated) {
+                Global.myTotalTimeUpdated = true;
+                Global.myStatistics.myTotalPlayTime += dt;
             }
         }
 
@@ -15038,20 +15337,22 @@ class ArcadeState extends PP.State {
         this._myFSM.perform("start");
         Global.myArcadeDuration = 0;
 
+        Global.myIsTrialPhase1 = false;
+
+        Global.sendAnalytics("event", "arcade_started", {
+            "value": 1
+        });
+
         if (this._myIsDispute) {
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "arcade_dispute_started", {
-                    "value": 1
-                });
-            }
+            Global.sendAnalytics("event", "arcade_dispute_started", {
+                "value": 1
+            });
 
             Global.myStatistics.myDisputePlayCount += 1;
         } else {
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "arcade_chat_started", {
-                    "value": 1
-                });
-            }
+            Global.sendAnalytics("event", "arcade_chat_started", {
+                "value": 1
+            });
 
             Global.myStatistics.myChatPlayCount += 1;
         }
@@ -15147,11 +15448,11 @@ class IntroState extends PP.State {
 
         this._myIntroDuration = 0;
 
+        this._myXRSessionManuallyStarted = false;
+
         if (WL.xrSession) {
-            this._onXRSessionStart(WL.xrSession);
+            this._myXRSessionManuallyStarted = true;
         }
-        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
-        this._myXRSessionStartCalled = false;
     }
 
     update(dt, fsm) {
@@ -15165,24 +15466,23 @@ class IntroState extends PP.State {
         let introViewed = Global.mySaveManager.loadNumber("intro_viewed", 0);
 
         if ((trialStartedOnce && introViewed >= 3) || Global.myDebugShortcutsEnabled) {
-            if (!this._myFSM.isInState("wait_session") && PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd((PP.XRUtils.isDeviceEmulated()) ? 1 : 3)) {
+            let buttonPressToSkip = (PP.XRUtils.isDeviceEmulated() && Global.myIsLocalhost && Global.myDebugShortcutsEnabled) ? 1 : 3;
+            if (!this._myFSM.isInState("wait_session") && PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(buttonPressToSkip)) {
                 while (!this._myFSM.isInState("done") && !this._myFSM.isInState("test")) {
                     this._myFSM.perform("skip");
                 }
 
-                if (Global.myGoogleAnalytics) {
-                    gtag("event", "intro_skipped", {
-                        "value": 1
-                    });
+                Global.sendAnalytics("event", "intro_skipped", {
+                    "value": 1
+                });
 
-                    gtag("event", "intro_done", {
-                        "value": 1
-                    });
+                Global.sendAnalytics("event", "intro_done", {
+                    "value": 1
+                });
 
-                    gtag("event", "intro_skipped_time", {
-                        "value": this._myIntroDuration.toFixed(2)
-                    });
-                }
+                Global.sendAnalytics("event", "intro_skipped_time", {
+                    "value": this._myIntroDuration.toFixed(2)
+                });
             }
         }
     }
@@ -15197,18 +15497,20 @@ class IntroState extends PP.State {
             let currentVersion = Global.mySaveManager.loadNumber("game_version", 0);
             console.log("Game Version:", currentVersion);
 
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "xr_enter_session", {
+            Global.sendAnalytics("event", "xr_enter_session", {
+                "value": 1
+            });
+
+            PP.CAUtils.getUser(function () {
+                Global.sendAnalytics("event", "xr_enter_session_logged_in", {
                     "value": 1
                 });
+            }, null, false);
 
-                PP.CAUtils.getUser(function () {
-                    if (Global.myGoogleAnalytics) {
-                        gtag("event", "xr_enter_session_logged_in", {
-                            "value": 1
-                        });
-                    }
-                }, null, false);
+            if (this._myXRSessionManuallyStarted) {
+                Global.sendAnalytics("event", "xr_session_manually_started", {
+                    "value": 1
+                });
             }
 
             fsm.perform("end");
@@ -15288,41 +15590,32 @@ class IntroState extends PP.State {
         this._myParentFSM.perform(MainTransitions.End);
 
         let introViewed = Global.mySaveManager.loadNumber("intro_viewed", 0);
+
+        if (introViewed == 0) {
+            Global.sendAnalytics("event", "intro_done_first", {
+                "value": 1
+            });
+        }
+
         introViewed += 1;
         Global.mySaveManager.save("intro_viewed", introViewed);
 
-        if (Global.myGoogleAnalytics) {
-            gtag("event", "intro_viewed", {
-                "value": 1
-            });
+        Global.sendAnalytics("event", "intro_viewed", {
+            "value": 1
+        });
 
-            gtag("event", "intro_done", {
-                "value": 1
-            });
+        Global.sendAnalytics("event", "intro_done", {
+            "value": 1
+        });
 
-            if (!this._myXRSessionStartCalled) {
-                gtag("event", "xr_session_not_started", {
-                    "value": 1
-                });
-            }
-        }
+        Global.myIntroDone = true;
     }
 
     skipIntro(fsm, transition) {
         transition.myFromState.myObject.end(fsm, transition);
         this._myParentFSM.perform(MainTransitions.Skip);
 
-        if (Global.myGoogleAnalytics) {
-            if (!this._myXRSessionStartCalled) {
-                gtag("event", "xr_session_not_started", {
-                    "value": 1
-                });
-            }
-        }
-    }
-
-    _onXRSessionStart(session) {
-        this._myXRSessionStartCalled = true;
+        Global.myIntroDone = true;
     }
 }
 class MainFSM {
@@ -15402,7 +15695,7 @@ class MainFSM {
                 if (!this._myMusic.isPlaying()) {
                     this._myMusic.play();
                 }
-                this._myMusic.fade(0, this._myMusicVolume, 6);
+                this._myMusic.fade(0, this._myMusicVolume, 6, true);
                 this._myStartMusicTimerAfterLoad.reset();
 
                 this._myIsMusicPlaying = true;
@@ -15412,8 +15705,8 @@ class MainFSM {
         if (this._myStopMusicTimer.isRunning()) {
             this._myStopMusicTimer.update(dt);
             if (this._myStopMusicTimer.isDone()) {
-                this._myMusic.fade(this._myMusicVolume, 0, 0.05);
-                //this._myMusic.updateVolume(0);
+                this._myMusic.fade(this._myMusicVolume, 0, 0.05, true);
+                //this._myMusic.updateVolume(0, true);
                 this._myStopMusicTimer.reset();
                 this._myIsMusicPlaying = false;
             }
@@ -15482,7 +15775,7 @@ class MenuState extends PP.State {
         this._myMenuDuration = 0;
         this._myFirstTime = true;
 
-        this._myButtonPressed = Global.mySaveManager.loadBool("button_pressed", false);
+        this._myButtonPressedEventSent = false;
     }
 
     update(dt, fsm) {
@@ -15490,20 +15783,16 @@ class MenuState extends PP.State {
         this._myFSM.update(dt);
         this._myNotEnough.update(dt);
 
-        if (!this._myButtonPressed) {
+        if (!this._myButtonPressedEventSent) {
             for (let key in PP.ButtonType) {
                 let resultLeft = PP.myLeftGamepad.getButtonInfo(PP.ButtonType[key]).isPressStart();
                 let resultRight = PP.myRightGamepad.getButtonInfo(PP.ButtonType[key]).isPressStart();
 
                 if (resultLeft || resultRight) {
-                    this._myButtonPressed = true;
-                    Global.mySaveManager.save("button_pressed", true);
-
-                    if (Global.myGoogleAnalytics) {
-                        gtag("event", "button_pressed", {
-                            "value": 1
-                        });
-                    }
+                    this._myButtonPressedEventSent = true;
+                    Global.sendAnalytics("event", "button_pressed", {
+                        "value": 1
+                    });
 
                     break;
                 }
@@ -15560,6 +15849,8 @@ class MenuState extends PP.State {
 
         Global.myIsInMenu = true;
 
+        Global.myIsTrialPhase1 = false;
+
         Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialPhase >= 2);
 
         Global.myPlayMusic = true;
@@ -15568,11 +15859,9 @@ class MenuState extends PP.State {
     }
 
     end() {
-        if (Global.myGoogleAnalytics) {
-            gtag("event", "menu_time", {
-                "value": this._myMenuDuration.toFixed(2)
-            });
-        }
+        Global.sendAnalytics("event", "menu_time", {
+            "value": this._myMenuDuration.toFixed(2)
+        });
 
         Global.myIsInMenu = false;
     }
@@ -15639,14 +15928,17 @@ class MenuState extends PP.State {
     _startUnspawningReset(fsm) {
         this._myResetCount = 0;
 
+        Global.myMrNOTClonesNotDismissedPhase1PlayCount = 0;
+
+        Global.sendAnalytics("event", "save_reset", {
+            "value": 1
+        });
+
         let fullReset = this._myFloppyDisk.getGrabTime() >= 5;
         if (!fullReset) {
-
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "save_reset", {
-                    "value": 1
-                });
-            }
+            Global.sendAnalytics("event", "save_reset_normal", {
+                "value": 1
+            });
 
             Global.mySaveManager.save("trial_started_once", false);
             Global.mySaveManager.save("trial_completed", false);
@@ -15654,16 +15946,13 @@ class MenuState extends PP.State {
 
             Global.myStatistics.myTrialPlayCountResettable = 0;
             Global.myStatistics.myMrNOTClonesDismissedResettable = 0;
-            Global.mySaveManager.save("trial_play_count_resettable", 0);
-            Global.mySaveManager.save("mr_NOT_clones_dismissed_resettable", 0);
+            Global.myStatistics.save();
 
             this._myNotEnough.start();
         } else {
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "save_reset_full", {
-                    "value": 1
-                });
-            }
+            Global.sendAnalytics("event", "save_reset_full", {
+                "value": 1
+            });
 
             Global.mySaveManager.clear();
             Global.mySaveManager.save("game_version", Global.myGameVersion);
@@ -15812,36 +16101,36 @@ class MenuState extends PP.State {
 
         {
             let zestyMarket = new MenuItem(Global.myGameObjects.get(GameObjectType.ZESTY_MARKET), GameObjectType.ZESTY_MARKET, positions[6], function () {
-                if (this._myFSM.isInState("ready")) {
+                if (this._myFSM.isInState("ready") && Global.myElementToClick == null) {
                     this._myResetCount = 0;
                     let zestyComponent = this._myZestyObject.getObject().pp_getComponentHierarchy("zesty-banner");
-                    if (zestyComponent) {
-                        if (zestyComponent.banner != null) {
+                    if (zestyComponent != null) {
+                        if (zestyComponent.banner != null && zestyComponent.banner.url != null) {
                             let onZestySuccess = function () {
                                 Global.myUnmute = true;
                                 Howler.mute(true);
 
-                                zestyComponent.executeClick();
-
-                                if (Global.myGoogleAnalytics) {
-                                    gtag("event", "zesty_market_opened", {
-                                        "value": 1
-                                    });
+                                try {
+                                    zestyComponent.executeClick();
+                                } catch (error) {
+                                    // Do nothing
                                 }
+
+                                Global.sendAnalytics("event", "zesty_market_opened", {
+                                    "value": 1
+                                });
                             }.bind(this);
 
-                            PP.XRUtils.openLinkPersistent(zestyComponent.banner.url, true, true, 15, onZestySuccess);
+                            PP.XRUtils.openLink(zestyComponent.banner.url, true, true, false, false, onZestySuccess);
                         } else {
-                            PP.XRUtils.openLinkPersistent("https://www.zesty.market", true, true, 15,
+                            PP.XRUtils.openLink("https://www.zesty.market", true, true, false, false,
                                 function () {
                                     Global.myUnmute = true;
                                     Howler.mute(true);
 
-                                    if (Global.myGoogleAnalytics) {
-                                        gtag("event", "zesty_market_opened", {
-                                            "value": 1
-                                        });
-                                    }
+                                    Global.sendAnalytics("event", "zesty_market_opened", {
+                                        "value": 1
+                                    });
                                 }.bind(this)
                             );
                         }
@@ -15868,18 +16157,18 @@ class MenuState extends PP.State {
 
         {
             let wondermelon = new MenuItem(Global.myGameObjects.get(GameObjectType.WONDERMELON), GameObjectType.WONDERMELON, positions[7], function () {
-                PP.XRUtils.openLinkPersistent("https://signor-pipo.itch.io/not-enough", true, true, 15,
-                    function () {
-                        Global.myUnmute = true;
-                        Howler.mute(true);
+                if (this._myFSM.isInState("ready") && Global.myElementToClick == null) {
+                    PP.XRUtils.openLink("https://signor-pipo.itch.io/not-enough", true, true, false, false,
+                        function () {
+                            Global.myUnmute = true;
+                            Howler.mute(true);
 
-                        if (Global.myGoogleAnalytics) {
-                            gtag("event", "not_enough_opened", {
+                            Global.sendAnalytics("event", "not_enough_opened", {
                                 "value": 1
                             });
-                        }
-                    }.bind(this)
-                );
+                        }.bind(this)
+                    );
+                }
             }.bind(this));
             this._myMenuItems.push(wondermelon);
         }
@@ -15903,7 +16192,7 @@ class MenuItem {
 
         this._myAutoSpawn = true;
 
-        this._myThrowTimer = new PP.Timer(5, false);
+        this._myThrowTimer = new PP.Timer(6, false);
         WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
 
         this._myFSM = new PP.FSM();
@@ -16039,7 +16328,7 @@ class MenuItem {
         let scaleMultiplier = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
 
-        this._myAppearAudio.updatePosition(this._myObject.pp_getPosition());
+        this._myAppearAudio.updatePosition(this._myObject.pp_getPosition(), true);
 
         if (this._myTimer.isDone()) {
             this._myFSM.perform("end");
@@ -16054,7 +16343,7 @@ class MenuItem {
     }
 
     _readyUpdate(dt) {
-        if (this._myObject.pp_getPosition()[1] <= -10 || this._myObject.pp_getPosition()[1] > 20 || this._myObject.pp_getPosition().vec3_length() > 50) {
+        if (this._myObject.pp_getPosition()[1] <= -10 || this._myObject.pp_getPosition().vec3_length() > 50) {
             this._myHitFloor = true;
             this._myFSM.perform("unspawn");
         }
@@ -16078,12 +16367,13 @@ class MenuItem {
         let scaleMultiplier = Math.pp_interpolate(1, PP.myEasyTuneVariables.get("Unspawn Menu Scale"), this._myTimer.getPercentage());
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
 
-        //this._myDisappearAudio.updatePosition(this._myObject.pp_getPosition());
+        //this._myDisappearAudio.updatePosition(this._myObject.pp_getPosition(), true);
 
         if (this._myTimer.isDone()) {
             Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myParticlesRadius, this._myScale, this._myObjectType);
             this._myFSM.perform("end");
-            if (this._myCallbackOnFall && PP.XRUtils.isXRSessionActive() && Global.myXRSessionActiveOpenLinkExtraCheck && this._myThrowTimer.isRunning()) {
+            if (this._myCallbackOnFall && PP.XRUtils.isXRSessionActive() && Global.myXRSessionActiveOpenLinkExtraCheck && this._myThrowTimer.isRunning() &&
+                (WL.xrSession == null || WL.xrSession.visibilityState == null || WL.xrSession.visibilityState == "visible")) {
                 this._myCallbackOnFall();
             }
         }
@@ -16509,19 +16799,19 @@ class TrialState extends PP.State {
         this._myFSM.addTransition("first_blather", "first_vent", "end");
         this._myFSM.addTransition("first_blather_hint", "first_vent", "end");
         this._myFSM.addTransition("first_vent", "first_defeat_blather", "lost", this._trialPhaseLost.bind(this, 1));
-        this._myFSM.addTransition("first_vent", "second_blather", "completed", this._trialPhaseCompleted.bind(this, 1));
+        this._myFSM.addTransition("first_vent", "second_blather", "completed", this._trialPhaseCompleted.bind(this, 1, 2));
 
         this._myFSM.addTransition("second_blather", "second_vent", "end");
         this._myFSM.addTransition("second_vent", "second_defeat_blather", "lost", this._trialPhaseLost.bind(this, 2));
-        this._myFSM.addTransition("second_vent", "third_blather", "completed", this._trialPhaseCompleted.bind(this, 2));
+        this._myFSM.addTransition("second_vent", "third_blather", "completed", this._trialPhaseCompleted.bind(this, 2, 3));
 
         this._myFSM.addTransition("third_blather", "third_vent", "end");
         this._myFSM.addTransition("third_vent", "third_defeat_blather", "lost", this._trialPhaseLost.bind(this, 3));
-        this._myFSM.addTransition("third_vent", "MrNOT_blather", "completed", this._trialPhaseCompleted.bind(this, 3));
+        this._myFSM.addTransition("third_vent", "MrNOT_blather", "completed", this._trialPhaseCompleted.bind(this, 3, 4));
 
         this._myFSM.addTransition("MrNOT_blather", "MrNOT_vent", "end");
         this._myFSM.addTransition("MrNOT_vent", "MrNOT_defeat_blather", "lost", this._trialPhaseLost.bind(this, 4));
-        this._myFSM.addTransition("MrNOT_vent", "it_will_always_be_not_enough", "completed", this._trialPhaseCompleted.bind(this, 4));
+        this._myFSM.addTransition("MrNOT_vent", "it_will_always_be_not_enough", "completed", this._trialPhaseCompleted.bind(this, 4, 4));
 
         this._myFSM.addTransition("it_will_always_be_not_enough", "done", "end", this._gameCompleted.bind(this));
 
@@ -16544,11 +16834,18 @@ class TrialState extends PP.State {
         this._myFSM.init("init");
 
         this._myParentFSM = null;
+
+        this._myMrNotClonesDismissedOnStart = 0;
     }
 
     update(dt, fsm) {
         Global.myTrialDuration += dt;
         Global.myStatistics.myTrialPlayTime += dt;
+
+        if (!Global.myTotalTimeUpdated) {
+            Global.myTotalTimeUpdated = true;
+            Global.myStatistics.myTotalPlayTime += dt;
+        }
 
         this._myFSM.update(dt);
     }
@@ -16563,104 +16860,129 @@ class TrialState extends PP.State {
         Global.myStatistics.myTrialPlayCount += 1;
         Global.myStatistics.myTrialPlayCountResettable += 1;
 
+        this._myMrNotClonesDismissedOnStart = Global.myStatistics.myMrNOTClonesDismissed;
+
         let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
 
+        Global.myIsTrialPhase1 = false;
         if (trialPhase == 1) {
             this._myTrialStartedFromBegin = true;
+
+            Global.myIsTrialPhase1 = true;
+            Global.myMrNOTClonesNotDismissedPhase1PlayCount++;
         }
 
         let transition = "start_".concat(trialPhase);
 
         let giveHint = false;
-        giveHint = trialPhase == 1 && Global.myStatistics.myTrialPlayCountResettable >= 7 && Global.myStatistics.myMrNOTClonesDismissedResettable <= 0;
+        giveHint = trialPhase == 1 && Global.myMrNOTClonesNotDismissedPhase1PlayCount >= 7;
         if (giveHint) {
             transition = transition.concat("_hint");
 
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "trial_hint_viewed_phase_".concat(trialPhase), {
-                    "value": 1
-                });
-            }
-        }
-
-        if (Global.myGoogleAnalytics) {
-            gtag("event", "trial_started", {
-                "value": 1
-            });
-
-            gtag("event", "trial_started_phase_".concat(trialPhase), {
+            Global.sendAnalytics("event", "trial_hint_viewed_phase_".concat(trialPhase), {
                 "value": 1
             });
         }
+
+        Global.sendAnalytics("event", "trial_started", {
+            "value": 1
+        });
+
+        Global.sendAnalytics("event", "trial_started_phase_".concat(trialPhase), {
+            "value": 1
+        });
 
         this._myFSM.perform(transition);
     }
 
     end(fsm, transitionID) {
+        Global.myIsTrialPhase1 = false;
+
         Global.mySaveManager.save("trial_started_once", true);
     }
 
-    _trialPhaseCompleted(trialPhase, fsm) {
-        if (Global.myGoogleAnalytics) {
-            gtag("event", "trial_completed_phase_".concat(trialPhase), {
+    _trialPhaseCompleted(trialPhase, nextTrialPhase, fsm) {
+        Global.mySaveManager.save("trial_phase", nextTrialPhase);
+
+        Global.myIsTrialPhase1 = false;
+        Global.myMrNOTClonesNotDismissedPhase1PlayCount = 0;
+
+        Global.sendAnalytics("event", "trial_completed_phase_".concat(trialPhase), {
+            "value": 1
+        });
+
+        if (trialPhase == 4) {
+            Global.sendAnalytics("event", "trial_time", {
+                "value": Global.myTrialDuration.toFixed(2)
+            });
+        }
+
+        if (Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount == Global.myStatistics.myTrialPlayCountResettable &&
+            Global.myStatistics.myTrialPlayCount <= 3 && Global.myStatistics.myMrNOTClonesDismissed > 0 && this._myMrNotClonesDismissedOnStart == 0) {
+            Global.sendAnalytics("event", "mr_NOT_clones_dismissed_first_attempt_" + Global.myStatistics.myTrialPlayCount, {
                 "value": 1
             });
         }
 
-        if (trialPhase == 4) {
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "trial_time", {
-                    "value": Global.myTrialDuration.toFixed(2)
-                });
-            }
+        if (Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount == Global.myStatistics.myTrialPlayCountResettable &&
+            Global.myStatistics.myTrialPlayCount <= 3) {
+            Global.sendAnalytics("event", "trial_completed_phase_1_first_attempt_" + Global.myStatistics.myTrialPlayCount, {
+                "value": 1
+            });
         }
     }
 
     _trialPhaseLost(trialPhase, fsm) {
-        if (Global.myGoogleAnalytics) {
-            gtag("event", "trial_lost_phase_".concat(trialPhase), {
-                "value": 1
-            });
+        Global.myIsTrialPhase1 = false;
 
-            gtag("event", "trial_lost_time_phase_".concat(trialPhase), {
+        Global.sendAnalytics("event", "trial_lost_phase_".concat(trialPhase), {
+            "value": 1
+        });
+
+        Global.sendAnalytics("event", "trial_lost_time_phase_".concat(trialPhase), {
+            "value": Global.myVentDuration.toFixed(2)
+        });
+
+        Global.sendAnalytics("event", "trial_time", {
+            "value": Global.myTrialDuration.toFixed(2)
+        });
+
+        if (Global.myStatistics.myTrialCompletedCount <= 0) {
+            Global.sendAnalytics("event", "trial_lost_time_before_completed_phase_".concat(trialPhase), {
                 "value": Global.myVentDuration.toFixed(2)
             });
+        }
 
-            gtag("event", "trial_time", {
-                "value": Global.myTrialDuration.toFixed(2)
-            });
-
-            if (Global.myStatistics.myTrialCompletedCount <= 0) {
-                gtag("event", "trial_lost_time_before_completed_phase_".concat(trialPhase), {
-                    "value": Global.myVentDuration.toFixed(2)
-                });
-            }
-
-            if (trialPhase == 1 && Global.myStatistics.myTrialCompletedCount <= 0) {
-                let clonesOnlyPunched = Global.myStatistics.myMrNOTClonesDismissed > 0 && Global.myStatistics.myMrNOTClonesDismissed == Global.myStatistics.myEvidencesPunched;
-                if (Global.myStatistics.myMrNOTClonesDismissed <= 0 || clonesOnlyPunched) {
-                    gtag("event", "trial_lost_before_first_dismiss", {
-                        "value": 1
-                    });
-
-                    if (clonesOnlyPunched) {
-                        gtag("event", "trial_lost_only_punched", {
-                            "value": 1
-                        });
-                    }
-                }
-            }
-
-            if (trialPhase == 1 && !Global.mySaveManager.loadBool("mr_NOT_clones_seen", false)) {
-                gtag("event", "trial_lost_before_first_clone_seen", {
+        if (trialPhase == 1 && Global.myStatistics.myTrialCompletedCount <= 0 && Global.myStatistics.myTrialPlayCount == Global.myStatistics.myTrialPlayCountResettable) {
+            let clonesOnlyPunched = Global.myStatistics.myMrNOTClonesDismissed > 0 && Global.myStatistics.myMrNOTClonesDismissed == Global.myStatistics.myEvidencesPunched;
+            if (Global.myStatistics.myMrNOTClonesDismissed <= 0 || clonesOnlyPunched) {
+                Global.sendAnalytics("event", "trial_lost_before_first_dismiss", {
                     "value": 1
                 });
+
+                if (clonesOnlyPunched) {
+                    Global.sendAnalytics("event", "trial_lost_only_punched", {
+                        "value": 1
+                    });
+                }
             }
+        }
+
+        if (trialPhase == 1 && !Global.mySaveManager.loadBool("mr_NOT_clones_seen", false)) {
+            Global.sendAnalytics("event", "trial_lost_before_first_clone_seen", {
+                "value": 1
+            });
+        }
+
+        if (Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount == Global.myStatistics.myTrialPlayCountResettable &&
+            Global.myStatistics.myTrialPlayCount <= 3 && Global.myStatistics.myMrNOTClonesDismissed > 0 && this._myMrNotClonesDismissedOnStart == 0) {
+            Global.sendAnalytics("event", "mr_NOT_clones_dismissed_first_attempt_" + Global.myStatistics.myTrialPlayCount, {
+                "value": 1
+            });
         }
     }
 
     _backToMenu(trialPhase, fsm) {
-        Global.mySaveManager.save("trial_phase", trialPhase);
         this._myParentFSM.perform(MainTransitions.End);
     }
 
@@ -16670,20 +16992,27 @@ class TrialState extends PP.State {
                 Global.myStatistics.myTrialBestTime = Global.myTrialDuration;
             }
 
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "trial_completed_from_start", {
-                    "value": 1
-                });
+            Global.sendAnalytics("event", "trial_completed_from_start", {
+                "value": 1
+            });
 
-                gtag("event", "trial_completed_from_start_time", {
-                    "value": Global.myTrialDuration.toFixed(2)
-                });
-            }
+            Global.sendAnalytics("event", "trial_completed_from_start_time", {
+                "value": Global.myTrialDuration.toFixed(2)
+            });
         }
+
+        Global.sendAnalytics("event", "trial_completed", {
+            "value": 1
+        });
 
         Global.mySaveManager.save("trial_phase", 1);
         Global.mySaveManager.save("trial_completed", true);
+
         Global.myStatistics.myTrialCompletedCount += 1;
+
+        Global.myIsTrialPhase1 = false;
+        Global.myMrNOTClonesNotDismissedPhase1PlayCount = 0;
+
         this._myParentFSM.perform(MainTransitions.End);
     }
 
@@ -19471,26 +19800,26 @@ class ArcadeResultState extends PP.State {
         this._myParentFSM = fsm;
         this._myFSM.perform("start");
 
+        Global.sendAnalytics("event", "arcade_time", {
+            "value": Global.myVentDuration.toFixed(2)
+        });
+
         if (this._myIsDispute) {
             if (Global.myStatistics.myDisputeBestTime < 0 || Global.myVentDuration > Global.myStatistics.myDisputeBestTime) {
                 Global.myStatistics.myDisputeBestTime = Global.myVentDuration;
             }
 
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "arcade_dispute_time", {
-                    "value": Global.myVentDuration.toFixed(2)
-                });
-            }
+            Global.sendAnalytics("event", "arcade_dispute_time", {
+                "value": Global.myVentDuration.toFixed(2)
+            });
         } else {
             if (Global.myStatistics.myChatBestTime < 0 || Global.myVentDuration > Global.myStatistics.myChatBestTime) {
                 Global.myStatistics.myChatBestTime = Global.myVentDuration;
             }
 
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "arcade_chat_time", {
-                    "value": Global.myVentDuration.toFixed(2)
-                });
-            }
+            Global.sendAnalytics("event", "arcade_chat_time", {
+                "value": Global.myVentDuration.toFixed(2)
+            });
         }
 
         let leaderboardID = "enough-is-enough";
@@ -19502,7 +19831,16 @@ class ArcadeResultState extends PP.State {
 
         let score = Math.floor(Global.myVentDuration * 1000);
 
-        PP.CAUtils.submitScore(leaderboardID, score);
+        let scoreSubmittedEventID = (this._myIsDispute ? "arcade_dispute" : "arcade_chat") + "_score_submitted";
+        PP.CAUtils.submitScore(leaderboardID, score, function () {
+            Global.sendAnalytics("event", "arcade_score_submitted", {
+                "value": 1
+            });
+
+            Global.sendAnalytics("event", scoreSubmittedEventID, {
+                "value": 1
+            });
+        }, null, false);
 
         Global.myIsInArcadeResult = true;
     }
@@ -19516,7 +19854,8 @@ class ArcadeResultState extends PP.State {
     }
 
     _onTimerUnspawned(evidence) {
-        if (PP.XRUtils.isXRSessionActive() && evidence.hasBeenThrown()) {
+        if (PP.XRUtils.isXRSessionActive() && evidence.hasBeenThrown() &&
+            (WL.xrSession == null || WL.xrSession.visibilityState == null || WL.xrSession.visibilityState == "visible")) {
             this._myFSM.perform("end");
         }
     }
@@ -19962,7 +20301,7 @@ class Evidence {
 
         this._myTimer = new PP.Timer(0);
         this._mySpawnTimer = new PP.Timer(0);
-        this._myThrowTimer = new PP.Timer(5, false);
+        this._myThrowTimer = new PP.Timer(6, false);
         WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
 
         this._myFSM = new PP.FSM();
@@ -20109,7 +20448,7 @@ class Evidence {
         let scaleMultiplier = PP.EasingFunction.easeInOut(this._mySpawnTimer.getPercentage());
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
 
-        this._myAppearAudio.updatePosition(this._myObject.pp_getPosition());
+        this._myAppearAudio.updatePosition(this._myObject.pp_getPosition(), true);
 
         if (this._mySpawnTimer.isDone()) {
             this._myFSM.perform("end");
@@ -20124,7 +20463,7 @@ class Evidence {
     }
 
     _readyUpdate(dt) {
-        if (this._myObject.pp_getPosition()[1] <= -10 || this._myObject.pp_getPosition()[1] > 20 || this._myObject.pp_getPosition().vec3_length() > 50) {
+        if (this._myObject.pp_getPosition()[1] <= -10 || this._myObject.pp_getPosition().vec3_length() > 50) {
             this._myHitFloor = true;
             this._myFSM.perform("unspawn");
         }
@@ -20737,7 +21076,9 @@ class MrNOT {
         let distanceToCurrentFromStart = this._myStartPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myCurrentPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
 
         if (distanceToTarget < this._myReachTargetDistance || distanceToTargetFromStart < distanceToCurrentFromStart) {
-            if (this._myCallbackOnReach) {
+            if (PP.myEasyTuneVariables.get("Prevent Vent Lost")) {
+                this._checkHit(false, true);
+            } else if (this._myCallbackOnReach) {
                 this._myCallbackOnReach(this);
             }
         } else {
@@ -20753,7 +21094,7 @@ class MrNOT {
         }
     }
 
-    _checkHit(avoidCallbacks = false) {
+    _checkHit(avoidCallbacks = false, alwaysHit = false) {
         let hit = false;
         let hittingObjects = [];
 
@@ -20802,7 +21143,7 @@ class MrNOT {
             }
         }
 
-        if (hit) {
+        if (hit || alwaysHit) {
             let patienceToRemove = 0;
             for (let object of hittingObjects) {
                 this._myHitAudio.setPosition(object.pp_getPosition());
@@ -20824,7 +21165,7 @@ class MrNOT {
                     this._myPatience = Math.max(this._myPatience, this._myPatienceRefill);
                 }
 
-                if (this._myPatience <= 0) {
+                if (this._myPatience <= 0 || alwaysHit) {
                     if (this._myDebugActive) {
                         console.log("mr NOT dismissed - Duration -", Global.myVentDuration.toFixed(3));
                     }
@@ -21148,12 +21489,14 @@ class MrNOTClone {
             this._myTimerBeforeCheckingSeen.update(dt);
             if (this._myTimerBeforeCheckingSeen.isDone()) {
                 if (!this._myTimerBeforeSettingSeen.isRunning()) {
-                    let directionToClone = this._myObject.pp_getPosition();
-                    directionToClone.vec3_sub(Global.myPlayerPosition, directionToClone).vec3_normalize(directionToClone);
+                    if (PP.XRUtils.isXRSessionActive()) {
+                        let directionToClone = this._myObject.pp_getPosition();
+                        directionToClone.vec3_sub(Global.myPlayerPosition, directionToClone).vec3_normalize(directionToClone);
 
-                    let angle = Global.myPlayerForward.vec3_angle(directionToClone);
-                    if (angle < 20) {
-                        this._myTimerBeforeSettingSeen.start();
+                        let angle = Global.myPlayerForward.vec3_angle(directionToClone);
+                        if (angle < 20) {
+                            this._myTimerBeforeSettingSeen.start();
+                        }
                     }
                 } else {
                     this._myTimerBeforeSettingSeen.update(dt);
@@ -21224,9 +21567,8 @@ class MrNOTClone {
         let distanceToCurrentFromStart = this._myStartPosition.vec3_removeComponentAlongAxis([0, 1, 0]).vec3_sub(this._myCurrentPosition.vec3_removeComponentAlongAxis([0, 1, 0])).vec3_length();
 
         if (distanceToTarget < this._myReachTargetDistance || distanceToTargetFromStart < distanceToCurrentFromStart) {
-            if (PP.myEasyTuneVariables.get("Prevent Vent Lost")) {
-                this._myCallbackOnDismiss(this, null);
-                this.unspawn();
+            if (PP.myEasyTuneVariables.get("Prevent Vent Lost") || PP.myEasyTuneVariables.get("Prevent Vent Lost Only Clone")) {
+                this._checkHit(false, true);
             } else {
                 if (this._myCallbackOnReach) {
                     this._myCallbackOnReach(this);
@@ -21241,7 +21583,7 @@ class MrNOTClone {
         this._checkHit(true);
     }
 
-    _checkHit(avoidCallbacks = false) {
+    _checkHit(avoidCallbacks = false, alwaysHit = false) {
         let hit = false;
         let hittingObject = null;
 
@@ -21274,9 +21616,12 @@ class MrNOTClone {
             }
         }
 
-        if (hit) {
-            let evidence = hittingObject.pp_getComponent("evidence-component");
-            evidence.hit(this._myObject);
+        if (hit || alwaysHit) {
+            if (hittingObject != null) {
+                let evidence = hittingObject.pp_getComponent("evidence-component");
+                evidence.hit(this._myObject);
+            }
+
             this.unspawn();
             this._myHitAudio.setPosition(this._myObject.pp_getPosition());
             this._myHitAudio.setPitch(Math.pp_random(0.85, 1.05));
@@ -21287,6 +21632,10 @@ class MrNOTClone {
 
             Global.myStatistics.myMrNOTClonesDismissed += 1;
             Global.myStatistics.myMrNOTClonesDismissedResettable += 1;
+
+            if (Global.myIsTrialPhase1) {
+                Global.myMrNOTClonesNotDismissedPhase1PlayCount = 0;
+            }
         }
     }
 
@@ -21458,7 +21807,9 @@ class MrNOTVent {
 
         if (distanceToTarget < this._myReachTargetDistance || distanceToTargetFromStart < distanceToCurrentFromStart) {
             //console.log("mr NOT Hits Received -", this._myHitsReceived);
-            if (this._myCallbackOnReach) {
+            if (PP.myEasyTuneVariables.get("Prevent Vent Lost")) {
+                this._checkHit(false, true);
+            } else if (this._myCallbackOnReach) {
                 this._myCallbackOnReach(this);
             }
         } else {
@@ -21478,7 +21829,7 @@ class MrNOTVent {
         this._checkHit(true);
     }
 
-    _checkHit(avoidCallbacks = false) {
+    _checkHit(avoidCallbacks = false, alwaysHit = false) {
         let hit = false;
         let hittingObjects = [];
 
@@ -21527,7 +21878,7 @@ class MrNOTVent {
             }
         }
 
-        if (hit) {
+        if (hit || alwaysHit) {
             let patienceToRemove = 0;
             for (let object of hittingObjects) {
                 this._myHitAudio.setPosition(object.pp_getPosition());
@@ -21552,7 +21903,7 @@ class MrNOTVent {
                     this._myPatience = Math.max(this._myPatience, this._myPatienceRefill);
                 }
 
-                if (this._myPatience <= 0) {
+                if (this._myPatience <= 0 || alwaysHit) {
                     Global.myStatistics.myMrNOTDismissed += 1;
                     this._myFSM.perform("disappear");
                     this._myCallbackOnPatienceOver();
@@ -22800,12 +23151,7 @@ class Vent {
     }
 
     _mrNOTReachYou() {
-        if (PP.myEasyTuneVariables.get("Prevent Vent Lost")) {
-            this._mrNOTDismissed();
-            //this._mrNOTCloneReachYou();
-        } else {
-            this._mrNOTCloneReachYou();
-        }
+        this._mrNOTCloneReachYou();
     }
 
     _updateClones(dt) {
@@ -22900,11 +23246,9 @@ class Vent {
         if (!Global.mySaveManager.loadBool("mr_NOT_encountered", false)) {
             Global.mySaveManager.save("mr_NOT_encountered", true);
 
-            if (Global.myGoogleAnalytics) {
-                gtag("event", "mr_NOT_encountered_before_trial", {
-                    "value": 1
-                });
-            }
+            Global.sendAnalytics("event", "mr_NOT_encountered_before_trial", {
+                "value": 1
+            });
         }
     }
 
@@ -23354,8 +23698,8 @@ class VentState extends PP.State {
         this._myFSM.perform("completed");
     }
 }
-(()=>{var Kt=Object.create;var Ee=Object.defineProperty;var Xt=Object.getOwnPropertyDescriptor;var Gt=Object.getOwnPropertyNames;var Qt=Object.getPrototypeOf,Zt=Object.prototype.hasOwnProperty;var l=(t,e)=>()=>(e||t((e={exports:{}}).exports,e),e.exports);var Yt=(t,e,r,i)=>{if(e&&typeof e=="object"||typeof e=="function")for(let n of Gt(e))!Zt.call(t,n)&&n!==r&&Ee(t,n,{get:()=>e[n],enumerable:!(i=Xt(e,n))||i.enumerable});return t};var xe=(t,e,r)=>(r=t!=null?Kt(Qt(t)):{},Yt(e||!t||!t.__esModule?Ee(r,"default",{value:t,enumerable:!0}):r,t));var V=l((cn,Oe)=>{"use strict";Oe.exports=function(e,r){return function(){for(var n=new Array(arguments.length),s=0;s<n.length;s++)n[s]=arguments[s];return e.apply(r,n)}}});var f=l((ln,Ae)=>{"use strict";var er=V(),X=Object.prototype.toString,G=function(t){return function(e){var r=X.call(e);return t[r]||(t[r]=r.slice(8,-1).toLowerCase())}}(Object.create(null));function C(t){return t=t.toLowerCase(),function(r){return G(r)===t}}function Q(t){return Array.isArray(t)}function j(t){return typeof t>"u"}function tr(t){return t!==null&&!j(t)&&t.constructor!==null&&!j(t.constructor)&&typeof t.constructor.isBuffer=="function"&&t.constructor.isBuffer(t)}var Re=C("ArrayBuffer");function rr(t){var e;return typeof ArrayBuffer<"u"&&ArrayBuffer.isView?e=ArrayBuffer.isView(t):e=t&&t.buffer&&Re(t.buffer),e}function nr(t){return typeof t=="string"}function ir(t){return typeof t=="number"}function Ce(t){return t!==null&&typeof t=="object"}function U(t){if(G(t)!=="object")return!1;var e=Object.getPrototypeOf(t);return e===null||e===Object.prototype}var sr=C("Date"),ar=C("File"),or=C("Blob"),ur=C("FileList");function Z(t){return X.call(t)==="[object Function]"}function cr(t){return Ce(t)&&Z(t.pipe)}function lr(t){var e="[object FormData]";return t&&(typeof FormData=="function"&&t instanceof FormData||X.call(t)===e||Z(t.toString)&&t.toString()===e)}var dr=C("URLSearchParams");function fr(t){return t.trim?t.trim():t.replace(/^\s+|\s+$/g,"")}function pr(){return typeof navigator<"u"&&(navigator.product==="ReactNative"||navigator.product==="NativeScript"||navigator.product==="NS")?!1:typeof window<"u"&&typeof document<"u"}function Y(t,e){if(!(t===null||typeof t>"u"))if(typeof t!="object"&&(t=[t]),Q(t))for(var r=0,i=t.length;r<i;r++)e.call(null,t[r],r,t);else for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&e.call(null,t[n],n,t)}function K(){var t={};function e(n,s){U(t[s])&&U(n)?t[s]=K(t[s],n):U(n)?t[s]=K({},n):Q(n)?t[s]=n.slice():t[s]=n}for(var r=0,i=arguments.length;r<i;r++)Y(arguments[r],e);return t}function hr(t,e,r){return Y(e,function(n,s){r&&typeof n=="function"?t[s]=er(n,r):t[s]=n}),t}function mr(t){return t.charCodeAt(0)===65279&&(t=t.slice(1)),t}function yr(t,e,r,i){t.prototype=Object.create(e.prototype,i),t.prototype.constructor=t,r&&Object.assign(t.prototype,r)}function vr(t,e,r){var i,n,s,a={};e=e||{};do{for(i=Object.getOwnPropertyNames(t),n=i.length;n-- >0;)s=i[n],a[s]||(e[s]=t[s],a[s]=!0);t=Object.getPrototypeOf(t)}while(t&&(!r||r(t,e))&&t!==Object.prototype);return e}function wr(t,e,r){t=String(t),(r===void 0||r>t.length)&&(r=t.length),r-=e.length;var i=t.indexOf(e,r);return i!==-1&&i===r}function gr(t){if(!t)return null;var e=t.length;if(j(e))return null;for(var r=new Array(e);e-- >0;)r[e]=t[e];return r}var br=function(t){return function(e){return t&&e instanceof t}}(typeof Uint8Array<"u"&&Object.getPrototypeOf(Uint8Array));Ae.exports={isArray:Q,isArrayBuffer:Re,isBuffer:tr,isFormData:lr,isArrayBufferView:rr,isString:nr,isNumber:ir,isObject:Ce,isPlainObject:U,isUndefined:j,isDate:sr,isFile:ar,isBlob:or,isFunction:Z,isStream:cr,isURLSearchParams:dr,isStandardBrowserEnv:pr,forEach:Y,merge:K,extend:hr,trim:fr,stripBOM:mr,inherits:yr,toFlatObject:vr,kindOf:G,kindOfTest:C,endsWith:wr,toArray:gr,isTypedArray:br,isFileList:ur}});var ee=l((dn,qe)=>{"use strict";var q=f();function Te(t){return encodeURIComponent(t).replace(/%3A/gi,":").replace(/%24/g,"$").replace(/%2C/gi,",").replace(/%20/g,"+").replace(/%5B/gi,"[").replace(/%5D/gi,"]")}qe.exports=function(e,r,i){if(!r)return e;var n;if(i)n=i(r);else if(q.isURLSearchParams(r))n=r.toString();else{var s=[];q.forEach(r,function(c,h){c===null||typeof c>"u"||(q.isArray(c)?h=h+"[]":c=[c],q.forEach(c,function(d){q.isDate(d)?d=d.toISOString():q.isObject(d)&&(d=JSON.stringify(d)),s.push(Te(h)+"="+Te(d))}))}),n=s.join("&")}if(n){var a=e.indexOf("#");a!==-1&&(e=e.slice(0,a)),e+=(e.indexOf("?")===-1?"?":"&")+n}return e}});var Ne=l((fn,Se)=>{"use strict";var Er=f();function F(){this.handlers=[]}F.prototype.use=function(e,r,i){return this.handlers.push({fulfilled:e,rejected:r,synchronous:i?i.synchronous:!1,runWhen:i?i.runWhen:null}),this.handlers.length-1};F.prototype.eject=function(e){this.handlers[e]&&(this.handlers[e]=null)};F.prototype.forEach=function(e){Er.forEach(this.handlers,function(i){i!==null&&e(i)})};Se.exports=F});var Pe=l((pn,ke)=>{"use strict";var xr=f();ke.exports=function(e,r){xr.forEach(e,function(n,s){s!==r&&s.toUpperCase()===r.toUpperCase()&&(e[r]=n,delete e[s])})}});var A=l((hn,De)=>{"use strict";var _e=f();function S(t,e,r,i,n){Error.call(this),this.message=t,this.name="AxiosError",e&&(this.code=e),r&&(this.config=r),i&&(this.request=i),n&&(this.response=n)}_e.inherits(S,Error,{toJSON:function(){return{message:this.message,name:this.name,description:this.description,number:this.number,fileName:this.fileName,lineNumber:this.lineNumber,columnNumber:this.columnNumber,stack:this.stack,config:this.config,code:this.code,status:this.response&&this.response.status?this.response.status:null}}});var Le=S.prototype,Be={};["ERR_BAD_OPTION_VALUE","ERR_BAD_OPTION","ECONNABORTED","ETIMEDOUT","ERR_NETWORK","ERR_FR_TOO_MANY_REDIRECTS","ERR_DEPRECATED","ERR_BAD_RESPONSE","ERR_BAD_REQUEST","ERR_CANCELED"].forEach(function(t){Be[t]={value:t}});Object.defineProperties(S,Be);Object.defineProperty(Le,"isAxiosError",{value:!0});S.from=function(t,e,r,i,n,s){var a=Object.create(Le);return _e.toFlatObject(t,a,function(c){return c!==Error.prototype}),S.call(a,t.message,e,r,i,n),a.name=t.name,s&&Object.assign(a,s),a};De.exports=S});var te=l((mn,Ue)=>{"use strict";Ue.exports={silentJSONParsing:!0,forcedJSONParsing:!0,clarifyTimeoutError:!1}});var re=l((yn,je)=>{"use strict";var b=f();function Or(t,e){e=e||new FormData;var r=[];function i(s){return s===null?"":b.isDate(s)?s.toISOString():b.isArrayBuffer(s)||b.isTypedArray(s)?typeof Blob=="function"?new Blob([s]):Buffer.from(s):s}function n(s,a){if(b.isPlainObject(s)||b.isArray(s)){if(r.indexOf(s)!==-1)throw Error("Circular reference detected in "+a);r.push(s),b.forEach(s,function(c,h){if(!b.isUndefined(c)){var o=a?a+"."+h:h,d;if(c&&!a&&typeof c=="object"){if(b.endsWith(h,"{}"))c=JSON.stringify(c);else if(b.endsWith(h,"[]")&&(d=b.toArray(c))){d.forEach(function(v){!b.isUndefined(v)&&e.append(o,i(v))});return}}n(c,o)}}),r.pop()}else e.append(a,i(s))}return n(t),e}je.exports=Or});var ze=l((vn,Fe)=>{"use strict";var ne=A();Fe.exports=function(e,r,i){var n=i.config.validateStatus;!i.status||!n||n(i.status)?e(i):r(new ne("Request failed with status code "+i.status,[ne.ERR_BAD_REQUEST,ne.ERR_BAD_RESPONSE][Math.floor(i.status/100)-4],i.config,i.request,i))}});var Me=l((wn,Ie)=>{"use strict";var z=f();Ie.exports=z.isStandardBrowserEnv()?function(){return{write:function(r,i,n,s,a,u){var c=[];c.push(r+"="+encodeURIComponent(i)),z.isNumber(n)&&c.push("expires="+new Date(n).toGMTString()),z.isString(s)&&c.push("path="+s),z.isString(a)&&c.push("domain="+a),u===!0&&c.push("secure"),document.cookie=c.join("; ")},read:function(r){var i=document.cookie.match(new RegExp("(^|;\\s*)("+r+")=([^;]*)"));return i?decodeURIComponent(i[3]):null},remove:function(r){this.write(r,"",Date.now()-864e5)}}}():function(){return{write:function(){},read:function(){return null},remove:function(){}}}()});var We=l((gn,$e)=>{"use strict";$e.exports=function(e){return/^([a-z][a-z\d+\-.]*:)?\/\//i.test(e)}});var Je=l((bn,He)=>{"use strict";He.exports=function(e,r){return r?e.replace(/\/+$/,"")+"/"+r.replace(/^\/+/,""):e}});var ie=l((En,Ve)=>{"use strict";var Rr=We(),Cr=Je();Ve.exports=function(e,r){return e&&!Rr(r)?Cr(e,r):r}});var Xe=l((xn,Ke)=>{"use strict";var se=f(),Ar=["age","authorization","content-length","content-type","etag","expires","from","host","if-modified-since","if-unmodified-since","last-modified","location","max-forwards","proxy-authorization","referer","retry-after","user-agent"];Ke.exports=function(e){var r={},i,n,s;return e&&se.forEach(e.split(`
-`),function(u){if(s=u.indexOf(":"),i=se.trim(u.substr(0,s)).toLowerCase(),n=se.trim(u.substr(s+1)),i){if(r[i]&&Ar.indexOf(i)>=0)return;i==="set-cookie"?r[i]=(r[i]?r[i]:[]).concat([n]):r[i]=r[i]?r[i]+", "+n:n}}),r}});var Ze=l((On,Qe)=>{"use strict";var Ge=f();Qe.exports=Ge.isStandardBrowserEnv()?function(){var e=/(msie|trident)/i.test(navigator.userAgent),r=document.createElement("a"),i;function n(s){var a=s;return e&&(r.setAttribute("href",a),a=r.href),r.setAttribute("href",a),{href:r.href,protocol:r.protocol?r.protocol.replace(/:$/,""):"",host:r.host,search:r.search?r.search.replace(/^\?/,""):"",hash:r.hash?r.hash.replace(/^#/,""):"",hostname:r.hostname,port:r.port,pathname:r.pathname.charAt(0)==="/"?r.pathname:"/"+r.pathname}}return i=n(window.location.href),function(a){var u=Ge.isString(a)?n(a):a;return u.protocol===i.protocol&&u.host===i.host}}():function(){return function(){return!0}}()});var B=l((Rn,et)=>{"use strict";var ae=A(),Tr=f();function Ye(t){ae.call(this,t??"canceled",ae.ERR_CANCELED),this.name="CanceledError"}Tr.inherits(Ye,ae,{__CANCEL__:!0});et.exports=Ye});var rt=l((Cn,tt)=>{"use strict";tt.exports=function(e){var r=/^([-+\w]{1,25})(:?\/\/|:)/.exec(e);return r&&r[1]||""}});var oe=l((An,nt)=>{"use strict";var D=f(),qr=ze(),Sr=Me(),Nr=ee(),kr=ie(),Pr=Xe(),_r=Ze(),Lr=te(),E=A(),Br=B(),Dr=rt();nt.exports=function(e){return new Promise(function(i,n){var s=e.data,a=e.headers,u=e.responseType,c;function h(){e.cancelToken&&e.cancelToken.unsubscribe(c),e.signal&&e.signal.removeEventListener("abort",c)}D.isFormData(s)&&D.isStandardBrowserEnv()&&delete a["Content-Type"];var o=new XMLHttpRequest;if(e.auth){var d=e.auth.username||"",v=e.auth.password?unescape(encodeURIComponent(e.auth.password)):"";a.Authorization="Basic "+btoa(d+":"+v)}var m=kr(e.baseURL,e.url);o.open(e.method.toUpperCase(),Nr(m,e.params,e.paramsSerializer),!0),o.timeout=e.timeout;function ge(){if(o){var g="getAllResponseHeaders"in o?Pr(o.getAllResponseHeaders()):null,T=!u||u==="text"||u==="json"?o.responseText:o.response,R={data:T,status:o.status,statusText:o.statusText,headers:g,config:e,request:o};qr(function(J){i(J),h()},function(J){n(J),h()},R),o=null}}if("onloadend"in o?o.onloadend=ge:o.onreadystatechange=function(){!o||o.readyState!==4||o.status===0&&!(o.responseURL&&o.responseURL.indexOf("file:")===0)||setTimeout(ge)},o.onabort=function(){o&&(n(new E("Request aborted",E.ECONNABORTED,e,o)),o=null)},o.onerror=function(){n(new E("Network Error",E.ERR_NETWORK,e,o,o)),o=null},o.ontimeout=function(){var T=e.timeout?"timeout of "+e.timeout+"ms exceeded":"timeout exceeded",R=e.transitional||Lr;e.timeoutErrorMessage&&(T=e.timeoutErrorMessage),n(new E(T,R.clarifyTimeoutError?E.ETIMEDOUT:E.ECONNABORTED,e,o)),o=null},D.isStandardBrowserEnv()){var be=(e.withCredentials||_r(m))&&e.xsrfCookieName?Sr.read(e.xsrfCookieName):void 0;be&&(a[e.xsrfHeaderName]=be)}"setRequestHeader"in o&&D.forEach(a,function(T,R){typeof s>"u"&&R.toLowerCase()==="content-type"?delete a[R]:o.setRequestHeader(R,T)}),D.isUndefined(e.withCredentials)||(o.withCredentials=!!e.withCredentials),u&&u!=="json"&&(o.responseType=e.responseType),typeof e.onDownloadProgress=="function"&&o.addEventListener("progress",e.onDownloadProgress),typeof e.onUploadProgress=="function"&&o.upload&&o.upload.addEventListener("progress",e.onUploadProgress),(e.cancelToken||e.signal)&&(c=function(g){o&&(n(!g||g&&g.type?new Br:g),o.abort(),o=null)},e.cancelToken&&e.cancelToken.subscribe(c),e.signal&&(e.signal.aborted?c():e.signal.addEventListener("abort",c))),s||(s=null);var H=Dr(m);if(H&&["http","https","file"].indexOf(H)===-1){n(new E("Unsupported protocol "+H+":",E.ERR_BAD_REQUEST,e));return}o.send(s)})}});var st=l((Tn,it)=>{it.exports=null});var M=l((qn,ct)=>{"use strict";var p=f(),at=Pe(),ot=A(),Ur=te(),jr=re(),Fr={"Content-Type":"application/x-www-form-urlencoded"};function ut(t,e){!p.isUndefined(t)&&p.isUndefined(t["Content-Type"])&&(t["Content-Type"]=e)}function zr(){var t;return typeof XMLHttpRequest<"u"?t=oe():typeof process<"u"&&Object.prototype.toString.call(process)==="[object process]"&&(t=oe()),t}function Ir(t,e,r){if(p.isString(t))try{return(e||JSON.parse)(t),p.trim(t)}catch(i){if(i.name!=="SyntaxError")throw i}return(r||JSON.stringify)(t)}var I={transitional:Ur,adapter:zr(),transformRequest:[function(e,r){if(at(r,"Accept"),at(r,"Content-Type"),p.isFormData(e)||p.isArrayBuffer(e)||p.isBuffer(e)||p.isStream(e)||p.isFile(e)||p.isBlob(e))return e;if(p.isArrayBufferView(e))return e.buffer;if(p.isURLSearchParams(e))return ut(r,"application/x-www-form-urlencoded;charset=utf-8"),e.toString();var i=p.isObject(e),n=r&&r["Content-Type"],s;if((s=p.isFileList(e))||i&&n==="multipart/form-data"){var a=this.env&&this.env.FormData;return jr(s?{"files[]":e}:e,a&&new a)}else if(i||n==="application/json")return ut(r,"application/json"),Ir(e);return e}],transformResponse:[function(e){var r=this.transitional||I.transitional,i=r&&r.silentJSONParsing,n=r&&r.forcedJSONParsing,s=!i&&this.responseType==="json";if(s||n&&p.isString(e)&&e.length)try{return JSON.parse(e)}catch(a){if(s)throw a.name==="SyntaxError"?ot.from(a,ot.ERR_BAD_RESPONSE,this,null,this.response):a}return e}],timeout:0,xsrfCookieName:"XSRF-TOKEN",xsrfHeaderName:"X-XSRF-TOKEN",maxContentLength:-1,maxBodyLength:-1,env:{FormData:st()},validateStatus:function(e){return e>=200&&e<300},headers:{common:{Accept:"application/json, text/plain, */*"}}};p.forEach(["delete","get","head"],function(e){I.headers[e]={}});p.forEach(["post","put","patch"],function(e){I.headers[e]=p.merge(Fr)});ct.exports=I});var dt=l((Sn,lt)=>{"use strict";var Mr=f(),$r=M();lt.exports=function(e,r,i){var n=this||$r;return Mr.forEach(i,function(a){e=a.call(n,e,r)}),e}});var ue=l((Nn,ft)=>{"use strict";ft.exports=function(e){return!!(e&&e.__CANCEL__)}});var mt=l((kn,ht)=>{"use strict";var pt=f(),ce=dt(),Wr=ue(),Hr=M(),Jr=B();function le(t){if(t.cancelToken&&t.cancelToken.throwIfRequested(),t.signal&&t.signal.aborted)throw new Jr}ht.exports=function(e){le(e),e.headers=e.headers||{},e.data=ce.call(e,e.data,e.headers,e.transformRequest),e.headers=pt.merge(e.headers.common||{},e.headers[e.method]||{},e.headers),pt.forEach(["delete","get","head","post","put","patch","common"],function(n){delete e.headers[n]});var r=e.adapter||Hr.adapter;return r(e).then(function(n){return le(e),n.data=ce.call(e,n.data,n.headers,e.transformResponse),n},function(n){return Wr(n)||(le(e),n&&n.response&&(n.response.data=ce.call(e,n.response.data,n.response.headers,e.transformResponse))),Promise.reject(n)})}});var de=l((Pn,yt)=>{"use strict";var w=f();yt.exports=function(e,r){r=r||{};var i={};function n(o,d){return w.isPlainObject(o)&&w.isPlainObject(d)?w.merge(o,d):w.isPlainObject(d)?w.merge({},d):w.isArray(d)?d.slice():d}function s(o){if(w.isUndefined(r[o])){if(!w.isUndefined(e[o]))return n(void 0,e[o])}else return n(e[o],r[o])}function a(o){if(!w.isUndefined(r[o]))return n(void 0,r[o])}function u(o){if(w.isUndefined(r[o])){if(!w.isUndefined(e[o]))return n(void 0,e[o])}else return n(void 0,r[o])}function c(o){if(o in r)return n(e[o],r[o]);if(o in e)return n(void 0,e[o])}var h={url:a,method:a,data:a,baseURL:u,transformRequest:u,transformResponse:u,paramsSerializer:u,timeout:u,timeoutMessage:u,withCredentials:u,adapter:u,responseType:u,xsrfCookieName:u,xsrfHeaderName:u,onUploadProgress:u,onDownloadProgress:u,decompress:u,maxContentLength:u,maxBodyLength:u,beforeRedirect:u,transport:u,httpAgent:u,httpsAgent:u,cancelToken:u,socketPath:u,responseEncoding:u,validateStatus:c};return w.forEach(Object.keys(e).concat(Object.keys(r)),function(d){var v=h[d]||s,m=v(d);w.isUndefined(m)&&v!==c||(i[d]=m)}),i}});var fe=l((_n,vt)=>{vt.exports={version:"0.27.2"}});var bt=l((Ln,gt)=>{"use strict";var Vr=fe().version,O=A(),pe={};["object","boolean","number","function","string","symbol"].forEach(function(t,e){pe[t]=function(i){return typeof i===t||"a"+(e<1?"n ":" ")+t}});var wt={};pe.transitional=function(e,r,i){function n(s,a){return"[Axios v"+Vr+"] Transitional option '"+s+"'"+a+(i?". "+i:"")}return function(s,a,u){if(e===!1)throw new O(n(a," has been removed"+(r?" in "+r:"")),O.ERR_DEPRECATED);return r&&!wt[a]&&(wt[a]=!0,console.warn(n(a," has been deprecated since v"+r+" and will be removed in the near future"))),e?e(s,a,u):!0}};function Kr(t,e,r){if(typeof t!="object")throw new O("options must be an object",O.ERR_BAD_OPTION_VALUE);for(var i=Object.keys(t),n=i.length;n-- >0;){var s=i[n],a=e[s];if(a){var u=t[s],c=u===void 0||a(u,s,t);if(c!==!0)throw new O("option "+s+" must be "+c,O.ERR_BAD_OPTION_VALUE);continue}if(r!==!0)throw new O("Unknown option "+s,O.ERR_BAD_OPTION)}}gt.exports={assertOptions:Kr,validators:pe}});var At=l((Bn,Ct)=>{"use strict";var Ot=f(),Xr=ee(),Et=Ne(),xt=mt(),$=de(),Gr=ie(),Rt=bt(),N=Rt.validators;function k(t){this.defaults=t,this.interceptors={request:new Et,response:new Et}}k.prototype.request=function(e,r){typeof e=="string"?(r=r||{},r.url=e):r=e||{},r=$(this.defaults,r),r.method?r.method=r.method.toLowerCase():this.defaults.method?r.method=this.defaults.method.toLowerCase():r.method="get";var i=r.transitional;i!==void 0&&Rt.assertOptions(i,{silentJSONParsing:N.transitional(N.boolean),forcedJSONParsing:N.transitional(N.boolean),clarifyTimeoutError:N.transitional(N.boolean)},!1);var n=[],s=!0;this.interceptors.request.forEach(function(m){typeof m.runWhen=="function"&&m.runWhen(r)===!1||(s=s&&m.synchronous,n.unshift(m.fulfilled,m.rejected))});var a=[];this.interceptors.response.forEach(function(m){a.push(m.fulfilled,m.rejected)});var u;if(!s){var c=[xt,void 0];for(Array.prototype.unshift.apply(c,n),c=c.concat(a),u=Promise.resolve(r);c.length;)u=u.then(c.shift(),c.shift());return u}for(var h=r;n.length;){var o=n.shift(),d=n.shift();try{h=o(h)}catch(v){d(v);break}}try{u=xt(h)}catch(v){return Promise.reject(v)}for(;a.length;)u=u.then(a.shift(),a.shift());return u};k.prototype.getUri=function(e){e=$(this.defaults,e);var r=Gr(e.baseURL,e.url);return Xr(r,e.params,e.paramsSerializer)};Ot.forEach(["delete","get","head","options"],function(e){k.prototype[e]=function(r,i){return this.request($(i||{},{method:e,url:r,data:(i||{}).data}))}});Ot.forEach(["post","put","patch"],function(e){function r(i){return function(s,a,u){return this.request($(u||{},{method:e,headers:i?{"Content-Type":"multipart/form-data"}:{},url:s,data:a}))}}k.prototype[e]=r(),k.prototype[e+"Form"]=r(!0)});Ct.exports=k});var qt=l((Dn,Tt)=>{"use strict";var Qr=B();function P(t){if(typeof t!="function")throw new TypeError("executor must be a function.");var e;this.promise=new Promise(function(n){e=n});var r=this;this.promise.then(function(i){if(r._listeners){var n,s=r._listeners.length;for(n=0;n<s;n++)r._listeners[n](i);r._listeners=null}}),this.promise.then=function(i){var n,s=new Promise(function(a){r.subscribe(a),n=a}).then(i);return s.cancel=function(){r.unsubscribe(n)},s},t(function(n){r.reason||(r.reason=new Qr(n),e(r.reason))})}P.prototype.throwIfRequested=function(){if(this.reason)throw this.reason};P.prototype.subscribe=function(e){if(this.reason){e(this.reason);return}this._listeners?this._listeners.push(e):this._listeners=[e]};P.prototype.unsubscribe=function(e){if(this._listeners){var r=this._listeners.indexOf(e);r!==-1&&this._listeners.splice(r,1)}};P.source=function(){var e,r=new P(function(n){e=n});return{token:r,cancel:e}};Tt.exports=P});var Nt=l((Un,St)=>{"use strict";St.exports=function(e){return function(i){return e.apply(null,i)}}});var Pt=l((jn,kt)=>{"use strict";var Zr=f();kt.exports=function(e){return Zr.isObject(e)&&e.isAxiosError===!0}});var Bt=l((Fn,he)=>{"use strict";var _t=f(),Yr=V(),W=At(),en=de(),tn=M();function Lt(t){var e=new W(t),r=Yr(W.prototype.request,e);return _t.extend(r,W.prototype,e),_t.extend(r,e),r.create=function(n){return Lt(en(t,n))},r}var y=Lt(tn);y.Axios=W;y.CanceledError=B();y.CancelToken=qt();y.isCancel=ue();y.VERSION=fe().version;y.toFormData=re();y.AxiosError=A();y.Cancel=y.CanceledError;y.all=function(e){return Promise.all(e)};y.spread=Nt();y.isAxiosError=Pt();he.exports=y;he.exports.default=y});var me=l((zn,Dt)=>{Dt.exports=Bt()});var L=xe(me(),1);var x="https://zesty-storage-prod.s3.amazonaws.com/images/zesty",_={tall:{width:.75,height:1,style:{standard:`${x}/zesty-banner-tall.png`,minimal:`${x}/zesty-banner-tall-minimal.png`,transparent:`${x}/zesty-banner-tall-transparent.png`}},wide:{width:4,height:1,style:{standard:`${x}/zesty-banner-wide.png`,minimal:`${x}/zesty-banner-wide-minimal.png`,transparent:`${x}/zesty-banner-wide-transparent.png`}},square:{width:1,height:1,style:{standard:`${x}/zesty-banner-square.png`,minimal:`${x}/zesty-banner-square-minimal.png`,transparent:`${x}/zesty-banner-square-transparent.png`}}},Ut="square";var rn=xe(me(),1);var ye=()=>{let t=window.XRHand!=null&&window.XRMediaBinding!=null,e=navigator.userAgent.includes("OculusBrowser"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},ve=()=>{let t=window.mozInnerScreenX!=null&&window.speechSynthesis==null,e=navigator.userAgent.includes("Mobile VR")&&!navigator.userAgent.includes("OculusBrowser"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},jt=async()=>{let t=navigator.xr&&await navigator.xr.isSessionSupported("immersive-vr")&&await navigator.xr.isSessionSupported("immersive-ar"),e=navigator.userAgent.includes("Pico Neo 3 Link"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},Ft=()=>{let t=navigator.maxTouchPoints===0||navigator.msMaxTouchPoints===0,e=!navigator.userAgent.includes("Android")&&!navigator.userAgent.includes("Mobile"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},we=async()=>{let t={platform:"",confidence:""};return ye().match?t={platform:"Oculus",confidence:ye().confidence}:ve().match?t={platform:"Wolvic",confidence:ve().confidence}:await jt().match?t={platform:"Pico",confidence:await jt().confidence}:Ft().match?t={platform:"Desktop",confidence:Ft().confidence}:t={platform:"Unknown",confidence:"None"},t},zt=t=>{if(t){if(ye().match){if(t.includes("https://www.oculus.com/experiences/quest/")){setTimeout(()=>{window.open(t,"_blank")},1e3);return}}else if(ve().match){let e=document.createElement("div"),r=document.createElement("div"),i=document.createElement("p"),n=document.createElement("button"),s=document.createElement("button");e.style.backgroundColor="rgb(0, 0, 0, 0.75)",e.style.color="white",e.style.textAlign="center",e.style.position="fixed",e.style.top="50%",e.style.left="50%",e.style.padding="5%",e.style.borderRadius="5%",e.style.transform="translate(-50%, -50%)",i.innerHTML=`<b>This billboard leads to ${t}. Continue?</b>`,n.innerText="Move cursor back into window.",n.style.width="100vw",n.style.height="100vh",n.onmouseenter=()=>{n.style.width="auto",n.style.height="auto",n.innerText="Yes"},n.onclick=()=>{window.open(t,"_blank"),e.remove()},s.innerText="No",s.onclick=()=>{e.remove()},e.append(r),r.append(i),r.append(n),r.append(s),document.body.append(e);return}window.open(t,"_blank")}};var It="https://beacon.zesty.market",Mt="https://beacon2.zesty.market/zgraphql",nn="https://api.zesty.market/api";var $t=async(t,e="tall",r="standard")=>{try{let i=encodeURI(window.top.location.href).replace(/\/$/,"");return(await L.default.get(`${nn}/ad?ad_unit_id=${t}&url=${i}`)).data}catch{return console.warn("No active campaign banner could be located. Displaying default banner."),{Ads:[{asset_url:_[e].style[r],cta_url:"https://www.zesty.market"}],CampaignId:"TestCampaign"}}},Wt=async(t,e=null)=>{let{platform:r,confidence:i}=await we();try{let n=It+`/api/v1/space/${t}`;await L.default.put(n),await L.default.post(Mt,{query:`mutation { increment(eventType: visits, spaceId: "${t}", campaignId: "${e}", platform: { name: ${r}, confidence: ${i} }) { message } }`},{headers:{"Content-Type":"application/json"}})}catch(n){console.log("Failed to emit onload event",n.message)}},Ht=async(t,e=null)=>{let{platform:r,confidence:i}=await we();try{let n=It+`/api/v1/space/click/${t}`;await L.default.put(n),await L.default.post(Mt,{query:`mutation { increment(eventType: clicks, spaceId: "${t}", campaignId: "${e}", platform: { name: ${r}, confidence: ${i} }) { message } }`},{headers:{"Content-Type":"application/json"}})}catch(n){console.log("Failed to emit onclick event",n.message)}};var Jt="2.0.6";console.log(`Zesty SDK Version: ${Jt} (compatibility)`);var an="https://cdn.zesty.xyz/sdk/zesty-formats.js",on="https://cdn.zesty.xyz/sdk/zesty-networking.js";WL.registerComponent("zesty-banner",{adUnit:{type:WL.Type.String},format:{type:WL.Type.Enum,values:Object.keys(_),default:Ut},style:{type:WL.Type.Enum,values:["standard","minimal","transparent"],default:"transparent"},scaleToRatio:{type:WL.Type.Bool,default:!0},textureProperty:{type:WL.Type.String,default:"auto"},beacon:{type:WL.Type.Bool,default:!0},dynamicFormats:{type:WL.Type.Bool,default:!0},createAutomaticCollision:{type:WL.Type.Bool,default:!0},dynamicNetworking:{type:WL.Type.Bool,default:!0}},{init:function(){this.formats=Object.values(_),this.formatKeys=Object.keys(_),this.styleKeys=["standard","minimal","transparent"]},start:function(){if(this.mesh=this.object.getComponent("mesh"),!this.mesh)throw new Error("'zesty-banner ' missing mesh component");if(this.createAutomaticCollision&&(this.collision=this.object.getComponent("collision")||this.object.addComponent("collision",{collider:WL.Collider.Box,group:2}),this.cursorTarget=this.object.getComponent("cursor-target")||this.object.addComponent("cursor-target"),this.cursorTarget.addClickFunction(this.onClick.bind(this))),this.dynamicFormats){let t=document.createElement("script");t.onload=()=>{this.formatsOverride=zestyFormats.formats},t.setAttribute("src",an),t.setAttribute("crossorigin","anonymous"),document.body.appendChild(t)}this.dynamicNetworking?import(on).then(t=>{this.zestyNetworking=Object.assign({},t),this.startLoading()}).catch(()=>{console.error("Failed to dynamically retrieve networking code, falling back to bundled version."),this.dynamicNetworking=null,this.startLoading()}):this.startLoading()},startLoading:function(){this.loadBanner(this.adUnit,this.formatKeys[this.format],this.styleKeys[this.style]).then(t=>{this.banner=t,this.scaleToRatio&&(this.height=this.object.scalingLocal[1],this.object.resetScaling(),this.createAutomaticCollision&&(this.collision.extents=[this.formats[this.format].width*this.height,this.height,.1]),this.object.scale([this.formats[this.format].width*this.height,this.height,1]));let e=this.mesh.material;if(this.textureProperty==="auto"){let r=e.pipeline||e.shader;if(r==="Phong Opaque Textured")e.diffuseTexture=t.texture,e.alphaMaskThreshold=.3;else if(r==="Flat Opaque Textured")e.flatTexture=t.texture,e.alphaMaskThreshold=.8;else throw Error("'zesty-banner ' unable to apply banner texture: unsupported pipeline "+e.shader);this.mesh.material=e}else this.mesh.material[this.textureProperty]=t.texture;this.beacon&&(this.dynamicNetworking?this.zestyNetworking.sendOnLoadMetric(this.adUnit,this.banner.campaignId):Wt(this.adUnit,this.banner.campaignId))})},onClick:function(){this.banner?.url&&(WL.xrSession?WL.xrSession.end().then(this.executeClick.bind(this)):this.executeClick())},executeClick:function(){this.beacon&&(this.dynamicNetworking?this.zestyNetworking.sendOnClickMetric(this.adUnit,this.banner.campaignId):Ht(this.adUnit,this.banner.campaignId))},loadBanner:async function(t,e,r){let i=this.dynamicNetworking?await this.zestyNetworking.fetchCampaignAd(t,e,r):await $t(t,e,r),{asset_url:n,cta_url:s}=i.Ads[0];return WL.textures.load(n,"").then(a=>({texture:a,imageSrc:n,url:s,campaignId:i.CampaignId}))}});})();
+(()=>{var Vt=Object.create;var Ee=Object.defineProperty;var Kt=Object.getOwnPropertyDescriptor;var Xt=Object.getOwnPropertyNames;var Gt=Object.getPrototypeOf,Qt=Object.prototype.hasOwnProperty;var l=(t,e)=>()=>(e||t((e={exports:{}}).exports,e),e.exports);var Zt=(t,e,r,i)=>{if(e&&typeof e=="object"||typeof e=="function")for(let n of Xt(e))!Qt.call(t,n)&&n!==r&&Ee(t,n,{get:()=>e[n],enumerable:!(i=Kt(e,n))||i.enumerable});return t};var xe=(t,e,r)=>(r=t!=null?Vt(Gt(t)):{},Zt(e||!t||!t.__esModule?Ee(r,"default",{value:t,enumerable:!0}):r,t));var V=l((un,Oe)=>{"use strict";Oe.exports=function(e,r){return function(){for(var n=new Array(arguments.length),s=0;s<n.length;s++)n[s]=arguments[s];return e.apply(r,n)}}});var f=l((cn,Ae)=>{"use strict";var Yt=V(),X=Object.prototype.toString,G=function(t){return function(e){var r=X.call(e);return t[r]||(t[r]=r.slice(8,-1).toLowerCase())}}(Object.create(null));function C(t){return t=t.toLowerCase(),function(r){return G(r)===t}}function Q(t){return Array.isArray(t)}function U(t){return typeof t>"u"}function er(t){return t!==null&&!U(t)&&t.constructor!==null&&!U(t.constructor)&&typeof t.constructor.isBuffer=="function"&&t.constructor.isBuffer(t)}var Re=C("ArrayBuffer");function tr(t){var e;return typeof ArrayBuffer<"u"&&ArrayBuffer.isView?e=ArrayBuffer.isView(t):e=t&&t.buffer&&Re(t.buffer),e}function rr(t){return typeof t=="string"}function nr(t){return typeof t=="number"}function Ce(t){return t!==null&&typeof t=="object"}function D(t){if(G(t)!=="object")return!1;var e=Object.getPrototypeOf(t);return e===null||e===Object.prototype}var ir=C("Date"),sr=C("File"),ar=C("Blob"),or=C("FileList");function Z(t){return X.call(t)==="[object Function]"}function ur(t){return Ce(t)&&Z(t.pipe)}function cr(t){var e="[object FormData]";return t&&(typeof FormData=="function"&&t instanceof FormData||X.call(t)===e||Z(t.toString)&&t.toString()===e)}var lr=C("URLSearchParams");function dr(t){return t.trim?t.trim():t.replace(/^\s+|\s+$/g,"")}function fr(){return typeof navigator<"u"&&(navigator.product==="ReactNative"||navigator.product==="NativeScript"||navigator.product==="NS")?!1:typeof window<"u"&&typeof document<"u"}function Y(t,e){if(!(t===null||typeof t>"u"))if(typeof t!="object"&&(t=[t]),Q(t))for(var r=0,i=t.length;r<i;r++)e.call(null,t[r],r,t);else for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&e.call(null,t[n],n,t)}function K(){var t={};function e(n,s){D(t[s])&&D(n)?t[s]=K(t[s],n):D(n)?t[s]=K({},n):Q(n)?t[s]=n.slice():t[s]=n}for(var r=0,i=arguments.length;r<i;r++)Y(arguments[r],e);return t}function pr(t,e,r){return Y(e,function(n,s){r&&typeof n=="function"?t[s]=Yt(n,r):t[s]=n}),t}function hr(t){return t.charCodeAt(0)===65279&&(t=t.slice(1)),t}function mr(t,e,r,i){t.prototype=Object.create(e.prototype,i),t.prototype.constructor=t,r&&Object.assign(t.prototype,r)}function yr(t,e,r){var i,n,s,a={};e=e||{};do{for(i=Object.getOwnPropertyNames(t),n=i.length;n-- >0;)s=i[n],a[s]||(e[s]=t[s],a[s]=!0);t=Object.getPrototypeOf(t)}while(t&&(!r||r(t,e))&&t!==Object.prototype);return e}function vr(t,e,r){t=String(t),(r===void 0||r>t.length)&&(r=t.length),r-=e.length;var i=t.indexOf(e,r);return i!==-1&&i===r}function wr(t){if(!t)return null;var e=t.length;if(U(e))return null;for(var r=new Array(e);e-- >0;)r[e]=t[e];return r}var gr=function(t){return function(e){return t&&e instanceof t}}(typeof Uint8Array<"u"&&Object.getPrototypeOf(Uint8Array));Ae.exports={isArray:Q,isArrayBuffer:Re,isBuffer:er,isFormData:cr,isArrayBufferView:tr,isString:rr,isNumber:nr,isObject:Ce,isPlainObject:D,isUndefined:U,isDate:ir,isFile:sr,isBlob:ar,isFunction:Z,isStream:ur,isURLSearchParams:lr,isStandardBrowserEnv:fr,forEach:Y,merge:K,extend:pr,trim:dr,stripBOM:hr,inherits:mr,toFlatObject:yr,kindOf:G,kindOfTest:C,endsWith:vr,toArray:wr,isTypedArray:gr,isFileList:or}});var ee=l((ln,qe)=>{"use strict";var q=f();function Te(t){return encodeURIComponent(t).replace(/%3A/gi,":").replace(/%24/g,"$").replace(/%2C/gi,",").replace(/%20/g,"+").replace(/%5B/gi,"[").replace(/%5D/gi,"]")}qe.exports=function(e,r,i){if(!r)return e;var n;if(i)n=i(r);else if(q.isURLSearchParams(r))n=r.toString();else{var s=[];q.forEach(r,function(c,h){c===null||typeof c>"u"||(q.isArray(c)?h=h+"[]":c=[c],q.forEach(c,function(d){q.isDate(d)?d=d.toISOString():q.isObject(d)&&(d=JSON.stringify(d)),s.push(Te(h)+"="+Te(d))}))}),n=s.join("&")}if(n){var a=e.indexOf("#");a!==-1&&(e=e.slice(0,a)),e+=(e.indexOf("?")===-1?"?":"&")+n}return e}});var Ne=l((dn,Se)=>{"use strict";var br=f();function j(){this.handlers=[]}j.prototype.use=function(e,r,i){return this.handlers.push({fulfilled:e,rejected:r,synchronous:i?i.synchronous:!1,runWhen:i?i.runWhen:null}),this.handlers.length-1};j.prototype.eject=function(e){this.handlers[e]&&(this.handlers[e]=null)};j.prototype.forEach=function(e){br.forEach(this.handlers,function(i){i!==null&&e(i)})};Se.exports=j});var Pe=l((fn,ke)=>{"use strict";var Er=f();ke.exports=function(e,r){Er.forEach(e,function(n,s){s!==r&&s.toUpperCase()===r.toUpperCase()&&(e[r]=n,delete e[s])})}});var A=l((pn,De)=>{"use strict";var _e=f();function S(t,e,r,i,n){Error.call(this),this.message=t,this.name="AxiosError",e&&(this.code=e),r&&(this.config=r),i&&(this.request=i),n&&(this.response=n)}_e.inherits(S,Error,{toJSON:function(){return{message:this.message,name:this.name,description:this.description,number:this.number,fileName:this.fileName,lineNumber:this.lineNumber,columnNumber:this.columnNumber,stack:this.stack,config:this.config,code:this.code,status:this.response&&this.response.status?this.response.status:null}}});var Le=S.prototype,Be={};["ERR_BAD_OPTION_VALUE","ERR_BAD_OPTION","ECONNABORTED","ETIMEDOUT","ERR_NETWORK","ERR_FR_TOO_MANY_REDIRECTS","ERR_DEPRECATED","ERR_BAD_RESPONSE","ERR_BAD_REQUEST","ERR_CANCELED"].forEach(function(t){Be[t]={value:t}});Object.defineProperties(S,Be);Object.defineProperty(Le,"isAxiosError",{value:!0});S.from=function(t,e,r,i,n,s){var a=Object.create(Le);return _e.toFlatObject(t,a,function(c){return c!==Error.prototype}),S.call(a,t.message,e,r,i,n),a.name=t.name,s&&Object.assign(a,s),a};De.exports=S});var te=l((hn,Ue)=>{"use strict";Ue.exports={silentJSONParsing:!0,forcedJSONParsing:!0,clarifyTimeoutError:!1}});var re=l((mn,je)=>{"use strict";var b=f();function xr(t,e){e=e||new FormData;var r=[];function i(s){return s===null?"":b.isDate(s)?s.toISOString():b.isArrayBuffer(s)||b.isTypedArray(s)?typeof Blob=="function"?new Blob([s]):Buffer.from(s):s}function n(s,a){if(b.isPlainObject(s)||b.isArray(s)){if(r.indexOf(s)!==-1)throw Error("Circular reference detected in "+a);r.push(s),b.forEach(s,function(c,h){if(!b.isUndefined(c)){var o=a?a+"."+h:h,d;if(c&&!a&&typeof c=="object"){if(b.endsWith(h,"{}"))c=JSON.stringify(c);else if(b.endsWith(h,"[]")&&(d=b.toArray(c))){d.forEach(function(v){!b.isUndefined(v)&&e.append(o,i(v))});return}}n(c,o)}}),r.pop()}else e.append(a,i(s))}return n(t),e}je.exports=xr});var Ie=l((yn,Fe)=>{"use strict";var ne=A();Fe.exports=function(e,r,i){var n=i.config.validateStatus;!i.status||!n||n(i.status)?e(i):r(new ne("Request failed with status code "+i.status,[ne.ERR_BAD_REQUEST,ne.ERR_BAD_RESPONSE][Math.floor(i.status/100)-4],i.config,i.request,i))}});var Me=l((vn,ze)=>{"use strict";var F=f();ze.exports=F.isStandardBrowserEnv()?function(){return{write:function(r,i,n,s,a,u){var c=[];c.push(r+"="+encodeURIComponent(i)),F.isNumber(n)&&c.push("expires="+new Date(n).toGMTString()),F.isString(s)&&c.push("path="+s),F.isString(a)&&c.push("domain="+a),u===!0&&c.push("secure"),document.cookie=c.join("; ")},read:function(r){var i=document.cookie.match(new RegExp("(^|;\\s*)("+r+")=([^;]*)"));return i?decodeURIComponent(i[3]):null},remove:function(r){this.write(r,"",Date.now()-864e5)}}}():function(){return{write:function(){},read:function(){return null},remove:function(){}}}()});var We=l((wn,$e)=>{"use strict";$e.exports=function(e){return/^([a-z][a-z\d+\-.]*:)?\/\//i.test(e)}});var Je=l((gn,He)=>{"use strict";He.exports=function(e,r){return r?e.replace(/\/+$/,"")+"/"+r.replace(/^\/+/,""):e}});var ie=l((bn,Ve)=>{"use strict";var Or=We(),Rr=Je();Ve.exports=function(e,r){return e&&!Or(r)?Rr(e,r):r}});var Xe=l((En,Ke)=>{"use strict";var se=f(),Cr=["age","authorization","content-length","content-type","etag","expires","from","host","if-modified-since","if-unmodified-since","last-modified","location","max-forwards","proxy-authorization","referer","retry-after","user-agent"];Ke.exports=function(e){var r={},i,n,s;return e&&se.forEach(e.split(`
+`),function(u){if(s=u.indexOf(":"),i=se.trim(u.substr(0,s)).toLowerCase(),n=se.trim(u.substr(s+1)),i){if(r[i]&&Cr.indexOf(i)>=0)return;i==="set-cookie"?r[i]=(r[i]?r[i]:[]).concat([n]):r[i]=r[i]?r[i]+", "+n:n}}),r}});var Ze=l((xn,Qe)=>{"use strict";var Ge=f();Qe.exports=Ge.isStandardBrowserEnv()?function(){var e=/(msie|trident)/i.test(navigator.userAgent),r=document.createElement("a"),i;function n(s){var a=s;return e&&(r.setAttribute("href",a),a=r.href),r.setAttribute("href",a),{href:r.href,protocol:r.protocol?r.protocol.replace(/:$/,""):"",host:r.host,search:r.search?r.search.replace(/^\?/,""):"",hash:r.hash?r.hash.replace(/^#/,""):"",hostname:r.hostname,port:r.port,pathname:r.pathname.charAt(0)==="/"?r.pathname:"/"+r.pathname}}return i=n(window.location.href),function(a){var u=Ge.isString(a)?n(a):a;return u.protocol===i.protocol&&u.host===i.host}}():function(){return function(){return!0}}()});var L=l((On,et)=>{"use strict";var ae=A(),Ar=f();function Ye(t){ae.call(this,t??"canceled",ae.ERR_CANCELED),this.name="CanceledError"}Ar.inherits(Ye,ae,{__CANCEL__:!0});et.exports=Ye});var rt=l((Rn,tt)=>{"use strict";tt.exports=function(e){var r=/^([-+\w]{1,25})(:?\/\/|:)/.exec(e);return r&&r[1]||""}});var oe=l((Cn,nt)=>{"use strict";var B=f(),Tr=Ie(),qr=Me(),Sr=ee(),Nr=ie(),kr=Xe(),Pr=Ze(),_r=te(),E=A(),Lr=L(),Br=rt();nt.exports=function(e){return new Promise(function(i,n){var s=e.data,a=e.headers,u=e.responseType,c;function h(){e.cancelToken&&e.cancelToken.unsubscribe(c),e.signal&&e.signal.removeEventListener("abort",c)}B.isFormData(s)&&B.isStandardBrowserEnv()&&delete a["Content-Type"];var o=new XMLHttpRequest;if(e.auth){var d=e.auth.username||"",v=e.auth.password?unescape(encodeURIComponent(e.auth.password)):"";a.Authorization="Basic "+btoa(d+":"+v)}var m=Nr(e.baseURL,e.url);o.open(e.method.toUpperCase(),Sr(m,e.params,e.paramsSerializer),!0),o.timeout=e.timeout;function ge(){if(o){var g="getAllResponseHeaders"in o?kr(o.getAllResponseHeaders()):null,T=!u||u==="text"||u==="json"?o.responseText:o.response,R={data:T,status:o.status,statusText:o.statusText,headers:g,config:e,request:o};Tr(function(J){i(J),h()},function(J){n(J),h()},R),o=null}}if("onloadend"in o?o.onloadend=ge:o.onreadystatechange=function(){!o||o.readyState!==4||o.status===0&&!(o.responseURL&&o.responseURL.indexOf("file:")===0)||setTimeout(ge)},o.onabort=function(){o&&(n(new E("Request aborted",E.ECONNABORTED,e,o)),o=null)},o.onerror=function(){n(new E("Network Error",E.ERR_NETWORK,e,o,o)),o=null},o.ontimeout=function(){var T=e.timeout?"timeout of "+e.timeout+"ms exceeded":"timeout exceeded",R=e.transitional||_r;e.timeoutErrorMessage&&(T=e.timeoutErrorMessage),n(new E(T,R.clarifyTimeoutError?E.ETIMEDOUT:E.ECONNABORTED,e,o)),o=null},B.isStandardBrowserEnv()){var be=(e.withCredentials||Pr(m))&&e.xsrfCookieName?qr.read(e.xsrfCookieName):void 0;be&&(a[e.xsrfHeaderName]=be)}"setRequestHeader"in o&&B.forEach(a,function(T,R){typeof s>"u"&&R.toLowerCase()==="content-type"?delete a[R]:o.setRequestHeader(R,T)}),B.isUndefined(e.withCredentials)||(o.withCredentials=!!e.withCredentials),u&&u!=="json"&&(o.responseType=e.responseType),typeof e.onDownloadProgress=="function"&&o.addEventListener("progress",e.onDownloadProgress),typeof e.onUploadProgress=="function"&&o.upload&&o.upload.addEventListener("progress",e.onUploadProgress),(e.cancelToken||e.signal)&&(c=function(g){o&&(n(!g||g&&g.type?new Lr:g),o.abort(),o=null)},e.cancelToken&&e.cancelToken.subscribe(c),e.signal&&(e.signal.aborted?c():e.signal.addEventListener("abort",c))),s||(s=null);var H=Br(m);if(H&&["http","https","file"].indexOf(H)===-1){n(new E("Unsupported protocol "+H+":",E.ERR_BAD_REQUEST,e));return}o.send(s)})}});var st=l((An,it)=>{it.exports=null});var z=l((Tn,ct)=>{"use strict";var p=f(),at=Pe(),ot=A(),Dr=te(),Ur=re(),jr={"Content-Type":"application/x-www-form-urlencoded"};function ut(t,e){!p.isUndefined(t)&&p.isUndefined(t["Content-Type"])&&(t["Content-Type"]=e)}function Fr(){var t;return typeof XMLHttpRequest<"u"?t=oe():typeof process<"u"&&Object.prototype.toString.call(process)==="[object process]"&&(t=oe()),t}function Ir(t,e,r){if(p.isString(t))try{return(e||JSON.parse)(t),p.trim(t)}catch(i){if(i.name!=="SyntaxError")throw i}return(r||JSON.stringify)(t)}var I={transitional:Dr,adapter:Fr(),transformRequest:[function(e,r){if(at(r,"Accept"),at(r,"Content-Type"),p.isFormData(e)||p.isArrayBuffer(e)||p.isBuffer(e)||p.isStream(e)||p.isFile(e)||p.isBlob(e))return e;if(p.isArrayBufferView(e))return e.buffer;if(p.isURLSearchParams(e))return ut(r,"application/x-www-form-urlencoded;charset=utf-8"),e.toString();var i=p.isObject(e),n=r&&r["Content-Type"],s;if((s=p.isFileList(e))||i&&n==="multipart/form-data"){var a=this.env&&this.env.FormData;return Ur(s?{"files[]":e}:e,a&&new a)}else if(i||n==="application/json")return ut(r,"application/json"),Ir(e);return e}],transformResponse:[function(e){var r=this.transitional||I.transitional,i=r&&r.silentJSONParsing,n=r&&r.forcedJSONParsing,s=!i&&this.responseType==="json";if(s||n&&p.isString(e)&&e.length)try{return JSON.parse(e)}catch(a){if(s)throw a.name==="SyntaxError"?ot.from(a,ot.ERR_BAD_RESPONSE,this,null,this.response):a}return e}],timeout:0,xsrfCookieName:"XSRF-TOKEN",xsrfHeaderName:"X-XSRF-TOKEN",maxContentLength:-1,maxBodyLength:-1,env:{FormData:st()},validateStatus:function(e){return e>=200&&e<300},headers:{common:{Accept:"application/json, text/plain, */*"}}};p.forEach(["delete","get","head"],function(e){I.headers[e]={}});p.forEach(["post","put","patch"],function(e){I.headers[e]=p.merge(jr)});ct.exports=I});var dt=l((qn,lt)=>{"use strict";var zr=f(),Mr=z();lt.exports=function(e,r,i){var n=this||Mr;return zr.forEach(i,function(a){e=a.call(n,e,r)}),e}});var ue=l((Sn,ft)=>{"use strict";ft.exports=function(e){return!!(e&&e.__CANCEL__)}});var mt=l((Nn,ht)=>{"use strict";var pt=f(),ce=dt(),$r=ue(),Wr=z(),Hr=L();function le(t){if(t.cancelToken&&t.cancelToken.throwIfRequested(),t.signal&&t.signal.aborted)throw new Hr}ht.exports=function(e){le(e),e.headers=e.headers||{},e.data=ce.call(e,e.data,e.headers,e.transformRequest),e.headers=pt.merge(e.headers.common||{},e.headers[e.method]||{},e.headers),pt.forEach(["delete","get","head","post","put","patch","common"],function(n){delete e.headers[n]});var r=e.adapter||Wr.adapter;return r(e).then(function(n){return le(e),n.data=ce.call(e,n.data,n.headers,e.transformResponse),n},function(n){return $r(n)||(le(e),n&&n.response&&(n.response.data=ce.call(e,n.response.data,n.response.headers,e.transformResponse))),Promise.reject(n)})}});var de=l((kn,yt)=>{"use strict";var w=f();yt.exports=function(e,r){r=r||{};var i={};function n(o,d){return w.isPlainObject(o)&&w.isPlainObject(d)?w.merge(o,d):w.isPlainObject(d)?w.merge({},d):w.isArray(d)?d.slice():d}function s(o){if(w.isUndefined(r[o])){if(!w.isUndefined(e[o]))return n(void 0,e[o])}else return n(e[o],r[o])}function a(o){if(!w.isUndefined(r[o]))return n(void 0,r[o])}function u(o){if(w.isUndefined(r[o])){if(!w.isUndefined(e[o]))return n(void 0,e[o])}else return n(void 0,r[o])}function c(o){if(o in r)return n(e[o],r[o]);if(o in e)return n(void 0,e[o])}var h={url:a,method:a,data:a,baseURL:u,transformRequest:u,transformResponse:u,paramsSerializer:u,timeout:u,timeoutMessage:u,withCredentials:u,adapter:u,responseType:u,xsrfCookieName:u,xsrfHeaderName:u,onUploadProgress:u,onDownloadProgress:u,decompress:u,maxContentLength:u,maxBodyLength:u,beforeRedirect:u,transport:u,httpAgent:u,httpsAgent:u,cancelToken:u,socketPath:u,responseEncoding:u,validateStatus:c};return w.forEach(Object.keys(e).concat(Object.keys(r)),function(d){var v=h[d]||s,m=v(d);w.isUndefined(m)&&v!==c||(i[d]=m)}),i}});var fe=l((Pn,vt)=>{vt.exports={version:"0.27.2"}});var bt=l((_n,gt)=>{"use strict";var Jr=fe().version,O=A(),pe={};["object","boolean","number","function","string","symbol"].forEach(function(t,e){pe[t]=function(i){return typeof i===t||"a"+(e<1?"n ":" ")+t}});var wt={};pe.transitional=function(e,r,i){function n(s,a){return"[Axios v"+Jr+"] Transitional option '"+s+"'"+a+(i?". "+i:"")}return function(s,a,u){if(e===!1)throw new O(n(a," has been removed"+(r?" in "+r:"")),O.ERR_DEPRECATED);return r&&!wt[a]&&(wt[a]=!0,console.warn(n(a," has been deprecated since v"+r+" and will be removed in the near future"))),e?e(s,a,u):!0}};function Vr(t,e,r){if(typeof t!="object")throw new O("options must be an object",O.ERR_BAD_OPTION_VALUE);for(var i=Object.keys(t),n=i.length;n-- >0;){var s=i[n],a=e[s];if(a){var u=t[s],c=u===void 0||a(u,s,t);if(c!==!0)throw new O("option "+s+" must be "+c,O.ERR_BAD_OPTION_VALUE);continue}if(r!==!0)throw new O("Unknown option "+s,O.ERR_BAD_OPTION)}}gt.exports={assertOptions:Vr,validators:pe}});var At=l((Ln,Ct)=>{"use strict";var Ot=f(),Kr=ee(),Et=Ne(),xt=mt(),M=de(),Xr=ie(),Rt=bt(),N=Rt.validators;function k(t){this.defaults=t,this.interceptors={request:new Et,response:new Et}}k.prototype.request=function(e,r){typeof e=="string"?(r=r||{},r.url=e):r=e||{},r=M(this.defaults,r),r.method?r.method=r.method.toLowerCase():this.defaults.method?r.method=this.defaults.method.toLowerCase():r.method="get";var i=r.transitional;i!==void 0&&Rt.assertOptions(i,{silentJSONParsing:N.transitional(N.boolean),forcedJSONParsing:N.transitional(N.boolean),clarifyTimeoutError:N.transitional(N.boolean)},!1);var n=[],s=!0;this.interceptors.request.forEach(function(m){typeof m.runWhen=="function"&&m.runWhen(r)===!1||(s=s&&m.synchronous,n.unshift(m.fulfilled,m.rejected))});var a=[];this.interceptors.response.forEach(function(m){a.push(m.fulfilled,m.rejected)});var u;if(!s){var c=[xt,void 0];for(Array.prototype.unshift.apply(c,n),c=c.concat(a),u=Promise.resolve(r);c.length;)u=u.then(c.shift(),c.shift());return u}for(var h=r;n.length;){var o=n.shift(),d=n.shift();try{h=o(h)}catch(v){d(v);break}}try{u=xt(h)}catch(v){return Promise.reject(v)}for(;a.length;)u=u.then(a.shift(),a.shift());return u};k.prototype.getUri=function(e){e=M(this.defaults,e);var r=Xr(e.baseURL,e.url);return Kr(r,e.params,e.paramsSerializer)};Ot.forEach(["delete","get","head","options"],function(e){k.prototype[e]=function(r,i){return this.request(M(i||{},{method:e,url:r,data:(i||{}).data}))}});Ot.forEach(["post","put","patch"],function(e){function r(i){return function(s,a,u){return this.request(M(u||{},{method:e,headers:i?{"Content-Type":"multipart/form-data"}:{},url:s,data:a}))}}k.prototype[e]=r(),k.prototype[e+"Form"]=r(!0)});Ct.exports=k});var qt=l((Bn,Tt)=>{"use strict";var Gr=L();function P(t){if(typeof t!="function")throw new TypeError("executor must be a function.");var e;this.promise=new Promise(function(n){e=n});var r=this;this.promise.then(function(i){if(r._listeners){var n,s=r._listeners.length;for(n=0;n<s;n++)r._listeners[n](i);r._listeners=null}}),this.promise.then=function(i){var n,s=new Promise(function(a){r.subscribe(a),n=a}).then(i);return s.cancel=function(){r.unsubscribe(n)},s},t(function(n){r.reason||(r.reason=new Gr(n),e(r.reason))})}P.prototype.throwIfRequested=function(){if(this.reason)throw this.reason};P.prototype.subscribe=function(e){if(this.reason){e(this.reason);return}this._listeners?this._listeners.push(e):this._listeners=[e]};P.prototype.unsubscribe=function(e){if(this._listeners){var r=this._listeners.indexOf(e);r!==-1&&this._listeners.splice(r,1)}};P.source=function(){var e,r=new P(function(n){e=n});return{token:r,cancel:e}};Tt.exports=P});var Nt=l((Dn,St)=>{"use strict";St.exports=function(e){return function(i){return e.apply(null,i)}}});var Pt=l((Un,kt)=>{"use strict";var Qr=f();kt.exports=function(e){return Qr.isObject(e)&&e.isAxiosError===!0}});var Bt=l((jn,he)=>{"use strict";var _t=f(),Zr=V(),$=At(),Yr=de(),en=z();function Lt(t){var e=new $(t),r=Zr($.prototype.request,e);return _t.extend(r,$.prototype,e),_t.extend(r,e),r.create=function(n){return Lt(Yr(t,n))},r}var y=Lt(en);y.Axios=$;y.CanceledError=L();y.CancelToken=qt();y.isCancel=ue();y.VERSION=fe().version;y.toFormData=re();y.AxiosError=A();y.Cancel=y.CanceledError;y.all=function(e){return Promise.all(e)};y.spread=Nt();y.isAxiosError=Pt();he.exports=y;he.exports.default=y});var me=l((Fn,Dt)=>{Dt.exports=Bt()});var W=xe(me(),1);var x="https://zesty-storage-prod.s3.amazonaws.com/images/zesty",_={tall:{width:.75,height:1,style:{standard:`${x}/zesty-banner-tall.png`,minimal:`${x}/zesty-banner-tall-minimal.png`,transparent:`${x}/zesty-banner-tall-transparent.png`}},wide:{width:4,height:1,style:{standard:`${x}/zesty-banner-wide.png`,minimal:`${x}/zesty-banner-wide-minimal.png`,transparent:`${x}/zesty-banner-wide-transparent.png`}},square:{width:1,height:1,style:{standard:`${x}/zesty-banner-square.png`,minimal:`${x}/zesty-banner-square-minimal.png`,transparent:`${x}/zesty-banner-square-transparent.png`}}},Ut="square";var tn=xe(me(),1);var ye=()=>{let t=window.XRHand!=null&&window.XRMediaBinding!=null,e=navigator.userAgent.includes("OculusBrowser"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},ve=()=>{let t=window.mozInnerScreenX!=null&&window.speechSynthesis==null,e=navigator.userAgent.includes("Mobile VR")&&!navigator.userAgent.includes("OculusBrowser"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},jt=async()=>{let t=navigator.xr&&await navigator.xr.isSessionSupported("immersive-vr")&&await navigator.xr.isSessionSupported("immersive-ar"),e=navigator.userAgent.includes("Pico Neo 3 Link"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},Ft=()=>{let t=navigator.maxTouchPoints===0||navigator.msMaxTouchPoints===0,e=!navigator.userAgent.includes("Android")&&!navigator.userAgent.includes("Mobile"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},we=async()=>{let t={platform:"",confidence:""};return ye().match?t={platform:"Oculus",confidence:ye().confidence}:ve().match?t={platform:"Wolvic",confidence:ve().confidence}:await jt().match?t={platform:"Pico",confidence:await jt().confidence}:Ft().match?t={platform:"Desktop",confidence:Ft().confidence}:t={platform:"Unknown",confidence:"None"},t},It=t=>{if(t){if(ye().match){if(t.includes("https://www.oculus.com/experiences/quest/")){setTimeout(()=>{window.open(t,"_blank")},1e3);return}}else if(ve().match){let e=document.createElement("div"),r=document.createElement("div"),i=document.createElement("p"),n=document.createElement("button"),s=document.createElement("button");e.style.backgroundColor="rgb(0, 0, 0, 0.75)",e.style.color="white",e.style.textAlign="center",e.style.position="fixed",e.style.top="50%",e.style.left="50%",e.style.padding="5%",e.style.borderRadius="5%",e.style.transform="translate(-50%, -50%)",i.innerHTML=`<b>This billboard leads to ${t}. Continue?</b>`,n.innerText="Move cursor back into window.",n.style.width="100vw",n.style.height="100vh",n.onmouseenter=()=>{n.style.width="auto",n.style.height="auto",n.innerText="Yes"},n.onclick=()=>{window.open(t,"_blank"),e.remove()},s.innerText="No",s.onclick=()=>{e.remove()},e.append(r),r.append(i),r.append(n),r.append(s),document.body.append(e);return}window.open(t,"_blank")}};var zt="https://beacon2.zesty.market/zgraphql",rn="https://api.zesty.market/api";var Mt=async(t,e="tall",r="standard")=>{try{let i=encodeURI(window.top.location.href).replace(/\/$/,"");return(await W.default.get(`${rn}/ad?ad_unit_id=${t}&url=${i}`)).data}catch{return console.warn("No active campaign banner could be located. Displaying default banner."),{Ads:[{asset_url:_[e].style[r],cta_url:"https://www.zesty.market"}],CampaignId:"TestCampaign"}}},$t=async(t,e=null)=>{let{platform:r,confidence:i}=await we();try{await W.default.post(zt,{query:`mutation { increment(eventType: visits, spaceId: "${t}", campaignId: "${e}", platform: { name: ${r}, confidence: ${i} }) { message } }`},{headers:{"Content-Type":"application/json"}})}catch(n){console.log("Failed to emit onload event",n.message)}},Wt=async(t,e=null)=>{let{platform:r,confidence:i}=await we();try{await W.default.post(zt,{query:`mutation { increment(eventType: clicks, spaceId: "${t}", campaignId: "${e}", platform: { name: ${r}, confidence: ${i} }) { message } }`},{headers:{"Content-Type":"application/json"}})}catch(n){console.log("Failed to emit onclick event",n.message)}};var Ht="2.1.0";console.log(`Zesty SDK Version: ${Ht} (compatibility)`);var sn="https://cdn.zesty.xyz/sdk/zesty-formats.js",an="https://cdn.zesty.xyz/sdk/zesty-networking.js";WL.registerComponent("zesty-banner",{adUnit:{type:WL.Type.String},format:{type:WL.Type.Enum,values:Object.keys(_),default:Ut},style:{type:WL.Type.Enum,values:["standard","minimal","transparent"],default:"transparent"},scaleToRatio:{type:WL.Type.Bool,default:!0},textureProperty:{type:WL.Type.String,default:"auto"},beacon:{type:WL.Type.Bool,default:!0},dynamicFormats:{type:WL.Type.Bool,default:!0},createAutomaticCollision:{type:WL.Type.Bool,default:!0},dynamicNetworking:{type:WL.Type.Bool,default:!0}},{init:function(){this.formats=Object.values(_),this.formatKeys=Object.keys(_),this.styleKeys=["standard","minimal","transparent"]},start:function(){if(this.mesh=this.object.getComponent("mesh"),!this.mesh)throw new Error("'zesty-banner ' missing mesh component");if(this.createAutomaticCollision&&(this.collision=this.object.getComponent("collision")||this.object.addComponent("collision",{collider:WL.Collider.Box,group:2}),this.cursorTarget=this.object.getComponent("cursor-target")||this.object.addComponent("cursor-target"),this.cursorTarget.addClickFunction(this.onClick.bind(this))),this.dynamicFormats){let t=document.createElement("script");t.onload=()=>{this.formatsOverride=zestyFormats.formats},t.setAttribute("src",sn),t.setAttribute("crossorigin","anonymous"),document.body.appendChild(t)}this.dynamicNetworking?import(an).then(t=>{this.zestyNetworking=Object.assign({},t),this.startLoading()}).catch(()=>{console.error("Failed to dynamically retrieve networking code, falling back to bundled version."),this.dynamicNetworking=null,this.startLoading()}):this.startLoading()},startLoading:function(){this.loadBanner(this.adUnit,this.formatKeys[this.format],this.styleKeys[this.style]).then(t=>{this.banner=t,this.scaleToRatio&&(this.height=this.object.scalingLocal[1],this.object.resetScaling(),this.createAutomaticCollision&&(this.collision.extents=[this.formats[this.format].width*this.height,this.height,.1]),this.object.scale([this.formats[this.format].width*this.height,this.height,1]));let e=this.mesh.material;if(this.textureProperty==="auto"){let r=e.pipeline||e.shader;if(r==="Phong Opaque Textured")e.diffuseTexture=t.texture,e.alphaMaskThreshold=.3;else if(r==="Flat Opaque Textured")e.flatTexture=t.texture,e.alphaMaskThreshold=.8;else throw Error("'zesty-banner ' unable to apply banner texture: unsupported pipeline "+e.shader);this.mesh.material=e}else this.mesh.material[this.textureProperty]=t.texture;this.beacon&&(this.dynamicNetworking?this.zestyNetworking.sendOnLoadMetric(this.adUnit,this.banner.campaignId):$t(this.adUnit,this.banner.campaignId))})},onClick:function(){this.banner?.url&&(WL.xrSession?WL.xrSession.end().then(this.executeClick.bind(this)):this.executeClick())},executeClick:function(){this.beacon&&(this.dynamicNetworking?this.zestyNetworking.sendOnClickMetric(this.adUnit,this.banner.campaignId):Wt(this.adUnit,this.banner.campaignId))},loadBanner:async function(t,e,r){let i=this.dynamicNetworking?await this.zestyNetworking.fetchCampaignAd(t,e,r):await Mt(t,e,r),{asset_url:n,cta_url:s}=i.Ads[0];return WL.textures.load(n,"").then(a=>({texture:a,imageSrc:n,url:s,campaignId:i.CampaignId}))}});})();
 //# sourceMappingURL=zesty-wonderland-sdk-compat.js.map
 
 WL.registerComponent("pp-easy-light-attenuation", {
@@ -30709,4 +31053,4 @@ TrialState.prototype._thirdVentSetup = function () {
 
     return ventSetup;
 };
-//# sourceMappingURL=enough IS enough-bundle.js.map
+//# sourceMappingURL=enoughISenough-bundle.js.map
