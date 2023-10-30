@@ -170,7 +170,7 @@ class HandPiece {
                 this._myScale = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
                 this._myObject.pp_setScale(this._myScale);
 
-                this._myAudio.updatePosition(this._myObject.pp_getPosition());
+                this._myAudio.updatePosition(this._myObject.pp_getPosition(), true);
             }
 
             glMatrix.vec3.lerp(this._myCurrentPosition, this._myEndPosition, this._myStartPosition, interpolateValue);

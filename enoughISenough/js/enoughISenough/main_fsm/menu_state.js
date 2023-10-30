@@ -369,7 +369,7 @@ class MenuState extends PP.State {
 
         {
             let zestyMarket = new MenuItem(Global.myGameObjects.get(GameObjectType.ZESTY_MARKET), GameObjectType.ZESTY_MARKET, positions[6], function () {
-                if (this._myFSM.isInState("ready")) {
+                if (this._myFSM.isInState("ready") && Global.myElementToClick == null) {
                     this._myResetCount = 0;
                     let zestyComponent = this._myZestyObject.getObject().pp_getComponentHierarchy("zesty-banner");
                     if (zestyComponent != null) {
@@ -425,7 +425,7 @@ class MenuState extends PP.State {
 
         {
             let wondermelon = new MenuItem(Global.myGameObjects.get(GameObjectType.WONDERMELON), GameObjectType.WONDERMELON, positions[7], function () {
-                if (this._myFSM.isInState("ready")) {
+                if (this._myFSM.isInState("ready") && Global.myElementToClick == null) {
                     PP.XRUtils.openLink("https://signor-pipo.itch.io/not-enough", true, true, false, false,
                         function () {
                             Global.myUnmute = true;
@@ -596,7 +596,7 @@ class MenuItem {
         let scaleMultiplier = PP.EasingFunction.easeInOut(this._myTimer.getPercentage());
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
 
-        this._myAppearAudio.updatePosition(this._myObject.pp_getPosition());
+        this._myAppearAudio.updatePosition(this._myObject.pp_getPosition(), true);
 
         if (this._myTimer.isDone()) {
             this._myFSM.perform("end");
@@ -635,7 +635,7 @@ class MenuItem {
         let scaleMultiplier = Math.pp_interpolate(1, PP.myEasyTuneVariables.get("Unspawn Menu Scale"), this._myTimer.getPercentage());
         this._myObject.pp_setScale(this._myScale.vec3_scale(scaleMultiplier));
 
-        //this._myDisappearAudio.updatePosition(this._myObject.pp_getPosition());
+        //this._myDisappearAudio.updatePosition(this._myObject.pp_getPosition(), true);
 
         if (this._myTimer.isDone()) {
             Global.myParticlesManager.explosion(this._myObject.pp_getPosition(), this._myParticlesRadius, this._myScale, this._myObjectType);

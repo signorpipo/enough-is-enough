@@ -65,7 +65,7 @@ WL.registerComponent("ring-animator", {
         this._myRingOut.pp_setPosition([0, Math.pp_interpolate(startPositionRingOut, this._myRingHeight, this._myTimer.getPercentage(), PP.EasingFunction.easeOut), 0]);
         this._myRingMiddle.pp_setPosition([0, Math.pp_interpolate(startPositionRingMiddle, this._myRingHeight, this._myTimer.getPercentage(), PP.EasingFunction.easeOut), 0]);
 
-        this._myRingOutAudio.updatePosition(this._myRingOut.pp_getPosition());
+        this._myRingOutAudio.updatePosition(this._myRingOut.pp_getPosition(), true);
 
         if (this._myTimer.isDone()) {
             this._myTimer.reset();

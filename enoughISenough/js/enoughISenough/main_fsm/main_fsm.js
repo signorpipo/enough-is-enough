@@ -75,7 +75,7 @@ class MainFSM {
                 if (!this._myMusic.isPlaying()) {
                     this._myMusic.play();
                 }
-                this._myMusic.fade(0, this._myMusicVolume, 6);
+                this._myMusic.fade(0, this._myMusicVolume, 6, true);
                 this._myStartMusicTimerAfterLoad.reset();
 
                 this._myIsMusicPlaying = true;
@@ -85,8 +85,8 @@ class MainFSM {
         if (this._myStopMusicTimer.isRunning()) {
             this._myStopMusicTimer.update(dt);
             if (this._myStopMusicTimer.isDone()) {
-                this._myMusic.fade(this._myMusicVolume, 0, 0.05);
-                //this._myMusic.updateVolume(0);
+                this._myMusic.fade(this._myMusicVolume, 0, 0.05, true);
+                //this._myMusic.updateVolume(0, true);
                 this._myStopMusicTimer.reset();
                 this._myIsMusicPlaying = false;
             }
