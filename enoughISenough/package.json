@@ -1,0 +1,17 @@
+{
+    "name": "enoughISenough",
+    "version": "1.1.0",
+    "author": "Pipo",
+    "description": "mr NOT does not want to leave me alone",
+    "homepage": "https://signor-pipo.itch.io/enough-is-enough",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/SignorPipo/enoughISenough.git"
+    },
+    "license": "ISC",
+    "devDependencies": {
+        "@typescript-eslint/parser": "^6.9.0",
+        "eslint": "^8.52.0",
+        "eslint-plugin-deprecation": "^2.0.0"
+    }
+}
