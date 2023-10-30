@@ -457,8 +457,6 @@ PP.EasyTuneSimpleTransformWidget = class EasyTuneSimpleTransformWidget {
                     this._myVariable.myScale[index] = this._myVariable.myInitialScale[index];
                     this._myUI.myScaleTextComponents[index].text = this._myVariable.myScale[index].toFixed(this._myVariable.myDecimalPlaces);
                     break;
-                default:
-                    initialValue = 0;
             }
         }
     }

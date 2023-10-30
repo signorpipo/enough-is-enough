@@ -92,4 +92,4 @@ PP.DebugAxes = class DebugAxes {
             this._myDebugRight._refreshLine(0);
         }
     }
-}
+};

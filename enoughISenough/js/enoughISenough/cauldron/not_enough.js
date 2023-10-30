@@ -9,7 +9,8 @@ class NotEnough {
     start() {
         this._myTimer.start();
 
-        if (this._myAudioPosition && false) {
+        let audioPositionEnabled = false;
+        if (this._myAudioPosition && audioPositionEnabled) {
             this._myNotEnoughAudio.setPosition(this._myAudioPosition);
         } else {
             this._updateAudioPosition();

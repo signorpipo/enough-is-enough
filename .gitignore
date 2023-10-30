@@ -1,8 +1,10 @@
 
-enoughISenough/deploy/
+deploy/
 
-enoughISenough/cache/
+cache/
 
-enoughISenough/imgui.ini
+node_modules/
+
+imgui.ini
 
 *.blend1

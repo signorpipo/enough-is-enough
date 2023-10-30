@@ -9,7 +9,7 @@ WL.registerComponent('test-rotate-object', {
     start: function () {
     },
     update: function (dt) {
-        let quat = this.object._pp_degreesToQuaternion([this._myX * dt, this._myY * dt, this._myZ * dt]);
+        this.object._pp_degreesToQuaternion([this._myX * dt, this._myY * dt, this._myZ * dt]);
         if (!this._myObjectRotate) {
             this.object.pp_rotateObjectDegrees([this._myX * dt, this._myY * dt, this._myZ * dt]);
             //this.object.pp_rotateAxisWorldDegrees(this.object.pp_getRightWorld(), -this._myX * dt);
