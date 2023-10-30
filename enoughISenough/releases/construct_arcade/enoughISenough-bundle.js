@@ -768,6 +768,7 @@ PP.HandPose = class HandPose {
             try {
                 xrPose = xrFrame.getPose(this._myInputSource.gripSpace, this._myReferenceSpace);
             } catch (error) {
+                // Do nothing
             }
 
             if (xrPose) {
@@ -1000,6 +1001,7 @@ PP.HeadPose = class HeadPose {
             try {
                 xrPose = xrFrame.getViewerPose(this._myReferenceSpace);
             } catch (error) {
+                // Do nothing
             }
 
             if (xrPose) {
@@ -2459,8 +2461,8 @@ WL.registerComponent('test-clone-mesh', {
 
     },
     update: function (dt) {
-        let a = 2;
-        a += 2;
+        //let a = 2;
+        //a += 2;
     }
 });
 WL.registerComponent('test-print-axes', {
@@ -3474,7 +3476,8 @@ WL.registerComponent('test-prototype', {
             let initialPos = [];
             this.object.getTranslationWorld(initialPos);
             for (let i = 0; i < 100; i++) {
-                this.object.transformWorld = this.object.transformWorld;
+                let currentTransformWorld = this.object.transformWorld;
+                this.object.transformWorld = currentTransformWorld;
                 this.object.setDirty();
             }
             let finalPos = [];
@@ -3531,7 +3534,7 @@ WL.registerComponent('test-rotate-object', {
     start: function () {
     },
     update: function (dt) {
-        let quat = this.object._pp_degreesToQuaternion([this._myX * dt, this._myY * dt, this._myZ * dt]);
+        this.object._pp_degreesToQuaternion([this._myX * dt, this._myY * dt, this._myZ * dt]);
         if (!this._myObjectRotate) {
             this.object.pp_rotateObjectDegrees([this._myX * dt, this._myY * dt, this._myZ * dt]);
             //this.object.pp_rotateAxisWorldDegrees(this.object.pp_getRightWorld(), -this._myX * dt);
@@ -4555,7 +4558,7 @@ PP.DebugAxes = class DebugAxes {
             this._myDebugRight._refreshLine(0);
         }
     }
-}
+};
 WL.registerComponent('pp-debug-global-data', {
     _myCubeMesh: { type: WL.Type.Mesh },
     _myFlatMaterial: { type: WL.Type.Material },
@@ -5870,7 +5873,7 @@ Global.sendAnalytics = function sendAnalytics(eventType, eventName, eventValue) 
     } catch (error) {
         // Do nothing
     }
-}
+};
 WL.registerComponent('pp-tool-cursor', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
     _myPulseOnHover: { type: WL.Type.Bool, default: true },
@@ -6686,15 +6689,15 @@ Array.prototype.vec3_addRotation = function (rotation, out) {
 };
 
 Array.prototype.vec3_addRotationDegrees = function (rotation, out) {
-    return quat.vec3_degreesAddRotationDegrees(rotation, out);
+    return this.vec3_degreesAddRotationDegrees(rotation, out);
 };
 
 Array.prototype.vec3_addRotationRadians = function (rotation, out) {
-    return quat.vec3_degreesAddRotationRadians(rotation, out);
+    return this.vec3_degreesAddRotationRadians(rotation, out);
 };
 
 Array.prototype.vec3_addRotationQuat = function (rotation, out) {
-    return quat.vec3_degreesAddRotationQuat(rotation, out);
+    return this.vec3_degreesAddRotationQuat(rotation, out);
 };
 
 Array.prototype.vec3_degreesAddRotation = function (rotation, out) {
@@ -8318,15 +8321,15 @@ Float32Array.prototype.vec3_addRotation = function (rotation, out) {
 };
 
 Float32Array.prototype.vec3_addRotationDegrees = function (rotation, out) {
-    return quat.vec3_degreesAddRotationDegrees(rotation, out);
+    return this.vec3_degreesAddRotationDegrees(rotation, out);
 };
 
 Float32Array.prototype.vec3_addRotationRadians = function (rotation, out) {
-    return quat.vec3_degreesAddRotationRadians(rotation, out);
+    return this.vec3_degreesAddRotationRadians(rotation, out);
 };
 
 Float32Array.prototype.vec3_addRotationQuat = function (rotation, out) {
-    return quat.vec3_degreesAddRotationQuat(rotation, out);
+    return this.vec3_degreesAddRotationQuat(rotation, out);
 };
 
 Float32Array.prototype.vec3_degreesAddRotation = function (rotation, out) {
@@ -12726,7 +12729,7 @@ PP.AudioEvent = {
 PP.AudioPlayer = class AudioPlayer {
     constructor(audioSetupOrAudioFilePath) {
         if (typeof audioSetupOrAudioFilePath === 'string') {
-            this._myAudioSetup = new PP.AudioSetup(audioSetupOrAudioFile);
+            this._myAudioSetup = new PP.AudioSetup(audioSetupOrAudioFilePath);
         } else {
             this._myAudioSetup = audioSetupOrAudioFilePath.clone();
         }
@@ -14066,7 +14069,8 @@ class NotEnough {
     start() {
         this._myTimer.start();
 
-        if (this._myAudioPosition && false) {
+        let audioPositionEnabled = false;
+        if (this._myAudioPosition && audioPositionEnabled) {
             this._myNotEnoughAudio.setPosition(this._myAudioPosition);
         } else {
             this._updateAudioPosition();
@@ -23837,7 +23841,9 @@ PP.EasyLightColor = class EasyLightColor extends PP.EasyObjectTuner {
             light.color[0] = color[0];
             light.color[1] = color[1];
             light.color[2] = color[2];
-            light.color[3] = light.color[3];
+
+            let alphaColor = light.color[3];
+            light.color[3] = alphaColor;
         }
 
         if ((PP.myRightGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isPressStart() && PP.myLeftGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).myIsPressed) ||
@@ -26690,8 +26696,6 @@ PP.EasyTuneSimpleTransformWidget = class EasyTuneSimpleTransformWidget {
                     this._myVariable.myScale[index] = this._myVariable.myInitialScale[index];
                     this._myUI.myScaleTextComponents[index].text = this._myVariable.myScale[index].toFixed(this._myVariable.myDecimalPlaces);
                     break;
-                default:
-                    initialValue = 0;
             }
         }
     }
