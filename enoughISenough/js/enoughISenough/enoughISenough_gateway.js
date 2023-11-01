@@ -6,6 +6,11 @@ WL.registerComponent("enough-IS-enough-gateway", {
 }, {
     init: function () {
         Global.myAnalyticsEnabled = true;
+
+        Global.sendAnalytics("event", "game_init_started", {
+            "value": 1
+        });
+
         Global.myAudioManager = new PP.AudioManager();
         Global.myParticlesManager = new ParticlesManager();
         Global.myMeshObjectPoolMap = new PP.ObjectPoolManager();
@@ -68,19 +73,23 @@ WL.registerComponent("enough-IS-enough-gateway", {
             this._start();
             PP.setEasyTuneWidgetActiveVariable("Float 1");
         } else if (!Global.myUpdateReady) {
-            if (!this._myLoadTimeSent) {
-                if (window.performance) {
-                    Global.sendAnalytics("event", "load_time", {
-                        "value": (performance.now() / 1000).toFixed(2)
-                    });
-                }
-
-                this._myLoadTimeSent = true;
-            }
-
             this._myUpdateReadyCountdown--;
             if (this._myUpdateReadyCountdown <= 0) {
                 Global.myUpdateReady = true;
+
+                Global.sendAnalytics("event", "game_init_ended", {
+                    "value": 1
+                });
+
+                if (!this._myLoadTimeSent) {
+                    if (window.performance) {
+                        Global.sendAnalytics("event", "load_time", {
+                            "value": (performance.now() / 1000).toFixed(2)
+                        });
+                    }
+
+                    this._myLoadTimeSent = true;
+                }
             }
         }
 
