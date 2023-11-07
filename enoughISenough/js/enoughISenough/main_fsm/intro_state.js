@@ -28,6 +28,8 @@ class IntroState extends PP.State {
 
         this._myIntroDuration = 0;
 
+        this._mySendFarEventCounter = 3;
+
         this._myXRSessionManuallyStarted = false;
 
         if (WL.xrSession) {
@@ -98,9 +100,24 @@ class IntroState extends PP.State {
     }
 
     waitStart(dt, fsm) {
-        this._myTimer.update(dt);
+        if (this._mySendFarEventCounter > 0) {
+            this._mySendFarEventCounter--;
+            if (this._mySendFarEventCounter == 0) {
+                if (PP.XRUtils.isXRSessionActive()) {
+                    this._sendFarEvents();
+                }
+            }
+        }
 
+        this._myTimer.update(dt);
         if (this._myTimer.isDone()) {
+            if (this._mySendFarEventCounter > 0) {
+                this._mySendFarEventCounter = 0;
+                if (PP.XRUtils.isXRSessionActive()) {
+                    this._sendFarEvents();
+                }
+            }
+
             fsm.perform("end");
         }
     }
@@ -196,5 +213,37 @@ class IntroState extends PP.State {
         this._myParentFSM.perform(MainTransitions.Skip);
 
         Global.myIntroDone = true;
+    }
+
+    _sendFarEvents() {
+        try {
+            let flatPlayerPosition = Global.myPlayerPosition.vec3_removeComponentAlongAxis([0, 1, 0]);
+            let distanceFromCenter = flatPlayerPosition.vec3_length();
+
+            if (distanceFromCenter > 0.55) {
+                Global.sendAnalytics("event", "xr_enter_session_very_far", {
+                    "value": 1
+                });
+            } else if (distanceFromCenter > 0.30) {
+                Global.sendAnalytics("event", "xr_enter_session_far", {
+                    "value": 1
+                });
+            }
+
+            let flatPlayerForward = Global.myPlayerForward.vec3_removeComponentAlongAxis([0, 1, 0]);
+            let angle = flatPlayerForward.vec3_angle([0, 0, -1]);
+
+            if (angle > 50) {
+                Global.sendAnalytics("event", "xr_enter_session_looking_far_away", {
+                    "value": 1
+                });
+            } else if (angle > 35) {
+                Global.sendAnalytics("event", "xr_enter_session_looking_away", {
+                    "value": 1
+                });
+            }
+        } catch (error) {
+            // Do nothing
+        }
     }
 }
