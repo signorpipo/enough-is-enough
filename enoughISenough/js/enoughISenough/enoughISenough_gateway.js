@@ -40,6 +40,11 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
         this._myResetXRSessionActiveOpenLinkExtraCheckTimer = new PP.Timer(2);
 
+        this._myVRButtonVisibilityUpdated = false;
+        this._myVRButtonDisabledOpacityUpdated = false;
+        this._myVRButtonUsabilityUpdated = false;
+        this._myVRButton = document.getElementById("vr-button");
+
         if (window.location != null && window.location.host != null) {
             Global.myIsLocalhost = window.location.host == "localhost:8080";
         }
@@ -72,23 +77,29 @@ WL.registerComponent("enough-IS-enough-gateway", {
             this._myFirstUpdate = false;
             this._start();
             PP.setEasyTuneWidgetActiveVariable("Float 1");
-        } else if (!Global.myUpdateReady) {
-            this._myUpdateReadyCountdown--;
-            if (this._myUpdateReadyCountdown <= 0) {
-                Global.myUpdateReady = true;
+        } else {
+            if (!this._myVRButtonUsabilityUpdated) {
+                this._updateVRButtonVisibility();
+            }
 
-                Global.sendAnalytics("event", "game_init_ended", {
-                    "value": 1
-                });
+            if (!Global.myUpdateReady) {
+                this._myUpdateReadyCountdown--;
+                if (this._myUpdateReadyCountdown <= 0) {
+                    Global.myUpdateReady = true;
 
-                if (!this._myLoadTimeSent) {
-                    if (window.performance) {
-                        Global.sendAnalytics("event", "load_time", {
-                            "value": (window.performance.now() / 1000).toFixed(2)
-                        });
+                    Global.sendAnalytics("event", "game_init_ended", {
+                        "value": 1
+                    });
+
+                    if (!this._myLoadTimeSent) {
+                        if (window.performance) {
+                            Global.sendAnalytics("event", "load_time", {
+                                "value": (window.performance.now() / 1000).toFixed(2)
+                            });
+                        }
+
+                        this._myLoadTimeSent = true;
                     }
-
-                    this._myLoadTimeSent = true;
                 }
             }
         }
@@ -288,6 +299,10 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
         this.enoughISenough.start();
 
+        if (this._myVRButton != null) {
+            this._myVRButton.style.setProperty("display", "flex");
+        }
+
         /*
         let componentAmountMapAfterLoad = Global.myScene.pp_getComponentAmountMapHierarchy();
         //console.error(componentAmountMapAfterLoad);
@@ -330,6 +345,29 @@ WL.registerComponent("enough-IS-enough-gateway", {
             if (WL.xrSession) {
                 console.clear();
             }
+        }
+    },
+    _updateVRButtonVisibility() {
+        if (this._myVRButton != null) {
+            if (!this._myVRButtonVisibilityUpdated) {
+                this._myVRButton.style.setProperty("width", "100px");
+                this._myVRButtonVisibilityUpdated = true;
+            }
+
+            if (!this._myVRButtonUsabilityUpdated) {
+                if (WL.vrSupported != 0) {
+                    this._myVRButton.style.setProperty("opacity", "1");
+                    this._myVRButton.style.setProperty("pointer-events", "all");
+
+                    this._myVRButtonUsabilityUpdated = true;
+                } else if (!this._myVRButtonDisabledOpacityUpdated) {
+                    this._myVRButton.style.setProperty("opacity", "0.5");
+
+                    this._myVRButtonDisabledOpacityUpdated = true;
+                }
+            }
+        } else {
+            this._myVRButtonUsabilityUpdated = true;
         }
     },
     _onXRSessionStart(session) {

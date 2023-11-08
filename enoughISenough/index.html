@@ -25,9 +25,9 @@
         }
 
         .xr-button-container {
-            display: block;
             position: fixed;
             width: 100%;
+            height: 90px;
             bottom: 0px;
             display: flex;
             justify-content: center;
@@ -36,23 +36,13 @@
 
         #vr-button {
             float: left;
-            /* Hidden until we know supported state */
             width: 0px;
             margin-bottom: 25px;
-            display: block;
-            pointer-events: all;
+            display: none;
+            pointer-events: none;
             cursor: pointer;
-        }
-
-        #ar-button {
-            float: left;
-            /* Hidden until we know supported state */
-            width: 0px;
-            margin-left: 10px;
-            margin-bottom: 25px;
-            display: block;
-            pointer-events: all;
-            cursor: pointer;
+            opacity: 0;
+            transition: width 0.5s;
         }
 
         #canvas {
@@ -65,23 +55,20 @@
             touch-action: none;
         }
 
-        /* Once supported state is known, show the button */
-        [data-supported] {
-            width: 100px !important;
-            transition: 0.5s;
-        }
-
-        /* If not supported, we dim out */
-        [data-supported="0"] {
-            opacity: 0.25;
-        }
-
         .xr-button-label {
             fill: #472777;
         }
 
         .xr-button-frame {
             stroke: #472777;
+        }
+
+        #vr-button:hover {
+            width: 105px !important;
+        }
+
+        #vr-button:active {
+            width: 95px !important;
         }
     </style>
 
