@@ -300,7 +300,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         this.enoughISenough.start();
 
         if (this._myVRButton != null) {
-            this._myVRButton.style.setProperty("display", "flex");
+            this._myVRButton.style.setProperty("display", "block");
         }
 
         /*
@@ -350,7 +350,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
     _updateVRButtonVisibility() {
         if (this._myVRButton != null) {
             if (!this._myVRButtonVisibilityUpdated) {
-                this._myVRButton.style.setProperty("width", "100px");
+                this._myVRButton.style.setProperty("transform", "scale(1)");
                 this._myVRButtonVisibilityUpdated = true;
             }
 
