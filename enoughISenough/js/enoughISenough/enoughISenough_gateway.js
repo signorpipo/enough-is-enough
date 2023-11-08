@@ -48,6 +48,11 @@ WL.registerComponent("enough-IS-enough-gateway", {
         if (window.location != null && window.location.host != null) {
             Global.myIsLocalhost = window.location.host == "localhost:8080";
         }
+
+        this._myGestureStartEventListener = function (event) {
+            event.preventDefault();
+        };
+        document.addEventListener("gesturestart", this._myGestureStartEventListener);
     },
     start: function () {
         let version = Global.mySaveManager.loadNumber("game_version", 0);
