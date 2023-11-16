@@ -182,14 +182,13 @@ PP.Gamepad = class Gamepad {
 
         this._myAxesInfo = new PP.AxesInfo();
 
-        this._mySelectStart = false;
-        this._mySelectEnd = false;
-        this._mySqueezeStart = false;
-        this._mySqueezeEnd = false;
+        this._mySelectPressed = false;
+        this._mySqueezePressed = false;
 
         this._myIsXRSessionActive = false;
         this._myInputSource = null;
         this._myGamepad = null;
+        this._myPrevInputSource = null;
 
         this._myButtonCallbacks = [];
         for (let typeKey in PP.ButtonType) {
@@ -325,6 +324,12 @@ PP.Gamepad = class Gamepad {
     }
 
     update(dt) {
+        if (this._myPrevInputSource != this._myInputSource) {
+            this._mySelectPressed = false;
+            this._mySqueezePressed = false;
+        }
+        this._myPrevInputSource = this._myInputSource;
+
         this._preUpdateButtonInfos();
         this._updateButtonInfos();
         this._postUpdateButtonInfos(dt);
@@ -375,22 +380,10 @@ PP.Gamepad = class Gamepad {
     //This sadly must be done this way to be the most compatible
     _updateSelectAndSqueezePressed() {
         let buttonSelect = this._myButtonInfos[PP.ButtonType.SELECT];
-
-        if (this._mySelectStart) {
-            buttonSelect.myIsPressed = true;
-        }
-        if (this._mySelectEnd) {
-            buttonSelect.myIsPressed = false;
-        }
+        buttonSelect.myIsPressed = this._mySelectPressed;
 
         let buttonSqueeze = this._myButtonInfos[PP.ButtonType.SQUEEZE];
-        if (this._mySqueezeStart) {
-            buttonSqueeze.myIsPressed = true;
-        }
-
-        if (this._mySqueezeEnd) {
-            buttonSqueeze.myIsPressed = false;
-        }
+        buttonSqueeze.myIsPressed = this._mySqueezePressed;
 
         if (!this.isGamepadActive()) {
             buttonSelect.myIsPressed = false;
@@ -541,11 +534,6 @@ PP.Gamepad = class Gamepad {
             let callbacksMap = buttonCallbacks[PP.ButtonEvent.ALWAYS];
             this._triggerCallbacks(callbacksMap, buttonInfo);
         }
-
-        this._mySelectStart = false;
-        this._mySelectEnd = false;
-        this._mySqueezeStart = false;
-        this._mySqueezeEnd = false;
     }
 
     _preUpdateAxesInfos() {
@@ -679,10 +667,11 @@ PP.Gamepad = class Gamepad {
         this._myGamepad = null;
 
         if (session.inputSources != null && session.inputSources.length > 0) {
-            for (let item of session.inputSources) {
-                if (item.handedness == this._myHandedness) {
-                    this._myInputSource = item;
-                    this._myGamepad = item.gamepad;
+            for (let i = 0; i < session.inputSources.length; i++) {
+                let inputSource = session.inputSources[i];
+                if (inputSource.handedness == this._myHandedness) {
+                    this._myInputSource = inputSource;
+                    this._myGamepad = inputSource.gamepad;
                 }
             }
         }
@@ -692,10 +681,11 @@ PP.Gamepad = class Gamepad {
             this._myGamepad = null;
 
             if (session.inputSources != null && session.inputSources.length > 0) {
-                for (let item of session.inputSources) {
-                    if (item.handedness == this._myHandedness) {
-                        this._myInputSource = item;
-                        this._myGamepad = item.gamepad;
+                for (let i = 0; i < session.inputSources.length; i++) {
+                    let inputSource = session.inputSources[i];
+                    if (inputSource.handedness == this._myHandedness) {
+                        this._myInputSource = inputSource;
+                        this._myGamepad = inputSource.gamepad;
                     }
                 }
             }
@@ -714,31 +704,34 @@ PP.Gamepad = class Gamepad {
         this._myInputSource = null;
         this._myGamepad = null;
 
+        this._mySelectPressed = false;
+        this._mySqueezePressed = false;
+
         this._myIsXRSessionActive = false;
     }
 
     //Select and Squeeze are managed this way to be more compatible
     _selectStart(event) {
-        if (event.inputSource.handedness == this._myHandedness) {
-            this._mySelectStart = true;
+        if (this._myInputSource != null && this._myInputSource == event.inputSource) {
+            this._mySelectPressed = true;
         }
     }
 
     _selectEnd(event) {
-        if (event.inputSource.handedness == this._myHandedness) {
-            this._mySelectEnd = true;
+        if (this._myInputSource != null && this._myInputSource == event.inputSource) {
+            this._mySelectPressed = false;
         }
     }
 
     _squeezeStart(event) {
-        if (event.inputSource.handedness == this._myHandedness) {
-            this._mySqueezeStart = true;
+        if (this._myInputSource != null && this._myInputSource == event.inputSource) {
+            this._mySqueezePressed = true;
         }
     }
 
     _squeezeEnd(event) {
-        if (event.inputSource.handedness == this._myHandedness) {
-            this._mySqueezeEnd = true;
+        if (this._myInputSource != null && this._myInputSource == event.inputSource) {
+            this._mySqueezePressed = false;
         }
     }
 
