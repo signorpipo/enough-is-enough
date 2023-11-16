@@ -43,6 +43,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         this._myVRButtonVisibilityUpdated = false;
         this._myVRButtonDisabledOpacityUpdated = false;
         this._myVRButtonUsabilityUpdated = false;
+        this._myXRButtonsContainer = document.getElementById("xr-buttons-container");
         this._myVRButton = document.getElementById("vr-button");
 
         if (window.location != null && window.location.host != null) {
@@ -376,9 +377,17 @@ WL.registerComponent("enough-IS-enough-gateway", {
         }
     },
     _onXRSessionStart(session) {
+        if (this._myXRButtonsContainer != null) {
+            this._myXRButtonsContainer.style.setProperty("display", "none");
+        }
+
         Global.myXRSessionActiveOpenLinkExtraCheck = true;
     },
     _onXRSessionEnd() {
+        if (this._myXRButtonsContainer != null) {
+            this._myXRButtonsContainer.style.removeProperty("display");
+        }
+
         Global.myXRSessionActiveOpenLinkExtraCheck = false;
     }
 });
