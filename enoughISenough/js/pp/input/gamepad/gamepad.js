@@ -362,14 +362,6 @@ PP.Gamepad = class Gamepad {
             if (inputSourceType == PP.InputSourceType.HAND) {
                 this._updateHandSqueeze();
             }
-
-            if (this._myButtonInfos[PP.ButtonType.SELECT].myIsPressed && this._myButtonInfos[PP.ButtonType.SELECT].myValue == 0) {
-                this._myButtonInfos[PP.ButtonType.SELECT].myValue = 1;
-            }
-
-            if (this._myButtonInfos[PP.ButtonType.SQUEEZE].myIsPressed && this._myButtonInfos[PP.ButtonType.SQUEEZE].myValue == 0) {
-                this._myButtonInfos[PP.ButtonType.SQUEEZE].myValue = 1;
-            }
         }
     }
 
@@ -401,6 +393,14 @@ PP.Gamepad = class Gamepad {
 
         button.myIsTouched = internalButton.touched;
         button.myValue = internalButton.value;
+
+        if (button.myIsPressed) {
+            button.myIsTouched = true;
+
+            if (button.myValue == 0) {
+                button.myValue = 1;
+            }
+        }
     }
 
     _postUpdateButtonInfos(dt) {

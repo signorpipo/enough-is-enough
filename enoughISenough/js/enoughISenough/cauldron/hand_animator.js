@@ -173,7 +173,8 @@ class HandPiece {
                 this._myAudio.updatePosition(this._myObject.pp_getPosition(), true);
             }
 
-            glMatrix.vec3.lerp(this._myCurrentPosition, this._myEndPosition, this._myStartPosition, interpolateValue);
+            let adjustedInterpolateValue = Math.pp_mapToRange(interpolateValue, 0.025, 0.975, 0, 1);
+            glMatrix.vec3.lerp(this._myCurrentPosition, this._myEndPosition, this._myStartPosition, adjustedInterpolateValue);
             this._myObject.pp_setPositionLocal(this._myCurrentPosition);
         }
     }
