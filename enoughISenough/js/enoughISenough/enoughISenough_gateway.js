@@ -16,7 +16,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         Global.myMeshObjectPoolMap = new PP.ObjectPoolManager();
         Global.myMeshNoFogObjectPoolMap = new PP.ObjectPoolManager();
         Global.myGameObjectPoolMap = new PP.ObjectPoolManager();
-        Global.mySaveManager = new PP.SaveManager();
+        Global.mySaveManager = new PP.SaveManager("enoughISenough");
         //Global.mySaveManager.clear(); 
         Global.myScene = this.object;
 
@@ -56,7 +56,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         document.addEventListener("gesturestart", this._myGestureStartEventListener);
     },
     start: function () {
-        let version = Global.mySaveManager.loadNumber("game_version", 0);
+        let version = Global.mySaveManager.load("game_version", 0);
         Global.myGameVersion = 18;
 
         let minVersionToReset = 6;
@@ -67,9 +67,9 @@ WL.registerComponent("enough-IS-enough-gateway", {
             Global.mySaveManager.save("game_version", Global.myGameVersion);
         }
 
-        let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false); // This is actually trial ended once, don't want to change name tho
-        let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
-        let trialCompleted = Global.mySaveManager.loadBool("trial_completed", false);
+        let trialStartedOnce = Global.mySaveManager.load("trial_started_once", false); // This is actually trial ended once, don't want to change name tho
+        let trialPhase = Global.mySaveManager.load("trial_phase", 1);
+        let trialCompleted = Global.mySaveManager.load("trial_completed", false);
         Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialPhase >= 2);
 
         if (WL.xrSession) {

@@ -71,9 +71,9 @@ class MenuState extends PP.State {
     start(fsm, transitionID) {
         this._myParentFSM = fsm;
 
-        let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false);
-        let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
-        let trialCompleted = Global.mySaveManager.loadBool("trial_completed", false);
+        let trialStartedOnce = Global.mySaveManager.load("trial_started_once", false);
+        let trialPhase = Global.mySaveManager.load("trial_phase", 1);
+        let trialCompleted = Global.mySaveManager.load("trial_completed", false);
         if (trialCompleted || (trialStartedOnce && trialPhase >= 2)) {
             this._myCurrentMenuItems = [];
 
@@ -213,7 +213,6 @@ class MenuState extends PP.State {
             Global.mySaveManager.save("trial_phase", 1);
 
             Global.myStatistics.myTrialPlayCountResettable = 0;
-            Global.myStatistics.myMrNOTClonesDismissedResettable = 0;
             Global.myStatistics.save();
 
             this._myNotEnough.start();

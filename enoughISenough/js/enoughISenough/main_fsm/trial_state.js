@@ -93,7 +93,7 @@ class TrialState extends PP.State {
 
         this._myMrNotClonesDismissedOnStart = Global.myStatistics.myMrNOTClonesDismissed;
 
-        let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
+        let trialPhase = Global.mySaveManager.load("trial_phase", 1);
 
         Global.myIsTrialPhase1 = false;
         if (trialPhase == 1) {
@@ -199,7 +199,7 @@ class TrialState extends PP.State {
             }
         }
 
-        if (trialPhase == 1 && !Global.mySaveManager.loadBool("mr_NOT_clones_seen", false)) {
+        if (trialPhase == 1 && !Global.mySaveManager.load("mr_NOT_clones_seen", false)) {
             Global.sendAnalytics("event", "trial_lost_before_first_clone_seen", {
                 "value": 1
             });

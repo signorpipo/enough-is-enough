@@ -707,7 +707,7 @@ class Vent {
 
         //this._boosterGroupDebug();
 
-        if (!Global.mySaveManager.loadBool("mr_NOT_encountered", false)) {
+        if (!Global.mySaveManager.load("mr_NOT_encountered", false)) {
             Global.mySaveManager.save("mr_NOT_encountered", true);
 
             Global.sendAnalytics("event", "mr_NOT_encountered_before_trial", {

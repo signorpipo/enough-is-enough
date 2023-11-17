@@ -125,7 +125,6 @@ class Statistics {
         this.myEvidencesMissed = 0;
         this.myEvidencesPunched = 0;
         this.myMrNOTClonesDismissed = 0;
-        this.myMrNOTClonesDismissedResettable = 0;
         this.myMrNOTDismissed = 0;
 
         this.myTotalPlayTimeOnLoad = 0;
@@ -137,28 +136,27 @@ class Statistics {
     }
 
     load() {
-        this.myTotalPlayTime = Global.mySaveManager.loadNumber("total_play_time", 0);
+        this.myTotalPlayTime = Global.mySaveManager.load("total_play_time", 0);
 
-        this.myTrialPlayTime = Global.mySaveManager.loadNumber("trial_play_time", 0);
-        this.myTrialPlayCount = Global.mySaveManager.loadNumber("trial_play_count", 0);
-        this.myTrialPlayCountResettable = Global.mySaveManager.loadNumber("trial_play_count_resettable", 0);
-        this.myTrialCompletedCount = Global.mySaveManager.loadNumber("trial_completed_count", 0);
-        this.myTrialBestTime = Global.mySaveManager.loadNumber("trial_best_time", -1);
+        this.myTrialPlayTime = Global.mySaveManager.load("trial_play_time", 0);
+        this.myTrialPlayCount = Global.mySaveManager.load("trial_play_count", 0);
+        this.myTrialPlayCountResettable = Global.mySaveManager.load("trial_play_count_resettable", 0);
+        this.myTrialCompletedCount = Global.mySaveManager.load("trial_completed_count", 0);
+        this.myTrialBestTime = Global.mySaveManager.load("trial_best_time", -1);
 
-        this.myChatPlayTime = Global.mySaveManager.loadNumber("chat_play_time", 0);
-        this.myChatPlayCount = Global.mySaveManager.loadNumber("chat_play_count", 0);
-        this.myChatBestTime = Global.mySaveManager.loadNumber("chat_best_time", -1);
+        this.myChatPlayTime = Global.mySaveManager.load("chat_play_time", 0);
+        this.myChatPlayCount = Global.mySaveManager.load("chat_play_count", 0);
+        this.myChatBestTime = Global.mySaveManager.load("chat_best_time", -1);
 
-        this.myDisputePlayTime = Global.mySaveManager.loadNumber("dispute_play_time", 0);
-        this.myDisputePlayCount = Global.mySaveManager.loadNumber("dispute_play_count", 0);
-        this.myDisputeBestTime = Global.mySaveManager.loadNumber("dispute_best_time", -1);
+        this.myDisputePlayTime = Global.mySaveManager.load("dispute_play_time", 0);
+        this.myDisputePlayCount = Global.mySaveManager.load("dispute_play_count", 0);
+        this.myDisputeBestTime = Global.mySaveManager.load("dispute_best_time", -1);
 
-        this.myEvidencesThrown = Global.mySaveManager.loadNumber("evidences_thrown", 0);
-        this.myEvidencesMissed = Global.mySaveManager.loadNumber("evidences_missed", 0);
-        this.myEvidencesPunched = Global.mySaveManager.loadNumber("evidences_punched", 0);
-        this.myMrNOTClonesDismissed = Global.mySaveManager.loadNumber("mr_NOT_clones_dismissed", 0);
-        this.myMrNOTClonesDismissedResettable = Global.mySaveManager.loadNumber("mr_NOT_clones_dismissed_resettable", 0);
-        this.myMrNOTDismissed = Global.mySaveManager.loadNumber("mr_NOT_dismissed", 0);
+        this.myEvidencesThrown = Global.mySaveManager.load("evidences_thrown", 0);
+        this.myEvidencesMissed = Global.mySaveManager.load("evidences_missed", 0);
+        this.myEvidencesPunched = Global.mySaveManager.load("evidences_punched", 0);
+        this.myMrNOTClonesDismissed = Global.mySaveManager.load("mr_NOT_clones_dismissed", 0);
+        this.myMrNOTDismissed = Global.mySaveManager.load("mr_NOT_dismissed", 0);
 
         this.syncOnLoadVariables();
     }
@@ -193,7 +191,6 @@ class Statistics {
         Global.mySaveManager.save("evidences_missed", this.myEvidencesMissed);
         Global.mySaveManager.save("evidences_punched", this.myEvidencesPunched);
         Global.mySaveManager.save("mr_NOT_clones_dismissed", this.myMrNOTClonesDismissed);
-        Global.mySaveManager.save("mr_NOT_clones_dismissed_resettable", this.myMrNOTClonesDismissedResettable);
         Global.mySaveManager.save("mr_NOT_dismissed", this.myMrNOTDismissed);
     }
 }

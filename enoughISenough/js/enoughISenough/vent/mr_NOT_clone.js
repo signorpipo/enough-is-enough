@@ -100,7 +100,7 @@ class MrNOTClone {
 
         this._myTimerBeforeCheckingSeen = new PP.Timer(3);
         this._myTimerBeforeSettingSeen = new PP.Timer(0.75, false);
-        this._myMrNOTClonesSeen = Global.mySaveManager.loadBool("mr_NOT_clones_seen", false);
+        this._myMrNOTClonesSeen = Global.mySaveManager.load("mr_NOT_clones_seen", false);
 
         //Setup
         this._myReachTargetDistance = Global.myRingRadius * 2;
@@ -255,7 +255,6 @@ class MrNOTClone {
             }
 
             Global.myStatistics.myMrNOTClonesDismissed += 1;
-            Global.myStatistics.myMrNOTClonesDismissedResettable += 1;
 
             if (Global.myIsTrialPhase1) {
                 Global.myMrNOTClonesNotDismissedPhase1PlayCount = 0;

@@ -44,5 +44,14 @@ PP.SaveUtils = {
         }
 
         return defaultValue;
+    },
+    loadObject: function (id, defaultValue = null) {
+        let item = PP.SaveUtils.loadString(id);
+
+        if (item != null) {
+            return JSON.parse(item);
+        }
+
+        return defaultValue;
     }
 };

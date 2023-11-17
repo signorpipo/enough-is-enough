@@ -44,8 +44,8 @@ class IntroState extends PP.State {
             this._myIntroDuration += dt;
         }
 
-        let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false);
-        let introViewed = Global.mySaveManager.loadNumber("intro_viewed", 0);
+        let trialStartedOnce = Global.mySaveManager.load("trial_started_once", false);
+        let introViewed = Global.mySaveManager.load("intro_viewed", 0);
 
         if ((trialStartedOnce && introViewed >= 3) || Global.myDebugShortcutsEnabled) {
             let buttonPressToSkip = (PP.XRUtils.isDeviceEmulated() && Global.myIsLocalhost && Global.myDebugShortcutsEnabled) ? 1 : 3;
@@ -76,7 +76,7 @@ class IntroState extends PP.State {
 
     waitSession(dt, fsm) {
         if (WL.xrSession && Global.myUpdateReady) {
-            let currentVersion = Global.mySaveManager.loadNumber("game_version", 0);
+            let currentVersion = Global.mySaveManager.load("game_version", 0);
             console.log("Game Version:", currentVersion);
 
             Global.sendAnalytics("event", "xr_enter_session", {
@@ -186,7 +186,7 @@ class IntroState extends PP.State {
     endIntro(fsm) {
         this._myParentFSM.perform(MainTransitions.End);
 
-        let introViewed = Global.mySaveManager.loadNumber("intro_viewed", 0);
+        let introViewed = Global.mySaveManager.load("intro_viewed", 0);
 
         if (introViewed == 0) {
             Global.sendAnalytics("event", "intro_done_first", {
