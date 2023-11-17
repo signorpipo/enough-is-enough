@@ -211,8 +211,8 @@ class MenuState extends PP.State {
             Global.mySaveManager.save("trial_started_once", false);
             Global.mySaveManager.save("trial_completed", false);
             Global.mySaveManager.save("trial_phase", 1);
+            Global.mySaveManager.save("save_reset_normal", true);
 
-            Global.myStatistics.myTrialPlayCountResettable = 0;
             Global.myStatistics.save();
 
             this._myNotEnough.start();
@@ -223,6 +223,7 @@ class MenuState extends PP.State {
 
             Global.mySaveManager.clear();
             Global.mySaveManager.save("game_version", Global.myGameVersion);
+
             this._myNotEnough.start();
             Global.myParticlesManager.mrNOTParticles(Global.myPlayerPosition);
         }

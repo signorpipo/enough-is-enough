@@ -112,7 +112,6 @@ class Statistics {
         this.myTotalPlayTime = 0;
         this.myTrialPlayTime = 0;
         this.myTrialPlayCount = 0;
-        this.myTrialPlayCountResettable = 0;
         this.myTrialCompletedCount = 0;
         this.myTrialBestTime = 0;
         this.myChatPlayTime = 0;
@@ -140,7 +139,6 @@ class Statistics {
 
         this.myTrialPlayTime = Global.mySaveManager.load("trial_play_time", 0);
         this.myTrialPlayCount = Global.mySaveManager.load("trial_play_count", 0);
-        this.myTrialPlayCountResettable = Global.mySaveManager.load("trial_play_count_resettable", 0);
         this.myTrialCompletedCount = Global.mySaveManager.load("trial_completed_count", 0);
         this.myTrialBestTime = Global.mySaveManager.load("trial_best_time", -1);
 
@@ -175,7 +173,6 @@ class Statistics {
 
         Global.mySaveManager.save("trial_play_time", this.myTrialPlayTime);
         Global.mySaveManager.save("trial_play_count", this.myTrialPlayCount);
-        Global.mySaveManager.save("trial_play_count_resettable", this.myTrialPlayCountResettable);
         Global.mySaveManager.save("trial_completed_count", this.myTrialCompletedCount);
         Global.mySaveManager.save("trial_best_time", this.myTrialBestTime);
 
