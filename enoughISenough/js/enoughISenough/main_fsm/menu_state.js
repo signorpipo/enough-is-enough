@@ -124,6 +124,8 @@ class MenuState extends PP.State {
         Global.myPlayMusic = true;
 
         this._myMenuDuration = 0;
+
+        Global.myStatisticsManager.saveStatistics();
     }
 
     end() {
@@ -132,6 +134,8 @@ class MenuState extends PP.State {
         });
 
         Global.myIsInMenu = false;
+
+        Global.myStatisticsManager.saveStatistics();
     }
 
     _readyUpdate(dt, fsm) {
@@ -214,8 +218,6 @@ class MenuState extends PP.State {
             Global.mySaveManager.save("trial_phase", 1);
 
             Global.mySaveManager.save("save_reset_normal", true);
-
-            Global.myStatisticsManager.saveStatistics();
 
             this._myNotEnough.start();
         } else {

@@ -77,6 +77,8 @@ class ArcadeResultState extends PP.State {
         this._myParentFSM = fsm;
         this._myFSM.perform("start");
 
+        Global.myStatisticsManager.saveStatistics();
+
         Global.sendAnalytics("event", "arcade_time", {
             "value": Global.myVentDuration.toFixed(2)
         });
