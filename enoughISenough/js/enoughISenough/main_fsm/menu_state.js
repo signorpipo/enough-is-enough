@@ -213,7 +213,7 @@ class MenuState extends PP.State {
             Global.mySaveManager.save("trial_phase", 1);
             Global.mySaveManager.save("save_reset_normal", true);
 
-            Global.myStatistics.save();
+            Global.myStatisticsManager.saveStatistics();
 
             this._myNotEnough.start();
         } else {

@@ -33,9 +33,13 @@ class StatisticsManager {
         this._myCommitOnEndTimer.update(dt);
         this._mySaveTimer.update(dt);
         if (this._mySaveTimer.isDone()) {
-            this._mySaveTimer.start(Math.pp_random(15, 25));
-            Global.myStatistics.save();
+            this.saveStatistics();
         }
+    }
+
+    saveStatistics() {
+        Global.myStatistics.save();
+        this._mySaveTimer.start(Math.pp_random(15, 25));
     }
 
     _onXRSessionStart(session) {
@@ -51,7 +55,7 @@ class StatisticsManager {
     }
 
     _onXRSessionInterrupt() {
-        Global.myStatistics.save();
+        this.saveStatistics();
         Global.mySaveManager.commitSaves();
 
         if (this._myCommitOnEndTimer.isDone()) {

@@ -429,6 +429,7 @@ var Global = {
     myLightFadeInTime: 0,
     myStartFadeOut: false,
     myStatistics: null,
+    myStatisticsManager: null,
     myIsInMenu: false,
     myIsInArcadeResult: false,
     myEnableSelectPhysx: false,
