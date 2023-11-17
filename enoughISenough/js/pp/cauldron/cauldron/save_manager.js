@@ -9,8 +9,6 @@ PP.SaveManager = class SaveManager {
         this._myCommitSavesDirty = false;
         this._myCommitSavesDirtyClearOnFail = true;
 
-        this._myCacheDefaultValueOnFail = true;
-
         this._myClearCallbacks = new Map();                 // Signature: callback()
         this._myDeleteCallbacks = new Map();                // Signature: callback(id)
         this._myDeleteIDCallbacks = new Map();              // Signature: callback(id)
@@ -44,10 +42,6 @@ PP.SaveManager = class SaveManager {
 
     setCommitSavesDirtyClearOnFail(clearOnFail) {
         this._myCommitSavesDirtyClearOnFail = clearOnFail;
-    }
-
-    setCacheDefaultValueOnFail(cache) {
-        this._myCacheDefaultValueOnFail = cache;
     }
 
     update(dt) {
@@ -163,9 +157,6 @@ PP.SaveManager = class SaveManager {
 
         if (value == null && defaultValue != null) {
             value = defaultValue;
-            if (this._myCacheDefaultValueOnFail) {
-                this._mySaveObject[id] = value;
-            }
         }
 
         if (this._myLoadCallbacks.size > 0) {
@@ -218,10 +209,6 @@ PP.SaveManager = class SaveManager {
 
     isCommitSavesDirtyClearOnFail() {
         return this._myCommitSavesDirtyClearOnFail;
-    }
-
-    isCacheDefaultValueOnFail() {
-        return this._myCacheDefaultValueOnFail;
     }
 
     registerClearEventListener(callbackID, callback) {
