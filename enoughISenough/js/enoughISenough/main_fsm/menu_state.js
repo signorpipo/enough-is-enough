@@ -208,6 +208,7 @@ class MenuState extends PP.State {
                 "value": 1
             });
 
+            Global.mySaveManager.save("intro_viewed", 0);
             Global.mySaveManager.save("trial_ended_once", false);
             Global.mySaveManager.save("trial_completed", false);
             Global.mySaveManager.save("trial_phase", 1);
