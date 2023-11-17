@@ -44,10 +44,10 @@ class IntroState extends PP.State {
             this._myIntroDuration += dt;
         }
 
-        let trialStartedOnce = Global.mySaveManager.load("trial_started_once", false);
+        let trialEndedOnce = Global.mySaveManager.load("trial_ended_once", false);
         let introViewed = Global.mySaveManager.load("intro_viewed", 0);
 
-        if ((trialStartedOnce && introViewed >= 3) || Global.myDebugShortcutsEnabled) {
+        if ((trialEndedOnce && introViewed >= 3) || Global.myDebugShortcutsEnabled) {
             let buttonPressToSkip = (PP.XRUtils.isDeviceEmulated() && Global.myIsLocalhost && Global.myDebugShortcutsEnabled) ? 1 : 3;
             if (!this._myFSM.isInState("wait_session") && PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(buttonPressToSkip)) {
                 while (!this._myFSM.isInState("done") && !this._myFSM.isInState("test")) {

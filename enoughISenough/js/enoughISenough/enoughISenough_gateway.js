@@ -67,10 +67,10 @@ WL.registerComponent("enough-IS-enough-gateway", {
             Global.mySaveManager.save("game_version", Global.myGameVersion);
         }
 
-        let trialStartedOnce = Global.mySaveManager.load("trial_started_once", false); // This is actually trial ended once, don't want to change name tho
+        let trialEndedOnce = Global.mySaveManager.load("trial_ended_once", false);
         let trialPhase = Global.mySaveManager.load("trial_phase", 1);
         let trialCompleted = Global.mySaveManager.load("trial_completed", false);
-        Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialPhase >= 2);
+        Global.myEnableSelectPhysx = trialCompleted || (trialEndedOnce && trialPhase >= 2);
 
         if (WL.xrSession) {
             this._onXRSessionStart(WL.xrSession);

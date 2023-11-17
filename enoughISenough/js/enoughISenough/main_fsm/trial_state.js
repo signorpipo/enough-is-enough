@@ -128,7 +128,7 @@ class TrialState extends PP.State {
     end(fsm, transitionID) {
         Global.myIsTrialPhase1 = false;
 
-        Global.mySaveManager.save("trial_started_once", true);
+        Global.mySaveManager.save("trial_ended_once", true);
     }
 
     _trialPhaseCompleted(trialPhase, nextTrialPhase, fsm) {
