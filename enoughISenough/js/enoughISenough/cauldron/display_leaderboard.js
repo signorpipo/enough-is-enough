@@ -9,6 +9,14 @@ WL.registerComponent("display-leaderboard", {
     start: function () {
         this._myNamesTextComponent = this._myNamesText.pp_getComponent("text");
         this._myScoresTextComponent = this._myScoresText.pp_getComponent("text");
+
+        if (this._myNamesTextComponent != null) {
+            this._myNamesTextComponent.text = "";
+        }
+
+        if (this._myScoresTextComponent != null) {
+            this._myScoresTextComponent.text = "";
+        }
     },
     update: function (dt) {
     },
@@ -40,8 +48,13 @@ WL.registerComponent("display-leaderboard", {
             scoresText = scoresText.concat(convertedScore, "\n\n");
         }
 
-        this._myNamesTextComponent.text = namesText;
-        this._myScoresTextComponent.text = scoresText;
+        if (this._myNamesTextComponent != null) {
+            this._myNamesTextComponent.text = namesText;
+        }
+
+        if (this._myScoresTextComponent != null) {
+            this._myScoresTextComponent.text = scoresText;
+        }
     },
     _convertTime(score) {
         let time = Math.floor(score / 1000);
