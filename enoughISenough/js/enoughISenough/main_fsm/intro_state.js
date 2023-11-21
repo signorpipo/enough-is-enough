@@ -189,7 +189,7 @@ class IntroState extends PP.State {
         let introViewed = Global.mySaveManager.load("intro_viewed", 0);
 
         if (introViewed == 0) {
-            Global.sendAnalytics("event", "intro_done_first", {
+            Global.sendAnalytics("event", "intro_done_first_time", {
                 "value": 1
             });
         }
