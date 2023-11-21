@@ -4,6 +4,9 @@ WL.registerComponent("statistics-text-displayer", {
     },
     start: function () {
         this._myText = this.object.pp_getComponent("text");
+        this._myText.text = " ";
+        this._myText.text = "";
+
         this._myTextPosition = this._myText.object.pp_getPosition();
         this._myTempDirection1 = [];
         this._myTempDirection2 = [];
