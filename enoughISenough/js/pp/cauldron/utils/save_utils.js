@@ -19,11 +19,11 @@ PP.SaveUtils = {
     loadString: function (id, defaultValue = null) {
         let item = localStorage.getItem(id);
 
-        if (item == null) {
-            item = defaultValue;
+        if (item != null) {
+            return item;
         }
 
-        return item;
+        return defaultValue;
     },
     loadNumber: function (id, defaultValue = null) {
         let item = PP.SaveUtils.loadString(id);
