@@ -99,7 +99,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
                     if (!this._myLoadTimeSent) {
                         if (window.performance) {
-                            Global.sendAnalytics("event", "load_time", {
+                            Global.sendAnalytics("event", "load_seconds", {
                                 "value": (window.performance.now() / 1000).toFixed(2)
                             });
                         }

@@ -129,7 +129,7 @@ class MenuState extends PP.State {
     }
 
     end() {
-        Global.sendAnalytics("event", "menu_time", {
+        Global.sendAnalytics("event", "menu_seconds", {
             "value": this._myMenuDuration.toFixed(2)
         });
 

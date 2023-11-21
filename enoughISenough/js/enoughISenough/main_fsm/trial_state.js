@@ -143,7 +143,7 @@ class TrialState extends PP.State {
         });
 
         if (trialPhase == 4) {
-            Global.sendAnalytics("event", "trial_time", {
+            Global.sendAnalytics("event", "trial_seconds", {
                 "value": Global.myTrialDuration.toFixed(2)
             });
         }
@@ -172,16 +172,16 @@ class TrialState extends PP.State {
             "value": 1
         });
 
-        Global.sendAnalytics("event", "trial_lost_time_phase_".concat(trialPhase), {
+        Global.sendAnalytics("event", "trial_lost_seconds_phase_".concat(trialPhase), {
             "value": Global.myVentDuration.toFixed(2)
         });
 
-        Global.sendAnalytics("event", "trial_time", {
+        Global.sendAnalytics("event", "trial_seconds", {
             "value": Global.myTrialDuration.toFixed(2)
         });
 
         if (Global.myStatistics.myTrialCompletedCount <= 0) {
-            Global.sendAnalytics("event", "trial_lost_time_before_completed_phase_".concat(trialPhase), {
+            Global.sendAnalytics("event", "trial_lost_seconds_before_completed_phase_".concat(trialPhase), {
                 "value": Global.myVentDuration.toFixed(2)
             });
         }
@@ -230,7 +230,7 @@ class TrialState extends PP.State {
                 "value": 1
             });
 
-            Global.sendAnalytics("event", "trial_completed_from_start_time", {
+            Global.sendAnalytics("event", "trial_completed_from_start_seconds", {
                 "value": Global.myTrialDuration.toFixed(2)
             });
         }

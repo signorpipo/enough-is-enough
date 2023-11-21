@@ -72,7 +72,7 @@ class StatisticsManager {
     }
 
     _sendAnalytics() {
-        Global.sendAnalytics("event", "play_time", {
+        Global.sendAnalytics("event", "play_seconds", {
             "value": (Global.myStatistics.myTotalPlayTime - Global.myStatistics.myTotalPlayTimeOnLoad).toFixed(2)
         });
 

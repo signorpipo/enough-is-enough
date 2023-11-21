@@ -62,7 +62,7 @@ class IntroState extends PP.State {
                     "value": 1
                 });
 
-                Global.sendAnalytics("event", "intro_skipped_time", {
+                Global.sendAnalytics("event", "intro_skipped_seconds", {
                     "value": this._myIntroDuration.toFixed(2)
                 });
             }
