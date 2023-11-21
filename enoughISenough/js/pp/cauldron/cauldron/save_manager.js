@@ -49,12 +49,12 @@ PP.SaveManager = class SaveManager {
             this._myCommitSavesDelayTimer.update(dt);
             if (this._myCommitSavesDelayTimer.isDone()) {
                 if (this._myCommitSavesDirty) {
-                    this.commitSaves();
+                    this._commitSaves();
                 }
             }
         } else {
             if (this._myCommitSavesDirty) {
-                this.commitSaves();
+                this._commitSaves();
             }
         }
     }
@@ -78,7 +78,7 @@ PP.SaveManager = class SaveManager {
                     this._myCommitSavesDelayTimer.start();
                 }
             } else {
-                this.commitSaves();
+                this._commitSaves();
             }
         }
 
@@ -117,7 +117,7 @@ PP.SaveManager = class SaveManager {
                     this._myCommitSavesDelayTimer.start();
                 }
             } else {
-                this.commitSaves();
+                this._commitSaves();
             }
         }
 
@@ -143,7 +143,7 @@ PP.SaveManager = class SaveManager {
                     this._myCommitSavesDelayTimer.start();
                 }
             } else {
-                this.commitSaves();
+                this._commitSaves();
             }
         }
 
@@ -173,7 +173,13 @@ PP.SaveManager = class SaveManager {
         return value;
     }
 
-    commitSaves() {
+    commitSaves(commitSavesOnlyIfDirty = true) {
+        if (this._myCommitSavesDirty || !commitSavesOnlyIfDirty) {
+            this._commitSaves();
+        }
+    }
+
+    _commitSaves() {
         let succeded = true;
         try {
             let saveObjectStringified = JSON.stringify(this._mySaveObject);
