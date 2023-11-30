@@ -56,16 +56,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         document.addEventListener("gesturestart", this._myGestureStartEventListener);
     },
     start: function () {
-        let version = Global.mySaveManager.load("game_version", 0);
-        Global.myGameVersion = 18;
-
-        let minVersionToReset = 6;
-        if (version < minVersionToReset) {
-            Global.mySaveManager.clear();
-            Global.mySaveManager.save("game_version", Global.myGameVersion);
-        } else if (version < Global.myGameVersion) {
-            Global.mySaveManager.save("game_version", Global.myGameVersion);
-        }
+        Global.myGameVersion = "1.1.0";
 
         let trialEndedOnce = Global.mySaveManager.load("trial_ended_once", false);
         let trialPhase = Global.mySaveManager.load("trial_phase", 1);

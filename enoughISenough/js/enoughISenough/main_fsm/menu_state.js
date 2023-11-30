@@ -226,7 +226,6 @@ class MenuState extends PP.State {
             });
 
             Global.mySaveManager.clear();
-            Global.mySaveManager.save("game_version", Global.myGameVersion);
 
             this._myNotEnough.start();
             Global.myParticlesManager.mrNOTParticles(Global.myPlayerPosition);
