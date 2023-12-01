@@ -110,7 +110,7 @@ WL.registerComponent("display-leaderboard", {
 
         let currentWeight = 0;
         for (let i = 0; i < displayName.length; i++) {
-            let currentCharacter = displayName[i];
+            let currentCharacter = displayName.charAt(i);
             let characterWeight = this._myCharacterWeightMap.get(currentCharacter);
             characterWeight = characterWeight != null ? characterWeight : 1;
 
