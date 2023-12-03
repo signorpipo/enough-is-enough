@@ -229,6 +229,14 @@ class IntroState extends PP.State {
                 });
             }
 
+            let defaultHeight = 1.65;
+            let distanceFromCenterVertical = Math.abs(defaultHeight - Global.myPlayerPosition.vec3_componentAlongAxis([0, 1, 0]).vec3_length());
+            if (distanceFromCenterVertical > 0.35) {
+                Global.sendAnalytics("event", "xr_enter_session_far_vertical", {
+                    "value": 1
+                });
+            }
+
             let flatPlayerForward = Global.myPlayerForward.vec3_removeComponentAlongAxis([0, 1, 0]);
             let angle = flatPlayerForward.vec3_angle([0, 0, -1]);
 
