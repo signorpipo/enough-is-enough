@@ -49,7 +49,8 @@ class IntroState extends PP.State {
 
         if ((trialEndedOnce && introViewed >= 3) || Global.myDebugShortcutsEnabled) {
             let buttonPressToSkip = (PP.XRUtils.isDeviceEmulated() && Global.myIsLocalhost && Global.myDebugShortcutsEnabled) ? 1 : 3;
-            if (!this._myFSM.isInState("wait_session") && PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(buttonPressToSkip)) {
+            if (!this._myFSM.isInState("wait_session") &&
+                (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(buttonPressToSkip) || PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(buttonPressToSkip))) {
                 while (!this._myFSM.isInState("done") && !this._myFSM.isInState("test")) {
                     this._myFSM.perform("skip");
                 }
