@@ -1476,7 +1476,7 @@ function _shouldDeleteCacheID(cacheID) {
     if (validCacheID) {
         let cacheIDWithoutAppName = cacheID.replace(new RegExp("^" + _escapeRegexSpecialCharacters(_myAppName)), "");
 
-        let versions = cacheIDWithoutAppName.match(new RegExp("(?<=_v)\\d+(?=_|$)", "g"));
+        let versions = Array.from(cacheIDWithoutAppName.matchAll(new RegExp("_v(\\d+)(?:_|$)", "g")), match => match[1]);
 
         deleteCacheID = parseInt(versions[0]) < _myCacheVersion;
     }
@@ -1491,7 +1491,7 @@ function _shouldDeleteTempCacheID(tempCacheID) {
     if (validTempCacheID) {
         let tempCacheIDWithoutAppName = tempCacheID.replace(new RegExp("^" + _escapeRegexSpecialCharacters(_myAppName)), "");
 
-        let versions = tempCacheIDWithoutAppName.match(new RegExp("(?<=_v)\\d+(?=_|$)", "g"));
+        let versions = Array.from(tempCacheIDWithoutAppName.matchAll(new RegExp("_v(\\d+)(?:_|$)", "g")), match => match[1]);
 
         deleteTempCacheID =
             parseInt(versions[0]) < _myCacheVersion ||
@@ -1508,7 +1508,7 @@ function _shouldDeleteRefetchFromNetworkChecklistID(refetchFromNetworkChecklistI
     if (validRefetchFromNetworkChecklistID) {
         let refetchFromNetworkChecklistIDWithoutAppName = refetchFromNetworkChecklistID.replace(new RegExp("^" + _escapeRegexSpecialCharacters(_myAppName)), "");
 
-        let versions = refetchFromNetworkChecklistIDWithoutAppName.match(new RegExp("(?<=_v)\\d+(?=_|$)", "g"));
+        let versions = Array.from(refetchFromNetworkChecklistIDWithoutAppName.matchAll(new RegExp("_v(\\d+)(?:_|$)", "g")), match => match[1]);
 
         deleteRefetchFromNetworkChecklistID =
             parseInt(versions[0]) < _myCacheVersion ||
@@ -1525,7 +1525,7 @@ function _shouldDeleteTempRefetchFromNetworkChecklistID(tempRefetchFromNetworkCh
     if (validTempRefetchFromNetworkChecklistID) {
         let tempRefetchFromNetworkChecklistIDWithoutAppName = tempRefetchFromNetworkChecklistID.replace(new RegExp("^" + _escapeRegexSpecialCharacters(_myAppName)), "");
 
-        let versions = tempRefetchFromNetworkChecklistIDWithoutAppName.match(new RegExp("(?<=_v)\\d+(?=_|$)", "g"));
+        let versions = Array.from(tempRefetchFromNetworkChecklistIDWithoutAppName.matchAll(new RegExp("_v(\\d+)(?:_|$)", "g")), match => match[1]);
 
         deleteTempRefetchFromNetworkChecklistID =
             parseInt(versions[0]) < _myCacheVersion ||
