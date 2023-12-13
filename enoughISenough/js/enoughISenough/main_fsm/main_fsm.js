@@ -77,6 +77,7 @@ class MainFSM {
             this._myStartMusicTimerAfterLoad.update(dt);
             if (this._myStartMusicTimerAfterLoad.isDone()) {
                 if (!this._myMusic.isPlaying()) {
+                    this._myMusic.stop();
                     this._myMusic.play();
                 }
                 this._myMusic.fade(0, this._myMusicVolume, 6, true);
