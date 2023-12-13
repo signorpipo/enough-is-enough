@@ -47,26 +47,30 @@ class MainFSM {
         if (Global.myPlayMusic) {
             Global.myPlayMusic = false;
             if (!this._myIsMusicPlaying) {
-                this._myStartMusicTimer.start();
+                if (!(this._myStartMusicTimer.isRunning() || this._myStartMusicTimer.isDone() || this._myStartMusicTimerAfterLoad.isRunning())) {
+                    this._myStartMusicTimer.start();
+                    this._myStartMusicTimerAfterLoad.reset();
+                }
+            } else {
+                this._myStartMusicTimerAfterLoad.reset();
+                this._myStartMusicTimer.reset();
             }
+
+            this._myStopMusicTimer.reset();
         }
 
         if (Global.myStopMusic) {
             Global.myStopMusic = false;
             if (this._myIsMusicPlaying) {
-                this._myStopMusicTimer.start();
+                if (!this._myStopMusicTimer.isRunning()) {
+                    this._myStopMusicTimer.start();
+                }
+            } else {
+                this._myStopMusicTimer.reset();
             }
-        }
 
-        if (this._myStartMusicTimer.isRunning()) {
-            this._myStartMusicTimer.update(dt);
-        }
-
-        if (this._myStartMusicTimer.isDone()) {
-            if (this._myMusic.isLoaded()) {
-                this._myStartMusicTimerAfterLoad.start();
-                this._myStartMusicTimer.reset();
-            }
+            this._myStartMusicTimerAfterLoad.reset();
+            this._myStartMusicTimer.reset();
         }
 
         if (this._myStartMusicTimerAfterLoad.isRunning()) {
@@ -79,6 +83,17 @@ class MainFSM {
                 this._myStartMusicTimerAfterLoad.reset();
 
                 this._myIsMusicPlaying = true;
+            }
+        }
+
+        if (this._myStartMusicTimer.isRunning()) {
+            this._myStartMusicTimer.update(dt);
+        }
+
+        if (this._myStartMusicTimer.isDone()) {
+            if (this._myMusic.isLoaded()) {
+                this._myStartMusicTimerAfterLoad.start();
+                this._myStartMusicTimer.reset();
             }
         }
 
