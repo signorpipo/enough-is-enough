@@ -22,23 +22,6 @@
         }
     </script>
     {{ end }}
-    
-    {{ if settings.runtime.googleAnalytics != "" }}
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.runtime.googleAnalytics }}"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-
-        gtag("js", new Date());
-        gtag("config", "{{ settings.runtime.googleAnalytics }}");
-    </script>
-
-    {{ if settings.runtime.googleAnalyticsSecondary != "" }}
-    <script>
-        gtag("config", "{{ settings.runtime.googleAnalyticsSecondary }}");
-    </script>
-    {{ end }}
-    {{ end }}
 
     <script>
         var Module = {
@@ -101,6 +84,17 @@
             loadRuntime(simdSupported, threadsSupported && self.crossOriginIsolated);
         });
     </script>
+    
+    {{ if settings.runtime.googleAnalytics != "" }}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.runtime.googleAnalytics }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+
+        gtag("js", new Date());
+        gtag("config", "{{ settings.runtime.googleAnalytics }}");
+    </script>
+    {{ end }}
     
     <style>
         html {
