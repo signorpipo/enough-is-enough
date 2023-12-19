@@ -97,9 +97,10 @@
         body {
             height: 100%;
             margin: 0px;
-            background-image: linear-gradient(black, #2b2b2b);
 
             overflow: hidden;
+
+            background-image: linear-gradient(black, #2b2b2b);
 
             -webkit-touch-callout: none;
             -webkit-user-select: none;
@@ -114,21 +115,27 @@
 
         #xr-buttons-container {
             position: fixed;
+
             width: 100%;
             bottom: 0px;
             margin-bottom: 30px;
+
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
+
             pointer-events: none;
         }
 
         .xr-button {
             width: 100px;
             height: 60px;
+
             display: none;
-            pointer-events: none;
+
             cursor: pointer;
+            pointer-events: none;
+
             opacity: 0;
             transform: scale(0);
             transition: transform 0.85s, opacity 1.25s;
@@ -137,6 +144,7 @@
         .xr-button-svg-container {
             width: inherit;
             height: inherit;
+
             transition: transform 0.25s;
         }
 
@@ -154,11 +162,11 @@
         }
 
         .xr-button-svg-label {
-            fill: #472777;
+            fill: {{ settings.runtime.xrButtonColor }};
         }
 
         .xr-button-svg-frame {
-            stroke: #472777;
+            stroke: {{ settings.runtime.xrButtonColor }};
         }
     </style>
 </head>
