@@ -2,17 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <link rel="preload" href="{{ settings.project.name }}-bundle.js" as="script">
+    <link rel="preload" href="enoughISenough-bundle.js" as="script">
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="{{ settings.runtime.xrButtonColor }}">
+    <meta name="theme-color" content="#472777">
 
-    <title>{{ settings.project.name }}</title>
+    <title>mr NOT - enough IS enough</title>
 
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 
-    {{ if settings.runtime.pwa.enable }}
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon192.png">
     
@@ -21,11 +20,10 @@
             navigator.serviceWorker.register("service-worker.js");
         }
     </script>
-    {{ end }}
 
     <script>
         var Module = {
-            scene: "{{ settings.project.name }}.bin",
+            scene: "enoughISenough.bin",
             webxr_framebuffer_scale_factor: 1.000
         };
     </script>
@@ -49,7 +47,7 @@
                 bundle.onload = () => {
                     removeRunDependency("bundle");
                 };
-                bundle.src = "{{ settings.project.name }}-bundle.js";
+                bundle.src = "enoughISenough-bundle.js";
             }
 
             script.src = runtime + ".js";
@@ -85,16 +83,14 @@
         });
     </script>
     
-    {{ if settings.runtime.googleAnalytics != "" }}
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.runtime.googleAnalytics }}"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KN2L5E21YD"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
 
         gtag("js", new Date());
-        gtag("config", "{{ settings.runtime.googleAnalytics }}");
+        gtag("config", "G-KN2L5E21YD");
     </script>
-    {{ end }}
     
     <style>
         html {
@@ -169,11 +165,11 @@
         }
 
         .xr-button-svg-label {
-            fill: {{ settings.runtime.xrButtonColor }};
+            fill: #472777;
         }
 
         .xr-button-svg-frame {
-            stroke: {{ settings.runtime.xrButtonColor }};
+            stroke: #472777;
         }
     </style>
 </head>
@@ -182,7 +178,6 @@
     <canvas id="canvas" style="width: 100%; height: 100%; display: block;" tabindex="0"></canvas>
 
     <div id="xr-buttons-container">
-        {{ if settings.vr.enable }}
         <a id="vr-button" class="xr-button" onclick="Module['webxr_request_session_func']('immersive-vr', ['local',], ['local','hand-tracking'])">
             <div class="xr-button-svg-container">
                 <svg class="xr-button-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 109.41 65">
@@ -195,7 +190,6 @@
                 </svg>
             </div>
         </a>
-        {{ end }}
     </div>
 </body>
 </html>
