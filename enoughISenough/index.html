@@ -2,89 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <link rel="preload" href="enoughISenough-bundle.js" as="script">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon192.png">
-
-    <title>mr NOT - enough IS enough</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#472777">
+    
+    <title>mr NOT - enough IS enough</title>
 
-    <style>
-        html {
-            height: 100%;
-        }
-
-        body {
-            height: 100%;
-            margin: 0px;
-            background-image: linear-gradient(black, #2b2b2b);
-
-            overflow: hidden;
-
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            touch-action: none;
-
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        #xr-buttons-container {
-            position: fixed;
-            width: 100%;
-            bottom: 0px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            pointer-events: none;
-        }
-
-        .xr-button {
-            width: 100px;
-            height: 60px;
-            display: none;
-            pointer-events: none;
-            cursor: pointer;
-            opacity: 0;
-            transform: scale(0);
-            transition: transform 0.85s, opacity 1.25s;
-        }
-
-        .xr-button-svg-container {
-            width: inherit;
-            height: inherit;
-            transition: transform 0.25s;
-        }
-
-        .xr-button-svg-container:hover {
-            transform: scale(1.06);
-        }
-
-        .xr-button-svg-container:active {
-            transform: scale(0.94);
-        }
-
-        .xr-button-svg {
-            width: inherit;
-            height: inherit;
-        }
-
-        .xr-button-svg-label {
-            fill: #472777;
-        }
-
-        .xr-button-svg-frame {
-            stroke: #472777;
-        }
-    </style>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon192.png">
 
     <script>
         if (navigator.serviceWorker != null) {
@@ -162,6 +88,79 @@
             loadRuntime(simdSupported, threadsSupported && self.crossOriginIsolated);
         });
     </script>
+    
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            margin: 0px;
+            background-image: linear-gradient(black, #2b2b2b);
+
+            overflow: hidden;
+
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            touch-action: none;
+
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #xr-buttons-container {
+            position: fixed;
+            width: 100%;
+            bottom: 0px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .xr-button {
+            width: 100px;
+            height: 60px;
+            display: none;
+            pointer-events: none;
+            cursor: pointer;
+            opacity: 0;
+            transform: scale(0);
+            transition: transform 0.85s, opacity 1.25s;
+        }
+
+        .xr-button-svg-container {
+            width: inherit;
+            height: inherit;
+            transition: transform 0.25s;
+        }
+
+        .xr-button-svg-container:hover {
+            transform: scale(1.06);
+        }
+
+        .xr-button-svg-container:active {
+            transform: scale(0.94);
+        }
+
+        .xr-button-svg {
+            width: inherit;
+            height: inherit;
+        }
+
+        .xr-button-svg-label {
+            fill: #472777;
+        }
+
+        .xr-button-svg-frame {
+            stroke: #472777;
+        }
+    </style>
 </head>
 
 <body>
