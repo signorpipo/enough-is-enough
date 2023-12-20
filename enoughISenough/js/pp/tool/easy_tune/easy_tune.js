@@ -13,7 +13,9 @@ WL.registerComponent('pp-easy-tune', {
         //Int: PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Lives", 3, 1));
         //Bool: PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Run", false));
 
-        PP.myEasyTuneVariables = new PP.EasyTuneVariables();
+        if (PP.myEasyTuneVariables == null) {
+            PP.myEasyTuneVariables = new PP.EasyTuneVariables();
+        }
 
         this._myWidget = new PP.EasyTuneWidget();
         PP.setEasyTuneWidgetActiveVariable = function (variableName) {

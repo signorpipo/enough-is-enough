@@ -5,6 +5,10 @@ WL.registerComponent("enough-IS-enough-gateway", {
     _myRightHandAnimator: { type: WL.Type.Object },
 }, {
     init: function () {
+        if (PP.myEasyTuneVariables == null) {
+            PP.myEasyTuneVariables = new PP.EasyTuneVariables();
+        }
+
         Global.myAnalyticsEnabled = true;
 
         Global.sendAnalytics("event", "game_init_started", {
