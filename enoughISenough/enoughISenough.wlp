@@ -358,10 +358,6 @@
                     "active": false
                 },
                 {
-                    "type": "clear-console-on-session",
-                    "active": false
-                },
-                {
                     "type": "pp-gamepad-manager"
                 },
                 {
@@ -407,32 +403,6 @@
         "50": {
             "parent": "84",
             "components": [
-                {
-                    "type": "pp-easy-tune",
-                    "pp-easy-tune": {
-                        "_myShowVisibilityButton": false,
-                        "_myHandedness": "left",
-                        "_myPlaneMaterial": "66",
-                        "_myTextMaterial": "DefaultFontMaterial",
-                        "_myEnableAdditionalButtons": true,
-                        "_myShowOnStart": false,
-                        "_myEnableChangeVariableShortcut": true
-                    },
-                    "active": false
-                },
-                {
-                    "type": "pp-console-vr",
-                    "pp-console-vr": {
-                        "_myPlaneMaterial": "66",
-                        "_myTextMaterial": "DefaultFontMaterial",
-                        "_myHandedness": "left",
-                        "_myShowOnStart": false,
-                        "_myOverrideBrowserConsole": true,
-                        "_myPulseOnNewMessage": "never",
-                        "_myShowVisibilityButton": false
-                    },
-                    "active": false
-                },
                 {
                     "type": "pp-set-hand-transform",
                     "pp-set-hand-transform": {
@@ -537,17 +507,6 @@
         "58": {
             "parent": "84",
             "components": [
-                {
-                    "type": "pp-tool-cursor",
-                    "pp-tool-cursor": {
-                        "_myHandedness": "right",
-                        "_myCursorMesh": "9",
-                        "_myCursorMaterial": "66",
-                        "_myShowFingerCursor": false,
-                        "_myPulseOnHover": false
-                    },
-                    "active": false
-                },
                 {
                     "type": "pp-set-hand-transform",
                     "pp-set-hand-transform": {
@@ -2522,52 +2481,6 @@
                         "_myGrabMultipleObjects": false,
                         "_myMaxNumberOfObjects": 9999
                     }
-                },
-                {
-                    "type": "pp-easy-scale",
-                    "pp-easy-scale": {
-                        "_myVariableName": "Target",
-                        "_mySetAsDefault": true,
-                        "_myUseGrabTarget": true,
-                        "_myIsLocal": true,
-                        "_myScaleAsOne": true,
-                        "_myUseTuneTarget": true
-                    },
-                    "active": false
-                },
-                {
-                    "type": "pp-easy-transform",
-                    "pp-easy-transform": {
-                        "_myUseGrabTarget": true,
-                        "_myIsLocal": true,
-                        "_myVariableName": "Target",
-                        "_myUseTuneTarget": true
-                    },
-                    "active": false
-                },
-                {
-                    "type": "pp-easy-set-tune-target-grab",
-                    "active": false
-                },
-                {
-                    "type": "pp-easy-mesh-color",
-                    "pp-easy-mesh-color": {
-                        "_myVariableName": "Target",
-                        "_myColorModel": "hsv",
-                        "_myColorType": "diffuse color",
-                        "_myUseTuneTarget": true
-                    },
-                    "active": false
-                },
-                {
-                    "type": "pp-easy-mesh-color",
-                    "pp-easy-mesh-color": {
-                        "_myVariableName": "Target S",
-                        "_myUseTuneTarget": true,
-                        "_myColorModel": "hsv",
-                        "_myColorType": "specular color"
-                    },
-                    "active": false
                 },
                 {
                     "type": "pulse-on-grab",
