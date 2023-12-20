@@ -77,7 +77,9 @@ class ArcadeResultState extends PP.State {
         this._myParentFSM = fsm;
         this._myFSM.perform("start");
 
-        Global.sendAnalytics("event", "arcade_time", {
+        Global.myStatisticsManager.saveStatistics();
+
+        Global.sendAnalytics("event", "arcade_seconds", {
             "value": Global.myVentDuration.toFixed(2)
         });
 
@@ -86,7 +88,7 @@ class ArcadeResultState extends PP.State {
                 Global.myStatistics.myDisputeBestTime = Global.myVentDuration;
             }
 
-            Global.sendAnalytics("event", "arcade_dispute_time", {
+            Global.sendAnalytics("event", "arcade_dispute_seconds", {
                 "value": Global.myVentDuration.toFixed(2)
             });
         } else {
@@ -94,7 +96,7 @@ class ArcadeResultState extends PP.State {
                 Global.myStatistics.myChatBestTime = Global.myVentDuration;
             }
 
-            Global.sendAnalytics("event", "arcade_chat_time", {
+            Global.sendAnalytics("event", "arcade_chat_seconds", {
                 "value": Global.myVentDuration.toFixed(2)
             });
         }

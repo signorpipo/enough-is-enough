@@ -18,7 +18,9 @@ WL.registerComponent("pp-easy-set-tune-target-grab", {
         this._myGrabber.registerThrowEventListener(this, this._onRelease.bind(this));
     },
     onDeactivate() {
-        this._myGrabber.unregisterGrabEventListener(this);
-        this._myGrabber.unregisterThrowEventListener(this);
+        if (this._myGrabber != null) {
+            this._myGrabber.unregisterGrabEventListener(this);
+            this._myGrabber.unregisterThrowEventListener(this);
+        }
     }
 });

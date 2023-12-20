@@ -10,6 +10,15 @@ WL.registerComponent("timer", {
         this._mySecondsTextComponent = this._mySeconds.pp_getComponent("text");
         this._myMinutesTextComponent = this._myMinutes.pp_getComponent("text");
         this._myHoursTextComponent = this._myHours.pp_getComponent("text");
+
+        this._mySecondsTextComponent.text = " ";
+        this._mySecondsTextComponent.text = "";
+
+        this._myMinutesTextComponent.text = " ";
+        this._myMinutesTextComponent.text = "";
+
+        this._myHoursTextComponent.text = " ";
+        this._myHoursTextComponent.text = "";
     },
     update: function (dt) {
         let time = Global.myVentDuration;

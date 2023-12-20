@@ -44,8 +44,10 @@ WL.registerComponent("light-fade-in", {
         this._myFadeTimer.start(Global.myLightFadeInTime);
     },
     onDeactivate: function () {
-        this._myLight.color[0] = 0;
-        this._myLight.color[1] = 0;
-        this._myLight.color[2] = 0;
+        if (this._myLight != null) {
+            this._myLight.color[0] = 0;
+            this._myLight.color[1] = 0;
+            this._myLight.color[2] = 0;
+        }
     },
 });

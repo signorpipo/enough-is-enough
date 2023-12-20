@@ -71,10 +71,10 @@ class MenuState extends PP.State {
     start(fsm, transitionID) {
         this._myParentFSM = fsm;
 
-        let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false);
-        let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
-        let trialCompleted = Global.mySaveManager.loadBool("trial_completed", false);
-        if (trialCompleted || (trialStartedOnce && trialPhase >= 2)) {
+        let trialEndedOnce = Global.mySaveManager.load("trial_ended_once", false);
+        let trialPhase = Global.mySaveManager.load("trial_phase", 1);
+        let trialCompleted = Global.mySaveManager.load("trial_completed", false);
+        if (trialCompleted || (trialEndedOnce && trialPhase >= 2)) {
             this._myCurrentMenuItems = [];
 
             if (trialCompleted) {
@@ -119,19 +119,23 @@ class MenuState extends PP.State {
 
         Global.myIsTrialPhase1 = false;
 
-        Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialPhase >= 2);
+        Global.myEnableSelectPhysx = trialCompleted || (trialEndedOnce && trialPhase >= 2);
 
         Global.myPlayMusic = true;
 
         this._myMenuDuration = 0;
+
+        Global.myStatisticsManager.saveStatistics();
     }
 
     end() {
-        Global.sendAnalytics("event", "menu_time", {
+        Global.sendAnalytics("event", "menu_seconds", {
             "value": this._myMenuDuration.toFixed(2)
         });
 
         Global.myIsInMenu = false;
+
+        Global.myStatisticsManager.saveStatistics();
     }
 
     _readyUpdate(dt, fsm) {
@@ -208,13 +212,12 @@ class MenuState extends PP.State {
                 "value": 1
             });
 
-            Global.mySaveManager.save("trial_started_once", false);
+            Global.mySaveManager.save("intro_viewed", 0);
+            Global.mySaveManager.save("trial_ended_once", false);
             Global.mySaveManager.save("trial_completed", false);
             Global.mySaveManager.save("trial_phase", 1);
 
-            Global.myStatistics.myTrialPlayCountResettable = 0;
-            Global.myStatistics.myMrNOTClonesDismissedResettable = 0;
-            Global.myStatistics.save();
+            Global.mySaveManager.save("save_reset_normal", true);
 
             this._myNotEnough.start();
         } else {
@@ -223,7 +226,7 @@ class MenuState extends PP.State {
             });
 
             Global.mySaveManager.clear();
-            Global.mySaveManager.save("game_version", Global.myGameVersion);
+
             this._myNotEnough.start();
             Global.myParticlesManager.mrNOTParticles(Global.myPlayerPosition);
         }
@@ -699,6 +702,10 @@ class MenuTitle {
         this._mySubtitleText = this._mySubtitleObject.pp_getComponent("text");
         this._mySubtitleTextColor = this._mySubtitleText.material.outlineColor.pp_clone();
 
+        this._myTitleTextColorUnspawn = this._myTitleText.material.outlineColor.pp_clone();
+        this._mySubtitleTextColorUnspawn = this._mySubtitleText.material.outlineColor.pp_clone();
+        this._myTitleScaleUnspawn = 1;
+
         this._myStartTimer = new PP.Timer(1, false);
         this._myStartAppearAudioTimer = new PP.Timer(0.3, false);
         this._myTimer = new PP.Timer(1, false);
@@ -743,6 +750,11 @@ class MenuTitle {
     unspawn(timeToStart) {
         this._myTimer.start(this._mySpawnTime);
         this._myStartTimer.start(timeToStart);
+
+        this._myTitleTextColorUnspawn = this._myTitleText.material.outlineColor.pp_clone();
+        this._mySubtitleTextColorUnspawn = this._mySubtitleText.material.outlineColor.pp_clone();
+        this._myTitleScaleUnspawn = this._myTitlesObject.pp_getScale()[0];
+
         this._myFSM.perform("unspawn");
 
         this._myDisappearAudio.play();
@@ -800,20 +812,20 @@ class MenuTitle {
                 this._myTimer.update(dt);
                 let tempColor = [0, 0, 0, 1];
 
-                tempColor[0] = Math.pp_interpolate(this._myTitleTextColor[0], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
-                tempColor[1] = Math.pp_interpolate(this._myTitleTextColor[1], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
-                tempColor[2] = Math.pp_interpolate(this._myTitleTextColor[2], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[0] = Math.pp_interpolate(this._myTitleTextColorUnspawn[0], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[1] = Math.pp_interpolate(this._myTitleTextColorUnspawn[1], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[2] = Math.pp_interpolate(this._myTitleTextColorUnspawn[2], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
 
                 this._myTitleText.material.outlineColor = tempColor;
 
-                tempColor[0] = Math.pp_interpolate(this._mySubtitleTextColor[0], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
-                tempColor[1] = Math.pp_interpolate(this._mySubtitleTextColor[1], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
-                tempColor[2] = Math.pp_interpolate(this._mySubtitleTextColor[2], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[0] = Math.pp_interpolate(this._mySubtitleTextColorUnspawn[0], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[1] = Math.pp_interpolate(this._mySubtitleTextColorUnspawn[1], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[2] = Math.pp_interpolate(this._mySubtitleTextColorUnspawn[2], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
 
                 this._mySubtitleText.material.outlineColor = tempColor;
 
                 let easing = t => t * t;
-                let scale = Math.pp_interpolate(1, this._myHideScale, this._myTimer.getPercentage(), easing);
+                let scale = Math.pp_interpolate(this._myTitleScaleUnspawn, this._myHideScale, this._myTimer.getPercentage(), easing);
                 this._myTitlesObject.pp_setScale(scale);
             }
 

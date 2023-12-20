@@ -6,12 +6,17 @@ WL.registerComponent("enough-IS-enough-gateway", {
 }, {
     init: function () {
         Global.myAnalyticsEnabled = true;
+
+        Global.sendAnalytics("event", "game_init_started", {
+            "value": 1
+        });
+
         Global.myAudioManager = new PP.AudioManager();
         Global.myParticlesManager = new ParticlesManager();
         Global.myMeshObjectPoolMap = new PP.ObjectPoolManager();
         Global.myMeshNoFogObjectPoolMap = new PP.ObjectPoolManager();
         Global.myGameObjectPoolMap = new PP.ObjectPoolManager();
-        Global.mySaveManager = new PP.SaveManager();
+        Global.mySaveManager = new PP.SaveManager("enoughISenough");
         //Global.mySaveManager.clear(); 
         Global.myScene = this.object;
 
@@ -35,26 +40,28 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
         this._myResetXRSessionActiveOpenLinkExtraCheckTimer = new PP.Timer(2);
 
+        this._myVRButtonVisibilityUpdated = false;
+        this._myVRButtonDisabledOpacityUpdated = false;
+        this._myVRButtonUsabilityUpdated = false;
+        this._myXRButtonsContainer = document.getElementById("xr-buttons-container");
+        this._myVRButton = document.getElementById("vr-button");
+
         if (window.location != null && window.location.host != null) {
             Global.myIsLocalhost = window.location.host == "localhost:8080";
         }
+
+        this._myGestureStartEventListener = function (event) {
+            event.preventDefault();
+        };
+        document.addEventListener("gesturestart", this._myGestureStartEventListener);
     },
     start: function () {
-        let version = Global.mySaveManager.loadNumber("game_version", 0);
-        Global.myGameVersion = 18;
+        Global.myGameVersion = "1.1.0";
 
-        let minVersionToReset = 6;
-        if (version < minVersionToReset) {
-            Global.mySaveManager.clear();
-            Global.mySaveManager.save("game_version", Global.myGameVersion);
-        } else if (version < Global.myGameVersion) {
-            Global.mySaveManager.save("game_version", Global.myGameVersion);
-        }
-
-        let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false); // This is actually trial ended once, don't want to change name tho
-        let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
-        let trialCompleted = Global.mySaveManager.loadBool("trial_completed", false);
-        Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialPhase >= 2);
+        let trialEndedOnce = Global.mySaveManager.load("trial_ended_once", false);
+        let trialPhase = Global.mySaveManager.load("trial_phase", 1);
+        let trialCompleted = Global.mySaveManager.load("trial_completed", false);
+        Global.myEnableSelectPhysx = trialCompleted || (trialEndedOnce && trialPhase >= 2);
 
         if (WL.xrSession) {
             this._onXRSessionStart(WL.xrSession);
@@ -67,20 +74,30 @@ WL.registerComponent("enough-IS-enough-gateway", {
             this._myFirstUpdate = false;
             this._start();
             PP.setEasyTuneWidgetActiveVariable("Float 1");
-        } else if (!Global.myUpdateReady) {
-            if (!this._myLoadTimeSent) {
-                if (window.performance) {
-                    Global.sendAnalytics("event", "load_time", {
-                        "value": (performance.now() / 1000).toFixed(2)
-                    });
-                }
-
-                this._myLoadTimeSent = true;
+        } else {
+            if (!this._myVRButtonUsabilityUpdated) {
+                this._updateVRButtonVisibility();
             }
 
-            this._myUpdateReadyCountdown--;
-            if (this._myUpdateReadyCountdown <= 0) {
-                Global.myUpdateReady = true;
+            if (!Global.myUpdateReady) {
+                this._myUpdateReadyCountdown--;
+                if (this._myUpdateReadyCountdown <= 0) {
+                    Global.myUpdateReady = true;
+
+                    Global.sendAnalytics("event", "game_init_ended", {
+                        "value": 1
+                    });
+
+                    if (!this._myLoadTimeSent) {
+                        if (window.performance) {
+                            Global.sendAnalytics("event", "load_seconds", {
+                                "value": (window.performance.now() / 1000).toFixed(2)
+                            });
+                        }
+
+                        this._myLoadTimeSent = true;
+                    }
+                }
             }
         }
 
@@ -279,6 +296,10 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
         this.enoughISenough.start();
 
+        if (this._myVRButton != null) {
+            this._myVRButton.style.setProperty("display", "block");
+        }
+
         /*
         let componentAmountMapAfterLoad = Global.myScene.pp_getComponentAmountMapHierarchy();
         //console.error(componentAmountMapAfterLoad);
@@ -323,10 +344,41 @@ WL.registerComponent("enough-IS-enough-gateway", {
             }
         }
     },
+    _updateVRButtonVisibility() {
+        if (this._myVRButton != null) {
+            if (!this._myVRButtonVisibilityUpdated) {
+                this._myVRButton.style.setProperty("transform", "scale(1)");
+                this._myVRButtonVisibilityUpdated = true;
+            }
+
+            if (!this._myVRButtonUsabilityUpdated) {
+                if (WL.vrSupported != 0) {
+                    this._myVRButton.style.setProperty("opacity", "1");
+                    this._myVRButton.style.setProperty("pointer-events", "all");
+
+                    this._myVRButtonUsabilityUpdated = true;
+                } else if (!this._myVRButtonDisabledOpacityUpdated) {
+                    this._myVRButton.style.setProperty("opacity", "0.5");
+
+                    this._myVRButtonDisabledOpacityUpdated = true;
+                }
+            }
+        } else {
+            this._myVRButtonUsabilityUpdated = true;
+        }
+    },
     _onXRSessionStart(session) {
+        if (this._myXRButtonsContainer != null) {
+            this._myXRButtonsContainer.style.setProperty("display", "none");
+        }
+
         Global.myXRSessionActiveOpenLinkExtraCheck = true;
     },
     _onXRSessionEnd() {
+        if (this._myXRButtonsContainer != null) {
+            this._myXRButtonsContainer.style.removeProperty("display");
+        }
+
         Global.myXRSessionActiveOpenLinkExtraCheck = false;
     }
 });
@@ -368,6 +420,7 @@ var Global = {
     myLightFadeInTime: 0,
     myStartFadeOut: false,
     myStatistics: null,
+    myStatisticsManager: null,
     myIsInMenu: false,
     myIsInArcadeResult: false,
     myEnableSelectPhysx: false,

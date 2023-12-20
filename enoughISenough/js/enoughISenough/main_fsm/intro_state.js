@@ -28,6 +28,8 @@ class IntroState extends PP.State {
 
         this._myIntroDuration = 0;
 
+        this._mySendFarEventCounter = 3;
+
         this._myXRSessionManuallyStarted = false;
 
         if (WL.xrSession) {
@@ -42,12 +44,13 @@ class IntroState extends PP.State {
             this._myIntroDuration += dt;
         }
 
-        let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false);
-        let introViewed = Global.mySaveManager.loadNumber("intro_viewed", 0);
+        let trialEndedOnce = Global.mySaveManager.load("trial_ended_once", false);
+        let introViewed = Global.mySaveManager.load("intro_viewed", 0);
 
-        if ((trialStartedOnce && introViewed >= 3) || Global.myDebugShortcutsEnabled) {
+        if ((trialEndedOnce && introViewed >= 3) || Global.myDebugShortcutsEnabled) {
             let buttonPressToSkip = (PP.XRUtils.isDeviceEmulated() && Global.myIsLocalhost && Global.myDebugShortcutsEnabled) ? 1 : 3;
-            if (!this._myFSM.isInState("wait_session") && PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(buttonPressToSkip)) {
+            if (!this._myFSM.isInState("wait_session") &&
+                (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(buttonPressToSkip) || PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(buttonPressToSkip))) {
                 while (!this._myFSM.isInState("done") && !this._myFSM.isInState("test")) {
                     this._myFSM.perform("skip");
                 }
@@ -60,7 +63,7 @@ class IntroState extends PP.State {
                     "value": 1
                 });
 
-                Global.sendAnalytics("event", "intro_skipped_time", {
+                Global.sendAnalytics("event", "intro_skipped_seconds", {
                     "value": this._myIntroDuration.toFixed(2)
                 });
             }
@@ -74,8 +77,7 @@ class IntroState extends PP.State {
 
     waitSession(dt, fsm) {
         if (WL.xrSession && Global.myUpdateReady) {
-            let currentVersion = Global.mySaveManager.loadNumber("game_version", 0);
-            console.log("Game Version:", currentVersion);
+            console.log("Game Version:", Global.myGameVersion);
 
             Global.sendAnalytics("event", "xr_enter_session", {
                 "value": 1
@@ -98,9 +100,24 @@ class IntroState extends PP.State {
     }
 
     waitStart(dt, fsm) {
-        this._myTimer.update(dt);
+        if (this._mySendFarEventCounter > 0) {
+            this._mySendFarEventCounter--;
+            if (this._mySendFarEventCounter == 0) {
+                if (PP.XRUtils.isXRSessionActive()) {
+                    this._sendFarEvents();
+                }
+            }
+        }
 
+        this._myTimer.update(dt);
         if (this._myTimer.isDone()) {
+            if (this._mySendFarEventCounter > 0) {
+                this._mySendFarEventCounter = 0;
+                if (PP.XRUtils.isXRSessionActive()) {
+                    this._sendFarEvents();
+                }
+            }
+
             fsm.perform("end");
         }
     }
@@ -169,10 +186,10 @@ class IntroState extends PP.State {
     endIntro(fsm) {
         this._myParentFSM.perform(MainTransitions.End);
 
-        let introViewed = Global.mySaveManager.loadNumber("intro_viewed", 0);
+        let introViewed = Global.mySaveManager.load("intro_viewed", 0);
 
         if (introViewed == 0) {
-            Global.sendAnalytics("event", "intro_done_first", {
+            Global.sendAnalytics("event", "intro_done_first_time", {
                 "value": 1
             });
         }
@@ -196,5 +213,45 @@ class IntroState extends PP.State {
         this._myParentFSM.perform(MainTransitions.Skip);
 
         Global.myIntroDone = true;
+    }
+
+    _sendFarEvents() {
+        try {
+            let flatPlayerPosition = Global.myPlayerPosition.vec3_removeComponentAlongAxis([0, 1, 0]);
+            let distanceFromCenter = flatPlayerPosition.vec3_length();
+
+            if (distanceFromCenter > 0.55) {
+                Global.sendAnalytics("event", "xr_enter_session_very_far", {
+                    "value": 1
+                });
+            } else if (distanceFromCenter > 0.30) {
+                Global.sendAnalytics("event", "xr_enter_session_far", {
+                    "value": 1
+                });
+            }
+
+            let defaultHeight = 1.65;
+            let distanceFromCenterVertical = Math.abs(defaultHeight - Global.myPlayerPosition.vec3_componentAlongAxis([0, 1, 0]).vec3_length());
+            if (distanceFromCenterVertical > 0.35) {
+                Global.sendAnalytics("event", "xr_enter_session_far_vertical", {
+                    "value": 1
+                });
+            }
+
+            let flatPlayerForward = Global.myPlayerForward.vec3_removeComponentAlongAxis([0, 1, 0]);
+            let angle = flatPlayerForward.vec3_angle([0, 0, -1]);
+
+            if (angle > 50) {
+                Global.sendAnalytics("event", "xr_enter_session_looking_far_away", {
+                    "value": 1
+                });
+            } else if (angle > 35) {
+                Global.sendAnalytics("event", "xr_enter_session_looking_away", {
+                    "value": 1
+                });
+            }
+        } catch (error) {
+            // Do nothing
+        }
     }
 }

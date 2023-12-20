@@ -89,11 +89,10 @@ class TrialState extends PP.State {
         Global.myTrialDuration = 0;
         this._myTrialStartedFromBegin = false;
         Global.myStatistics.myTrialPlayCount += 1;
-        Global.myStatistics.myTrialPlayCountResettable += 1;
 
         this._myMrNotClonesDismissedOnStart = Global.myStatistics.myMrNOTClonesDismissed;
 
-        let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
+        let trialPhase = Global.mySaveManager.load("trial_phase", 1);
 
         Global.myIsTrialPhase1 = false;
         if (trialPhase == 1) {
@@ -129,11 +128,12 @@ class TrialState extends PP.State {
     end(fsm, transitionID) {
         Global.myIsTrialPhase1 = false;
 
-        Global.mySaveManager.save("trial_started_once", true);
+        Global.mySaveManager.save("trial_ended_once", true);
     }
 
     _trialPhaseCompleted(trialPhase, nextTrialPhase, fsm) {
         Global.mySaveManager.save("trial_phase", nextTrialPhase);
+        Global.myStatisticsManager.saveStatistics();
 
         Global.myIsTrialPhase1 = false;
         Global.myMrNOTClonesNotDismissedPhase1PlayCount = 0;
@@ -143,48 +143,51 @@ class TrialState extends PP.State {
         });
 
         if (trialPhase == 4) {
-            Global.sendAnalytics("event", "trial_time", {
+            Global.sendAnalytics("event", "trial_seconds", {
                 "value": Global.myTrialDuration.toFixed(2)
             });
         }
 
-        if (Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount == Global.myStatistics.myTrialPlayCountResettable &&
-            Global.myStatistics.myTrialPlayCount <= 3 && Global.myStatistics.myMrNOTClonesDismissed > 0 && this._myMrNotClonesDismissedOnStart == 0) {
-            Global.sendAnalytics("event", "mr_NOT_clones_dismissed_first_attempt_" + Global.myStatistics.myTrialPlayCount, {
+        if (Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount <= 3 &&
+            Global.myStatistics.myMrNOTClonesDismissed > 0 && this._myMrNotClonesDismissedOnStart == 0) {
+            Global.sendAnalytics("event", "mr_NOT_clones_dismissed_first_time_attempt_" + Global.myStatistics.myTrialPlayCount, {
                 "value": 1
             });
         }
 
-        if (Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount == Global.myStatistics.myTrialPlayCountResettable &&
-            Global.myStatistics.myTrialPlayCount <= 3) {
-            Global.sendAnalytics("event", "trial_completed_phase_1_first_attempt_" + Global.myStatistics.myTrialPlayCount, {
+        let saveResetNormal = Global.mySaveManager.load("save_reset_normal", false);
+        if (!saveResetNormal && Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount <= 3) {
+            Global.sendAnalytics("event", "trial_completed_phase_1_first_time_attempt_" + Global.myStatistics.myTrialPlayCount, {
                 "value": 1
             });
         }
     }
 
     _trialPhaseLost(trialPhase, fsm) {
+        Global.myStatisticsManager.saveStatistics();
+
         Global.myIsTrialPhase1 = false;
 
         Global.sendAnalytics("event", "trial_lost_phase_".concat(trialPhase), {
             "value": 1
         });
 
-        Global.sendAnalytics("event", "trial_lost_time_phase_".concat(trialPhase), {
+        Global.sendAnalytics("event", "trial_lost_seconds_phase_".concat(trialPhase), {
             "value": Global.myVentDuration.toFixed(2)
         });
 
-        Global.sendAnalytics("event", "trial_time", {
+        Global.sendAnalytics("event", "trial_seconds", {
             "value": Global.myTrialDuration.toFixed(2)
         });
 
         if (Global.myStatistics.myTrialCompletedCount <= 0) {
-            Global.sendAnalytics("event", "trial_lost_time_before_completed_phase_".concat(trialPhase), {
+            Global.sendAnalytics("event", "trial_lost_seconds_before_completed_phase_".concat(trialPhase), {
                 "value": Global.myVentDuration.toFixed(2)
             });
         }
 
-        if (trialPhase == 1 && Global.myStatistics.myTrialCompletedCount <= 0 && Global.myStatistics.myTrialPlayCount == Global.myStatistics.myTrialPlayCountResettable) {
+        let saveResetNormal = Global.mySaveManager.load("save_reset_normal", false);
+        if (!saveResetNormal && trialPhase == 1 && Global.myStatistics.myTrialCompletedCount <= 0) {
             let clonesOnlyPunched = Global.myStatistics.myMrNOTClonesDismissed > 0 && Global.myStatistics.myMrNOTClonesDismissed == Global.myStatistics.myEvidencesPunched;
             if (Global.myStatistics.myMrNOTClonesDismissed <= 0 || clonesOnlyPunched) {
                 Global.sendAnalytics("event", "trial_lost_before_first_dismiss", {
@@ -199,15 +202,15 @@ class TrialState extends PP.State {
             }
         }
 
-        if (trialPhase == 1 && !Global.mySaveManager.loadBool("mr_NOT_clones_seen", false)) {
+        if (trialPhase == 1 && !Global.mySaveManager.load("mr_NOT_clones_seen", false)) {
             Global.sendAnalytics("event", "trial_lost_before_first_clone_seen", {
                 "value": 1
             });
         }
 
-        if (Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount == Global.myStatistics.myTrialPlayCountResettable &&
-            Global.myStatistics.myTrialPlayCount <= 3 && Global.myStatistics.myMrNOTClonesDismissed > 0 && this._myMrNotClonesDismissedOnStart == 0) {
-            Global.sendAnalytics("event", "mr_NOT_clones_dismissed_first_attempt_" + Global.myStatistics.myTrialPlayCount, {
+        if (Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount <= 3 &&
+            Global.myStatistics.myMrNOTClonesDismissed > 0 && this._myMrNotClonesDismissedOnStart == 0) {
+            Global.sendAnalytics("event", "mr_NOT_clones_dismissed_first_time_attempt_" + Global.myStatistics.myTrialPlayCount, {
                 "value": 1
             });
         }
@@ -227,7 +230,7 @@ class TrialState extends PP.State {
                 "value": 1
             });
 
-            Global.sendAnalytics("event", "trial_completed_from_start_time", {
+            Global.sendAnalytics("event", "trial_completed_from_start_seconds", {
                 "value": Global.myTrialDuration.toFixed(2)
             });
         }

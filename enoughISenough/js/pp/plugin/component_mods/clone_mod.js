@@ -17,6 +17,9 @@ WL.CollisionComponent.prototype.pp_clone = function (clone, deepCloneParams, ext
 };
 
 WL.TextComponent.prototype.pp_clone = function (clone, deepCloneParams, extraData) {
+    clone.text = " ";
+    clone.text = "";
+
     if (deepCloneParams.shouldDeepCloneComponent("text")) {
         clone.text = this.text.slice(0);
     } else {

@@ -25548,7 +25548,8 @@
                 },
                 "optionalFeatures": {
                     "local-floor": false,
-                    "hand-tracking": true
+                    "hand-tracking": true,
+                    "hit-test": false
                 }
             },
             "visualizeColliders": false,

@@ -72,8 +72,7 @@ PP.AudioPlayer = class AudioPlayer {
 
         if (checkOnlyLast) {
             isPlaying = this._myAudio.playing(this._myLastAudioID);
-        }
-        else {
+        } else {
             isPlaying = this._myAudio.playing();
         }
 

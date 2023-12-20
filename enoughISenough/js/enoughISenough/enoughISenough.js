@@ -4,8 +4,8 @@ class enoughISenough {
     }
 
     start() {
-        this._myStatisticsManager = new StatisticsManager();
-        this._myStatisticsManager.start();
+        Global.myStatisticsManager = new StatisticsManager();
+        Global.myStatisticsManager.start();
 
         this._myMainFSM = new MainFSM();
         this._myMainFSM.init();
@@ -21,7 +21,7 @@ class enoughISenough {
             Global.myStatistics.myTotalPlayTime += dt;
         }
 
-        this._myStatisticsManager.update(dt);
+        Global.myStatisticsManager.update(dt);
     }
 
     prepareSFXSetups() {
