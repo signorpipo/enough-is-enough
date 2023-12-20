@@ -47,10 +47,6 @@ PP.myEasyTuneVariables = null;
 
 PP.myEasyTuneTarget = null;
 
-PP.setEasyTuneWidgetActiveVariable = function () {
-    console.log("setEasyTuneWidgetActiveVariable function not initialized yet");
-};
+PP.setEasyTuneWidgetActiveVariable = function () { };
 
-PP.refreshEasyTuneWidget = function () {
-    console.log("refreshEasyTuneWidget function not initialized yet");
-};
+PP.refreshEasyTuneWidget = function () { };
