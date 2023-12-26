@@ -133,7 +133,6 @@ class TrialState extends PP.State {
 
     _trialPhaseCompleted(trialPhase, nextTrialPhase, fsm) {
         Global.mySaveManager.save("trial_phase", nextTrialPhase);
-        Global.myStatisticsManager.saveStatistics();
 
         Global.myIsTrialPhase1 = false;
         Global.myMrNOTClonesNotDismissedPhase1PlayCount = 0;
@@ -161,11 +160,11 @@ class TrialState extends PP.State {
                 "value": 1
             });
         }
+
+        Global.myStatisticsManager.saveStatistics();
     }
 
     _trialPhaseLost(trialPhase, fsm) {
-        Global.myStatisticsManager.saveStatistics();
-
         Global.myIsTrialPhase1 = false;
 
         Global.sendAnalytics("event", "trial_lost_phase_".concat(trialPhase), {
@@ -214,6 +213,8 @@ class TrialState extends PP.State {
                 "value": 1
             });
         }
+
+        Global.myStatisticsManager.saveStatistics();
     }
 
     _backToMenu(trialPhase, fsm) {
