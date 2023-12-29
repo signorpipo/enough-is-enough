@@ -167,6 +167,10 @@ class TrialState extends PP.State {
     _trialPhaseLost(trialPhase, fsm) {
         Global.myIsTrialPhase1 = false;
 
+        Global.sendAnalytics("event", "trial_lost", {
+            "value": 1
+        });
+
         Global.sendAnalytics("event", "trial_lost_phase_".concat(trialPhase), {
             "value": 1
         });
