@@ -10,6 +10,8 @@ PP.AudioSetup = class AudioSetup {
 
         this.myPool = 5;
 
+        this.myPreload = false;
+
         //Spatial
         this.myPosition = null;
         this.mySpatial = true;
@@ -25,10 +27,11 @@ PP.AudioSetup = class AudioSetup {
         audioSetup.myAutoplay = this.myAutoplay;
 
         audioSetup.myVolume = this.myVolume;
-        audioSetup.myPitch = this.myPitch;
-        audioSetup.myRate = this.myRate;
+        audioSetup._myRate = this._myRate;
 
         audioSetup.myPool = this.myPool;
+
+        audioSetup.myPreload = this.myPreload;
 
         //Spatial
         audioSetup.myPosition = this.myPosition;

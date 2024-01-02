@@ -1,6 +1,8 @@
 PP.AudioManager = class AudioManager {
     constructor() {
         this._myAudioSetupMap = new Map();
+
+        this._myAudioPlayersForPreload = [];
     }
 
     createAudioPlayer(audioSetupID) {
@@ -13,8 +15,11 @@ PP.AudioManager = class AudioManager {
 
     addAudioSetup(id, audioSetup, preload = true) {
         this._myAudioSetupMap.set(id, audioSetup);
+
         if (preload) {
-            this.createAudioPlayer(id);
+            let preloadAudioSetup = audioSetup.clone();
+            preloadAudioSetup.myPreload = true;
+            this._myAudioPlayersForPreload.push(new PP.AudioPlayer(preloadAudioSetup));
         }
     }
 
