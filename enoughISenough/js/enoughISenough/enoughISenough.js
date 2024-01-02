@@ -173,17 +173,12 @@ class enoughISenough {
             manager.addAudioSetup(SfxID.COLLISION, audioSetup);
         }
 
-        manager.createAudioPlayer(SfxID.RING_RISE);
-        for (let i = 0; i <= SfxID.BLATHER_DOT; i++) {
-            manager.createAudioPlayer(i);
-        }
-
         //This MAY avoid some crackle on first play with position
-        let ringRise = manager.createAudioPlayer(SfxID.RING_RISE);
-        ringRise.setVolume(0);
-        ringRise.updatePosition([0, -10000, 0]);
-        ringRise.play();
-        ringRise.updatePosition([0, -10000, 0]);
+        this._myRingRiseFixFirstPlayCrackleAudioPlayer = manager.createAudioPlayer(SfxID.RING_RISE);
+        this._myRingRiseFixFirstPlayCrackleAudioPlayer.setVolume(0);
+        this._myRingRiseFixFirstPlayCrackleAudioPlayer.updatePosition([0, -10000, 0]);
+        this._myRingRiseFixFirstPlayCrackleAudioPlayer.play();
+        this._myRingRiseFixFirstPlayCrackleAudioPlayer.updatePosition([0, -10000, 0]);
     }
 }
 
