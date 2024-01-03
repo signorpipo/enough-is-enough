@@ -56,6 +56,7 @@ class enoughISenough {
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/blather_0.wav");
             audioSetup.myVolume = 0.4;
+            audioSetup.myPool = 10;
             audioSetup.myReferenceDistance = 1000000;
             manager.addAudioSetup(SfxID.BLATHER_0, audioSetup);
 
@@ -71,6 +72,7 @@ class enoughISenough {
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/blather_1.wav");
             audioSetup.myVolume = 0.4;
+            audioSetup.myPool = 10;
             audioSetup.myReferenceDistance = 1000000;
             manager.addAudioSetup(SfxID.BLATHER_1, audioSetup);
 
