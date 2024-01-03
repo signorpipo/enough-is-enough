@@ -85,6 +85,11 @@ PP.AudioPlayer = class AudioPlayer {
     }
 
     isLoaded() {
+        if (!this._myAudioLoadRequested) {
+            this._myAudioLoadRequested = true;
+            this._myAudio.load();
+        }
+
         return this._myAudio.state() == "loaded";
     }
 
