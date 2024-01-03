@@ -152,11 +152,11 @@ PP.AudioPool = class AudioPool {
     _equals(first, second) {
         let equals = false;
 
-        if (this._myAudioPoolParams.myEqualsFunctionName != null) {
+        if (first != null && this._myAudioPoolParams.myEqualsFunctionName != null) {
             equals = first[this._myAudioPoolParams.myEqualsFunctionName](second);
-        } else if (first.pp_equals != null) {
+        } else if (first != null && first.pp_equals != null) {
             equals = first.pp_equals(second);
-        } else if (first.equals != null) {
+        } else if (first != null && first.equals != null) {
             equals = first.equals(second);
         } else {
             equals = first == second;
@@ -183,7 +183,7 @@ PP.AudioPool.prototype.update = function () {
             }
         }
 
-        this._myOnHoldPlayingAudios.pp_remove(removePlayingCallback);
+        this._myOnHoldPlayingAudios.pp_removeAll(removePlayingCallback);
 
         for (let i = 0; i < this._myOnHoldDelayAudios.length; i++) {
             let audioPair = this._myOnHoldDelayAudios[i];
@@ -193,7 +193,7 @@ PP.AudioPool.prototype.update = function () {
             }
         }
 
-        this._myOnHoldDelayAudios.pp_remove(removeDelayCallback);
+        this._myOnHoldDelayAudios.pp_removeAll(removeDelayCallback);
 
     };
 }();
