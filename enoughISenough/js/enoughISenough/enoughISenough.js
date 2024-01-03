@@ -62,7 +62,7 @@ class enoughISenough {
 
             let audioPoolParams = new PP.AudioPoolParams();
             audioPoolParams.myPercentageToAddWhenEmpty = 0;
-            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myInitialPoolSize = 2;
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_0);
             };
@@ -78,7 +78,7 @@ class enoughISenough {
 
             let audioPoolParams = new PP.AudioPoolParams();
             audioPoolParams.myPercentageToAddWhenEmpty = 0;
-            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myInitialPoolSize = 2;
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_1);
             };
@@ -138,7 +138,7 @@ class enoughISenough {
 
             let audioPoolParams = new PP.AudioPoolParams();
             audioPoolParams.myPercentageToAddWhenEmpty = 0;
-            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myInitialPoolSize = 2;
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_APPEAR);
             };
@@ -154,7 +154,7 @@ class enoughISenough {
 
             let audioPoolParams = new PP.AudioPoolParams();
             audioPoolParams.myPercentageToAddWhenEmpty = 0;
-            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myInitialPoolSize = 2;
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_DISAPPEAR);
             };
@@ -201,7 +201,7 @@ class enoughISenough {
 
             let audioPoolParams = new PP.AudioPoolParams();
             audioPoolParams.myPercentageToAddWhenEmpty = 0;
-            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myInitialPoolSize = 20;
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.CLONE_EXPLODE);
             };
@@ -261,7 +261,7 @@ class enoughISenough {
 
             let audioPoolParams = new PP.AudioPoolParams();
             audioPoolParams.myPercentageToAddWhenEmpty = 0;
-            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myInitialPoolSize = 20;
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.CLONE_APPEAR);
             };
