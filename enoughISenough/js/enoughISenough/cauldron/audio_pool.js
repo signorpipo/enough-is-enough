@@ -176,15 +176,6 @@ PP.AudioPool.prototype.update = function () {
     };
 
     return function update(dt) {
-        for (let i = 0; i < this._myOnHoldPlayingAudios.length; i++) {
-            let audio = this._myOnHoldPlayingAudios[i];
-            if (!audio.isPlaying() && audio.isLoaded()) {
-                this._myOnHoldDelayAudios.push([1, audio]);
-            }
-        }
-
-        this._myOnHoldPlayingAudios.pp_removeAll(removePlayingCallback);
-
         for (let i = 0; i < this._myOnHoldDelayAudios.length; i++) {
             let audioPair = this._myOnHoldDelayAudios[i];
             audioPair[0] = audioPair[0] - dt;
@@ -195,5 +186,13 @@ PP.AudioPool.prototype.update = function () {
 
         this._myOnHoldDelayAudios.pp_removeAll(removeDelayCallback);
 
+        for (let i = 0; i < this._myOnHoldPlayingAudios.length; i++) {
+            let audio = this._myOnHoldPlayingAudios[i];
+            if (!audio.isPlaying() && audio.isLoaded()) {
+                this._myOnHoldDelayAudios.push([1, audio]);
+            }
+        }
+
+        this._myOnHoldPlayingAudios.pp_removeAll(removePlayingCallback);
     };
 }();
