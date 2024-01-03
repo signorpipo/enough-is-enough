@@ -421,6 +421,7 @@ var Global = {
     myMeshObjectPoolMap: null,
     myMeshNoFogObjectPoolMap: null,
     myGameObjectPoolMap: null,
+    myAudioPoolMap: null,
     myMaterials: null,
     myTrialDuration: 0,
     myArcadeDuration: 0,

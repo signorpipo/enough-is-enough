@@ -2,11 +2,12 @@ class NotEnough {
     constructor(audioPosition = null) {
         this._myTimer = new PP.Timer(1, false);
         this._myExtraTimer = new PP.Timer(2, false);
-        this._myNotEnoughAudio = Global.myAudioManager.createAudioPlayer(SfxID.NOT_ENOUGH);
         this._myAudioPosition = audioPosition;
+        this._myNotEnoughAudio = null;
     }
 
     start() {
+        this._myNotEnoughAudio = Global.myAudioPoolMap.getAudio(SfxID.NOT_ENOUGH);
         this._myTimer.start();
 
         let audioPositionEnabled = false;
@@ -17,6 +18,7 @@ class NotEnough {
         }
 
         this._myNotEnoughAudio.play();
+        Global.myAudioPoolMap.releaseAudio(SfxID.NOT_ENOUGH, this._myNotEnoughAudio);
 
         this._myLeftTimer = new PP.Timer(0);
         this._myRightTimer = new PP.Timer(0);
