@@ -1,5 +1,10 @@
-- update casdk to heyvr (si può dire fatto, dato che penso lascerò le CAUtils che sono supportate ancora)
-	- assicurarsi che ci sia sempre un errore anche se poi heyvr non funzionerà più o in caso di eccezioni
-	- assicurarsi che il sistema di save, se uso quello di heyvr, funzioni o fallbacki a localStorage se non c'è quello di heyvr
+- add a way to squeeze fist for hand tracking
+	- smoothare cambiamento hand quando è tracked hand
+	- provare a mettere indice per physx
+	- togliere il pinch con select e usare invece fatto da me
+	- aggiungere qualche hand tracking event in più
 	
-- stare attenti a non pubblicare console VR o altro attivi
+- se le analytics sono ancora pesanti come performance:
+	- mettere analytics come trial started sul sito per risparmiare, come per phase 1 enough/good/almost generato sul sito direttamente
+	
+- rifare il trailer
