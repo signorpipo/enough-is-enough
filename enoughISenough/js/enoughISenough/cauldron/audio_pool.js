@@ -179,20 +179,18 @@ PP.AudioPool.prototype.update = function () {
         for (let i = 0; i < this._myOnHoldDelayAudios.length; i++) {
             let audioPair = this._myOnHoldDelayAudios[i];
             audioPair[0] = audioPair[0] - dt;
-            if (audioPair[0] <= 0) {
-                this._myAvailableAudios.push(audioPair[1]);
-            }
         }
 
-        this._myOnHoldDelayAudios.pp_removeAll(removeDelayCallback);
-
-        for (let i = 0; i < this._myOnHoldPlayingAudios.length; i++) {
-            let audio = this._myOnHoldPlayingAudios[i];
-            if (!audio.isPlaying() && audio.isLoaded()) {
-                this._myOnHoldDelayAudios.push([2, audio]);
-            }
+        let removedOnHoldDelayAudios = this._myOnHoldDelayAudios.pp_removeAll(removeDelayCallback);
+        for (let i = 0; i < removedOnHoldDelayAudios.length; i++) {
+            let audioPair = removedOnHoldDelayAudios[i];
+            this._myAvailableAudios.push(audioPair[1]);
         }
 
-        this._myOnHoldPlayingAudios.pp_removeAll(removePlayingCallback);
+        let removedOnHoldPlayingAudios = this._myOnHoldPlayingAudios.pp_removeAll(removePlayingCallback);
+        for (let i = 0; i < removedOnHoldPlayingAudios.length; i++) {
+            let audio = removedOnHoldPlayingAudios[i];
+            this._myOnHoldDelayAudios.push([2, audio]);
+        }
     };
 }();
