@@ -189,7 +189,7 @@ PP.AudioPool.prototype.update = function () {
         for (let i = 0; i < this._myOnHoldPlayingAudios.length; i++) {
             let audio = this._myOnHoldPlayingAudios[i];
             if (!audio.isPlaying() && audio.isLoaded()) {
-                this._myOnHoldDelayAudios.push([1, audio]);
+                this._myOnHoldDelayAudios.push([2, audio]);
             }
         }
 
