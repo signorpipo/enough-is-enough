@@ -154,6 +154,10 @@ WL.registerComponent('pp-grabber-hand', {
             return;
         }
 
+        if (!this._myHandPose.isValid()) {
+            return;
+        }
+
         if (this._myGrabButton == 2 || this._myActiveGrabButton == null || this._myActiveGrabButton == grabButton || grabButton == null) {
             let grabbablesToGrab = [];
 
