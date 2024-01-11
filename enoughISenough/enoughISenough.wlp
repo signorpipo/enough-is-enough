@@ -354,10 +354,6 @@
                     }
                 },
                 {
-                    "type": "pp-mute-all",
-                    "active": false
-                },
-                {
                     "type": "pp-gamepad-manager"
                 },
                 {
@@ -627,19 +623,6 @@
                 1.6499998,
                 -0.1,
                 1.0
-            ],
-            "components": [
-                {
-                    "type": "pp-player-height",
-                    "active": false,
-                    "pp-player-height": {
-                        "_myEyesHeight": 1.6499999
-                    }
-                },
-                {
-                    "type": "top-down-view",
-                    "active": false
-                }
             ]
         },
         "85": {
