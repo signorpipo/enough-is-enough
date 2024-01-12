@@ -288,6 +288,7 @@ class enoughISenough {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/grab.wav");
             audioSetup.myVolume = 0.55;
             audioSetup.myReferenceDistance = 0.3;
+            audioSetup.myPool = 15;
             manager.addAudioSetup(SfxID.GRAB, audioSetup);
 
             let audioPoolParams = new PP.AudioPoolParams();
@@ -304,6 +305,7 @@ class enoughISenough {
             audioSetup.myRate = 0.7;
             audioSetup.myVolume = 0.225;
             audioSetup.myReferenceDistance = 0.3;
+            audioSetup.myPool = 15;
             manager.addAudioSetup(SfxID.THROW, audioSetup);
 
             let audioPoolParams = new PP.AudioPoolParams();
