@@ -50,7 +50,7 @@ class enoughISenough {
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.NOT_ENOUGH);
             };
-            Global.myAudioPoolMap.addPool(SfxID.NOT_ENOUGH, audioPoolParams);
+            //Global.myAudioPoolMap.addPool(SfxID.NOT_ENOUGH, audioPoolParams);
         }
 
         {
@@ -97,7 +97,7 @@ class enoughISenough {
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_DOT);
             };
-            Global.myAudioPoolMap.addPool(SfxID.BLATHER_DOT, audioPoolParams);
+            //Global.myAudioPoolMap.addPool(SfxID.BLATHER_DOT, audioPoolParams);
         }
 
         {
@@ -112,7 +112,7 @@ class enoughISenough {
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.RING_RISE);
             };
-            Global.myAudioPoolMap.addPool(SfxID.RING_RISE, audioPoolParams);
+            //Global.myAudioPoolMap.addPool(SfxID.RING_RISE, audioPoolParams);
         }
 
         {
@@ -126,7 +126,7 @@ class enoughISenough {
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.HAND_PIECE_APPEAR);
             };
-            Global.myAudioPoolMap.addPool(SfxID.HAND_PIECE_APPEAR, audioPoolParams);
+            //Global.myAudioPoolMap.addPool(SfxID.HAND_PIECE_APPEAR, audioPoolParams);
         }
 
         {
@@ -174,7 +174,7 @@ class enoughISenough {
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.TITLE_APPEAR);
             };
-            Global.myAudioPoolMap.addPool(SfxID.TITLE_APPEAR, audioPoolParams);
+            //Global.myAudioPoolMap.addPool(SfxID.TITLE_APPEAR, audioPoolParams);
         }
 
         {
@@ -190,7 +190,7 @@ class enoughISenough {
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.TITLE_DISAPPEAR);
             };
-            Global.myAudioPoolMap.addPool(SfxID.TITLE_DISAPPEAR, audioPoolParams);
+            //Global.myAudioPoolMap.addPool(SfxID.TITLE_DISAPPEAR, audioPoolParams);
         }
 
         {
@@ -220,7 +220,7 @@ class enoughISenough {
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_EXPLODE);
             };
-            Global.myAudioPoolMap.addPool(SfxID.MR_NOT_EXPLODE, audioPoolParams);
+            //Global.myAudioPoolMap.addPool(SfxID.MR_NOT_EXPLODE, audioPoolParams);
         }
 
         {
@@ -235,7 +235,7 @@ class enoughISenough {
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_APPEAR);
             };
-            Global.myAudioPoolMap.addPool(SfxID.EVIDENCE_APPEAR, audioPoolParams);
+            //Global.myAudioPoolMap.addPool(SfxID.EVIDENCE_APPEAR, audioPoolParams);
         }
 
         {
@@ -250,7 +250,7 @@ class enoughISenough {
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_DISAPPEAR);
             };
-            Global.myAudioPoolMap.addPool(SfxID.EVIDENCE_DISAPPEAR, audioPoolParams);
+            //Global.myAudioPoolMap.addPool(SfxID.EVIDENCE_DISAPPEAR, audioPoolParams);
         }
 
         {
@@ -281,7 +281,7 @@ class enoughISenough {
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_FAST_APPEAR);
             };
-            Global.myAudioPoolMap.addPool(SfxID.MR_NOT_FAST_APPEAR, audioPoolParams);
+            //Global.myAudioPoolMap.addPool(SfxID.MR_NOT_FAST_APPEAR, audioPoolParams);
         }
 
         {
@@ -297,7 +297,7 @@ class enoughISenough {
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.GRAB);
             };
-            Global.myAudioPoolMap.addPool(SfxID.GRAB, audioPoolParams);
+            //Global.myAudioPoolMap.addPool(SfxID.GRAB, audioPoolParams);
         }
 
         {
@@ -314,7 +314,7 @@ class enoughISenough {
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.THROW);
             };
-            Global.myAudioPoolMap.addPool(SfxID.THROW, audioPoolParams);
+            //Global.myAudioPoolMap.addPool(SfxID.THROW, audioPoolParams);
         }
 
         {
@@ -331,7 +331,7 @@ class enoughISenough {
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.COLLISION);
             };
-            Global.myAudioPoolMap.addPool(SfxID.COLLISION, audioPoolParams);
+            //Global.myAudioPoolMap.addPool(SfxID.COLLISION, audioPoolParams);
         }
 
         //This MAY avoid some crackle on first play with position
