@@ -322,6 +322,7 @@ class enoughISenough {
             audioSetup.myRate = 0.8;
             audioSetup.myVolume = 0.5;
             audioSetup.myReferenceDistance = 0.3;
+            audioSetup.myPool = 10;
             manager.addAudioSetup(SfxID.COLLISION, audioSetup);
 
             let audioPoolParams = new PP.AudioPoolParams();
