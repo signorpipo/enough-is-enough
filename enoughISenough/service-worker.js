@@ -73,7 +73,6 @@ let _myResourceURLsToPrecache = [
     "favicon.ico",
     "manifest.json",
     "icon192.png",
-    "1428.png",
     "wonderland.min.js",
     "wasm-featuredetect.js",
     //"WonderlandRuntime-physx.wasm",
@@ -107,7 +106,8 @@ let _myResourceURLsToPrecache = [
     "assets/audio/sfx/clone_appear.wav",
     "assets/audio/sfx/mr_NOT_explode.wav",
     "assets/audio/sfx/mr_NOT_fast_appear.wav",
-    "assets/audio/music/you_KNOW_22Hz.wav"
+    "assets/audio/music/you_KNOW_22Hz.wav",
+    "1428.png"
 ];
 
 
