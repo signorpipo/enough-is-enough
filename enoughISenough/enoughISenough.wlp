@@ -22027,12 +22027,6 @@
             },
             "name": "DefaultFont"
         },
-        "1018": {
-            "link": {
-                "name": "P8_palette.png",
-                "file": "assets\\textures\\P8_palette.png"
-            }
-        },
         "1429": {
             "link": {
                 "name": "icon.png",
@@ -22052,13 +22046,6 @@
                 "name": "DefaultFontImage",
                 "file": "default"
             }
-        },
-        "1017": {
-            "link": {
-                "name": "P8_palette.png",
-                "file": "assets\\textures\\P8_palette.png"
-            },
-            "compress": false
         },
         "1428": {
             "link": {
@@ -24390,33 +24377,6 @@
             },
             "pipeline": "194"
         },
-        "1016": {
-            "name": "P8 Palette",
-            "Phong": {
-                "diffuseColor": [
-                    1.0,
-                    0.9999899,
-                    0.999996,
-                    1.0
-                ],
-                "specularColor": [
-                    9.999899930335233e-7,
-                    9.999911299019005e-7,
-                    9.999999974752428e-7,
-                    1.0
-                ],
-                "shininess": 10,
-                "ambientColor": [
-                    9.999999974752428e-7,
-                    9.999899930335233e-7,
-                    9.999968142437866e-7,
-                    1.0
-                ],
-                "diffuseTexture": "1018",
-                "ambientFactor": 0.3
-            },
-            "pipeline": "79"
-        },
         "1024": {
             "link": {
                 "name": "DefaultFontMaterial",
@@ -25528,7 +25488,6 @@
         "assets/models/evidences/wayfinder.fbx",
         "assets/models/evidences/wayfinder_physx.fbx",
         "assets/models/extra/palette_mesh_1.fbx",
-        "assets/textures/P8_palette.png",
         "assets/models/ring_out.fbx",
         "assets/models/ring_middle.fbx",
         "assets/models/hand_piece.fbx",
