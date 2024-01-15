@@ -322,21 +322,6 @@ class enoughISenough {
             Global.myMusic = Global.myAudioManager.createAudioPlayer(SfxID.YOU_KNOW);
         }
 
-        {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blather_dot.wav");
-            audioSetup.myVolume = 0.4;
-            audioSetup.myReferenceDistance = 1000000;
-            manager.addAudioSetup(SfxID.BLATHER_DOT, audioSetup);
-
-            let audioPoolParams = new PP.AudioPoolParams();
-            audioPoolParams.myPercentageToAddWhenEmpty = 0;
-            audioPoolParams.myInitialPoolSize = 1;
-            audioPoolParams.myCloneFunction = function () {
-                return Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_DOT);
-            };
-            //Global.myAudioPoolMap.addPool(SfxID.BLATHER_DOT, audioPoolParams);
-        }
-
         //This MAY avoid some crackle on first play with position
         this._myRingRiseFixFirstPlayCrackleAudioPlayer = manager.createAudioPlayer(SfxID.RING_RISE);
         this._myRingRiseFixFirstPlayCrackleAudioPlayer.setVolume(0);
@@ -365,6 +350,5 @@ var SfxID = {
     YOU_KNOW: 15,
     GRAB: 16,
     THROW: 17,
-    COLLISION: 18,
-    BLATHER_DOT: 19
+    COLLISION: 18
 };
