@@ -1,0 +1,12 @@
+- add a way to squeeze fist for hand tracking
+	- smoothare cambiamento hand quando è tracked hand
+	- provare a mettere indice per physx
+	- togliere il pinch con select e usare invece fatto da me
+	- aggiungere qualche hand tracking event in più
+	
+- se le analytics sono ancora pesanti come performance:
+	- mettere analytics come trial started sul sito per risparmiare, come per phase 1 enough/good/almost generato sul sito direttamente
+	
+- rifare il trailer?
+
+- cambiare wav to webm?

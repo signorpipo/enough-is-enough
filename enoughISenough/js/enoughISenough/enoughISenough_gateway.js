@@ -421,6 +421,7 @@ var Global = {
     myMeshObjectPoolMap: null,
     myMeshNoFogObjectPoolMap: null,
     myGameObjectPoolMap: null,
+    myAudioPoolMap: null,
     myMaterials: null,
     myTrialDuration: 0,
     myArcadeDuration: 0,
@@ -458,7 +459,8 @@ var Global = {
     myTotalTimeUpdated: false,
     myActivatePhysXHandEventSent: false,
     myElementToClick: null,
-    myElementToClickCounter: 0
+    myElementToClickCounter: 0,
+    myMusic: null
 };
 
 Global.sendAnalytics = function sendAnalytics(eventType, eventName, eventValue) {

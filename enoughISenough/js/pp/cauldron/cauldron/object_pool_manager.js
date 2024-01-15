@@ -138,11 +138,11 @@ PP.ObjectPool = class ObjectPool {
     _equals(first, second) {
         let equals = false;
 
-        if (this._myObjectPoolParams.myEqualsFunctionName != null) {
+        if (first != null && this._myObjectPoolParams.myEqualsFunctionName != null) {
             equals = first[this._myObjectPoolParams.myEqualsFunctionName](second);
-        } else if (first.pp_equals != null) {
+        } else if (first != null && first.pp_equals != null) {
             equals = first.pp_equals(second);
-        } else if (first.equals != null) {
+        } else if (first != null && first.equals != null) {
             equals = first.equals(second);
         }
 
