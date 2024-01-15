@@ -459,7 +459,8 @@ var Global = {
     myTotalTimeUpdated: false,
     myActivatePhysXHandEventSent: false,
     myElementToClick: null,
-    myElementToClickCounter: 0
+    myElementToClickCounter: 0,
+    myMusic: null
 };
 
 Global.sendAnalytics = function sendAnalytics(eventType, eventName, eventValue) {

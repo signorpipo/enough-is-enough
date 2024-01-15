@@ -36,7 +36,10 @@ class enoughISenough {
             audioSetup.myLoop = true;
             audioSetup.mySpatial = false;
             audioSetup.myVolume = 0.45;
-            manager.addAudioSetup(SfxID.YOU_KNOW, audioSetup);
+            audioSetup.myPreload = true;
+            manager.addAudioSetup(SfxID.YOU_KNOW, audioSetup, false);
+
+            Global.myMusic = Global.myAudioManager.createAudioPlayer(SfxID.YOU_KNOW);
         }
 
         {
