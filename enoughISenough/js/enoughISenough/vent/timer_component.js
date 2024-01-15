@@ -26,7 +26,8 @@ WL.registerComponent("timer", {
             time = Global.myTrialDuration;
         }
 
-        time = Math.floor(time);
+        time = Math.floor(time * 1000);
+        time = Math.floor(time / 1000);
 
         let hours = Math.floor(time / 3600);
         time -= hours * 3600;

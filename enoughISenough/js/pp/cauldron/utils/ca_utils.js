@@ -208,7 +208,7 @@ PP.CAUtils = {
     getUser(onDoneCallback = null, onErrorCallback = null, useDummyServerOverride = null) {
         if (PP.CAUtils.isSDKAvailable()) {
             try {
-                PP.CAUtils_getUser().then(function (result) {
+                PP.CAUtils._getUser().then(function (result) {
                     if (result.user != null && result.user.displayName != null) {
                         if (onDoneCallback != null) {
                             onDoneCallback(result.user);

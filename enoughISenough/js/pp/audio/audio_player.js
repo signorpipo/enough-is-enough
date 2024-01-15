@@ -29,11 +29,11 @@ PP.AudioPlayer = class AudioPlayer {
             autoplay: this._myAudioSetup.myAutoplay,
             rate: this._myAudioSetup.myRate,
             pool: this._myAudioSetup.myPool,
-            preload: true
+            preload: this._myAudioSetup.myPreload,
+            refDistance: this._myAudioSetup.myReferenceDistance
         });
 
-        this._myAudio._pannerAttr.refDistance = this._myAudioSetup.myReferenceDistance;
-
+        this._myAudioLoadRequested = this._myAudioSetup.myPreload;
         this._myLastAudioID = null;
 
         this._myCallbackMap = new Map();
@@ -45,6 +45,11 @@ PP.AudioPlayer = class AudioPlayer {
     }
 
     play() {
+        if (!this._myAudioLoadRequested) {
+            this._myAudioLoadRequested = true;
+            this._myAudio.load();
+        }
+
         let audioID = this._myAudio.play();
         if (audioID != null) {
             this._myLastAudioID = audioID;
@@ -80,6 +85,11 @@ PP.AudioPlayer = class AudioPlayer {
     }
 
     isLoaded() {
+        if (!this._myAudioLoadRequested) {
+            this._myAudioLoadRequested = true;
+            this._myAudio.load();
+        }
+
         return this._myAudio.state() == "loaded";
     }
 

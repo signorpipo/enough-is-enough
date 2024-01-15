@@ -80,8 +80,8 @@ class MrNOTClone {
 
         this._myCollisions = this._myObject.pp_getComponentsHierarchy("collision");
 
-        this._myHitAudio = Global.myAudioManager.createAudioPlayer(SfxID.CLONE_EXPLODE);
-        this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.CLONE_APPEAR);
+        this._myHitAudio = Global.myAudioPoolMap.getAudio(SfxID.CLONE_EXPLODE);
+        this._myAppearAudio = Global.myAudioPoolMap.getAudio(SfxID.CLONE_APPEAR);
 
         this._myAppearAudioDelay = new PP.Timer(0.2);
 
@@ -156,6 +156,11 @@ class MrNOTClone {
         Global.myGameObjectPoolMap.releaseObject(GameObjectType.MR_NOT_CLONE, this._myObject);
         this._myObject = null;
         this._myFSM.perform("hide");
+
+        Global.myAudioPoolMap.releaseAudio(SfxID.CLONE_EXPLODE, this._myHitAudio);
+        Global.myAudioPoolMap.releaseAudio(SfxID.CLONE_APPEAR, this._myAppearAudio);
+        this._myHitAudio = null;
+        this._myAppearAudio = null;
     }
 
     _move(dt) {

@@ -39,6 +39,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         this._myGameObjectPoolSize = 40;
         this._myUpdateReadyCountdown = 10;
         this._myLoadTimeSent = false;
+        this._myVRSupportedSent = false;
 
         this._myTimeUsingTrackedHands = 0;
 
@@ -109,6 +110,15 @@ WL.registerComponent("enough-IS-enough-gateway", {
             if (this._myIncreasePool) {
                 this._increasePools();
             } else {
+                if (!this._myVRSupportedSent) {
+                    if (WL.vrSupported != 0) {
+                        this._myVRSupportedSent = true;
+                        Global.sendAnalytics("event", "vr_supported", {
+                            "value": 1
+                        });
+                    }
+                }
+
                 if (Global.myDebugShortcutsEnabled) {
                     if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.BOTTOM_BUTTON).isPressEnd(Global.myDebugShortcutsPress)) {
                         if (Global.myDeltaTimeSpeed == 1) {
@@ -411,6 +421,7 @@ var Global = {
     myMeshObjectPoolMap: null,
     myMeshNoFogObjectPoolMap: null,
     myGameObjectPoolMap: null,
+    myAudioPoolMap: null,
     myMaterials: null,
     myTrialDuration: 0,
     myArcadeDuration: 0,
@@ -448,7 +459,8 @@ var Global = {
     myTotalTimeUpdated: false,
     myActivatePhysXHandEventSent: false,
     myElementToClick: null,
-    myElementToClickCounter: 0
+    myElementToClickCounter: 0,
+    myMusic: null
 };
 
 Global.sendAnalytics = function sendAnalytics(eventType, eventName, eventValue) {

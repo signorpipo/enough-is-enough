@@ -45,8 +45,8 @@ class BlatherState extends PP.State {
 
         this._myBlather = new Blather(sentences, isDefeat);
 
-        this._myMrNOTAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_APPEAR);
-        this._myMrNOTDisappearAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_DISAPPEAR);
+        this._myMrNOTAppearAudio = null;
+        this._myMrNOTDisappearAudio = null;
 
         //Setup
         this._myFogAlphaMax = 0.7;
@@ -161,6 +161,9 @@ class BlatherState extends PP.State {
     }
 
     start(fsm, transition) {
+        this._myMrNOTAppearAudio = Global.myAudioPoolMap.getAudio(SfxID.MR_NOT_APPEAR);
+        this._myMrNOTDisappearAudio = Global.myAudioPoolMap.getAudio(SfxID.MR_NOT_DISAPPEAR);
+
         this._myParentFSM = fsm;
         this._myFSM.perform("start");
     }
@@ -169,6 +172,11 @@ class BlatherState extends PP.State {
         if (!this._myFSM.isInState("done")) {
             this._myFSM.perform("skip");
         }
+
+        Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_APPEAR, this._myMrNOTAppearAudio);
+        Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_DISAPPEAR, this._myMrNOTDisappearAudio);
+        this._myMrNOTAppearAudio = null;
+        this._myMrNOTDisappearAudio = null;
     }
 }
 
@@ -251,13 +259,14 @@ class Blather {
         this._myNextTimer = new PP.Timer(0.1);
 
         this._myCharAudios = [];
-        this._myCharAudios[0] = Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_1);
-        this._myCharAudios[1] = Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_0);
 
         this._myFSM.init("init");
     }
 
     start() {
+        this._myCharAudios[0] = Global.myAudioPoolMap.getAudio(SfxID.BLATHER_1);
+        this._myCharAudios[1] = Global.myAudioPoolMap.getAudio(SfxID.BLATHER_0);
+
         this._myFSM.perform("start");
     }
 
@@ -361,6 +370,11 @@ class Blather {
         this._myBigBlatherTextObject.pp_setActive(false);
         this._myBigBlatherPatchObject.pp_setActive(false);
         this._myIsDone = true;
+
+        Global.myAudioPoolMap.releaseAudio(SfxID.BLATHER_1, this._myCharAudios[0]);
+        Global.myAudioPoolMap.releaseAudio(SfxID.BLATHER_0, this._myCharAudios[1]);
+        this._myCharAudios[0] = null;
+        this._myCharAudios[1] = null;
     }
 
     _setBlatherPosition() {

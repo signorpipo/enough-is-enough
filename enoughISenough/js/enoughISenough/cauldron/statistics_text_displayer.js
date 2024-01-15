@@ -53,7 +53,8 @@ WL.registerComponent("statistics-text-displayer", {
             return "-";
         }
 
-        time = Math.floor(time);
+        time = Math.floor(time * 1000);
+        time = Math.floor(time / 1000);
 
         let hours = Math.floor(time / 3600);
         time -= hours * 3600;

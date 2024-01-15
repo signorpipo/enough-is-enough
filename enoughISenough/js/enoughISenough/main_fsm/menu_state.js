@@ -129,6 +129,13 @@ class MenuState extends PP.State {
     }
 
     end() {
+        if (this._myMenuTitle._mySendTitleSuddenUnspawnEvent) {
+            this._myMenuTitle._mySendTitleSuddenUnspawnEvent = false;
+            Global.sendAnalytics("event", "menu_sudden_unspawn", {
+                "value": 1
+            });
+        }
+
         Global.sendAnalytics("event", "menu_seconds", {
             "value": this._myMenuDuration.toFixed(2)
         });
@@ -724,6 +731,8 @@ class MenuTitle {
         this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.TITLE_APPEAR);
         this._myDisappearAudio = Global.myAudioManager.createAudioPlayer(SfxID.TITLE_DISAPPEAR);
 
+        this._mySendTitleSuddenUnspawnEvent = false;
+
         //Setup
         this._mySpawnTime = 1.5;
         this._myHideScale = 0.95;
@@ -748,6 +757,12 @@ class MenuTitle {
     }
 
     unspawn(timeToStart) {
+        if (this._myTimer.isRunning()) {
+            this._mySendTitleSuddenUnspawnEvent = true;
+        } else {
+            this._mySendTitleSuddenUnspawnEvent = false;
+        }
+
         this._myTimer.start(this._mySpawnTime);
         this._myStartTimer.start(timeToStart);
 
