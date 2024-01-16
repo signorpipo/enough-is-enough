@@ -109,7 +109,7 @@ class ArcadeResultState extends PP.State {
         let score = Math.floor(Global.myVentDuration * 1000);
 
         let scoreSubmittedEventID = (this._myIsDispute ? "arcade_dispute" : "arcade_chat") + "_score_submitted";
-        PP.CAUtils.submitScore(leaderboardID, score, function () {
+        let submitScoreSuccessCallback = function () {
             Global.sendAnalytics("event", "arcade_score_submitted", {
                 "value": 1
             });
@@ -117,7 +117,18 @@ class ArcadeResultState extends PP.State {
             Global.sendAnalytics("event", scoreSubmittedEventID, {
                 "value": 1
             });
-        }, null, false);
+        };
+        PP.CAUtils.submitScore(leaderboardID, score, submitScoreSuccessCallback,
+            function (error) {
+                if (error != null && error.type == PP.CAUtils.CAError.SUBMIT_SCORE_FAILED) {
+                    PP.CAUtils.submitScore(leaderboardID, score, submitScoreSuccessCallback,
+                        function (error) {
+                            if (error != null && error.type == PP.CAUtils.CAError.SUBMIT_SCORE_FAILED) {
+                                PP.CAUtils.submitScore(leaderboardID, score, submitScoreSuccessCallback, null, false);
+                            }
+                        }, false);
+                }
+            }, false);
 
         Global.myIsInArcadeResult = true;
 
