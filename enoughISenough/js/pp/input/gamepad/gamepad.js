@@ -647,6 +647,8 @@ PP.Gamepad = class Gamepad {
 
                 this._myPulseInfo.myIsDevicePulsing = false;
             }
+        } else {
+            this._myPulseInfo.myIsDevicePulsing = false;
         }
 
         this._myPulseInfo.myDuration -= dt;
