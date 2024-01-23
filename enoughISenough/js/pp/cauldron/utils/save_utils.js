@@ -49,7 +49,11 @@ PP.SaveUtils = {
         let item = PP.SaveUtils.loadString(id);
 
         if (item != null) {
-            return JSON.parse(item);
+            try {
+                return JSON.parse(item);
+            } catch (error) {
+                // Do nothing
+            }
         }
 
         return defaultValue;

@@ -7,7 +7,7 @@ PP.SaveManager = class SaveManager {
         try {
             this._mySaveObject = PP.SaveUtils.loadObject(this._mySaveID, {});
         } catch (error) {
-            // Do nothing
+            this._mySaveObject = {};
         }
 
         this._myCommitSavesDelayTimer = new PP.Timer(0, false);
