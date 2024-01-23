@@ -4,9 +4,18 @@ PP.SaveManager = class SaveManager {
 
         this._mySaveObject = {};
 
-        try {
-            this._mySaveObject = PP.SaveUtils.loadObject(this._mySaveID, {});
-        } catch (error) {
+        let loadSucceded = false;
+        let maxAttempts = 3;
+        do {
+            try {
+                this._mySaveObject = PP.SaveUtils.loadObject(this._mySaveID, {});
+                loadSucceded = true;
+            } catch (error) {
+                maxAttempts--;
+            }
+        } while (maxAttempts > 0 && !loadSucceded);
+
+        if (!loadSucceded) {
             this._mySaveObject = {};
         }
 
