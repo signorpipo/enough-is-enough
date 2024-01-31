@@ -52,7 +52,7 @@ PP.SaveUtils = {
             try {
                 return JSON.parse(item);
             } catch (error) {
-                // Do nothing
+                Global.myLoadedSaveObjectParseFailed = true;
             }
         }
 

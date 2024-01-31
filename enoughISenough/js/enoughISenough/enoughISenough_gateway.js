@@ -40,6 +40,8 @@ WL.registerComponent("enough-IS-enough-gateway", {
         this._myUpdateReadyCountdown = 10;
         this._myLoadTimeSent = false;
         this._myVRSupportedSent = false;
+        this._myLoadSaveObjectFailedEventSent = false;
+        this._myLoadedSaveObjectParseFailedEventSent = false;
 
         this._myTimeUsingTrackedHands = 0;
 
@@ -114,6 +116,24 @@ WL.registerComponent("enough-IS-enough-gateway", {
                     if (WL.vrSupported != 0) {
                         this._myVRSupportedSent = true;
                         Global.sendAnalytics("event", "vr_supported", {
+                            "value": 1
+                        });
+                    }
+                }
+
+                if (!this._myLoadSaveObjectFailedEventSent) {
+                    this._myLoadSaveObjectFailedEventSent = true;
+                    if (!Global.mySaveManager.hasLoadSavesSucceded()) {
+                        Global.sendAnalytics("event", "load_saves_failed", {
+                            "value": 1
+                        });
+                    }
+                }
+
+                if (!this._myLoadedSaveObjectParseFailedEventSent) {
+                    this._myLoadedSaveObjectParseFailedEventSent = true;
+                    if (Global.myLoadedSaveObjectParseFailed) {
+                        Global.sendAnalytics("event", "parse_saves_failed", {
                             "value": 1
                         });
                     }
@@ -460,7 +480,8 @@ var Global = {
     myActivatePhysXHandEventSent: false,
     myElementToClick: null,
     myElementToClickCounter: 0,
-    myMusic: null
+    myMusic: null,
+    myLoadedSaveObjectParseFailed: false
 };
 
 Global.sendAnalytics = function sendAnalytics(eventType, eventName, eventValue) {
