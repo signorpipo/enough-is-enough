@@ -54,11 +54,11 @@ class enoughISenough {
 
             let audioPoolParams = new PP.AudioPoolParams();
             audioPoolParams.myPercentageToAddWhenEmpty = 0;
-            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myInitialPoolSize = 25;
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_APPEAR);
             };
-            //Global.myAudioPoolMap.addPool(SfxID.EVIDENCE_APPEAR, audioPoolParams);
+            Global.myAudioPoolMap.addPool(SfxID.EVIDENCE_APPEAR, audioPoolParams);
         }
 
         {
@@ -165,11 +165,11 @@ class enoughISenough {
 
             let audioPoolParams = new PP.AudioPoolParams();
             audioPoolParams.myPercentageToAddWhenEmpty = 0;
-            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myInitialPoolSize = 25;
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_DISAPPEAR);
             };
-            //Global.myAudioPoolMap.addPool(SfxID.EVIDENCE_DISAPPEAR, audioPoolParams);
+            Global.myAudioPoolMap.addPool(SfxID.EVIDENCE_DISAPPEAR, audioPoolParams);
         }
 
         {
