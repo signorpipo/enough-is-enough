@@ -300,6 +300,7 @@ class enoughISenough {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_explode.wav");
             audioSetup.myVolume = 0.95;
             audioSetup.myReferenceDistance = 3;
+            audioSetup.myPool = 10;
             manager.addAudioSetup(SfxID.MR_NOT_EXPLODE, audioSetup);
 
             let audioPoolParams = new PP.AudioPoolParams();
