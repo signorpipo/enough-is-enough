@@ -383,6 +383,13 @@ class MrNOT {
                 this._myObject.pp_setActive(false);
                 this._myRumbleScreen.stop();
                 this._myFSM.perform("end");
+
+                Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_EXPLODE, this._myExplodeAudio);
+                Global.myAudioPoolMap.releaseAudio(SfxID.CLONE_EXPLODE, this._myHitAudio);
+                Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_FAST_APPEAR, this._myAppearAudio);
+                this._myExplodeAudio = null;
+                this._myHitAudio = null;
+                this._myAppearAudio = null;
             }
         }
     }
