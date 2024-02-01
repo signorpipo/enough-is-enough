@@ -289,11 +289,11 @@ class enoughISenough {
 
             let audioPoolParams = new PP.AudioPoolParams();
             audioPoolParams.myPercentageToAddWhenEmpty = 0;
-            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myInitialPoolSize = 2;
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_FAST_APPEAR);
             };
-            //Global.myAudioPoolMap.addPool(SfxID.MR_NOT_FAST_APPEAR, audioPoolParams);
+            Global.myAudioPoolMap.addPool(SfxID.MR_NOT_FAST_APPEAR, audioPoolParams);
         }
 
         {
@@ -304,11 +304,11 @@ class enoughISenough {
 
             let audioPoolParams = new PP.AudioPoolParams();
             audioPoolParams.myPercentageToAddWhenEmpty = 0;
-            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myInitialPoolSize = 2;
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_EXPLODE);
             };
-            //Global.myAudioPoolMap.addPool(SfxID.MR_NOT_EXPLODE, audioPoolParams);
+            Global.myAudioPoolMap.addPool(SfxID.MR_NOT_EXPLODE, audioPoolParams);
         }
 
         {

@@ -43,9 +43,9 @@ class MrNOT {
         this._myPhysx = this._myObject.pp_getComponentHierarchy("physx");
         this._myCollisionsCollector = this._myObject.pp_getComponentHierarchy("physx-collector-component").getCollisionsCollector();
 
-        this._myExplodeAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_EXPLODE);
-        this._myHitAudio = Global.myAudioManager.createAudioPlayer(SfxID.CLONE_EXPLODE);
-        this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_FAST_APPEAR);
+        this._myExplodeAudio = null;
+        this._myHitAudio = null;
+        this._myAppearAudio = null;
 
         this._myRumbleScreen = new RumbleScreen();
 
@@ -70,6 +70,10 @@ class MrNOT {
     }
 
     start(dt) {
+        this._myExplodeAudio = Global.myAudioPoolMap.getAudio(SfxID.MR_NOT_EXPLODE);
+        this._myHitAudio = Global.myAudioPoolMap.getAudio(SfxID.CLONE_EXPLODE);
+        this._myAppearAudio = Global.myAudioPoolMap.getAudio(SfxID.MR_NOT_FAST_APPEAR);
+
         this._myFSM.perform("start");
     }
 
@@ -96,6 +100,13 @@ class MrNOT {
         this._myRumbleScreen.stop();
         this._myObject.pp_setActive(false);
         this._myFSM.perform("hide");
+
+        Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_EXPLODE, this._myExplodeAudio);
+        Global.myAudioPoolMap.releaseAudio(SfxID.CLONE_EXPLODE, this._myHitAudio);
+        Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_FAST_APPEAR, this._myAppearAudio);
+        this._myExplodeAudio = null;
+        this._myHitAudio = null;
+        this._myAppearAudio = null;
     }
 
     _prepareMove() {
