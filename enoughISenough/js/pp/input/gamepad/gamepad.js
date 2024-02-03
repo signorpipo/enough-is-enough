@@ -317,7 +317,7 @@ PP.Gamepad = class Gamepad {
 
     start() {
         if (WL.xrSession) {
-            this._onXRSessionStart(true, WL.xrSession);
+            //this._onXRSessionStart(true, WL.xrSession);
         }
         WL.onXRSessionStart.push(this._onXRSessionStart.bind(this, false));
         WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
