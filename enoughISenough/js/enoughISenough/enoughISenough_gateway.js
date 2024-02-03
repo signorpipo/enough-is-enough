@@ -433,9 +433,20 @@ WL.registerComponent("enough-IS-enough-gateway", {
         this._mySetDesiredFrameRateMaxAttempts = 10;
         if (session.supportedFrameRates != null) {
             let desiredFrameRate = 72;
-            if (session.supportedFrameRates.indexOf(desiredFrameRate) >= 0) {
-                this._myDesiredFrameRate = desiredFrameRate;
+
+            let bestFrameRate = null;
+            for (let supportedFrameRate of session.supportedFrameRates) {
+                if (supportedFrameRate == desiredFrameRate) {
+                    bestFrameRate = desiredFrameRate;
+                    break;
+                } else if (supportedFrameRate > desiredFrameRate) {
+                    if (bestFrameRate == null || supportedFrameRate < bestFrameRate) {
+                        bestFrameRate = supportedFrameRate;
+                    }
+                }
             }
+
+            this._myDesiredFrameRate = bestFrameRate;
         }
 
         Global.myXRSessionActiveOpenLinkExtraCheck = true;
