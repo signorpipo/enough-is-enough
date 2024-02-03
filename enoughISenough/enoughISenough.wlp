@@ -395,12 +395,6 @@
                         "_my18": "933"
                     },
                     "active": true
-                },
-                {
-                    "type": "target-framerate",
-                    "target-framerate": {
-                        "framerate": 72.0
-                    }
                 }
             ]
         },

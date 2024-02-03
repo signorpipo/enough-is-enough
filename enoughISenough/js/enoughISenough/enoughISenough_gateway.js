@@ -45,6 +45,9 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
         this._myTimeUsingTrackedHands = 0;
 
+        this._myDesiredFrameRate = null;
+        this._mySetDesiredFrameRateMaxAttempts = 10;
+
         this._myResetXRSessionActiveOpenLinkExtraCheckTimer = new PP.Timer(2);
 
         this._myVRButtonVisibilityUpdated = false;
@@ -136,6 +139,24 @@ WL.registerComponent("enough-IS-enough-gateway", {
                         Global.sendAnalytics("event", "parse_saves_failed", {
                             "value": 1
                         });
+                    }
+                }
+
+                if (WL.xrSession != null && WL.xrSession.updateTargetFrameRate != null && this._myDesiredFrameRate != null && WL.xrSession.frameRate != this._myDesiredFrameRate) {
+                    try {
+                        WL.xrSession.updateTargetFrameRate(this._myDesiredFrameRate).catch(function () {
+                            if (this._mySetDesiredFrameRateMaxAttempts > 0) {
+                                this._mySetDesiredFrameRateMaxAttempts--;
+                            } else {
+                                this._myDesiredFrameRate = null;
+                            }
+                        }.bind(this));
+                    } catch (error) {
+                        if (this._mySetDesiredFrameRateMaxAttempts > 0) {
+                            this._mySetDesiredFrameRateMaxAttempts--;
+                        } else {
+                            this._myDesiredFrameRate = null;
+                        }
                     }
                 }
 
@@ -406,12 +427,23 @@ WL.registerComponent("enough-IS-enough-gateway", {
             this._myXRButtonsContainer.style.setProperty("display", "none");
         }
 
+        this._myDesiredFrameRate = null;
+        this._mySetDesiredFrameRateMaxAttempts = 10;
+        if (session.supportedFrameRates != null) {
+            let desiredFrameRate = 72;
+            if (session.supportedFrameRates.indexOf(desiredFrameRate) >= 0) {
+                this._myDesiredFrameRate = desiredFrameRate;
+            }
+        }
+
         Global.myXRSessionActiveOpenLinkExtraCheck = true;
     },
     _onXRSessionEnd() {
         if (this._myXRButtonsContainer != null) {
             this._myXRButtonsContainer.style.removeProperty("display");
         }
+
+        this._myDesiredFrameRate = null;
 
         Global.myXRSessionActiveOpenLinkExtraCheck = false;
     }
