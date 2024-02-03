@@ -60,6 +60,8 @@ WL.registerComponent("enough-IS-enough-gateway", {
             Global.myIsLocalhost = window.location.host == "localhost:8080";
         }
 
+        Global.myAnalyticsEnabled = !Global.myIsLocalhost;
+
         this._myGestureStartEventListener = function (event) {
             event.preventDefault();
         };
