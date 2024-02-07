@@ -436,7 +436,7 @@ class MenuState extends PP.State {
         {
             let wondermelon = new MenuItem(Global.myGameObjects.get(GameObjectType.WONDERMELON), GameObjectType.WONDERMELON, positions[7], function () {
                 if (this._myFSM.isInState("ready") && Global.myElementToClick == null) {
-                    PP.XRUtils.openLink("https://signor-pipo.itch.io/not-enough", true, true, false, false,
+                    PP.XRUtils.openLink("https://signorpipo.itch.io/not-enough", true, true, false, false,
                         function () {
                             Global.myUnmute = true;
                             Howler.mute(true);
