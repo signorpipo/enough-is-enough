@@ -1,12 +1,12 @@
 {
-    "name": "enoughISenough",
+    "name": "enough-is-enough",
     "version": "1.1.0",
     "author": "Pipo",
     "description": "mr NOT does not want to leave me alone",
-    "homepage": "https://signor-pipo.itch.io/enough-is-enough",
+    "homepage": "https://signorpipo.itch.io/enough-is-enough",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/SignorPipo/enoughISenough.git"
+        "url": "git+https://github.com/signorpipo/enough-is-enough.git"
     },
     "license": "ISC",
     "devDependencies": {
