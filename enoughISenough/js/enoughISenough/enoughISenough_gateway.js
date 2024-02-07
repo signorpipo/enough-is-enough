@@ -451,6 +451,14 @@ WL.registerComponent("enough-IS-enough-gateway", {
             this._myDesiredFrameRate = bestFrameRate;
         }
 
+        if (session.updateTargetFrameRate != null && this._myDesiredFrameRate != null) {
+            try {
+                session.updateTargetFrameRate(this._myDesiredFrameRate);
+            } catch (error) {
+                // Do nothing
+            }
+        }
+
         Global.myXRSessionActiveOpenLinkExtraCheck = true;
     },
     _onXRSessionEnd() {
