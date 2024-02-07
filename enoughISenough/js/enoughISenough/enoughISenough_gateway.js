@@ -87,6 +87,24 @@ WL.registerComponent("enough-IS-enough-gateway", {
             this._start();
             PP.setEasyTuneWidgetActiveVariable("Float 1");
         } else {
+            if (WL.xrSession != null && WL.xrSession.updateTargetFrameRate != null && this._myDesiredFrameRate != null && WL.xrSession.frameRate != this._myDesiredFrameRate) {
+                try {
+                    WL.xrSession.updateTargetFrameRate(this._myDesiredFrameRate).catch(function () {
+                        if (this._mySetDesiredFrameRateMaxAttempts > 0) {
+                            this._mySetDesiredFrameRateMaxAttempts--;
+                        } else {
+                            this._myDesiredFrameRate = null;
+                        }
+                    }.bind(this));
+                } catch (error) {
+                    if (this._mySetDesiredFrameRateMaxAttempts > 0) {
+                        this._mySetDesiredFrameRateMaxAttempts--;
+                    } else {
+                        this._myDesiredFrameRate = null;
+                    }
+                }
+            }
+
             if (!this._myVRButtonUsabilityUpdated) {
                 this._updateVRButtonVisibility();
             }
@@ -141,24 +159,6 @@ WL.registerComponent("enough-IS-enough-gateway", {
                         Global.sendAnalytics("event", "parse_saves_failed", {
                             "value": 1
                         });
-                    }
-                }
-
-                if (WL.xrSession != null && WL.xrSession.updateTargetFrameRate != null && this._myDesiredFrameRate != null && WL.xrSession.frameRate != this._myDesiredFrameRate) {
-                    try {
-                        WL.xrSession.updateTargetFrameRate(this._myDesiredFrameRate).catch(function () {
-                            if (this._mySetDesiredFrameRateMaxAttempts > 0) {
-                                this._mySetDesiredFrameRateMaxAttempts--;
-                            } else {
-                                this._myDesiredFrameRate = null;
-                            }
-                        }.bind(this));
-                    } catch (error) {
-                        if (this._mySetDesiredFrameRateMaxAttempts > 0) {
-                            this._mySetDesiredFrameRateMaxAttempts--;
-                        } else {
-                            this._myDesiredFrameRate = null;
-                        }
                     }
                 }
 
