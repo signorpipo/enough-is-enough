@@ -7,7 +7,7 @@
 	"lang": "en-US",
 	"display": "standalone",
 	"ovr_package_name": "com.signorpipo.enoughISenough",
-	"start_url": "https://enough-is-enough.netlify.app/",
+	"start_url": "https://enough-is-enough.netlify.app",
 	"scope": "./",
 	"focusaware": true,
 	"orientation": "landscape",
