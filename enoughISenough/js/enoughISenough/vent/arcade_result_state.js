@@ -99,11 +99,11 @@ class ArcadeResultState extends PP.State {
             });
         }
 
-        let leaderboardID = "enough-is-enough";
+        let leaderboardID = "enoughISenough";
         if (this._myIsDispute) {
-            leaderboardID = leaderboardID.concat("-dispute");
+            leaderboardID = leaderboardID.concat("_dispute");
         } else {
-            leaderboardID = leaderboardID.concat("-chat");
+            leaderboardID = leaderboardID.concat("_chat");
         }
 
         let score = Math.floor(Global.myVentDuration * 1000);
