@@ -9976,7 +9976,7 @@
                 {
                     "type": "display-leaderboard",
                     "display-leaderboard": {
-                        "_myName": "enough-is-enough-chat",
+                        "_myName": "enoughISenough_chat",
                         "_myNamesText": "518",
                         "_myScoresText": "519"
                     }
@@ -10074,7 +10074,7 @@
                 {
                     "type": "display-leaderboard",
                     "display-leaderboard": {
-                        "_myName": "enough-is-enough-chat",
+                        "_myName": "enoughISenough_chat",
                         "_myNamesText": "521",
                         "_myScoresText": "522",
                         "_myIsLocal": true
@@ -10410,7 +10410,7 @@
                 {
                     "type": "display-leaderboard",
                     "display-leaderboard": {
-                        "_myName": "enough-is-enough-dispute",
+                        "_myName": "enoughISenough_dispute",
                         "_myNamesText": "534",
                         "_myScoresText": "535"
                     }
@@ -10508,7 +10508,7 @@
                 {
                     "type": "display-leaderboard",
                     "display-leaderboard": {
-                        "_myName": "enough-is-enough-dispute",
+                        "_myName": "enoughISenough_dispute",
                         "_myNamesText": "537",
                         "_myScoresText": "538",
                         "_myIsLocal": true
