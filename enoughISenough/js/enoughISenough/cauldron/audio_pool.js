@@ -189,7 +189,7 @@ PP.AudioPool.prototype.update = function () {
         let removedOnHoldDelayAudios = this._myOnHoldDelayAudios.pp_removeAll(removeDelayCallback);
         for (let i = 0; i < removedOnHoldDelayAudios.length; i++) {
             let audioPair = removedOnHoldDelayAudios[i];
-            this._myAvailableAudios.push(audioPair[1]);
+            this._myAvailableAudios.push(audioPair[2]);
         }
 
         let removedOnHoldPlayingAudios = this._myOnHoldPlayingAudios.pp_removeAll(removePlayingCallback);
