@@ -623,22 +623,32 @@ PP.Gamepad = class Gamepad {
     }
 
     _updatePulse(dt) {
-        let hapticActuator = this._getHapticActuator();
-        if (hapticActuator) {
+        let hapticActuators = this._getHapticActuators();
+        if (hapticActuators.length > 0) {
             if (this._myPulseInfo.myIntensity > 0) {
-                hapticActuator.pulse(this._myPulseInfo.myIntensity, Math.max(250, this._myPulseInfo.myDuration * 1000)); //duration is managed by this class
+                for (let i = 0; i < hapticActuators.length; i++) {
+                    let hapticActuator = hapticActuators[i];
+                    hapticActuator.pulse(this._myPulseInfo.myIntensity, Math.max(250, this._myPulseInfo.myDuration * 1000)); // Duration is managed by this class
+                }
                 this._myPulseInfo.myIsDevicePulsing = true;
             } else if (this._myPulseInfo.myIsDevicePulsing) {
-                hapticActuator.pulse(0, 1);
+                for (let i = 0; i < hapticActuators.length; i++) {
+                    let hapticActuator = hapticActuators[i];
+                    hapticActuator.pulse(0, 1);
 
-                try {
-                    hapticActuator.reset();
-                } catch (error) {
-                    // Do nothing
+                    try {
+                        if (hapticActuator.reset != null) {
+                            hapticActuator.reset();
+                        }
+                    } catch (error) {
+                        // Do nothing
+                    }
                 }
 
                 this._myPulseInfo.myIsDevicePulsing = false;
             }
+        } else {
+            this._myPulseInfo.myIsDevicePulsing = false;
         }
 
         this._myPulseInfo.myDuration -= dt;
@@ -648,18 +658,22 @@ PP.Gamepad = class Gamepad {
         }
     }
 
-    _getHapticActuator() {
-        let hapticActuator = null;
+    _getHapticActuators() {
+        let hapticActuators = [];
 
         if (this.isGamepadActive()) {
-            if (this._myGamepad.hapticActuators && this._myGamepad.hapticActuators.length > 0) {
-                hapticActuator = this._myGamepad.hapticActuators[0];
-            } else {
-                hapticActuator = this._myGamepad.vibrationActuator;
+            if (this._myGamepad.hapticActuators != null) {
+                for (let i = 0; i < this._myGamepad.hapticActuators.length; i++) {
+                    hapticActuators.push(this._myGamepad.hapticActuators[i]);
+                }
+            }
+
+            if (this._myGamepad.vibrationActuator != null) {
+                hapticActuators.push(this._myGamepad.vibrationActuator);
             }
         }
 
-        return hapticActuator;
+        return hapticActuators;
     }
 
     _onXRSessionStart(manualStart, session) {

@@ -40,8 +40,13 @@ WL.registerComponent("enough-IS-enough-gateway", {
         this._myUpdateReadyCountdown = 10;
         this._myLoadTimeSent = false;
         this._myVRSupportedSent = false;
+        this._myLoadSaveObjectFailedEventSent = false;
+        this._myLoadedSaveObjectParseFailedEventSent = false;
 
         this._myTimeUsingTrackedHands = 0;
+
+        this._myDesiredFrameRate = null;
+        this._mySetDesiredFrameRateMaxAttempts = 10;
 
         this._myResetXRSessionActiveOpenLinkExtraCheckTimer = new PP.Timer(2);
 
@@ -54,6 +59,8 @@ WL.registerComponent("enough-IS-enough-gateway", {
         if (window.location != null && window.location.host != null) {
             Global.myIsLocalhost = window.location.host == "localhost:8080";
         }
+
+        Global.myAnalyticsEnabled = !Global.myIsLocalhost;
 
         this._myGestureStartEventListener = function (event) {
             event.preventDefault();
@@ -106,6 +113,24 @@ WL.registerComponent("enough-IS-enough-gateway", {
             }
         }
 
+        if (WL.xrSession != null && WL.xrSession.updateTargetFrameRate != null && this._myDesiredFrameRate != null && WL.xrSession.frameRate != this._myDesiredFrameRate) {
+            try {
+                WL.xrSession.updateTargetFrameRate(this._myDesiredFrameRate).catch(function () {
+                    if (this._mySetDesiredFrameRateMaxAttempts > 0) {
+                        this._mySetDesiredFrameRateMaxAttempts--;
+                    } else {
+                        this._myDesiredFrameRate = null;
+                    }
+                }.bind(this));
+            } catch (error) {
+                if (this._mySetDesiredFrameRateMaxAttempts > 0) {
+                    this._mySetDesiredFrameRateMaxAttempts--;
+                } else {
+                    this._myDesiredFrameRate = null;
+                }
+            }
+        }
+
         if (Global.myUpdateReady) {
             if (this._myIncreasePool) {
                 this._increasePools();
@@ -114,6 +139,24 @@ WL.registerComponent("enough-IS-enough-gateway", {
                     if (WL.vrSupported != 0) {
                         this._myVRSupportedSent = true;
                         Global.sendAnalytics("event", "vr_supported", {
+                            "value": 1
+                        });
+                    }
+                }
+
+                if (!this._myLoadSaveObjectFailedEventSent) {
+                    this._myLoadSaveObjectFailedEventSent = true;
+                    if (!Global.mySaveManager.hasLoadSavesSucceded()) {
+                        Global.sendAnalytics("event", "load_saves_failed", {
+                            "value": 1
+                        });
+                    }
+                }
+
+                if (!this._myLoadedSaveObjectParseFailedEventSent) {
+                    this._myLoadedSaveObjectParseFailedEventSent = true;
+                    if (Global.myLoadedSaveObjectParseFailed) {
+                        Global.sendAnalytics("event", "parse_saves_failed", {
                             "value": 1
                         });
                     }
@@ -386,12 +429,44 @@ WL.registerComponent("enough-IS-enough-gateway", {
             this._myXRButtonsContainer.style.setProperty("display", "none");
         }
 
+        this._myDesiredFrameRate = null;
+        this._mySetDesiredFrameRateMaxAttempts = 10;
+        if (session.supportedFrameRates != null) {
+            let desiredFrameRate = 72;
+
+            let bestFrameRate = null;
+            for (let supportedFrameRate of session.supportedFrameRates) {
+                if (supportedFrameRate == desiredFrameRate) {
+                    bestFrameRate = desiredFrameRate;
+                    break;
+                } else if (bestFrameRate == null) {
+                    bestFrameRate = supportedFrameRate;
+                } else if (supportedFrameRate > desiredFrameRate && (supportedFrameRate < bestFrameRate || bestFrameRate < desiredFrameRate)) {
+                    bestFrameRate = supportedFrameRate;
+                } else if (supportedFrameRate < desiredFrameRate && supportedFrameRate > bestFrameRate) {
+                    bestFrameRate = supportedFrameRate;
+                }
+            }
+
+            this._myDesiredFrameRate = bestFrameRate;
+        }
+
+        if (session.updateTargetFrameRate != null && this._myDesiredFrameRate != null) {
+            try {
+                session.updateTargetFrameRate(this._myDesiredFrameRate);
+            } catch (error) {
+                // Do nothing
+            }
+        }
+
         Global.myXRSessionActiveOpenLinkExtraCheck = true;
     },
     _onXRSessionEnd() {
         if (this._myXRButtonsContainer != null) {
             this._myXRButtonsContainer.style.removeProperty("display");
         }
+
+        this._myDesiredFrameRate = null;
 
         Global.myXRSessionActiveOpenLinkExtraCheck = false;
     }
@@ -460,7 +535,8 @@ var Global = {
     myActivatePhysXHandEventSent: false,
     myElementToClick: null,
     myElementToClickCounter: 0,
-    myMusic: null
+    myMusic: null,
+    myLoadedSaveObjectParseFailed: false
 };
 
 Global.sendAnalytics = function sendAnalytics(eventType, eventName, eventValue) {

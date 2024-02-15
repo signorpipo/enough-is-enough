@@ -54,11 +54,11 @@ class enoughISenough {
 
             let audioPoolParams = new PP.AudioPoolParams();
             audioPoolParams.myPercentageToAddWhenEmpty = 0;
-            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myInitialPoolSize = 25;
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_APPEAR);
             };
-            //Global.myAudioPoolMap.addPool(SfxID.EVIDENCE_APPEAR, audioPoolParams);
+            Global.myAudioPoolMap.addPool(SfxID.EVIDENCE_APPEAR, audioPoolParams);
         }
 
         {
@@ -73,67 +73,6 @@ class enoughISenough {
                 return Global.myAudioManager.createAudioPlayer(SfxID.HAND_PIECE_APPEAR);
             };
             //Global.myAudioPoolMap.addPool(SfxID.HAND_PIECE_APPEAR, audioPoolParams);
-        }
-
-        {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blather_0.wav");
-            audioSetup.myVolume = 0.4;
-            audioSetup.myPool = 10;
-            audioSetup.myReferenceDistance = 1000000;
-            manager.addAudioSetup(SfxID.BLATHER_0, audioSetup);
-
-            let audioPoolParams = new PP.AudioPoolParams();
-            audioPoolParams.myPercentageToAddWhenEmpty = 0;
-            audioPoolParams.myInitialPoolSize = 2;
-            audioPoolParams.myCloneFunction = function () {
-                return Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_0);
-            };
-            Global.myAudioPoolMap.addPool(SfxID.BLATHER_0, audioPoolParams);
-        }
-
-        {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blather_1.wav");
-            audioSetup.myVolume = 0.4;
-            audioSetup.myPool = 10;
-            audioSetup.myReferenceDistance = 1000000;
-            manager.addAudioSetup(SfxID.BLATHER_1, audioSetup);
-
-            let audioPoolParams = new PP.AudioPoolParams();
-            audioPoolParams.myPercentageToAddWhenEmpty = 0;
-            audioPoolParams.myInitialPoolSize = 2;
-            audioPoolParams.myCloneFunction = function () {
-                return Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_1);
-            };
-            Global.myAudioPoolMap.addPool(SfxID.BLATHER_1, audioPoolParams);
-        }
-
-        {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/NOT_ENOUGH.wav");
-            audioSetup.myReferenceDistance = 1000000;
-            manager.addAudioSetup(SfxID.NOT_ENOUGH, audioSetup);
-
-            let audioPoolParams = new PP.AudioPoolParams();
-            audioPoolParams.myPercentageToAddWhenEmpty = 0;
-            audioPoolParams.myInitialPoolSize = 1;
-            audioPoolParams.myCloneFunction = function () {
-                return Global.myAudioManager.createAudioPlayer(SfxID.NOT_ENOUGH);
-            };
-            //Global.myAudioPoolMap.addPool(SfxID.NOT_ENOUGH, audioPoolParams);
-        }
-
-        {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/evidence_disappear.wav");
-            audioSetup.myVolume = 0.5;
-            audioSetup.myReferenceDistance = 3;
-            manager.addAudioSetup(SfxID.EVIDENCE_DISAPPEAR, audioSetup);
-
-            let audioPoolParams = new PP.AudioPoolParams();
-            audioPoolParams.myPercentageToAddWhenEmpty = 0;
-            audioPoolParams.myInitialPoolSize = 1;
-            audioPoolParams.myCloneFunction = function () {
-                return Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_DISAPPEAR);
-            };
-            //Global.myAudioPoolMap.addPool(SfxID.EVIDENCE_DISAPPEAR, audioPoolParams);
         }
 
         {
@@ -174,7 +113,7 @@ class enoughISenough {
             audioSetup.myRate = 0.8;
             audioSetup.myVolume = 0.5;
             audioSetup.myReferenceDistance = 0.3;
-            audioSetup.myPool = 10;
+            audioSetup.myPool = 15;
             manager.addAudioSetup(SfxID.COLLISION, audioSetup);
 
             let audioPoolParams = new PP.AudioPoolParams();
@@ -184,6 +123,53 @@ class enoughISenough {
                 return Global.myAudioManager.createAudioPlayer(SfxID.COLLISION);
             };
             //Global.myAudioPoolMap.addPool(SfxID.COLLISION, audioPoolParams);
+        }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blather_0.wav");
+            audioSetup.myVolume = 0.4;
+            audioSetup.myPool = 10;
+            audioSetup.myReferenceDistance = 1000000;
+            manager.addAudioSetup(SfxID.BLATHER_0, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 2;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_0);
+            };
+            Global.myAudioPoolMap.addPool(SfxID.BLATHER_0, audioPoolParams);
+        }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blather_1.wav");
+            audioSetup.myVolume = 0.4;
+            audioSetup.myPool = 10;
+            audioSetup.myReferenceDistance = 1000000;
+            manager.addAudioSetup(SfxID.BLATHER_1, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 2;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_1);
+            };
+            Global.myAudioPoolMap.addPool(SfxID.BLATHER_1, audioPoolParams);
+        }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/evidence_disappear.wav");
+            audioSetup.myVolume = 0.5;
+            audioSetup.myReferenceDistance = 3;
+            manager.addAudioSetup(SfxID.EVIDENCE_DISAPPEAR, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 25;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_DISAPPEAR);
+            };
+            Global.myAudioPoolMap.addPool(SfxID.EVIDENCE_DISAPPEAR, audioPoolParams);
         }
 
         {
@@ -200,6 +186,20 @@ class enoughISenough {
                 return Global.myAudioManager.createAudioPlayer(SfxID.TITLE_DISAPPEAR);
             };
             //Global.myAudioPoolMap.addPool(SfxID.TITLE_DISAPPEAR, audioPoolParams);
+        }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/NOT_ENOUGH.wav");
+            audioSetup.myReferenceDistance = 1000000;
+            manager.addAudioSetup(SfxID.NOT_ENOUGH, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.NOT_ENOUGH);
+            };
+            //Global.myAudioPoolMap.addPool(SfxID.NOT_ENOUGH, audioPoolParams);
         }
 
         {
@@ -289,26 +289,27 @@ class enoughISenough {
 
             let audioPoolParams = new PP.AudioPoolParams();
             audioPoolParams.myPercentageToAddWhenEmpty = 0;
-            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myInitialPoolSize = 2;
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_FAST_APPEAR);
             };
-            //Global.myAudioPoolMap.addPool(SfxID.MR_NOT_FAST_APPEAR, audioPoolParams);
+            Global.myAudioPoolMap.addPool(SfxID.MR_NOT_FAST_APPEAR, audioPoolParams);
         }
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_explode.wav");
             audioSetup.myVolume = 0.95;
             audioSetup.myReferenceDistance = 3;
+            audioSetup.myPool = 10;
             manager.addAudioSetup(SfxID.MR_NOT_EXPLODE, audioSetup);
 
             let audioPoolParams = new PP.AudioPoolParams();
             audioPoolParams.myPercentageToAddWhenEmpty = 0;
-            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myInitialPoolSize = 2;
             audioPoolParams.myCloneFunction = function () {
                 return Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_EXPLODE);
             };
-            //Global.myAudioPoolMap.addPool(SfxID.MR_NOT_EXPLODE, audioPoolParams);
+            Global.myAudioPoolMap.addPool(SfxID.MR_NOT_EXPLODE, audioPoolParams);
         }
 
         {

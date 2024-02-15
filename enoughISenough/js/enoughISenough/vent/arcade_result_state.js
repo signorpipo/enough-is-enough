@@ -99,25 +99,49 @@ class ArcadeResultState extends PP.State {
             });
         }
 
-        let leaderboardID = "enough-is-enough";
+        let leaderboardID = "enoughISenough";
         if (this._myIsDispute) {
-            leaderboardID = leaderboardID.concat("-dispute");
+            leaderboardID = leaderboardID.concat("_dispute");
         } else {
-            leaderboardID = leaderboardID.concat("-chat");
+            leaderboardID = leaderboardID.concat("_chat");
         }
 
         let score = Math.floor(Global.myVentDuration * 1000);
 
+        let scoreSubmittedSucceded = false;
+        let scoreStopSubmitting = false;
         let scoreSubmittedEventID = (this._myIsDispute ? "arcade_dispute" : "arcade_chat") + "_score_submitted";
-        PP.CAUtils.submitScore(leaderboardID, score, function () {
-            Global.sendAnalytics("event", "arcade_score_submitted", {
-                "value": 1
-            });
+        let submitScoreSuccessCallback = function () {
+            if (!scoreSubmittedSucceded) {
+                scoreSubmittedSucceded = true;
+                Global.sendAnalytics("event", "arcade_score_submitted", {
+                    "value": 1
+                });
 
-            Global.sendAnalytics("event", scoreSubmittedEventID, {
-                "value": 1
-            });
-        }, null, false);
+                Global.sendAnalytics("event", scoreSubmittedEventID, {
+                    "value": 1
+                });
+            }
+        };
+        let submitScoreErrorCallback = function (error) {
+            if (error != null && error.type != PP.CAUtils.CAError.SUBMIT_SCORE_FAILED) {
+                scoreStopSubmitting = true;
+            }
+        };
+
+        PP.CAUtils.submitScore(leaderboardID, score, submitScoreSuccessCallback, submitScoreErrorCallback, false);
+
+        setTimeout(function () {
+            if (!scoreSubmittedSucceded && !scoreStopSubmitting) {
+                PP.CAUtils.submitScore(leaderboardID, score, submitScoreSuccessCallback, submitScoreErrorCallback, false);
+            }
+        }, 5000);
+
+        setTimeout(function () {
+            if (!scoreSubmittedSucceded && !scoreStopSubmitting) {
+                PP.CAUtils.submitScore(leaderboardID, score, submitScoreSuccessCallback, submitScoreErrorCallback, false);
+            }
+        }, 10000);
 
         Global.myIsInArcadeResult = true;
 

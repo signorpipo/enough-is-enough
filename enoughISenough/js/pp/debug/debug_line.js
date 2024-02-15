@@ -82,12 +82,15 @@ PP.DebugLine = class DebugLine {
             let rotationAxis = [];
             glMatrix.vec3.cross(rotationAxis, forward, this._myDirection);
             glMatrix.vec3.normalize(rotationAxis, rotationAxis);
-            let rotationQuat = [];
-            glMatrix.quat.setAxisAngle(rotationQuat, rotationAxis, angle);
 
-            glMatrix.quat.mul(rotationQuat, rotationQuat, this._myLineObject.transformWorld);
-            glMatrix.quat.normalize(rotationQuat, rotationQuat);
-            this._myLineObject.rotateObject(rotationQuat);
+            if (rotationAxis.vec3_length() > 0.0001) {
+                let rotationQuat = [];
+                glMatrix.quat.setAxisAngle(rotationQuat, rotationAxis, angle);
+
+                glMatrix.quat.mul(rotationQuat, rotationQuat, this._myLineObject.transformWorld);
+                glMatrix.quat.normalize(rotationQuat, rotationQuat);
+                this._myLineObject.rotateObject(rotationQuat);
+            }
         }
 
         forward = this._myLineObject.pp_getForward();

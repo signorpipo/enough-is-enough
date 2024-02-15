@@ -1,13 +1,16 @@
 PP.SaveManager = class SaveManager {
-    constructor(saveID) {
+    constructor(saveID, autoLoadSaves = true) {
         this._mySaveID = saveID;
-
-        this._mySaveObject = PP.SaveUtils.loadObject(this._mySaveID, {});
 
         this._myCommitSavesDelayTimer = new PP.Timer(0, false);
         this._myDelaySavesCommit = true;
         this._myCommitSavesDirty = false;
         this._myCommitSavesDirtyClearOnFail = true;
+        this._myCommitSavesWhenLoadSavesFailed = false;
+        this._myResetSaveObjectOnLoadSavesFail = false;
+
+        this._mySaveObject = {};
+        this._myLoadSavesSucceded = false;
 
         this._myClearCallbacks = new Map();                 // Signature: callback()
         this._myDeleteCallbacks = new Map();                // Signature: callback(id)
@@ -19,6 +22,11 @@ PP.SaveManager = class SaveManager {
         this._myCommitSavesCallbacks = new Map();           // Signature: callback(succeeded)
         this._myLoadCallbacks = new Map();                  // Signature: callback(id, value)
         this._myLoadIDCallbacks = new Map();                // Signature: callback(id, value)
+        this._myLoadSavesCallbacks = new Map();             // Signature: callback(loadSavesSucceded, saveObjectReset)
+
+        if (autoLoadSaves) {
+            this.loadSaves();
+        }
     }
 
     setCommitSavesDelay(delay) {
@@ -44,6 +52,14 @@ PP.SaveManager = class SaveManager {
         this._myCommitSavesDirtyClearOnFail = clearOnFail;
     }
 
+    setCommitSavesWhenLoadSavesFailed(commitSavesWhenLoadSavesFailed) {
+        this._myCommitSavesWhenLoadSavesFailed = commitSavesWhenLoadSavesFailed;
+    }
+
+    setResetSaveObjectOnLoadSavesFail(resetSaveObjectOnLoadSavesFail) {
+        this._myResetSaveObjectOnLoadSavesFail = resetSaveObjectOnLoadSavesFail;
+    }
+
     getCommitSavesDelay() {
         return this._myCommitSavesDelayTimer.getDuration();
     }
@@ -58,6 +74,18 @@ PP.SaveManager = class SaveManager {
 
     isCommitSavesDirtyClearOnFail() {
         return this._myCommitSavesDirtyClearOnFail;
+    }
+
+    isCommitSavesWhenLoadSavesFailed() {
+        return this._myCommitSavesWhenLoadSavesFailed;
+    }
+
+    isResetSaveObjectOnLoadSavesFail() {
+        return this._myResetSaveObjectOnLoadSavesFail;
+    }
+
+    hasLoadSavesSucceded() {
+        return this._myLoadSavesSucceded;
     }
 
     update(dt) {
@@ -197,15 +225,14 @@ PP.SaveManager = class SaveManager {
 
     _commitSaves() {
         let succeded = true;
-        try {
-            let saveObjectStringified = JSON.stringify(this._mySaveObject);
-            PP.SaveUtils.save(this._mySaveID, saveObjectStringified);
-        } catch (error) {
-            succeded = false;
-        }
 
-        if (this._myCommitSavesCallbacks.size > 0) {
-            this._myCommitSavesCallbacks.forEach(function (callback) { callback(succeded); });
+        if (this._myLoadSavesSucceded || this._myCommitSavesWhenLoadSavesFailed) {
+            try {
+                let saveObjectStringified = JSON.stringify(this._mySaveObject);
+                PP.SaveUtils.save(this._mySaveID, saveObjectStringified);
+            } catch (error) {
+                succeded = false;
+            }
         }
 
         if (succeded || this._myCommitSavesDirtyClearOnFail) {
@@ -213,7 +240,43 @@ PP.SaveManager = class SaveManager {
             this._myCommitSavesDelayTimer.reset();
         }
 
+        if (this._myCommitSavesCallbacks.size > 0) {
+            this._myCommitSavesCallbacks.forEach(function (callback) { callback(succeded); });
+        }
+
         return succeded;
+    }
+
+    loadSaves() {
+        let saveObject = {};
+        let loadSavesSucceded = false;
+        let saveObjectReset = false;
+
+        let maxLoadObjectAttempts = 3;
+        do {
+            try {
+                saveObject = PP.SaveUtils.loadObject(this._mySaveID, {});
+                loadSavesSucceded = true;
+            } catch (error) {
+                maxLoadObjectAttempts--;
+            }
+        } while (maxLoadObjectAttempts > 0 && !loadSavesSucceded);
+
+        if (loadSavesSucceded) {
+            this._mySaveObject = saveObject;
+            this._myLoadSavesSucceded = true;
+        } else if (this._myResetSaveObjectOnLoadSavesFail) {
+            this._mySaveObject = {};
+            this._myLoadSavesSucceded = false;
+
+            saveObjectReset = true;
+        }
+
+        if (this._myLoadSavesCallbacks.size > 0) {
+            this._myLoadSavesCallbacks.forEach(function (callback) { callback(loadSavesSucceded, saveObjectReset); });
+        }
+
+        return loadSavesSucceded;
     }
 
     registerClearEventListener(callbackID, callback) {
@@ -330,5 +393,13 @@ PP.SaveManager = class SaveManager {
         if (valueIDMap != null) {
             valueIDMap.delete(callbackID);
         }
+    }
+
+    registerLoadSavesEventListener(callbackID, callback) {
+        this._myLoadSavesCallbacks.set(callbackID, callback);
+    }
+
+    unregisterLoadSavesEventListener(callbackID) {
+        this._myLoadSavesCallbacks.delete(callbackID);
     }
 };

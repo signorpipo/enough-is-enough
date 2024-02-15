@@ -118,10 +118,8 @@ class Evidence {
     }
 
     _startSpawn() {
-        if (this._myAppearAudio == null) {
-            this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_APPEAR);
-            this._myDisappearAudio = Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_DISAPPEAR);
-        }
+        this._myAppearAudio = Global.myAudioPoolMap.getAudio(SfxID.EVIDENCE_APPEAR);
+        this._myDisappearAudio = Global.myAudioPoolMap.getAudio(SfxID.EVIDENCE_DISAPPEAR);
 
         this._myEvidenceComponent = this._myObject.pp_getComponentHierarchy("evidence-component");
         this._myEvidenceComponent.setCallbackOnHit(this._onHit.bind(this));
@@ -271,6 +269,11 @@ class Evidence {
             this._myPhysx.removeCollisionCallback(this._myCollisionCallbackID);
             this._myCollisionCallbackID = null;
         }
+
+        Global.myAudioPoolMap.releaseAudio(SfxID.EVIDENCE_APPEAR, this._myAppearAudio);
+        Global.myAudioPoolMap.releaseAudio(SfxID.EVIDENCE_DISAPPEAR, this._myDisappearAudio);
+        this._myAppearAudio = null;
+        this._myDisappearAudio = null;
     }
 
     _onCollision(type) {

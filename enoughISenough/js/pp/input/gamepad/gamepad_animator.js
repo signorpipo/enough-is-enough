@@ -236,10 +236,12 @@ WL.registerComponent('pp-gamepad-animator', {
         glMatrix.vec3.cross(rotationAxis, startAxis, endAxis);
         glMatrix.vec3.normalize(rotationAxis, rotationAxis);
 
-        let angleToRotate = glMatrix.vec3.angle(startAxis, endAxis);
+        if (rotationAxis.vec3_length() > 0.0001) {
+            let angleToRotate = glMatrix.vec3.angle(startAxis, endAxis);
 
-        if (angleToRotate > 0.0001) {
-            object.rotateAxisAngleRadObject(rotationAxis, angleToRotate);
+            if (angleToRotate > 0.0001) {
+                object.rotateAxisAngleRadObject(rotationAxis, angleToRotate);
+            }
         }
     },
     _translateLocalAxis(object, axis, amount) {

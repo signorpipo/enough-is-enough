@@ -51,9 +51,9 @@ class MrNOTVent {
         this._myPhysx = this._myObject.pp_getComponentHierarchy("physx");
         this._myCollisionsCollector = this._myObject.pp_getComponentHierarchy("physx-collector-component").getCollisionsCollector();
 
-        this._myExplodeAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_EXPLODE);
-        this._myHitAudio = Global.myAudioManager.createAudioPlayer(SfxID.CLONE_EXPLODE);
-        this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_FAST_APPEAR);
+        this._myExplodeAudio = Global.myAudioPoolMap.getAudio(SfxID.MR_NOT_EXPLODE);
+        this._myHitAudio = Global.myAudioPoolMap.getAudio(SfxID.CLONE_EXPLODE);
+        this._myAppearAudio = Global.myAudioPoolMap.getAudio(SfxID.MR_NOT_FAST_APPEAR);
 
         this._myRumbleScreen = new RumbleScreen();
 
@@ -93,6 +93,13 @@ class MrNOTVent {
         this._myRumbleScreen.stop();
         this._myObject.pp_setActive(false);
         this._myFSM.perform("hide");
+
+        Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_EXPLODE, this._myExplodeAudio);
+        Global.myAudioPoolMap.releaseAudio(SfxID.CLONE_EXPLODE, this._myHitAudio);
+        Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_FAST_APPEAR, this._myAppearAudio);
+        this._myExplodeAudio = null;
+        this._myHitAudio = null;
+        this._myAppearAudio = null;
     }
 
     stop() {
@@ -294,8 +301,16 @@ class MrNOTVent {
         if (this._myDisappearEndTimer.isRunning()) {
             this._myDisappearEndTimer.update(dt);
             if (this._myDisappearEndTimer.isDone()) {
+                this._myObject.pp_setActive(false);
                 this._myRumbleScreen.stop();
                 this._myFSM.perform("end");
+
+                Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_EXPLODE, this._myExplodeAudio);
+                Global.myAudioPoolMap.releaseAudio(SfxID.CLONE_EXPLODE, this._myHitAudio);
+                Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_FAST_APPEAR, this._myAppearAudio);
+                this._myExplodeAudio = null;
+                this._myHitAudio = null;
+                this._myAppearAudio = null;
             }
         }
     }
