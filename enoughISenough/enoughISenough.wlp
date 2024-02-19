@@ -327,7 +327,13 @@
                     "type": "pp-debug-global-data",
                     "pp-debug-global-data": {
                         "_myCubeMesh": "8",
-                        "_myFlatMaterial": "66"
+                        "_myFlatMaterial": "66",
+                        "_myHandLeft": "50",
+                        "_myHandRight": "58",
+                        "_myTextMaterial": "DefaultFontMaterial",
+                        "_mySphereMesh": "9",
+                        "_myPlaneMesh": "7",
+                        "_myPhongMaterial": "20"
                     }
                 },
                 {
