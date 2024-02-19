@@ -58,8 +58,8 @@ PP.myDebugData = {
         }
 
         if (PP.myDebugData.myHandRight.pp_getComponent("pp-tool-cursor") == null) {
-            PP.myDebugData.myHandLeft.addComponent("pp-tool-cursor", {
-                _myHandedness: 2,
+            PP.myDebugData.myHandRight.addComponent("pp-tool-cursor", {
+                _myHandedness: 1,
                 _myPulseOnHover: false,
                 _myShowFingerCursor: false,
                 _myCursorMesh: PP.myDebugData.mySphereMesh,
