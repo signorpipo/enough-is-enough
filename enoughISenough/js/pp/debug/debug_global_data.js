@@ -33,7 +33,7 @@ PP.myDebugData = {
     myHandLeft: null,
     myHandRight: null,
     createTools: function (showVisibilityButton = true) {
-        if (!PP.myDebugData.myHandLeft.pp_getComponent("pp-easy-tune") == null) {
+        if (PP.myDebugData.myHandLeft.pp_getComponent("pp-easy-tune") == null) {
             PP.myDebugData.myHandLeft.addComponent("pp-easy-tune", {
                 _myHandedness: 1,
                 _myShowOnStart: false,
@@ -54,6 +54,16 @@ PP.myDebugData = {
                 _myPulseOnNewMessage: 0,
                 _myPlaneMaterial: PP.myDebugData.myFlatMaterial.clone(),
                 _myTextMaterial: PP.myDebugData.myTextMaterial.clone()
+            });
+        }
+
+        if (PP.myDebugData.myHandRight.pp_getComponent("pp-tool-cursor") == null) {
+            PP.myDebugData.myHandLeft.addComponent("pp-tool-cursor", {
+                _myHandedness: 2,
+                _myPulseOnHover: false,
+                _myShowFingerCursor: false,
+                _myCursorMesh: PP.myDebugData.mySphereMesh,
+                _myCursorMaterial: PP.myDebugData.myFlatMaterial.clone()
             });
         }
     }
