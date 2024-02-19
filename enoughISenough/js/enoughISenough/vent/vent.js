@@ -432,7 +432,7 @@ class Vent {
 
     _stop() {
         for (let clone of this._myMrNOTClones) {
-            clone.stopSounds();
+            //clone.stopSounds();
             clone.hide();
         }
 
