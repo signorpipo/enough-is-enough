@@ -331,7 +331,9 @@
                         "_myHandLeft": "50",
                         "_myHandRight": "58",
                         "_myTextMaterial": "DefaultFontMaterial",
-                        "_mySphereMesh": "9"
+                        "_mySphereMesh": "9",
+                        "_myPlaneMesh": "7",
+                        "_myPhongMaterial": "20"
                     }
                 },
                 {
