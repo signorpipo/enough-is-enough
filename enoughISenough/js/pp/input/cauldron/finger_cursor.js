@@ -53,11 +53,14 @@ WL.registerComponent('pp-finger-cursor', {
             let overlaps = this._myCollisionComponent.queryOverlaps();
             let overlapTarget = null;
             for (let i = 0; i < overlaps.length; ++i) {
-                let object = overlaps[i].object;
-                let target = object.getComponent('cursor-target');
-                if (target) {
-                    overlapTarget = target;
-                    break;
+                let collision = overlaps[i];
+                if (collision.group & this._myCollisionComponent.group) {
+                    let object = collision.object;
+                    let target = object.getComponent('cursor-target');
+                    if (target && !target.myPreventPulseOnHover) {
+                        overlapTarget = target;
+                        break;
+                    }
                 }
             }
 
