@@ -154,7 +154,7 @@ class MrNOTClone {
 
     stopSounds() {
         /*
-        Not doing this because the stop cause a click sadly
+        //Not doing this because the stop cause a click sadly
         
         if (this._myAppearAudio != null) {
             this._myAppearAudio.stop();
