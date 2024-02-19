@@ -10,6 +10,67 @@ _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.init = function (
     this.multipleClickDelay = 0.3;
 };
 
+_WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.start = function () {
+    if (this.handedness == 0) {
+        const inputComp = this.object.getComponent('input');
+        if (!inputComp) {
+            console.warn('cursor component on object', this.object.name,
+                'was configured with handedness "input component", ' +
+                'but object has no input component.');
+        } else {
+            this.handedness = inputComp.handedness;
+            this.input = inputComp;
+        }
+    } else {
+        this.handedness = ['left', 'right'][this.handedness - 1];
+    }
+
+    this.globalTarget = this.object.addComponent('cursor-target');
+
+    this.origin = new Float32Array(3);
+    this.cursorObjScale = new Float32Array(3);
+    this.direction = [0, 0, 0];
+    this.tempQuat = new Float32Array(4);
+    this.viewComponent = this.object.getComponent("view");
+    /* If this object also has a view component, we will enable inverse-projected mouse clicks,
+     * otherwise just use the objects transformation */
+    if (this.viewComponent != null) {
+        WL.canvas.addEventListener("click", this.onClick.bind(this));
+        WL.canvas.addEventListener("pointermove", this.onPointerMove.bind(this));
+        WL.canvas.addEventListener("pointerdown", this.onPointerDown.bind(this));
+        WL.canvas.addEventListener("pointerup", this.onPointerUp.bind(this));
+
+        this.projectionMatrix = new Float32Array(16);
+        glMatrix.mat4.invert(this.projectionMatrix, this.viewComponent.projectionMatrix);
+        window.addEventListener("resize", this.onViewportResize.bind(this));
+    }
+    this.isHovering = false;
+    this.visible = true;
+    this.isDown = false;
+    this.lastIsDown = false;
+
+    this.cursorPos = new Float32Array(3);
+    this.hoveringObject = null;
+
+    if (WL.xrSession) {
+        this.setupVREvents(WL.xrSession);
+    }
+    WL.onXRSessionStart.push(this.setupVREvents.bind(this));
+
+    if (this.cursorRayObject) {
+        this.cursorRayScale = new Float32Array(3);
+        this.cursorRayScale.set(this.cursorRayObject.scalingLocal);
+
+        /* Set ray to a good default distance of the cursor of 1m */
+        this.object.getTranslationWorld(this.origin);
+        this.object.getForward(this.direction);
+        this._setCursorRayTransform([
+            this.origin[0] + this.direction[0],
+            this.origin[1] + this.direction[1],
+            this.origin[2] + this.direction[2]]);
+    }
+};
+
 _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.update = function (dt) {
     if (this.doubleClickTimer > 0) {
         this.doubleClickTimer -= dt;
