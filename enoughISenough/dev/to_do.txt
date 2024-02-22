@@ -6,7 +6,3 @@
 	
 - se le analytics sono ancora pesanti come performance:
 	- mettere analytics come trial started sul sito per risparmiare, come per phase 1 enough/good/almost generato sul sito direttamente
-	
-- rifare il trailer?
-
-- cambiare wav to webm?
