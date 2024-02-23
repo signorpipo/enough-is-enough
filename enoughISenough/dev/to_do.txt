@@ -3,6 +3,7 @@
 	- provare a mettere indice per physx
 	- togliere il pinch con select e usare invece fatto da me
 	- aggiungere qualche hand tracking event in più
+	- controllare performance durante hand tracking
 	
 - se le analytics sono ancora pesanti come performance:
 	- mettere analytics come trial started sul sito per risparmiare, come per phase 1 enough/good/almost generato sul sito direttamente
