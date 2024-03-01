@@ -7,3 +7,8 @@
 	
 - se le analytics sono ancora pesanti come performance:
 	- mettere analytics come trial started sul sito per risparmiare, come per phase 1 enough/good/almost generato sul sito direttamente
+	
+- quando submitti la score la salvi anche e solo quando ha successo il submit score la cancelli dai save
+	- altrimenti, ad ogni avvio del gioco se la trovi salvata provi a risubmittarla e toglierla se ha successo
+	- la sovrascrivi solo se è migliore
+	- provare a risubmittarla anche on session end / window close
