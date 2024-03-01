@@ -136,7 +136,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
                 this._increasePools();
             } else {
                 if (!this._myVRSupportedSent) {
-                    if (WL.vrSupported != 0) {
+                    if (WL.vrSupported != null && WL.vrSupported != 0) {
                         this._myVRSupportedSent = true;
                         Global.sendAnalytics("event", "vr_supported", {
                             "value": 1
@@ -409,7 +409,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
             }
 
             if (!this._myVRButtonUsabilityUpdated) {
-                if (WL.vrSupported != 0) {
+                if (WL.vrSupported != null && WL.vrSupported != 0) {
                     this._myVRButton.style.setProperty("opacity", "1");
                     this._myVRButton.style.setProperty("pointer-events", "all");
 

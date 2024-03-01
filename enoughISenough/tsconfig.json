@@ -3,27 +3,12 @@
         "target": "ES2022",
         "module": "nodenext",
         "moduleResolution": "nodenext",
-        "experimentalDecorators": true,
-        "resolveJsonModule": true,
-        "strictNullChecks": true,
         "lib": [
             "DOM",
             "ES2022"
         ]
     },
     "include": [
-        ".",
         "js"
-    ],
-    "exclude": [
-        "node_modules",
-        "deploy",
-        "cache",
-        "assets",
-        "static",
-        "stuff",
-        "raw",
-        "dev",
-        "releases"
     ]
 }

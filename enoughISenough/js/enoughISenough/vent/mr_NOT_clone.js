@@ -152,6 +152,20 @@ class MrNOTClone {
         return this._myFSM.isInState("inactive");
     }
 
+    stopSounds() {
+        /*
+        //Not doing this because the stop cause a click sadly
+        
+        if (this._myAppearAudio != null) {
+            this._myAppearAudio.stop();
+        }
+
+        if (this._myHitAudio != null) {
+            this._myHitAudio.stop();
+        }
+        */
+    }
+
     hide() {
         Global.myGameObjectPoolMap.releaseObject(GameObjectType.MR_NOT_CLONE, this._myObject);
         this._myObject = null;

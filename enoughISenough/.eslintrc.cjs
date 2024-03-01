@@ -98,16 +98,16 @@ module.exports = {
         "deprecation/deprecation": "error"
     },
     ignorePatterns: [
-        "/node_modules/",
-        "/deploy/",
-        "/cache/",
-        "/assets/",
-        "/static/",
-        "/stuff/",
-        "/raw/",
-        "/dev/",
-        "/releases/",
-        ".eslintrc.cjs",
+        "/dev",
+        "/raw",
+        "/stuff",
+        "/assets",
+        "/static",
+        "/releases",
+        "/node_modules",
+        "/deploy",
+        "/cache",
+        "/.eslintrc.cjs",
         "zesty-wonderland-sdk-compat.js"
     ],
     overrides: [

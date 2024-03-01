@@ -87,12 +87,6 @@ WL.registerComponent('pp-grabber-hand', {
                 } else if (this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd()) {
                     this._throw(PP.ButtonType.SELECT);
                 }
-
-                if (this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressStart()) {
-                    this._grab(PP.ButtonType.SQUEEZE);
-                } else if (this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd()) {
-                    this._throw(PP.ButtonType.SQUEEZE);
-                }
             }
         }
     },
