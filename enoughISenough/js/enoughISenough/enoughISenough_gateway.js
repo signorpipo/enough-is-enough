@@ -96,6 +96,8 @@ WL.registerComponent("enough-IS-enough-gateway", {
                 if (this._myUpdateReadyCountdown <= 0) {
                     Global.myUpdateReady = true;
 
+                    console.log("Game Version:", Global.myGameVersion);
+
                     Global.sendAnalytics("event", "game_init_ended", {
                         "value": 1
                     });
