@@ -243,12 +243,6 @@ WL.registerComponent('pp-grabber-hand', {
                 } else if (this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd()) {
                     this._throw(PP.ButtonType.SELECT);
                 }
-
-                if (this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressStart()) {
-                    this._grab(PP.ButtonType.SQUEEZE);
-                } else if (this._myGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressEnd()) {
-                    this._throw(PP.ButtonType.SQUEEZE);
-                }
             }
         }
     },
@@ -286,18 +280,20 @@ WL.registerComponent('pp-grabber-hand', {
         }
     },
     onDeactivate() {
-        if (this._myGrabButton == 0) {
-            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this);
-            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this);
-        } else if (this._myGrabButton == 1) {
-            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this);
-            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this);
-        } else {
-            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this);
-            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this);
+        if (this._myGamepad != null) {
+            if (this._myGrabButton == 0) {
+                this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this);
+                this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this);
+            } else if (this._myGrabButton == 1) {
+                this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this);
+                this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this);
+            } else {
+                this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this);
+                this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this);
 
-            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this);
-            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this);
+                this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this);
+                this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this);
+            }
         }
     },
     getHandPose() {
@@ -305,6 +301,10 @@ WL.registerComponent('pp-grabber-hand', {
     },
     _grab: function (grabButton) {
         if (this._myGrabbables.length >= this._myMaxNumberOfObjects) {
+            return;
+        }
+
+        if (!this._myHandPose.isValid()) {
             return;
         }
 
@@ -579,11 +579,14 @@ WL.registerComponent('pp-finger-cursor', {
             let overlaps = this._myCollisionComponent.queryOverlaps();
             let overlapTarget = null;
             for (let i = 0; i < overlaps.length; ++i) {
-                let object = overlaps[i].object;
-                let target = object.getComponent('cursor-target');
-                if (target) {
-                    overlapTarget = target;
-                    break;
+                let collision = overlaps[i];
+                if (collision.group & this._myCollisionComponent.group) {
+                    let object = collision.object;
+                    let target = object.getComponent('cursor-target');
+                    if (target && !target.myPreventPulseOnHover) {
+                        overlapTarget = target;
+                        break;
+                    }
                 }
             }
 
@@ -637,7 +640,13 @@ WL.registerComponent('pp-finger-cursor', {
         this._myHandInputSource = PP.InputUtils.getInputSource(this._myHandednessString, PP.InputSourceType.HAND);
 
         if (this._myHandInputSource) {
-            let tip = Module['webxr_frame'].getJointPose(this._myHandInputSource.hand.get("index-finger-tip"), this._myReferenceSpace);
+            let tip = null;
+
+            try {
+                tip = Module['webxr_frame'].getJointPose(this._myHandInputSource.hand.get("index-finger-tip"), this._myReferenceSpace);
+            } catch (error) {
+                // Do nothing
+            }
 
             if (tip) {
                 this._myCursorObject.resetTransform();
@@ -854,9 +863,10 @@ PP.HandPose = class HandPose {
         this._myInputSource = null;
 
         if (session.inputSources != null && session.inputSources.length > 0) {
-            for (let item of session.inputSources) {
-                if (item.handedness == this._myHandedness) {
-                    this._myInputSource = item;
+            for (let i = 0; i < session.inputSources.length; i++) {
+                let inputSource = session.inputSources[i];
+                if (inputSource.handedness == this._myHandedness) {
+                    this._myInputSource = inputSource;
                 }
             }
         }
@@ -865,9 +875,10 @@ PP.HandPose = class HandPose {
             this._myInputSource = null;
 
             if (session.inputSources != null && session.inputSources.length > 0) {
-                for (let item of session.inputSources) {
-                    if (item.handedness == this._myHandedness) {
-                        this._myInputSource = item;
+                for (let i = 0; i < session.inputSources.length; i++) {
+                    let inputSource = session.inputSources[i];
+                    if (inputSource.handedness == this._myHandedness) {
+                        this._myInputSource = inputSource;
                     }
                 }
             }
@@ -1329,14 +1340,13 @@ PP.Gamepad = class Gamepad {
 
         this._myAxesInfo = new PP.AxesInfo();
 
-        this._mySelectStart = false;
-        this._mySelectEnd = false;
-        this._mySqueezeStart = false;
-        this._mySqueezeEnd = false;
+        this._mySelectPressed = false;
+        this._mySqueezePressed = false;
 
         this._myIsXRSessionActive = false;
         this._myInputSource = null;
         this._myGamepad = null;
+        this._myPrevInputSource = null;
 
         this._myButtonCallbacks = [];
         for (let typeKey in PP.ButtonType) {
@@ -1472,6 +1482,12 @@ PP.Gamepad = class Gamepad {
     }
 
     update(dt) {
+        if (this._myPrevInputSource != this._myInputSource) {
+            this._mySelectPressed = false;
+            this._mySqueezePressed = false;
+        }
+        this._myPrevInputSource = this._myInputSource;
+
         this._preUpdateButtonInfos();
         this._updateButtonInfos();
         this._postUpdateButtonInfos(dt);
@@ -1504,14 +1520,6 @@ PP.Gamepad = class Gamepad {
             if (inputSourceType == PP.InputSourceType.HAND) {
                 this._updateHandSqueeze();
             }
-
-            if (this._myButtonInfos[PP.ButtonType.SELECT].myIsPressed && this._myButtonInfos[PP.ButtonType.SELECT].myValue == 0) {
-                this._myButtonInfos[PP.ButtonType.SELECT].myValue = 1;
-            }
-
-            if (this._myButtonInfos[PP.ButtonType.SQUEEZE].myIsPressed && this._myButtonInfos[PP.ButtonType.SQUEEZE].myValue == 0) {
-                this._myButtonInfos[PP.ButtonType.SQUEEZE].myValue = 1;
-            }
         }
     }
 
@@ -1522,22 +1530,10 @@ PP.Gamepad = class Gamepad {
     //This sadly must be done this way to be the most compatible
     _updateSelectAndSqueezePressed() {
         let buttonSelect = this._myButtonInfos[PP.ButtonType.SELECT];
-
-        if (this._mySelectStart) {
-            buttonSelect.myIsPressed = true;
-        }
-        if (this._mySelectEnd) {
-            buttonSelect.myIsPressed = false;
-        }
+        buttonSelect.myIsPressed = this._mySelectPressed;
 
         let buttonSqueeze = this._myButtonInfos[PP.ButtonType.SQUEEZE];
-        if (this._mySqueezeStart) {
-            buttonSqueeze.myIsPressed = true;
-        }
-
-        if (this._mySqueezeEnd) {
-            buttonSqueeze.myIsPressed = false;
-        }
+        buttonSqueeze.myIsPressed = this._mySqueezePressed;
 
         if (!this.isGamepadActive()) {
             buttonSelect.myIsPressed = false;
@@ -1555,6 +1551,14 @@ PP.Gamepad = class Gamepad {
 
         button.myIsTouched = internalButton.touched;
         button.myValue = internalButton.value;
+
+        if (button.myIsPressed) {
+            button.myIsTouched = true;
+
+            if (button.myValue == 0) {
+                button.myValue = 1;
+            }
+        }
     }
 
     _postUpdateButtonInfos(dt) {
@@ -1688,11 +1692,6 @@ PP.Gamepad = class Gamepad {
             let callbacksMap = buttonCallbacks[PP.ButtonEvent.ALWAYS];
             this._triggerCallbacks(callbacksMap, buttonInfo);
         }
-
-        this._mySelectStart = false;
-        this._mySelectEnd = false;
-        this._mySqueezeStart = false;
-        this._mySqueezeEnd = false;
     }
 
     _preUpdateAxesInfos() {
@@ -1782,22 +1781,32 @@ PP.Gamepad = class Gamepad {
     }
 
     _updatePulse(dt) {
-        let hapticActuator = this._getHapticActuator();
-        if (hapticActuator) {
+        let hapticActuators = this._getHapticActuators();
+        if (hapticActuators.length > 0) {
             if (this._myPulseInfo.myIntensity > 0) {
-                hapticActuator.pulse(this._myPulseInfo.myIntensity, Math.max(250, this._myPulseInfo.myDuration * 1000)); //duration is managed by this class
+                for (let i = 0; i < hapticActuators.length; i++) {
+                    let hapticActuator = hapticActuators[i];
+                    hapticActuator.pulse(this._myPulseInfo.myIntensity, Math.max(250, this._myPulseInfo.myDuration * 1000)); // Duration is managed by this class
+                }
                 this._myPulseInfo.myIsDevicePulsing = true;
             } else if (this._myPulseInfo.myIsDevicePulsing) {
-                hapticActuator.pulse(0, 1);
+                for (let i = 0; i < hapticActuators.length; i++) {
+                    let hapticActuator = hapticActuators[i];
+                    hapticActuator.pulse(0, 1);
 
-                try {
-                    hapticActuator.reset();
-                } catch (error) {
-                    // Do nothing
+                    try {
+                        if (hapticActuator.reset != null) {
+                            hapticActuator.reset();
+                        }
+                    } catch (error) {
+                        // Do nothing
+                    }
                 }
 
                 this._myPulseInfo.myIsDevicePulsing = false;
             }
+        } else {
+            this._myPulseInfo.myIsDevicePulsing = false;
         }
 
         this._myPulseInfo.myDuration -= dt;
@@ -1807,18 +1816,22 @@ PP.Gamepad = class Gamepad {
         }
     }
 
-    _getHapticActuator() {
-        let hapticActuator = null;
+    _getHapticActuators() {
+        let hapticActuators = [];
 
         if (this.isGamepadActive()) {
-            if (this._myGamepad.hapticActuators && this._myGamepad.hapticActuators.length > 0) {
-                hapticActuator = this._myGamepad.hapticActuators[0];
-            } else {
-                hapticActuator = this._myGamepad.vibrationActuator;
+            if (this._myGamepad.hapticActuators != null) {
+                for (let i = 0; i < this._myGamepad.hapticActuators.length; i++) {
+                    hapticActuators.push(this._myGamepad.hapticActuators[i]);
+                }
+            }
+
+            if (this._myGamepad.vibrationActuator != null) {
+                hapticActuators.push(this._myGamepad.vibrationActuator);
             }
         }
 
-        return hapticActuator;
+        return hapticActuators;
     }
 
     _onXRSessionStart(manualStart, session) {
@@ -1826,10 +1839,11 @@ PP.Gamepad = class Gamepad {
         this._myGamepad = null;
 
         if (session.inputSources != null && session.inputSources.length > 0) {
-            for (let item of session.inputSources) {
-                if (item.handedness == this._myHandedness) {
-                    this._myInputSource = item;
-                    this._myGamepad = item.gamepad;
+            for (let i = 0; i < session.inputSources.length; i++) {
+                let inputSource = session.inputSources[i];
+                if (inputSource.handedness == this._myHandedness) {
+                    this._myInputSource = inputSource;
+                    this._myGamepad = inputSource.gamepad;
                 }
             }
         }
@@ -1839,10 +1853,11 @@ PP.Gamepad = class Gamepad {
             this._myGamepad = null;
 
             if (session.inputSources != null && session.inputSources.length > 0) {
-                for (let item of session.inputSources) {
-                    if (item.handedness == this._myHandedness) {
-                        this._myInputSource = item;
-                        this._myGamepad = item.gamepad;
+                for (let i = 0; i < session.inputSources.length; i++) {
+                    let inputSource = session.inputSources[i];
+                    if (inputSource.handedness == this._myHandedness) {
+                        this._myInputSource = inputSource;
+                        this._myGamepad = inputSource.gamepad;
                     }
                 }
             }
@@ -1861,31 +1876,34 @@ PP.Gamepad = class Gamepad {
         this._myInputSource = null;
         this._myGamepad = null;
 
+        this._mySelectPressed = false;
+        this._mySqueezePressed = false;
+
         this._myIsXRSessionActive = false;
     }
 
     //Select and Squeeze are managed this way to be more compatible
     _selectStart(event) {
-        if (event.inputSource.handedness == this._myHandedness) {
-            this._mySelectStart = true;
+        if (this._myInputSource != null && this._myInputSource == event.inputSource) {
+            this._mySelectPressed = true;
         }
     }
 
     _selectEnd(event) {
-        if (event.inputSource.handedness == this._myHandedness) {
-            this._mySelectEnd = true;
+        if (this._myInputSource != null && this._myInputSource == event.inputSource) {
+            this._mySelectPressed = false;
         }
     }
 
     _squeezeStart(event) {
-        if (event.inputSource.handedness == this._myHandedness) {
-            this._mySqueezeStart = true;
+        if (this._myInputSource != null && this._myInputSource == event.inputSource) {
+            this._mySqueezePressed = true;
         }
     }
 
     _squeezeEnd(event) {
-        if (event.inputSource.handedness == this._myHandedness) {
-            this._mySqueezeEnd = true;
+        if (this._myInputSource != null && this._myInputSource == event.inputSource) {
+            this._mySqueezePressed = false;
         }
     }
 
@@ -2133,10 +2151,12 @@ WL.registerComponent('pp-gamepad-animator', {
         glMatrix.vec3.cross(rotationAxis, startAxis, endAxis);
         glMatrix.vec3.normalize(rotationAxis, rotationAxis);
 
-        let angleToRotate = glMatrix.vec3.angle(startAxis, endAxis);
+        if (rotationAxis.vec3_length() > 0.0001) {
+            let angleToRotate = glMatrix.vec3.angle(startAxis, endAxis);
 
-        if (angleToRotate > 0.0001) {
-            object.rotateAxisAngleRadObject(rotationAxis, angleToRotate);
+            if (angleToRotate > 0.0001) {
+                object.rotateAxisAngleRadObject(rotationAxis, angleToRotate);
+            }
         }
     },
     _translateLocalAxis(object, axis, amount) {
@@ -3891,7 +3911,7 @@ PP.CAUtils = {
     getUser(onDoneCallback = null, onErrorCallback = null, useDummyServerOverride = null) {
         if (PP.CAUtils.isSDKAvailable()) {
             try {
-                PP.CAUtils_getUser().then(function (result) {
+                PP.CAUtils._getUser().then(function (result) {
                     if (result.user != null && result.user.displayName != null) {
                         if (onDoneCallback != null) {
                             onDoneCallback(result.user);
@@ -4327,11 +4347,11 @@ PP.SaveUtils = {
     loadString: function (id, defaultValue = null) {
         let item = localStorage.getItem(id);
 
-        if (item == null) {
-            item = defaultValue;
+        if (item != null) {
+            return item;
         }
 
-        return item;
+        return defaultValue;
     },
     loadNumber: function (id, defaultValue = null) {
         let item = PP.SaveUtils.loadString(id);
@@ -4349,6 +4369,19 @@ PP.SaveUtils = {
             return true;
         } else if (item == "false") {
             return false;
+        }
+
+        return defaultValue;
+    },
+    loadObject: function (id, defaultValue = null) {
+        let item = PP.SaveUtils.loadString(id);
+
+        if (item != null) {
+            try {
+                return JSON.parse(item);
+            } catch (error) {
+                Global.myLoadedSaveObjectParseFailed = true;
+            }
         }
 
         return defaultValue;
@@ -4560,21 +4593,74 @@ PP.DebugAxes = class DebugAxes {
     }
 };
 WL.registerComponent('pp-debug-global-data', {
+    _myPlaneMesh: { type: WL.Type.Mesh },
     _myCubeMesh: { type: WL.Type.Mesh },
+    _mySphereMesh: { type: WL.Type.Mesh },
     _myFlatMaterial: { type: WL.Type.Material },
+    _myPhongMaterial: { type: WL.Type.Material },
+    _myTextMaterial: { type: WL.Type.Material },
+    _myHandLeft: { type: WL.Type.Object },
+    _myHandRight: { type: WL.Type.Object }
 }, {
     init: function () {
         PP.myDebugData.myRootObject = WL.scene.addObject(null);
 
+        PP.myDebugData.myPlaneMesh = this._myPlaneMesh;
         PP.myDebugData.myCubeMesh = this._myCubeMesh;
-        PP.myDebugData.myFlatMaterial = this._myFlatMaterial;
+        PP.myDebugData.mySphereMesh = this._mySphereMesh;
+        PP.myDebugData.myFlatMaterial = this._myFlatMaterial.clone();
+        PP.myDebugData.myPhongMaterial = this._myPhongMaterial.clone();
+        PP.myDebugData.myTextMaterial = this._myTextMaterial.clone();
+        PP.myDebugData.myHandLeft = this._myHandLeft;
+        PP.myDebugData.myHandRight = this._myHandRight;
     },
 });
 
 PP.myDebugData = {
     myRootObject: null,
+    myPlaneMesh: null,
     myCubeMesh: null,
-    myFlatMaterial: null
+    mySphereMesh: null,
+    myFlatMaterial: null,
+    myPhongMaterial: null,
+    myTextMaterial: null,
+    myHandLeft: null,
+    myHandRight: null,
+    createTools: function (showVisibilityButton = true) {
+        if (PP.myDebugData.myHandLeft.pp_getComponent("pp-easy-tune") == null) {
+            PP.myDebugData.myHandLeft.addComponent("pp-easy-tune", {
+                _myHandedness: 1,
+                _myShowOnStart: false,
+                _myShowVisibilityButton: showVisibilityButton,
+                _myEnableAdditionalButtons: true,
+                _myEnableChangeVariableShortcut: true,
+                _myPlaneMaterial: PP.myDebugData.myFlatMaterial.clone(),
+                _myTextMaterial: PP.myDebugData.myTextMaterial.clone()
+            });
+        }
+
+        if (PP.myDebugData.myHandLeft.pp_getComponent("pp-console-vr") == null) {
+            PP.myDebugData.myHandLeft.addComponent("pp-console-vr", {
+                _myHandedness: 1,
+                _myOverrideBrowserConsole: true,
+                _myShowOnStart: false,
+                _myShowVisibilityButton: showVisibilityButton,
+                _myPulseOnNewMessage: 0,
+                _myPlaneMaterial: PP.myDebugData.myFlatMaterial.clone(),
+                _myTextMaterial: PP.myDebugData.myTextMaterial.clone()
+            });
+        }
+
+        if (PP.myDebugData.myHandRight.pp_getComponent("pp-tool-cursor") == null) {
+            PP.myDebugData.myHandRight.addComponent("pp-tool-cursor", {
+                _myHandedness: 1,
+                _myPulseOnHover: false,
+                _myShowFingerCursor: false,
+                _myCursorMesh: PP.myDebugData.mySphereMesh,
+                _myCursorMaterial: PP.myDebugData.myFlatMaterial.clone()
+            });
+        }
+    }
 };
 PP.DebugLine = class DebugLine {
 
@@ -4660,12 +4746,15 @@ PP.DebugLine = class DebugLine {
             let rotationAxis = [];
             glMatrix.vec3.cross(rotationAxis, forward, this._myDirection);
             glMatrix.vec3.normalize(rotationAxis, rotationAxis);
-            let rotationQuat = [];
-            glMatrix.quat.setAxisAngle(rotationQuat, rotationAxis, angle);
 
-            glMatrix.quat.mul(rotationQuat, rotationQuat, this._myLineObject.transformWorld);
-            glMatrix.quat.normalize(rotationQuat, rotationQuat);
-            this._myLineObject.rotateObject(rotationQuat);
+            if (rotationAxis.vec3_length() > 0.0001) {
+                let rotationQuat = [];
+                glMatrix.quat.setAxisAngle(rotationQuat, rotationAxis, angle);
+
+                glMatrix.quat.mul(rotationQuat, rotationQuat, this._myLineObject.transformWorld);
+                glMatrix.quat.normalize(rotationQuat, rotationQuat);
+                this._myLineObject.rotateObject(rotationQuat);
+            }
         }
 
         forward = this._myLineObject.pp_getForward();
@@ -5262,8 +5351,8 @@ class enoughISenough {
     }
 
     start() {
-        this._myStatisticsManager = new StatisticsManager();
-        this._myStatisticsManager.start();
+        Global.myStatisticsManager = new StatisticsManager();
+        Global.myStatisticsManager.start();
 
         this._myMainFSM = new MainFSM();
         this._myMainFSM.init();
@@ -5279,82 +5368,155 @@ class enoughISenough {
             Global.myStatistics.myTotalPlayTime += dt;
         }
 
-        this._myStatisticsManager.update(dt);
+        Global.myStatisticsManager.update(dt);
+
+        Global.myAudioPoolMap.update(dt);
     }
 
     prepareSFXSetups() {
+        Global.myAudioPoolMap = new PP.AudioPoolManager();
+
         let manager = Global.myAudioManager;
-
-        {
-            let audioSetup = new PP.AudioSetup("assets/audio/music/you_KNOW_22Hz.wav");
-            audioSetup.myLoop = true;
-            audioSetup.mySpatial = false;
-            audioSetup.myVolume = 0.45;
-            manager.addAudioSetup(SfxID.YOU_KNOW, audioSetup);
-        }
-
-        {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/NOT_ENOUGH.wav");
-            audioSetup.myReferenceDistance = 1000000;
-            manager.addAudioSetup(SfxID.NOT_ENOUGH, audioSetup);
-        }
-
-        {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blather_0.wav");
-            audioSetup.myVolume = 0.4;
-            audioSetup.myReferenceDistance = 1000000;
-            manager.addAudioSetup(SfxID.BLATHER_0, audioSetup);
-        }
-
-        {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blather_1.wav");
-            audioSetup.myVolume = 0.4;
-            audioSetup.myReferenceDistance = 1000000;
-            manager.addAudioSetup(SfxID.BLATHER_1, audioSetup);
-        }
-
-        {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blather_dot.wav");
-            audioSetup.myVolume = 0.4;
-            audioSetup.myReferenceDistance = 1000000;
-            manager.addAudioSetup(SfxID.BLATHER_DOT, audioSetup);
-        }
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/ring_rise.wav");
             audioSetup.myVolume = 0.5;
             audioSetup.myRate = 0.8;
             manager.addAudioSetup(SfxID.RING_RISE, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.RING_RISE);
+            };
+            //Global.myAudioPoolMap.addPool(SfxID.RING_RISE, audioPoolParams);
+        }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/evidence_appear.wav");
+            audioSetup.myVolume = 0.2;
+            audioSetup.myReferenceDistance = 3;
+            manager.addAudioSetup(SfxID.EVIDENCE_APPEAR, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 25;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_APPEAR);
+            };
+            Global.myAudioPoolMap.addPool(SfxID.EVIDENCE_APPEAR, audioPoolParams);
         }
 
         {
             let audioSetup = new PP.AudioSetup("assets/audio/sfx/hand_piece_appear.wav");
             audioSetup.myVolume = 0.2;
             manager.addAudioSetup(SfxID.HAND_PIECE_APPEAR, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.HAND_PIECE_APPEAR);
+            };
+            //Global.myAudioPoolMap.addPool(SfxID.HAND_PIECE_APPEAR, audioPoolParams);
         }
 
         {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_appear.wav");
-            audioSetup.myReferenceDistance = 1000000;
-            audioSetup.myPitch = 0.8;
-            audioSetup.myVolume = 0.85;
-            manager.addAudioSetup(SfxID.MR_NOT_APPEAR, audioSetup);
-        }
-
-        {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_disappear.wav");
-            audioSetup.myReferenceDistance = 1000000;
-            audioSetup.myPitch = 0.8;
-            audioSetup.myVolume = 0.45;
-            manager.addAudioSetup(SfxID.MR_NOT_DISAPPEAR, audioSetup);
-        }
-
-        {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/title_appear.wav");
-            audioSetup.myReferenceDistance = 1000000;
-            audioSetup.myPitch = 0.8;
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/grab.wav");
             audioSetup.myVolume = 0.55;
-            manager.addAudioSetup(SfxID.TITLE_APPEAR, audioSetup);
+            audioSetup.myReferenceDistance = 0.3;
+            audioSetup.myPool = 15;
+            manager.addAudioSetup(SfxID.GRAB, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.GRAB);
+            };
+            //Global.myAudioPoolMap.addPool(SfxID.GRAB, audioPoolParams);
+        }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/throw.wav");
+            audioSetup.myRate = 0.7;
+            audioSetup.myVolume = 0.225;
+            audioSetup.myReferenceDistance = 0.3;
+            audioSetup.myPool = 15;
+            manager.addAudioSetup(SfxID.THROW, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.THROW);
+            };
+            //Global.myAudioPoolMap.addPool(SfxID.THROW, audioPoolParams);
+        }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/collision.wav");
+            audioSetup.myRate = 0.8;
+            audioSetup.myVolume = 0.5;
+            audioSetup.myReferenceDistance = 0.3;
+            audioSetup.myPool = 15;
+            manager.addAudioSetup(SfxID.COLLISION, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.COLLISION);
+            };
+            //Global.myAudioPoolMap.addPool(SfxID.COLLISION, audioPoolParams);
+        }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blather_0.wav");
+            audioSetup.myVolume = 0.4;
+            audioSetup.myPool = 10;
+            audioSetup.myReferenceDistance = 1000000;
+            manager.addAudioSetup(SfxID.BLATHER_0, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 2;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_0);
+            };
+            Global.myAudioPoolMap.addPool(SfxID.BLATHER_0, audioPoolParams);
+        }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/blather_1.wav");
+            audioSetup.myVolume = 0.4;
+            audioSetup.myPool = 10;
+            audioSetup.myReferenceDistance = 1000000;
+            manager.addAudioSetup(SfxID.BLATHER_1, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 2;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_1);
+            };
+            Global.myAudioPoolMap.addPool(SfxID.BLATHER_1, audioPoolParams);
+        }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/evidence_disappear.wav");
+            audioSetup.myVolume = 0.5;
+            audioSetup.myReferenceDistance = 3;
+            manager.addAudioSetup(SfxID.EVIDENCE_DISAPPEAR, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 25;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_DISAPPEAR);
+            };
+            Global.myAudioPoolMap.addPool(SfxID.EVIDENCE_DISAPPEAR, audioPoolParams);
         }
 
         {
@@ -5363,34 +5525,76 @@ class enoughISenough {
             audioSetup.myPitch = 0.8;
             audioSetup.myVolume = 0.8;
             manager.addAudioSetup(SfxID.TITLE_DISAPPEAR, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.TITLE_DISAPPEAR);
+            };
+            //Global.myAudioPoolMap.addPool(SfxID.TITLE_DISAPPEAR, audioPoolParams);
         }
 
         {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_explode.wav");
-            audioSetup.myVolume = 0.95;
-            audioSetup.myReferenceDistance = 3;
-            manager.addAudioSetup(SfxID.CLONE_EXPLODE, audioSetup);
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/NOT_ENOUGH.wav");
+            audioSetup.myReferenceDistance = 1000000;
+            manager.addAudioSetup(SfxID.NOT_ENOUGH, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.NOT_ENOUGH);
+            };
+            //Global.myAudioPoolMap.addPool(SfxID.NOT_ENOUGH, audioPoolParams);
         }
 
         {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_explode.wav");
-            audioSetup.myVolume = 0.95;
-            audioSetup.myReferenceDistance = 3;
-            manager.addAudioSetup(SfxID.MR_NOT_EXPLODE, audioSetup);
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/title_appear.wav");
+            audioSetup.myReferenceDistance = 1000000;
+            audioSetup.myPitch = 0.8;
+            audioSetup.myVolume = 0.55;
+            manager.addAudioSetup(SfxID.TITLE_APPEAR, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 1;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.TITLE_APPEAR);
+            };
+            //Global.myAudioPoolMap.addPool(SfxID.TITLE_APPEAR, audioPoolParams);
         }
 
         {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/evidence_appear.wav");
-            audioSetup.myVolume = 0.2;
-            audioSetup.myReferenceDistance = 3;
-            manager.addAudioSetup(SfxID.EVIDENCE_APPEAR, audioSetup);
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_appear.wav");
+            audioSetup.myReferenceDistance = 1000000;
+            audioSetup.myPitch = 0.8;
+            audioSetup.myVolume = 0.85;
+            manager.addAudioSetup(SfxID.MR_NOT_APPEAR, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 2;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_APPEAR);
+            };
+            Global.myAudioPoolMap.addPool(SfxID.MR_NOT_APPEAR, audioPoolParams);
         }
 
         {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/evidence_disappear.wav");
-            audioSetup.myVolume = 0.5;
-            audioSetup.myReferenceDistance = 3;
-            manager.addAudioSetup(SfxID.EVIDENCE_DISAPPEAR, audioSetup);
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_disappear.wav");
+            audioSetup.myReferenceDistance = 1000000;
+            audioSetup.myPitch = 0.8;
+            audioSetup.myVolume = 0.45;
+            manager.addAudioSetup(SfxID.MR_NOT_DISAPPEAR, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 2;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_DISAPPEAR);
+            };
+            Global.myAudioPoolMap.addPool(SfxID.MR_NOT_DISAPPEAR, audioPoolParams);
         }
 
         {
@@ -5398,6 +5602,29 @@ class enoughISenough {
             audioSetup.myVolume = 0.65;
             audioSetup.myReferenceDistance = 1000000;
             manager.addAudioSetup(SfxID.CLONE_APPEAR, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 20;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.CLONE_APPEAR);
+            };
+            Global.myAudioPoolMap.addPool(SfxID.CLONE_APPEAR, audioPoolParams);
+        }
+
+        {
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_explode.wav");
+            audioSetup.myVolume = 0.95;
+            audioSetup.myReferenceDistance = 3;
+            manager.addAudioSetup(SfxID.CLONE_EXPLODE, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 20;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.CLONE_EXPLODE);
+            };
+            Global.myAudioPoolMap.addPool(SfxID.CLONE_EXPLODE, audioPoolParams);
         }
 
         {
@@ -5406,42 +5633,49 @@ class enoughISenough {
             audioSetup.myVolume = 0.6;
             audioSetup.myReferenceDistance = 1000000;
             manager.addAudioSetup(SfxID.MR_NOT_FAST_APPEAR, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 2;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_FAST_APPEAR);
+            };
+            Global.myAudioPoolMap.addPool(SfxID.MR_NOT_FAST_APPEAR, audioPoolParams);
         }
 
         {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/grab.wav");
-            audioSetup.myVolume = 0.55;
-            audioSetup.myReferenceDistance = 0.3;
-            manager.addAudioSetup(SfxID.GRAB, audioSetup);
+            let audioSetup = new PP.AudioSetup("assets/audio/sfx/mr_NOT_explode.wav");
+            audioSetup.myVolume = 0.95;
+            audioSetup.myReferenceDistance = 3;
+            audioSetup.myPool = 10;
+            manager.addAudioSetup(SfxID.MR_NOT_EXPLODE, audioSetup);
+
+            let audioPoolParams = new PP.AudioPoolParams();
+            audioPoolParams.myPercentageToAddWhenEmpty = 0;
+            audioPoolParams.myInitialPoolSize = 2;
+            audioPoolParams.myCloneFunction = function () {
+                return Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_EXPLODE);
+            };
+            Global.myAudioPoolMap.addPool(SfxID.MR_NOT_EXPLODE, audioPoolParams);
         }
 
         {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/throw.wav");
-            audioSetup.myRate = 0.7;
-            audioSetup.myVolume = 0.225;
-            audioSetup.myReferenceDistance = 0.3;
-            manager.addAudioSetup(SfxID.THROW, audioSetup);
-        }
+            let audioSetup = new PP.AudioSetup("assets/audio/music/you_KNOW_22Hz.wav");
+            audioSetup.myLoop = true;
+            audioSetup.mySpatial = false;
+            audioSetup.myVolume = 0.45;
+            audioSetup.myPreload = true;
+            manager.addAudioSetup(SfxID.YOU_KNOW, audioSetup, false);
 
-        {
-            let audioSetup = new PP.AudioSetup("assets/audio/sfx/collision.wav");
-            audioSetup.myRate = 0.8;
-            audioSetup.myVolume = 0.5;
-            audioSetup.myReferenceDistance = 0.3;
-            manager.addAudioSetup(SfxID.COLLISION, audioSetup);
-        }
-
-        manager.createAudioPlayer(SfxID.RING_RISE);
-        for (let i = 0; i <= SfxID.BLATHER_DOT; i++) {
-            manager.createAudioPlayer(i);
+            Global.myMusic = Global.myAudioManager.createAudioPlayer(SfxID.YOU_KNOW);
         }
 
         //This MAY avoid some crackle on first play with position
-        let ringRise = manager.createAudioPlayer(SfxID.RING_RISE);
-        ringRise.setVolume(0);
-        ringRise.updatePosition([0, -10000, 0]);
-        ringRise.play();
-        ringRise.updatePosition([0, -10000, 0]);
+        this._myRingRiseFixFirstPlayCrackleAudioPlayer = manager.createAudioPlayer(SfxID.RING_RISE);
+        this._myRingRiseFixFirstPlayCrackleAudioPlayer.setVolume(0);
+        this._myRingRiseFixFirstPlayCrackleAudioPlayer.updatePosition([0, -10000, 0]);
+        this._myRingRiseFixFirstPlayCrackleAudioPlayer.play();
+        this._myRingRiseFixFirstPlayCrackleAudioPlayer.updatePosition([0, -10000, 0]);
     }
 }
 
@@ -5464,8 +5698,7 @@ var SfxID = {
     YOU_KNOW: 15,
     GRAB: 16,
     THROW: 17,
-    COLLISION: 18,
-    BLATHER_DOT: 19,
+    COLLISION: 18
 };
 WL.registerComponent("enough-IS-enough-gateway", {
     _myPlayerRumbleObject: { type: WL.Type.Object },
@@ -5474,13 +5707,22 @@ WL.registerComponent("enough-IS-enough-gateway", {
     _myRightHandAnimator: { type: WL.Type.Object },
 }, {
     init: function () {
+        if (PP.myEasyTuneVariables == null) {
+            PP.myEasyTuneVariables = new PP.EasyTuneVariables();
+        }
+
         Global.myAnalyticsEnabled = true;
+
+        Global.sendAnalytics("event", "game_init_started", {
+            "value": 1
+        });
+
         Global.myAudioManager = new PP.AudioManager();
         Global.myParticlesManager = new ParticlesManager();
         Global.myMeshObjectPoolMap = new PP.ObjectPoolManager();
         Global.myMeshNoFogObjectPoolMap = new PP.ObjectPoolManager();
         Global.myGameObjectPoolMap = new PP.ObjectPoolManager();
-        Global.mySaveManager = new PP.SaveManager();
+        Global.mySaveManager = new PP.SaveManager("enoughISenough");
         //Global.mySaveManager.clear(); 
         Global.myScene = this.object;
 
@@ -5499,31 +5741,41 @@ WL.registerComponent("enough-IS-enough-gateway", {
         this._myGameObjectPoolSize = 40;
         this._myUpdateReadyCountdown = 10;
         this._myLoadTimeSent = false;
+        this._myVRSupportedSent = false;
+        this._myLoadSaveObjectFailedEventSent = false;
+        this._myLoadedSaveObjectParseFailedEventSent = false;
 
         this._myTimeUsingTrackedHands = 0;
 
+        this._myDesiredFrameRate = null;
+        this._mySetDesiredFrameRateMaxAttempts = 10;
+
         this._myResetXRSessionActiveOpenLinkExtraCheckTimer = new PP.Timer(2);
+
+        this._myVRButtonVisibilityUpdated = false;
+        this._myVRButtonDisabledOpacityUpdated = false;
+        this._myVRButtonUsabilityUpdated = false;
+        this._myXRButtonsContainer = document.getElementById("xr-buttons-container");
+        this._myVRButton = document.getElementById("vr-button");
 
         if (window.location != null && window.location.host != null) {
             Global.myIsLocalhost = window.location.host == "localhost:8080";
         }
+
+        Global.myAnalyticsEnabled = !Global.myIsLocalhost;
+
+        this._myGestureStartEventListener = function (event) {
+            event.preventDefault();
+        };
+        document.addEventListener("gesturestart", this._myGestureStartEventListener);
     },
     start: function () {
-        let version = Global.mySaveManager.loadNumber("game_version", 0);
-        Global.myGameVersion = 18;
+        Global.myGameVersion = "1.1.1";
 
-        let minVersionToReset = 6;
-        if (version < minVersionToReset) {
-            Global.mySaveManager.clear();
-            Global.mySaveManager.save("game_version", Global.myGameVersion);
-        } else if (version < Global.myGameVersion) {
-            Global.mySaveManager.save("game_version", Global.myGameVersion);
-        }
-
-        let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false); // This is actually trial ended once, don't want to change name tho
-        let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
-        let trialCompleted = Global.mySaveManager.loadBool("trial_completed", false);
-        Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialPhase >= 2);
+        let trialEndedOnce = Global.mySaveManager.load("trial_ended_once", false);
+        let trialPhase = Global.mySaveManager.load("trial_phase", 1);
+        let trialCompleted = Global.mySaveManager.load("trial_completed", false);
+        Global.myEnableSelectPhysx = trialCompleted || (trialEndedOnce && trialPhase >= 2);
 
         if (WL.xrSession) {
             this._onXRSessionStart(WL.xrSession);
@@ -5536,20 +5788,50 @@ WL.registerComponent("enough-IS-enough-gateway", {
             this._myFirstUpdate = false;
             this._start();
             PP.setEasyTuneWidgetActiveVariable("Float 1");
-        } else if (!Global.myUpdateReady) {
-            if (!this._myLoadTimeSent) {
-                if (window.performance) {
-                    Global.sendAnalytics("event", "load_time", {
-                        "value": (performance.now() / 1000).toFixed(2)
-                    });
-                }
-
-                this._myLoadTimeSent = true;
+        } else {
+            if (!this._myVRButtonUsabilityUpdated) {
+                this._updateVRButtonVisibility();
             }
 
-            this._myUpdateReadyCountdown--;
-            if (this._myUpdateReadyCountdown <= 0) {
-                Global.myUpdateReady = true;
+            if (!Global.myUpdateReady) {
+                this._myUpdateReadyCountdown--;
+                if (this._myUpdateReadyCountdown <= 0) {
+                    Global.myUpdateReady = true;
+
+                    console.log("Game Version:", Global.myGameVersion);
+
+                    Global.sendAnalytics("event", "game_init_ended", {
+                        "value": 1
+                    });
+
+                    if (!this._myLoadTimeSent) {
+                        if (window.performance) {
+                            Global.sendAnalytics("event", "load_seconds", {
+                                "value": (window.performance.now() / 1000).toFixed(2)
+                            });
+                        }
+
+                        this._myLoadTimeSent = true;
+                    }
+                }
+            }
+        }
+
+        if (WL.xrSession != null && WL.xrSession.updateTargetFrameRate != null && this._myDesiredFrameRate != null && WL.xrSession.frameRate != this._myDesiredFrameRate) {
+            try {
+                WL.xrSession.updateTargetFrameRate(this._myDesiredFrameRate).catch(function () {
+                    if (this._mySetDesiredFrameRateMaxAttempts > 0) {
+                        this._mySetDesiredFrameRateMaxAttempts--;
+                    } else {
+                        this._myDesiredFrameRate = null;
+                    }
+                }.bind(this));
+            } catch (error) {
+                if (this._mySetDesiredFrameRateMaxAttempts > 0) {
+                    this._mySetDesiredFrameRateMaxAttempts--;
+                } else {
+                    this._myDesiredFrameRate = null;
+                }
             }
         }
 
@@ -5557,6 +5839,33 @@ WL.registerComponent("enough-IS-enough-gateway", {
             if (this._myIncreasePool) {
                 this._increasePools();
             } else {
+                if (!this._myVRSupportedSent) {
+                    if (WL.vrSupported != null && WL.vrSupported != 0) {
+                        this._myVRSupportedSent = true;
+                        Global.sendAnalytics("event", "vr_supported", {
+                            "value": 1
+                        });
+                    }
+                }
+
+                if (!this._myLoadSaveObjectFailedEventSent) {
+                    this._myLoadSaveObjectFailedEventSent = true;
+                    if (!Global.mySaveManager.hasLoadSavesSucceded()) {
+                        Global.sendAnalytics("event", "load_saves_failed", {
+                            "value": 1
+                        });
+                    }
+                }
+
+                if (!this._myLoadedSaveObjectParseFailedEventSent) {
+                    this._myLoadedSaveObjectParseFailedEventSent = true;
+                    if (Global.myLoadedSaveObjectParseFailed) {
+                        Global.sendAnalytics("event", "parse_saves_failed", {
+                            "value": 1
+                        });
+                    }
+                }
+
                 if (Global.myDebugShortcutsEnabled) {
                     if (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.BOTTOM_BUTTON).isPressEnd(Global.myDebugShortcutsPress)) {
                         if (Global.myDeltaTimeSpeed == 1) {
@@ -5748,6 +6057,10 @@ WL.registerComponent("enough-IS-enough-gateway", {
 
         this.enoughISenough.start();
 
+        if (this._myVRButton != null) {
+            this._myVRButton.style.setProperty("display", "block");
+        }
+
         /*
         let componentAmountMapAfterLoad = Global.myScene.pp_getComponentAmountMapHierarchy();
         //console.error(componentAmountMapAfterLoad);
@@ -5792,10 +6105,73 @@ WL.registerComponent("enough-IS-enough-gateway", {
             }
         }
     },
+    _updateVRButtonVisibility() {
+        if (this._myVRButton != null) {
+            if (!this._myVRButtonVisibilityUpdated) {
+                this._myVRButton.style.setProperty("transform", "scale(1)");
+                this._myVRButtonVisibilityUpdated = true;
+            }
+
+            if (!this._myVRButtonUsabilityUpdated) {
+                if (WL.vrSupported != null && WL.vrSupported != 0) {
+                    this._myVRButton.style.setProperty("opacity", "1");
+                    this._myVRButton.style.setProperty("pointer-events", "all");
+
+                    this._myVRButtonUsabilityUpdated = true;
+                } else if (!this._myVRButtonDisabledOpacityUpdated) {
+                    this._myVRButton.style.setProperty("opacity", "0.5");
+
+                    this._myVRButtonDisabledOpacityUpdated = true;
+                }
+            }
+        } else {
+            this._myVRButtonUsabilityUpdated = true;
+        }
+    },
     _onXRSessionStart(session) {
+        if (this._myXRButtonsContainer != null) {
+            this._myXRButtonsContainer.style.setProperty("display", "none");
+        }
+
+        this._myDesiredFrameRate = null;
+        this._mySetDesiredFrameRateMaxAttempts = 10;
+        if (session.supportedFrameRates != null) {
+            let desiredFrameRate = 72;
+
+            let bestFrameRate = null;
+            for (let supportedFrameRate of session.supportedFrameRates) {
+                if (supportedFrameRate == desiredFrameRate) {
+                    bestFrameRate = desiredFrameRate;
+                    break;
+                } else if (bestFrameRate == null) {
+                    bestFrameRate = supportedFrameRate;
+                } else if (supportedFrameRate > desiredFrameRate && (supportedFrameRate < bestFrameRate || bestFrameRate < desiredFrameRate)) {
+                    bestFrameRate = supportedFrameRate;
+                } else if (supportedFrameRate < desiredFrameRate && supportedFrameRate > bestFrameRate) {
+                    bestFrameRate = supportedFrameRate;
+                }
+            }
+
+            this._myDesiredFrameRate = bestFrameRate;
+        }
+
+        if (session.updateTargetFrameRate != null && this._myDesiredFrameRate != null) {
+            try {
+                session.updateTargetFrameRate(this._myDesiredFrameRate);
+            } catch (error) {
+                // Do nothing
+            }
+        }
+
         Global.myXRSessionActiveOpenLinkExtraCheck = true;
     },
     _onXRSessionEnd() {
+        if (this._myXRButtonsContainer != null) {
+            this._myXRButtonsContainer.style.removeProperty("display");
+        }
+
+        this._myDesiredFrameRate = null;
+
         Global.myXRSessionActiveOpenLinkExtraCheck = false;
     }
 });
@@ -5824,6 +6200,7 @@ var Global = {
     myMeshObjectPoolMap: null,
     myMeshNoFogObjectPoolMap: null,
     myGameObjectPoolMap: null,
+    myAudioPoolMap: null,
     myMaterials: null,
     myTrialDuration: 0,
     myArcadeDuration: 0,
@@ -5837,6 +6214,7 @@ var Global = {
     myLightFadeInTime: 0,
     myStartFadeOut: false,
     myStatistics: null,
+    myStatisticsManager: null,
     myIsInMenu: false,
     myIsInArcadeResult: false,
     myEnableSelectPhysx: false,
@@ -5860,7 +6238,9 @@ var Global = {
     myTotalTimeUpdated: false,
     myActivatePhysXHandEventSent: false,
     myElementToClick: null,
-    myElementToClickCounter: 0
+    myElementToClickCounter: 0,
+    myMusic: null,
+    myLoadedSaveObjectParseFailed: false
 };
 
 Global.sendAnalytics = function sendAnalytics(eventType, eventName, eventValue) {
@@ -8609,6 +8989,58 @@ Float32Array.prototype.quat_toMatrix = function (out = glMatrix.mat3.create()) {
     glMatrix.mat3.fromQuat(out, this);
     return out;
 };
+
+Float32Array.prototype.quat_rotateAxisDegrees = function () {
+    let secondQuat = glMatrix.quat.create();
+    return function quat_rotateAxisDegrees(angle, axis, out = glMatrix.quat.create()) {
+        secondQuat.quat_fromAxisAngleDegrees(axis, angle);
+        return this.quat_rotateQuat(secondQuat, out);
+    };
+}();
+
+Float32Array.prototype.quat_rotateQuat = function (second, out = glMatrix.quat.create()) {
+    second.quat_mul(this, out);
+    return out;
+};
+
+Float32Array.prototype.quat_getForward = function () {
+    let rotationMatrix = glMatrix.mat3.create();
+    return function quat_getForward(out = glMatrix.vec3.create()) {
+        this.quat_toMatrix(rotationMatrix);
+
+        out.vec3_set(rotationMatrix[6], rotationMatrix[7], rotationMatrix[8]);
+
+        return out;
+    };
+}();
+
+Float32Array.prototype.quat_getLeft = function () {
+    let rotationMatrix = glMatrix.mat3.create();
+    return function quat_getLeft(out = glMatrix.vec3.create()) {
+        this.quat_toMatrix(rotationMatrix);
+
+        out.vec3_set(rotationMatrix[0], rotationMatrix[1], rotationMatrix[2]);
+
+        return out;
+    };
+}();
+
+Float32Array.prototype.quat_getRight = function (out = glMatrix.vec3.create()) {
+    this.quat_getLeft(out);
+    out.vec3_negate(out);
+    return out;
+};
+
+Float32Array.prototype.quat_getUp = function () {
+    let rotationMatrix = glMatrix.mat3.create();
+    return function quat_getUp(out = glMatrix.vec3.create()) {
+        this.quat_toMatrix(rotationMatrix);
+
+        out.vec3_set(rotationMatrix[3], rotationMatrix[4], rotationMatrix[5]);
+
+        return out;
+    };
+}();
 
 //QUAT 2
 
@@ -11963,11 +12395,11 @@ PP.ObjectPool = class ObjectPool {
     _equals(first, second) {
         let equals = false;
 
-        if (this._myObjectPoolParams.myEqualsFunctionName != null) {
+        if (first != null && this._myObjectPoolParams.myEqualsFunctionName != null) {
             equals = first[this._myObjectPoolParams.myEqualsFunctionName](second);
-        } else if (first.pp_equals != null) {
+        } else if (first != null && first.pp_equals != null) {
             equals = first.pp_equals(second);
-        } else if (first.equals != null) {
+        } else if (first != null && first.equals != null) {
             equals = first.equals(second);
         }
 
@@ -12165,14 +12597,18 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
     }
 };
 PP.SaveManager = class SaveManager {
-    constructor() {
-        this._mySaveCache = new Map();
+    constructor(saveID, autoLoadSaves = true) {
+        this._mySaveID = saveID;
 
         this._myCommitSavesDelayTimer = new PP.Timer(0, false);
         this._myDelaySavesCommit = true;
-        this._myIDsToCommit = [];
+        this._myCommitSavesDirty = false;
+        this._myCommitSavesDirtyClearOnFail = true;
+        this._myCommitSavesWhenLoadSavesFailed = false;
+        this._myResetSaveObjectOnLoadSavesFail = false;
 
-        this._myCacheDefaultValueOnFail = true;
+        this._mySaveObject = {};
+        this._myLoadSavesSucceded = false;
 
         this._myClearCallbacks = new Map();                 // Signature: callback()
         this._myDeleteCallbacks = new Map();                // Signature: callback(id)
@@ -12181,12 +12617,14 @@ PP.SaveManager = class SaveManager {
         this._mySaveValueChangedCallbacks = new Map();      // Signature: callback(id, value)
         this._mySaveIDCallbacks = new Map();                // Signature: callback(id, value)
         this._mySaveValueChangedIDCallbacks = new Map();    // Signature: callback(id, value)
-        this._myCommitSaveCallbacks = new Map();            // Signature: callback(id, value, isCommitSaveDelayed, failed)
-        this._myCommitSaveIDCallbacks = new Map();          // Signature: callback(id, value, isCommitSaveDelayed, failed)
-        this._myCommitSavesCallbacks = new Map();           // Signature: callback(isCommitSavesDelayed, failed)
+        this._myCommitSavesCallbacks = new Map();           // Signature: callback(succeeded)
+        this._myLoadCallbacks = new Map();                  // Signature: callback(id, value)
+        this._myLoadIDCallbacks = new Map();                // Signature: callback(id, value)
+        this._myLoadSavesCallbacks = new Map();             // Signature: callback(loadSavesSucceded, saveObjectReset)
 
-        this._myLoadCallbacks = new Map();                  // Signature: callback(id, value, loadFromCache, failed)
-        this._myLoadIDCallbacks = new Map();                // Signature: callback(id, value, loadFromCache, failed)
+        if (autoLoadSaves) {
+            this.loadSaves();
+        }
     }
 
     setCommitSavesDelay(delay) {
@@ -12197,39 +12635,92 @@ PP.SaveManager = class SaveManager {
         this._myDelaySavesCommit = delayed;
     }
 
-    setCacheDefaultValueOnFail(cache) {
-        this._myCacheDefaultValueOnFail = cache;
+    setCommitSavesDirty(dirty, startDelayTimer = true) {
+        this._myCommitSavesDirty = dirty;
+        if (dirty && startDelayTimer) {
+            if (!this.startDelayTimer.isRunning()) {
+                this._myCommitSavesDelayTimer.start();
+            }
+        } else {
+            this._myCommitSavesDelayTimer.reset();
+        }
+    }
+
+    setCommitSavesDirtyClearOnFail(clearOnFail) {
+        this._myCommitSavesDirtyClearOnFail = clearOnFail;
+    }
+
+    setCommitSavesWhenLoadSavesFailed(commitSavesWhenLoadSavesFailed) {
+        this._myCommitSavesWhenLoadSavesFailed = commitSavesWhenLoadSavesFailed;
+    }
+
+    setResetSaveObjectOnLoadSavesFail(resetSaveObjectOnLoadSavesFail) {
+        this._myResetSaveObjectOnLoadSavesFail = resetSaveObjectOnLoadSavesFail;
+    }
+
+    getCommitSavesDelay() {
+        return this._myCommitSavesDelayTimer.getDuration();
+    }
+
+    isDelaySavesCommit() {
+        return this._myDelaySavesCommit;
+    }
+
+    isCommitSavesDirty() {
+        return this._myCommitSavesDirty;
+    }
+
+    isCommitSavesDirtyClearOnFail() {
+        return this._myCommitSavesDirtyClearOnFail;
+    }
+
+    isCommitSavesWhenLoadSavesFailed() {
+        return this._myCommitSavesWhenLoadSavesFailed;
+    }
+
+    isResetSaveObjectOnLoadSavesFail() {
+        return this._myResetSaveObjectOnLoadSavesFail;
+    }
+
+    hasLoadSavesSucceded() {
+        return this._myLoadSavesSucceded;
     }
 
     update(dt) {
         if (this._myCommitSavesDelayTimer.isRunning()) {
             this._myCommitSavesDelayTimer.update(dt);
             if (this._myCommitSavesDelayTimer.isDone()) {
-                this.commitSaves();
+                if (this._myCommitSavesDirty) {
+                    this._commitSaves();
+                }
+            }
+        } else {
+            if (this._myCommitSavesDirty) {
+                this._commitSaves();
             }
         }
     }
 
+    has(id) {
+        return id in this._mySaveObject;
+    }
+
     save(id, value, overrideDelaySavesCommit = null) {
         let sameValue = false;
-        if (this._mySaveCache.has(id)) {
-            sameValue = this._mySaveCache.get(id) === value;
+        if (this.has(id)) {
+            sameValue = this._mySaveObject[id] === value;
         }
 
         if (!sameValue) {
-            this._mySaveCache.set(id, value);
+            this._mySaveObject[id] = value;
+
             if ((this._myDelaySavesCommit && overrideDelaySavesCommit == null) || (overrideDelaySavesCommit != null && overrideDelaySavesCommit)) {
-                this._myIDsToCommit.pp_pushUnique(id);
+                this._myCommitSavesDirty = true;
                 if (!this._myCommitSavesDelayTimer.isRunning()) {
                     this._myCommitSavesDelayTimer.start();
                 }
             } else {
-                let failed = this._commitSave(id, false);
-
-                if (this._myCommitSavesCallbacks.size > 0) {
-                    let isCommitSaveDelayed = false;
-                    this._myCommitSavesCallbacks.forEach(function (callback) { callback(isCommitSaveDelayed, failed); });
-                }
+                this._commitSaves();
             }
         }
 
@@ -12258,33 +12749,19 @@ PP.SaveManager = class SaveManager {
         }
     }
 
-    commitSaves() {
-        if (this._myIDsToCommit.length > 0) {
-            let failed = false;
+    delete(id, overrideDelaySavesCommit = null) {
+        if (this.has(id)) {
+            delete this._mySaveObject[id];
 
-            for (let id of this._myIDsToCommit) {
-                if (this._mySaveCache.has(id)) {
-                    let result = this._commitSave(id, true);
-                    failed = failed || result;
+            if ((this._myDelaySavesCommit && overrideDelaySavesCommit == null) || (overrideDelaySavesCommit != null && overrideDelaySavesCommit)) {
+                this._myCommitSavesDirty = true;
+                if (!this._myCommitSavesDelayTimer.isRunning()) {
+                    this._myCommitSavesDelayTimer.start();
                 }
-            }
-
-            this._myIDsToCommit = [];
-
-            if (this._myCommitSavesCallbacks.size > 0) {
-                let isCommitSavesDelayed = true;
-                this._myCommitSavesCallbacks.forEach(function (callback) { callback(isCommitSavesDelayed, failed); });
+            } else {
+                this._commitSaves();
             }
         }
-    }
-
-    has(id) {
-        return this._mySaveCache.has(id) || PP.SaveUtils.has(id);
-    }
-
-    delete(id) {
-        this._mySaveCache.delete(id);
-        PP.SaveUtils.delete(id);
 
         if (this._myDeleteCallbacks.size > 0) {
             this._myDeleteCallbacks.forEach(function (callback) { callback(id); });
@@ -12298,118 +12775,106 @@ PP.SaveManager = class SaveManager {
         }
     }
 
-    clear() {
-        this._mySaveCache.clear();
-        PP.SaveUtils.clear();
+    clear(overrideDelaySavesCommit = null) {
+        if (Object.keys(this._mySaveObject).length > 0) {
+            this._mySaveObject = {};
+
+            if ((this._myDelaySavesCommit && overrideDelaySavesCommit == null) || (overrideDelaySavesCommit != null && overrideDelaySavesCommit)) {
+                this._myCommitSavesDirty = true;
+                if (!this._myCommitSavesDelayTimer.isRunning()) {
+                    this._myCommitSavesDelayTimer.start();
+                }
+            } else {
+                this._commitSaves();
+            }
+        }
 
         if (this._myClearCallbacks.size > 0) {
             this._myClearCallbacks.forEach(function (callback) { callback(); });
         }
     }
 
-    load(id, defaultValue = null) {
-        return this._load(id, defaultValue, "load");
-    }
+    load(id, defaultValue) {
+        let value = this._mySaveObject[id];
 
-    loadString(id, defaultValue = null) {
-        return this._load(id, defaultValue, "loadString");
-    }
-
-    loadNumber(id, defaultValue = null) {
-        return this._load(id, defaultValue, "loadNumber");
-    }
-
-    loadBool(id, defaultValue = null) {
-        return this._load(id, defaultValue, "loadBool");
-    }
-
-    getCommitSavesDelay() {
-        return this._myCommitSavesDelayTimer.getDuration();
-    }
-
-    isDelaySavesCommit() {
-        return this._myDelaySavesCommit;
-    }
-
-    isCacheDefaultValueOnFail() {
-        return this._myCacheDefaultValueOnFail;
-    }
-
-    _commitSave(id, isCommitSaveDelayed) {
-        let value = this._mySaveCache.get(id);
-        let failed = false;
-
-        try {
-            PP.SaveUtils.save(id, value);
-        } catch (error) {
-            failed = true;
-        }
-
-        if (this._myCommitSaveCallbacks.size > 0) {
-            this._myCommitSaveCallbacks.forEach(function (callback) { callback(id, value, isCommitSaveDelayed, failed); });
-        }
-
-        if (this._myCommitSaveIDCallbacks.size > 0) {
-            let callbackMap = this._myCommitSaveIDCallbacks.get(id);
-            if (callbackMap != null) {
-                callbackMap.forEach(function (callback) { callback(id, value, isCommitSaveDelayed, failed); });
-            }
-        }
-
-        return failed;
-    }
-
-    _load(id, defaultValue, functionName) {
-        let value = null;
-        let failed = false;
-        let loadFromCache = false;
-
-        if (this._mySaveCache.has(id)) {
-            value = this._mySaveCache.get(id);
-
-            if (value == null && defaultValue != null) {
-                value = defaultValue;
-                if (this._myCacheDefaultValueOnFail) {
-                    this._mySaveCache.set(id, value);
-                }
-            }
-
-            loadFromCache = true;
-        } else {
-            let saveResult = null;
-            try {
-                saveResult = PP.SaveUtils[functionName](id, null);
-            } catch (error) {
-                // Error is managed as if it worked but there was no value
-                saveResult = null;
-                failed = true;
-            }
-
-            if (saveResult == null) {
-                value = defaultValue;
-            } else {
-                value = saveResult;
-            }
-
-            if (saveResult != null || this._myCacheDefaultValueOnFail) {
-                this._mySaveCache.set(id, value);
-            } else {
-                this._mySaveCache.set(id, null);
-            }
+        if (value == null && defaultValue != null) {
+            value = defaultValue;
         }
 
         if (this._myLoadCallbacks.size > 0) {
-            this._myLoadCallbacks.forEach(function (callback) { callback(id, value, loadFromCache, failed); });
+            this._myLoadCallbacks.forEach(function (callback) { callback(id, value); });
         }
 
         if (this._myLoadIDCallbacks.size > 0) {
             let callbackMap = this._myLoadIDCallbacks.get(id);
             if (callbackMap != null) {
-                callbackMap.forEach(function (callback) { callback(id, value, loadFromCache, failed); });
+                callbackMap.forEach(function (callback) { callback(id, value); });
             }
         }
 
         return value;
+    }
+
+    commitSaves(commitSavesOnlyIfDirty = true) {
+        if (this._myCommitSavesDirty || !commitSavesOnlyIfDirty) {
+            this._commitSaves();
+        }
+    }
+
+    _commitSaves() {
+        let succeded = true;
+
+        if (this._myLoadSavesSucceded || this._myCommitSavesWhenLoadSavesFailed) {
+            try {
+                let saveObjectStringified = JSON.stringify(this._mySaveObject);
+                PP.SaveUtils.save(this._mySaveID, saveObjectStringified);
+            } catch (error) {
+                succeded = false;
+            }
+        }
+
+        if (succeded || this._myCommitSavesDirtyClearOnFail) {
+            this._myCommitSavesDirty = false;
+            this._myCommitSavesDelayTimer.reset();
+        }
+
+        if (this._myCommitSavesCallbacks.size > 0) {
+            this._myCommitSavesCallbacks.forEach(function (callback) { callback(succeded); });
+        }
+
+        return succeded;
+    }
+
+    loadSaves() {
+        let saveObject = {};
+        let loadSavesSucceded = false;
+        let saveObjectReset = false;
+
+        let maxLoadObjectAttempts = 3;
+        do {
+            try {
+                saveObject = PP.SaveUtils.loadObject(this._mySaveID, {});
+                loadSavesSucceded = true;
+            } catch (error) {
+                maxLoadObjectAttempts--;
+            }
+        } while (maxLoadObjectAttempts > 0 && !loadSavesSucceded);
+
+        if (loadSavesSucceded) {
+            this._mySaveObject = saveObject;
+            this._myLoadSavesSucceded = true;
+        } else if (this._myResetSaveObjectOnLoadSavesFail) {
+            this._mySaveObject = {};
+            this._myLoadSavesSucceded = false;
+
+            saveObjectReset = true;
+        }
+
+        if (this._myLoadSavesCallbacks.size > 0) {
+            this._myLoadSavesCallbacks.forEach(function (callback) { callback(loadSavesSucceded, saveObjectReset); });
+        }
+
+        return loadSavesSucceded;
     }
 
     registerClearEventListener(callbackID, callback) {
@@ -12503,31 +12968,6 @@ PP.SaveManager = class SaveManager {
         this._myCommitSavesCallbacks.delete(callbackID);
     }
 
-    registerCommitSaveEventListener(callbackID, callback) {
-        this._myCommitSaveCallbacks.set(callbackID, callback);
-    }
-
-    unregisterCommitSaveEventListener(callbackID) {
-        this._myCommitSaveCallbacks.delete(callbackID);
-    }
-
-    registerCommitSaveIDEventListener(valueID, callbackID, callback) {
-        let valueIDMap = this._myCommitSaveIDCallbacks.get(valueID);
-        if (valueIDMap == null) {
-            this._myCommitSaveIDCallbacks.set(valueID, new Map());
-            valueIDMap = this._myCommitSaveIDCallbacks.get(valueID);
-        }
-
-        valueIDMap.set(callbackID, callback);
-    }
-
-    unregisterCommitSaveIDEventListener(valueID, callbackID) {
-        let valueIDMap = this._myCommitSaveIDCallbacks.get(valueID);
-        if (valueIDMap != null) {
-            valueIDMap.delete(callbackID);
-        }
-    }
-
     registerLoadEventListener(callbackID, callback) {
         this._myLoadCallbacks.set(callbackID, callback);
     }
@@ -12551,6 +12991,14 @@ PP.SaveManager = class SaveManager {
         if (valueIDMap != null) {
             valueIDMap.delete(callbackID);
         }
+    }
+
+    registerLoadSavesEventListener(callbackID, callback) {
+        this._myLoadSavesCallbacks.set(callbackID, callback);
+    }
+
+    unregisterLoadSavesEventListener(callbackID) {
+        this._myLoadSavesCallbacks.delete(callbackID);
     }
 };
 PP.Timer = class Timer {
@@ -12665,6 +13113,8 @@ WL.registerComponent("pp-audio-listener", {
 PP.AudioManager = class AudioManager {
     constructor() {
         this._myAudioSetupMap = new Map();
+
+        this._myAudioPlayersForPreload = [];
     }
 
     createAudioPlayer(audioSetupID) {
@@ -12677,8 +13127,11 @@ PP.AudioManager = class AudioManager {
 
     addAudioSetup(id, audioSetup, preload = true) {
         this._myAudioSetupMap.set(id, audioSetup);
+
         if (preload) {
-            this.createAudioPlayer(id);
+            let preloadAudioSetup = audioSetup.clone();
+            preloadAudioSetup.myPreload = true;
+            this._myAudioPlayersForPreload.push(new PP.AudioPlayer(preloadAudioSetup));
         }
     }
 
@@ -12741,11 +13194,11 @@ PP.AudioPlayer = class AudioPlayer {
             autoplay: this._myAudioSetup.myAutoplay,
             rate: this._myAudioSetup.myRate,
             pool: this._myAudioSetup.myPool,
-            preload: true
+            preload: this._myAudioSetup.myPreload,
+            refDistance: this._myAudioSetup.myReferenceDistance
         });
 
-        this._myAudio._pannerAttr.refDistance = this._myAudioSetup.myReferenceDistance;
-
+        this._myAudioLoadRequested = this._myAudioSetup.myPreload;
         this._myLastAudioID = null;
 
         this._myCallbackMap = new Map();
@@ -12757,6 +13210,11 @@ PP.AudioPlayer = class AudioPlayer {
     }
 
     play() {
+        if (!this._myAudioLoadRequested) {
+            this._myAudioLoadRequested = true;
+            this._myAudio.load();
+        }
+
         let audioID = this._myAudio.play();
         if (audioID != null) {
             this._myLastAudioID = audioID;
@@ -12784,8 +13242,7 @@ PP.AudioPlayer = class AudioPlayer {
 
         if (checkOnlyLast) {
             isPlaying = this._myAudio.playing(this._myLastAudioID);
-        }
-        else {
+        } else {
             isPlaying = this._myAudio.playing();
         }
 
@@ -12793,6 +13250,11 @@ PP.AudioPlayer = class AudioPlayer {
     }
 
     isLoaded() {
+        if (!this._myAudioLoadRequested) {
+            this._myAudioLoadRequested = true;
+            this._myAudio.load();
+        }
+
         return this._myAudio.state() == "loaded";
     }
 
@@ -12914,6 +13376,8 @@ PP.AudioSetup = class AudioSetup {
 
         this.myPool = 5;
 
+        this.myPreload = false;
+
         //Spatial
         this.myPosition = null;
         this.mySpatial = true;
@@ -12929,10 +13393,11 @@ PP.AudioSetup = class AudioSetup {
         audioSetup.myAutoplay = this.myAutoplay;
 
         audioSetup.myVolume = this.myVolume;
-        audioSetup.myPitch = this.myPitch;
-        audioSetup.myRate = this.myRate;
+        audioSetup._myRate = this._myRate;
 
         audioSetup.myPool = this.myPool;
+
+        audioSetup.myPreload = this.myPreload;
 
         //Spatial
         audioSetup.myPosition = this.myPosition;
@@ -13122,6 +13587,207 @@ WL.registerComponent("adjust-materials", {
         }
     }
 });
+PP.AudioPoolManager = class AudioPoolManager {
+    constructor() {
+        this._myPoolMap = new Map();
+    }
+
+    update(dt) {
+        for (let pool of this._myPoolMap.values()) {
+            pool.update(dt);
+        }
+    }
+
+    addPool(poolID, poolAudio, audioPoolParams = new PP.AudioPoolParams()) {
+        if (!this._myPoolMap.has(poolID)) {
+            let pool = new PP.AudioPool(poolAudio, audioPoolParams);
+            this._myPoolMap.set(poolID, pool);
+        } else {
+            console.error("Pool already created with this ID");
+        }
+    }
+
+    increasePool(poolID, amount) {
+        let pool = this._myPoolMap.get(poolID);
+        if (pool) {
+            pool.increase(amount);
+        }
+    }
+
+    increasePoolPercentage(poolID, percentage) {
+        let pool = this._myPoolMap.get(poolID);
+        if (pool) {
+            pool.increasePercentage(percentage);
+        }
+    }
+
+    getPool(poolID) {
+        return this._myPoolMap.get(poolID);
+    }
+
+    getAudio(poolID) {
+        return this._myPoolMap.get(poolID).get();
+    }
+
+    releaseAudio(poolID, audio) {
+        this._myPoolMap.get(poolID).release(audio);
+    }
+};
+
+PP.AudioPoolParams = class AudioPoolParams {
+    constructor() {
+        this.myInitialPoolSize = 0;
+        this.myAmountToAddWhenEmpty = 1;
+        this.myPercentageToAddWhenEmpty = 0.5;
+
+        this.myCloneParams = undefined;
+        this.myCloneFunction = undefined;
+        this.myCloneFunctionName = undefined;
+        this.mySetActiveFunctionName = undefined;
+        this.myEqualsFunctionName = undefined;
+    }
+};
+
+PP.AudioPool = class AudioPool {
+    constructor(audioPoolParams) {
+        this._myAudioPoolParams = audioPoolParams;
+
+        this._myAvailableAudios = [];
+        this._myBusyAudios = [];
+        this._myOnHoldPlayingAudios = [];
+        this._myOnHoldDelayAudios = [];
+
+        this._addToPool(audioPoolParams.myInitialPoolSize, false);
+    }
+
+    update(dt) {
+        // Implemented outside class definition
+    }
+
+    get() {
+        let audio = this._myAvailableAudios.shift();
+
+        if (audio == null) {
+            let amountToAdd = Math.ceil((this._myBusyAudios.length + this._myAvailableAudios.length + this._myOnHoldPlayingAudios.length, + this._myOnHoldDelayAudios.length) * this._myAudioPoolParams.myPercentageToAddWhenEmpty);
+            amountToAdd += this._myAudioPoolParams.myAmountToAddWhenEmpty;
+            this._addToPool(amountToAdd, true);
+            audio = this._myAvailableAudios.shift();
+        }
+
+        this._myBusyAudios.push(audio);
+
+        return audio;
+    }
+
+    release(audio) {
+        let released = this._myBusyAudios.pp_remove(this._equals.bind(this, audio));
+        if (released) {
+            this._setActive(released, false);
+            this._myOnHoldPlayingAudios.push(released);
+        }
+    }
+
+    increase(amount) {
+        this._addToPool(amount, false);
+    }
+
+    increasePercentage(percentage) {
+        let amount = Math.ceil((this._myBusyAudios.length + this._myAvailableAudios.length + this._myOnHoldPlayingAudios.length, + this._myOnHoldDelayAudios.length) * percentage);
+        this._addToPool(amount, false);
+    }
+
+    _addToPool(size, log) {
+        for (let i = 0; i < size; i++) {
+            this._myAvailableAudios.push(this._clone());
+        }
+
+        if (log) {
+            console.warn("Added new elements to the pool:", size);
+        }
+    }
+
+    _clone(audio) {
+        let clone = null;
+
+        if (this._myAudioPoolParams.myCloneFunction != null) {
+            clone = this._myAudioPoolParams.myCloneFunction(this._myAudioPoolParams.myCloneParams);
+        } else if (this._myAudioPoolParams.myCloneFunctionName != null) {
+            clone = audio[this._myAudioPoolParams.myCloneFunctionName](this._myAudioPoolParams.myCloneParams);
+        } else if (audio.pp_clone != null) {
+            clone = audio.pp_clone(this._myAudioPoolParams.myCloneParams);
+        } else if (audio.clone != null) {
+            clone = audio.clone(this._myAudioPoolParams.myCloneParams);
+        }
+
+        if (clone == null) {
+            console.error("Audio not cloneable, pool will return null");
+        } else {
+            this._setActive(clone, false);
+        }
+
+        return clone;
+    }
+
+    _setActive(audio, active) {
+        if (this._myAudioPoolParams.mySetActiveFunctionName != null) {
+            audio[this._myAudioPoolParams.mySetActiveFunctionName](active);
+        } else if (audio.pp_setActive != null) {
+            audio.pp_setActive(active);
+        } else if (audio.setActive != null) {
+            audio.setActive(active);
+        }
+    }
+
+    _equals(first, second) {
+        let equals = false;
+
+        if (first != null && this._myAudioPoolParams.myEqualsFunctionName != null) {
+            equals = first[this._myAudioPoolParams.myEqualsFunctionName](second);
+        } else if (first != null && first.pp_equals != null) {
+            equals = first.pp_equals(second);
+        } else if (first != null && first.equals != null) {
+            equals = first.equals(second);
+        } else {
+            equals = first == second;
+        }
+
+        return equals;
+    }
+};
+
+PP.AudioPool.prototype.update = function () {
+    let removePlayingCallback = function (audio) {
+        return !audio.isPlaying() && audio.isLoaded();
+    };
+
+    let removeDelayCallback = function (audioPair) {
+        return audioPair[0] <= 0 && audioPair[1] <= 0;
+    };
+
+    return function update(dt) {
+        for (let i = 0; i < this._myOnHoldDelayAudios.length; i++) {
+            let audioPair = this._myOnHoldDelayAudios[i];
+
+            if (audioPair[0] > 0) {
+                audioPair[0] = audioPair[0] - dt;
+            } else if (audioPair[1] > 0) {
+                audioPair[1] = audioPair[1] - 1;
+            }
+        }
+
+        let removedOnHoldDelayAudios = this._myOnHoldDelayAudios.pp_removeAll(removeDelayCallback);
+        for (let i = 0; i < removedOnHoldDelayAudios.length; i++) {
+            let audioPair = removedOnHoldDelayAudios[i];
+            this._myAvailableAudios.push(audioPair[2]);
+        }
+
+        let removedOnHoldPlayingAudios = this._myOnHoldPlayingAudios.pp_removeAll(removePlayingCallback);
+        for (let i = 0; i < removedOnHoldPlayingAudios.length; i++) {
+            let audio = removedOnHoldPlayingAudios[i];
+            this._myOnHoldDelayAudios.push([2, 10, audio]);
+        }
+    };
+}();
 WL.registerComponent("clear-console-on-session", {
 }, {
     init: function () {
@@ -13175,7 +13841,7 @@ WL.registerComponent("color-on-select", {
             this._myMaterial = this.object.pp_getComponentHierarchy("mesh").material.clone();
             PP.MeshUtils.setMaterial(this.object, this._myMaterial);
         } else {
-            let selectValue = Math.pp_mapToRange(this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).getValue(), 0.1, 0.85, 0, 1);
+            let selectValue = Math.pp_mapToRange(this._myGamepad.getButtonInfo(PP.ButtonType.SELECT).getValue(), 0.025, 0.975, 0, 1);
             if (!Global.myEnableSelectPhysx || PP.InputUtils.getInputSourceType(this._myHandednessType) != PP.InputSourceType.GAMEPAD) {
                 selectValue = 0;
             }
@@ -13344,10 +14010,43 @@ WL.registerComponent("display-leaderboard", {
     _myScoresText: { type: WL.Type.Object },
 }, {
     init: function () {
+        this._myCharacterWeightMap = new Map();
+
+        this._myCharacterWeightMap.set("M", 1.4);
+        this._myCharacterWeightMap.set("W", 1.4);
+        this._myCharacterWeightMap.set("@", 1.4);
+        this._myCharacterWeightMap.set("m", 1.3);
+        this._myCharacterWeightMap.set("w", 1.3);
+        this._myCharacterWeightMap.set("N", 1.2);
+        this._myCharacterWeightMap.set("Q", 1.1);
+        this._myCharacterWeightMap.set("U", 1.1);
+        this._myCharacterWeightMap.set("V", 1.1);
+        this._myCharacterWeightMap.set("X", 1.1);
+
+        this._myCharacterWeightMap.set("f", 0.8);
+        this._myCharacterWeightMap.set("i", 0.8);
+        this._myCharacterWeightMap.set("j", 0.8);
+        this._myCharacterWeightMap.set("l", 0.8);
+        this._myCharacterWeightMap.set("t", 0.8);
+        this._myCharacterWeightMap.set("1", 0.8);
+        this._myCharacterWeightMap.set(" ", 0.55);
+        this._myCharacterWeightMap.set(".", 0.55);
+        this._myCharacterWeightMap.set("-", 0.55);
+
     },
     start: function () {
         this._myNamesTextComponent = this._myNamesText.pp_getComponent("text");
         this._myScoresTextComponent = this._myScoresText.pp_getComponent("text");
+
+        if (this._myNamesTextComponent != null) {
+            this._myNamesTextComponent.text = " ";
+            this._myNamesTextComponent.text = "";
+        }
+
+        if (this._myScoresTextComponent != null) {
+            this._myScoresTextComponent.text = " ";
+            this._myScoresTextComponent.text = "";
+        }
     },
     update: function (dt) {
     },
@@ -13360,27 +14059,38 @@ WL.registerComponent("display-leaderboard", {
 
         let maxRankDigit = 0;
         for (let value of leaderboard) {
-            let rank = value.rank + 1;
-            if (rank.toFixed(0).length > maxRankDigit) {
-                maxRankDigit = rank.toFixed(0).length;
+            if (value != null && value.rank != null && value.displayName != null && value.score != null) {
+                let rank = value.rank + 1;
+                if (rank.toFixed(0).length > maxRankDigit) {
+                    maxRankDigit = rank.toFixed(0).length;
+                }
             }
         }
 
         for (let value of leaderboard) {
-            let rank = value.rank + 1;
-            let fixedRank = rank.toFixed(0);
-            while (fixedRank.length < maxRankDigit) {
-                fixedRank = "0".concat(fixedRank);
+            if (value != null && value.rank != null && value.displayName != null && value.score != null) {
+                let rank = value.rank + 1;
+                let fixedRank = rank.toFixed(0);
+                while (fixedRank.length < maxRankDigit) {
+                    fixedRank = "0".concat(fixedRank);
+                }
+
+                let clampedDisplayName = this._clampDisplayName(value.displayName);
+
+                namesText = namesText.concat(fixedRank, " - ", clampedDisplayName, "\n\n");
+
+                let convertedScore = this._convertTime(value.score);
+                scoresText = scoresText.concat(convertedScore, "\n\n");
             }
-
-            namesText = namesText.concat(fixedRank, " - ", value.displayName, "\n\n");
-
-            let convertedScore = this._convertTime(value.score);
-            scoresText = scoresText.concat(convertedScore, "\n\n");
         }
 
-        this._myNamesTextComponent.text = namesText;
-        this._myScoresTextComponent.text = scoresText;
+        if (this._myNamesTextComponent != null) {
+            this._myNamesTextComponent.text = namesText;
+        }
+
+        if (this._myScoresTextComponent != null) {
+            this._myScoresTextComponent.text = scoresText;
+        }
     },
     _convertTime(score) {
         let time = Math.floor(score / 1000);
@@ -13399,6 +14109,32 @@ WL.registerComponent("display-leaderboard", {
         let convertedTime = hoursText.concat(":", minutesText, ":", secondsText);
 
         return convertedTime;
+    },
+    _clampDisplayName(displayName) {
+        let nameCharactersToShow = 0;
+
+        let currentWeight = 0;
+        for (let i = 0; i < displayName.length; i++) {
+            let currentCharacter = displayName.charAt(i);
+            let characterWeight = this._myCharacterWeightMap.get(currentCharacter);
+            characterWeight = characterWeight != null ? characterWeight : 1;
+
+            currentWeight += characterWeight;
+
+            if (currentWeight > 15) {
+                break;
+            }
+
+            nameCharactersToShow++;
+        }
+
+        nameCharactersToShow = Math.min(nameCharactersToShow, displayName.length);
+
+        if (nameCharactersToShow < displayName.length) {
+            return displayName.slice(0, nameCharactersToShow) + "...";
+        }
+
+        return displayName;
     }
 });
 class EIECADummyServer {
@@ -13863,7 +14599,8 @@ class HandPiece {
                 this._myAudio.updatePosition(this._myObject.pp_getPosition(), true);
             }
 
-            glMatrix.vec3.lerp(this._myCurrentPosition, this._myEndPosition, this._myStartPosition, interpolateValue);
+            let adjustedInterpolateValue = Math.pp_mapToRange(interpolateValue, 0.025, 0.975, 0, 1);
+            glMatrix.vec3.lerp(this._myCurrentPosition, this._myEndPosition, this._myStartPosition, adjustedInterpolateValue);
             this._myObject.pp_setPositionLocal(this._myCurrentPosition);
         }
     }
@@ -13936,9 +14673,11 @@ WL.registerComponent("light-fade-in", {
         this._myFadeTimer.start(Global.myLightFadeInTime);
     },
     onDeactivate: function () {
-        this._myLight.color[0] = 0;
-        this._myLight.color[1] = 0;
-        this._myLight.color[2] = 0;
+        if (this._myLight != null) {
+            this._myLight.color[0] = 0;
+            this._myLight.color[1] = 0;
+            this._myLight.color[2] = 0;
+        }
     },
 });
 WL.registerComponent("material-container", {
@@ -14928,9 +15667,13 @@ class StatisticsManager {
         this._myCommitOnEndTimer.update(dt);
         this._mySaveTimer.update(dt);
         if (this._mySaveTimer.isDone()) {
-            this._mySaveTimer.start(Math.pp_random(15, 25));
-            Global.myStatistics.save();
+            this.saveStatistics();
         }
+    }
+
+    saveStatistics() {
+        Global.myStatistics.save();
+        this._mySaveTimer.start(Math.pp_random(15, 25));
     }
 
     _onXRSessionStart(session) {
@@ -14946,7 +15689,7 @@ class StatisticsManager {
     }
 
     _onXRSessionInterrupt() {
-        Global.myStatistics.save();
+        this.saveStatistics();
         Global.mySaveManager.commitSaves();
 
         if (this._myCommitOnEndTimer.isDone()) {
@@ -14963,7 +15706,7 @@ class StatisticsManager {
     }
 
     _sendAnalytics() {
-        Global.sendAnalytics("event", "play_time", {
+        Global.sendAnalytics("event", "play_seconds", {
             "value": (Global.myStatistics.myTotalPlayTime - Global.myStatistics.myTotalPlayTimeOnLoad).toFixed(2)
         });
 
@@ -15007,7 +15750,6 @@ class Statistics {
         this.myTotalPlayTime = 0;
         this.myTrialPlayTime = 0;
         this.myTrialPlayCount = 0;
-        this.myTrialPlayCountResettable = 0;
         this.myTrialCompletedCount = 0;
         this.myTrialBestTime = 0;
         this.myChatPlayTime = 0;
@@ -15020,7 +15762,6 @@ class Statistics {
         this.myEvidencesMissed = 0;
         this.myEvidencesPunched = 0;
         this.myMrNOTClonesDismissed = 0;
-        this.myMrNOTClonesDismissedResettable = 0;
         this.myMrNOTDismissed = 0;
 
         this.myTotalPlayTimeOnLoad = 0;
@@ -15032,28 +15773,26 @@ class Statistics {
     }
 
     load() {
-        this.myTotalPlayTime = Global.mySaveManager.loadNumber("total_play_time", 0);
+        this.myTotalPlayTime = Global.mySaveManager.load("total_play_time", 0);
 
-        this.myTrialPlayTime = Global.mySaveManager.loadNumber("trial_play_time", 0);
-        this.myTrialPlayCount = Global.mySaveManager.loadNumber("trial_play_count", 0);
-        this.myTrialPlayCountResettable = Global.mySaveManager.loadNumber("trial_play_count_resettable", 0);
-        this.myTrialCompletedCount = Global.mySaveManager.loadNumber("trial_completed_count", 0);
-        this.myTrialBestTime = Global.mySaveManager.loadNumber("trial_best_time", -1);
+        this.myTrialPlayTime = Global.mySaveManager.load("trial_play_time", 0);
+        this.myTrialPlayCount = Global.mySaveManager.load("trial_play_count", 0);
+        this.myTrialCompletedCount = Global.mySaveManager.load("trial_completed_count", 0);
+        this.myTrialBestTime = Global.mySaveManager.load("trial_best_time", -1);
 
-        this.myChatPlayTime = Global.mySaveManager.loadNumber("chat_play_time", 0);
-        this.myChatPlayCount = Global.mySaveManager.loadNumber("chat_play_count", 0);
-        this.myChatBestTime = Global.mySaveManager.loadNumber("chat_best_time", -1);
+        this.myChatPlayTime = Global.mySaveManager.load("chat_play_time", 0);
+        this.myChatPlayCount = Global.mySaveManager.load("chat_play_count", 0);
+        this.myChatBestTime = Global.mySaveManager.load("chat_best_time", -1);
 
-        this.myDisputePlayTime = Global.mySaveManager.loadNumber("dispute_play_time", 0);
-        this.myDisputePlayCount = Global.mySaveManager.loadNumber("dispute_play_count", 0);
-        this.myDisputeBestTime = Global.mySaveManager.loadNumber("dispute_best_time", -1);
+        this.myDisputePlayTime = Global.mySaveManager.load("dispute_play_time", 0);
+        this.myDisputePlayCount = Global.mySaveManager.load("dispute_play_count", 0);
+        this.myDisputeBestTime = Global.mySaveManager.load("dispute_best_time", -1);
 
-        this.myEvidencesThrown = Global.mySaveManager.loadNumber("evidences_thrown", 0);
-        this.myEvidencesMissed = Global.mySaveManager.loadNumber("evidences_missed", 0);
-        this.myEvidencesPunched = Global.mySaveManager.loadNumber("evidences_punched", 0);
-        this.myMrNOTClonesDismissed = Global.mySaveManager.loadNumber("mr_NOT_clones_dismissed", 0);
-        this.myMrNOTClonesDismissedResettable = Global.mySaveManager.loadNumber("mr_NOT_clones_dismissed_resettable", 0);
-        this.myMrNOTDismissed = Global.mySaveManager.loadNumber("mr_NOT_dismissed", 0);
+        this.myEvidencesThrown = Global.mySaveManager.load("evidences_thrown", 0);
+        this.myEvidencesMissed = Global.mySaveManager.load("evidences_missed", 0);
+        this.myEvidencesPunched = Global.mySaveManager.load("evidences_punched", 0);
+        this.myMrNOTClonesDismissed = Global.mySaveManager.load("mr_NOT_clones_dismissed", 0);
+        this.myMrNOTDismissed = Global.mySaveManager.load("mr_NOT_dismissed", 0);
 
         this.syncOnLoadVariables();
     }
@@ -15072,7 +15811,6 @@ class Statistics {
 
         Global.mySaveManager.save("trial_play_time", this.myTrialPlayTime);
         Global.mySaveManager.save("trial_play_count", this.myTrialPlayCount);
-        Global.mySaveManager.save("trial_play_count_resettable", this.myTrialPlayCountResettable);
         Global.mySaveManager.save("trial_completed_count", this.myTrialCompletedCount);
         Global.mySaveManager.save("trial_best_time", this.myTrialBestTime);
 
@@ -15088,7 +15826,6 @@ class Statistics {
         Global.mySaveManager.save("evidences_missed", this.myEvidencesMissed);
         Global.mySaveManager.save("evidences_punched", this.myEvidencesPunched);
         Global.mySaveManager.save("mr_NOT_clones_dismissed", this.myMrNOTClonesDismissed);
-        Global.mySaveManager.save("mr_NOT_clones_dismissed_resettable", this.myMrNOTClonesDismissedResettable);
         Global.mySaveManager.save("mr_NOT_dismissed", this.myMrNOTDismissed);
     }
 }
@@ -15098,6 +15835,9 @@ WL.registerComponent("statistics-text-displayer", {
     },
     start: function () {
         this._myText = this.object.pp_getComponent("text");
+        this._myText.text = " ";
+        this._myText.text = "";
+
         this._myTextPosition = this._myText.object.pp_getPosition();
         this._myTempDirection1 = [];
         this._myTempDirection2 = [];
@@ -15144,7 +15884,8 @@ WL.registerComponent("statistics-text-displayer", {
             return "-";
         }
 
-        time = Math.floor(time);
+        time = Math.floor(time * 1000);
+        time = Math.floor(time / 1000);
 
         let hours = Math.floor(time / 3600);
         time -= hours * 3600;
@@ -15452,6 +16193,8 @@ class IntroState extends PP.State {
 
         this._myIntroDuration = 0;
 
+        this._mySendFarEventCounter = 3;
+
         this._myXRSessionManuallyStarted = false;
 
         if (WL.xrSession) {
@@ -15466,12 +16209,13 @@ class IntroState extends PP.State {
             this._myIntroDuration += dt;
         }
 
-        let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false);
-        let introViewed = Global.mySaveManager.loadNumber("intro_viewed", 0);
+        let trialEndedOnce = Global.mySaveManager.load("trial_ended_once", false);
+        let introViewed = Global.mySaveManager.load("intro_viewed", 0);
 
-        if ((trialStartedOnce && introViewed >= 3) || Global.myDebugShortcutsEnabled) {
+        if ((trialEndedOnce && introViewed >= 3) || Global.myDebugShortcutsEnabled) {
             let buttonPressToSkip = (PP.XRUtils.isDeviceEmulated() && Global.myIsLocalhost && Global.myDebugShortcutsEnabled) ? 1 : 3;
-            if (!this._myFSM.isInState("wait_session") && PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(buttonPressToSkip)) {
+            if (!this._myFSM.isInState("wait_session") &&
+                (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(buttonPressToSkip) || PP.myRightGamepad.getButtonInfo(PP.ButtonType.SELECT).isPressEnd(buttonPressToSkip))) {
                 while (!this._myFSM.isInState("done") && !this._myFSM.isInState("test")) {
                     this._myFSM.perform("skip");
                 }
@@ -15484,7 +16228,7 @@ class IntroState extends PP.State {
                     "value": 1
                 });
 
-                Global.sendAnalytics("event", "intro_skipped_time", {
+                Global.sendAnalytics("event", "intro_skipped_seconds", {
                     "value": this._myIntroDuration.toFixed(2)
                 });
             }
@@ -15498,9 +16242,6 @@ class IntroState extends PP.State {
 
     waitSession(dt, fsm) {
         if (WL.xrSession && Global.myUpdateReady) {
-            let currentVersion = Global.mySaveManager.loadNumber("game_version", 0);
-            console.log("Game Version:", currentVersion);
-
             Global.sendAnalytics("event", "xr_enter_session", {
                 "value": 1
             });
@@ -15522,9 +16263,24 @@ class IntroState extends PP.State {
     }
 
     waitStart(dt, fsm) {
-        this._myTimer.update(dt);
+        if (this._mySendFarEventCounter > 0) {
+            this._mySendFarEventCounter--;
+            if (this._mySendFarEventCounter == 0) {
+                if (PP.XRUtils.isXRSessionActive()) {
+                    this._sendFarEvents();
+                }
+            }
+        }
 
+        this._myTimer.update(dt);
         if (this._myTimer.isDone()) {
+            if (this._mySendFarEventCounter > 0) {
+                this._mySendFarEventCounter = 0;
+                if (PP.XRUtils.isXRSessionActive()) {
+                    this._sendFarEvents();
+                }
+            }
+
             fsm.perform("end");
         }
     }
@@ -15593,10 +16349,10 @@ class IntroState extends PP.State {
     endIntro(fsm) {
         this._myParentFSM.perform(MainTransitions.End);
 
-        let introViewed = Global.mySaveManager.loadNumber("intro_viewed", 0);
+        let introViewed = Global.mySaveManager.load("intro_viewed", 0);
 
         if (introViewed == 0) {
-            Global.sendAnalytics("event", "intro_done_first", {
+            Global.sendAnalytics("event", "intro_done_first_time", {
                 "value": 1
             });
         }
@@ -15621,6 +16377,46 @@ class IntroState extends PP.State {
 
         Global.myIntroDone = true;
     }
+
+    _sendFarEvents() {
+        try {
+            let flatPlayerPosition = Global.myPlayerPosition.vec3_removeComponentAlongAxis([0, 1, 0]);
+            let distanceFromCenter = flatPlayerPosition.vec3_length();
+
+            if (distanceFromCenter > 0.55) {
+                Global.sendAnalytics("event", "xr_enter_session_very_far", {
+                    "value": 1
+                });
+            } else if (distanceFromCenter > 0.30) {
+                Global.sendAnalytics("event", "xr_enter_session_far", {
+                    "value": 1
+                });
+            }
+
+            let defaultHeight = 1.65;
+            let distanceFromCenterVertical = Math.abs(defaultHeight - Global.myPlayerPosition.vec3_componentAlongAxis([0, 1, 0]).vec3_length());
+            if (distanceFromCenterVertical > 0.35) {
+                Global.sendAnalytics("event", "xr_enter_session_far_vertical", {
+                    "value": 1
+                });
+            }
+
+            let flatPlayerForward = Global.myPlayerForward.vec3_removeComponentAlongAxis([0, 1, 0]);
+            let angle = flatPlayerForward.vec3_angle([0, 0, -1]);
+
+            if (angle > 50) {
+                Global.sendAnalytics("event", "xr_enter_session_looking_far_away", {
+                    "value": 1
+                });
+            } else if (angle > 35) {
+                Global.sendAnalytics("event", "xr_enter_session_looking_away", {
+                    "value": 1
+                });
+            }
+        } catch (error) {
+            // Do nothing
+        }
+    }
 }
 class MainFSM {
     constructor() {
@@ -15629,13 +16425,12 @@ class MainFSM {
 
         this._buildFSM();
 
-        this._myMusic = Global.myAudioManager.createAudioPlayer(SfxID.YOU_KNOW);
         this._myStartMusicTimer = new PP.Timer(1.8, false);
         this._myStartMusicTimerAfterLoad = new PP.Timer(0.2, false);
         this._myStopMusicTimer = new PP.Timer(0, false);
 
         this._myIsMusicPlaying = false;
-        this._myMusicVolume = this._myMusic.getVolume();
+        this._myMusicVolume = Global.myMusic.getVolume();
     }
 
     init() {
@@ -15671,14 +16466,43 @@ class MainFSM {
         if (Global.myPlayMusic) {
             Global.myPlayMusic = false;
             if (!this._myIsMusicPlaying) {
-                this._myStartMusicTimer.start();
+                if (!(this._myStartMusicTimer.isRunning() || this._myStartMusicTimer.isDone() || this._myStartMusicTimerAfterLoad.isRunning())) {
+                    this._myStartMusicTimer.start();
+                    this._myStartMusicTimerAfterLoad.reset();
+                }
+            } else {
+                this._myStartMusicTimerAfterLoad.reset();
+                this._myStartMusicTimer.reset();
             }
+
+            this._myStopMusicTimer.reset();
         }
 
         if (Global.myStopMusic) {
             Global.myStopMusic = false;
             if (this._myIsMusicPlaying) {
-                this._myStopMusicTimer.start();
+                if (!this._myStopMusicTimer.isRunning()) {
+                    this._myStopMusicTimer.start();
+                }
+            } else {
+                this._myStopMusicTimer.reset();
+            }
+
+            this._myStartMusicTimerAfterLoad.reset();
+            this._myStartMusicTimer.reset();
+        }
+
+        if (this._myStartMusicTimerAfterLoad.isRunning()) {
+            this._myStartMusicTimerAfterLoad.update(dt);
+            if (this._myStartMusicTimerAfterLoad.isDone()) {
+                if (!Global.myMusic.isPlaying()) {
+                    Global.myMusic.stop();
+                    Global.myMusic.play();
+                }
+                Global.myMusic.fade(0, this._myMusicVolume, 6, true);
+                this._myStartMusicTimerAfterLoad.reset();
+
+                this._myIsMusicPlaying = true;
             }
         }
 
@@ -15687,30 +16511,17 @@ class MainFSM {
         }
 
         if (this._myStartMusicTimer.isDone()) {
-            if (this._myMusic.isLoaded()) {
+            if (Global.myMusic.isLoaded()) {
                 this._myStartMusicTimerAfterLoad.start();
                 this._myStartMusicTimer.reset();
-            }
-        }
-
-        if (this._myStartMusicTimerAfterLoad.isRunning()) {
-            this._myStartMusicTimerAfterLoad.update(dt);
-            if (this._myStartMusicTimerAfterLoad.isDone()) {
-                if (!this._myMusic.isPlaying()) {
-                    this._myMusic.play();
-                }
-                this._myMusic.fade(0, this._myMusicVolume, 6, true);
-                this._myStartMusicTimerAfterLoad.reset();
-
-                this._myIsMusicPlaying = true;
             }
         }
 
         if (this._myStopMusicTimer.isRunning()) {
             this._myStopMusicTimer.update(dt);
             if (this._myStopMusicTimer.isDone()) {
-                this._myMusic.fade(this._myMusicVolume, 0, 0.05, true);
-                //this._myMusic.updateVolume(0, true);
+                Global.myMusic.fade(this._myMusicVolume, 0, 0.05, true);
+                //Global.myMusic.updateVolume(0, true);
                 this._myStopMusicTimer.reset();
                 this._myIsMusicPlaying = false;
             }
@@ -15807,10 +16618,10 @@ class MenuState extends PP.State {
     start(fsm, transitionID) {
         this._myParentFSM = fsm;
 
-        let trialStartedOnce = Global.mySaveManager.loadBool("trial_started_once", false);
-        let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
-        let trialCompleted = Global.mySaveManager.loadBool("trial_completed", false);
-        if (trialCompleted || (trialStartedOnce && trialPhase >= 2)) {
+        let trialEndedOnce = Global.mySaveManager.load("trial_ended_once", false);
+        let trialPhase = Global.mySaveManager.load("trial_phase", 1);
+        let trialCompleted = Global.mySaveManager.load("trial_completed", false);
+        if (trialCompleted || (trialEndedOnce && trialPhase >= 2)) {
             this._myCurrentMenuItems = [];
 
             if (trialCompleted) {
@@ -15855,19 +16666,30 @@ class MenuState extends PP.State {
 
         Global.myIsTrialPhase1 = false;
 
-        Global.myEnableSelectPhysx = trialCompleted || (trialStartedOnce && trialPhase >= 2);
+        Global.myEnableSelectPhysx = trialCompleted || (trialEndedOnce && trialPhase >= 2);
 
         Global.myPlayMusic = true;
 
         this._myMenuDuration = 0;
+
+        Global.myStatisticsManager.saveStatistics();
     }
 
     end() {
-        Global.sendAnalytics("event", "menu_time", {
+        if (this._myMenuTitle._mySendTitleSuddenUnspawnEvent) {
+            this._myMenuTitle._mySendTitleSuddenUnspawnEvent = false;
+            Global.sendAnalytics("event", "menu_sudden_unspawn", {
+                "value": 1
+            });
+        }
+
+        Global.sendAnalytics("event", "menu_seconds", {
             "value": this._myMenuDuration.toFixed(2)
         });
 
         Global.myIsInMenu = false;
+
+        Global.myStatisticsManager.saveStatistics();
     }
 
     _readyUpdate(dt, fsm) {
@@ -15944,13 +16766,12 @@ class MenuState extends PP.State {
                 "value": 1
             });
 
-            Global.mySaveManager.save("trial_started_once", false);
+            Global.mySaveManager.save("intro_viewed", 0);
+            Global.mySaveManager.save("trial_ended_once", false);
             Global.mySaveManager.save("trial_completed", false);
             Global.mySaveManager.save("trial_phase", 1);
 
-            Global.myStatistics.myTrialPlayCountResettable = 0;
-            Global.myStatistics.myMrNOTClonesDismissedResettable = 0;
-            Global.myStatistics.save();
+            Global.mySaveManager.save("save_reset_normal", true);
 
             this._myNotEnough.start();
         } else {
@@ -15959,7 +16780,7 @@ class MenuState extends PP.State {
             });
 
             Global.mySaveManager.clear();
-            Global.mySaveManager.save("game_version", Global.myGameVersion);
+
             this._myNotEnough.start();
             Global.myParticlesManager.mrNOTParticles(Global.myPlayerPosition);
         }
@@ -16162,7 +16983,7 @@ class MenuState extends PP.State {
         {
             let wondermelon = new MenuItem(Global.myGameObjects.get(GameObjectType.WONDERMELON), GameObjectType.WONDERMELON, positions[7], function () {
                 if (this._myFSM.isInState("ready") && Global.myElementToClick == null) {
-                    PP.XRUtils.openLink("https://signor-pipo.itch.io/not-enough", true, true, false, false,
+                    PP.XRUtils.openLink("https://signorpipo.itch.io/not-enough", true, true, false, false,
                         function () {
                             Global.myUnmute = true;
                             Howler.mute(true);
@@ -16278,10 +17099,8 @@ class MenuItem {
     }
 
     _startSpawn() {
-        if (this._myAppearAudio == null) {
-            this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_APPEAR);
-            this._myDisappearAudio = Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_DISAPPEAR);
-        }
+        this._myAppearAudio = Global.myAudioPoolMap.getAudio(SfxID.EVIDENCE_APPEAR);
+        this._myDisappearAudio = Global.myAudioPoolMap.getAudio(SfxID.EVIDENCE_DISAPPEAR);
 
         let position = this._myPosition.pp_clone();
 
@@ -16414,6 +17233,11 @@ class MenuItem {
             this._myPhysx.removeCollisionCallback(this._myCollisionCallbackID);
             this._myCollisionCallbackID = null;
         }
+
+        Global.myAudioPoolMap.releaseAudio(SfxID.EVIDENCE_APPEAR, this._myAppearAudio);
+        Global.myAudioPoolMap.releaseAudio(SfxID.EVIDENCE_DISAPPEAR, this._myDisappearAudio);
+        this._myAppearAudio = null;
+        this._myDisappearAudio = null;
     }
 
     _onCollision() {
@@ -16435,6 +17259,10 @@ class MenuTitle {
         this._mySubtitleText = this._mySubtitleObject.pp_getComponent("text");
         this._mySubtitleTextColor = this._mySubtitleText.material.outlineColor.pp_clone();
 
+        this._myTitleTextColorUnspawn = this._myTitleText.material.outlineColor.pp_clone();
+        this._mySubtitleTextColorUnspawn = this._mySubtitleText.material.outlineColor.pp_clone();
+        this._myTitleScaleUnspawn = 1;
+
         this._myStartTimer = new PP.Timer(1, false);
         this._myStartAppearAudioTimer = new PP.Timer(0.3, false);
         this._myTimer = new PP.Timer(1, false);
@@ -16452,6 +17280,8 @@ class MenuTitle {
 
         this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.TITLE_APPEAR);
         this._myDisappearAudio = Global.myAudioManager.createAudioPlayer(SfxID.TITLE_DISAPPEAR);
+
+        this._mySendTitleSuddenUnspawnEvent = false;
 
         //Setup
         this._mySpawnTime = 1.5;
@@ -16477,8 +17307,19 @@ class MenuTitle {
     }
 
     unspawn(timeToStart) {
+        if (this._myTimer.isRunning()) {
+            this._mySendTitleSuddenUnspawnEvent = true;
+        } else {
+            this._mySendTitleSuddenUnspawnEvent = false;
+        }
+
         this._myTimer.start(this._mySpawnTime);
         this._myStartTimer.start(timeToStart);
+
+        this._myTitleTextColorUnspawn = this._myTitleText.material.outlineColor.pp_clone();
+        this._mySubtitleTextColorUnspawn = this._mySubtitleText.material.outlineColor.pp_clone();
+        this._myTitleScaleUnspawn = this._myTitlesObject.pp_getScale()[0];
+
         this._myFSM.perform("unspawn");
 
         this._myDisappearAudio.play();
@@ -16536,20 +17377,20 @@ class MenuTitle {
                 this._myTimer.update(dt);
                 let tempColor = [0, 0, 0, 1];
 
-                tempColor[0] = Math.pp_interpolate(this._myTitleTextColor[0], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
-                tempColor[1] = Math.pp_interpolate(this._myTitleTextColor[1], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
-                tempColor[2] = Math.pp_interpolate(this._myTitleTextColor[2], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[0] = Math.pp_interpolate(this._myTitleTextColorUnspawn[0], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[1] = Math.pp_interpolate(this._myTitleTextColorUnspawn[1], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[2] = Math.pp_interpolate(this._myTitleTextColorUnspawn[2], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
 
                 this._myTitleText.material.outlineColor = tempColor;
 
-                tempColor[0] = Math.pp_interpolate(this._mySubtitleTextColor[0], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
-                tempColor[1] = Math.pp_interpolate(this._mySubtitleTextColor[1], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
-                tempColor[2] = Math.pp_interpolate(this._mySubtitleTextColor[2], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[0] = Math.pp_interpolate(this._mySubtitleTextColorUnspawn[0], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[1] = Math.pp_interpolate(this._mySubtitleTextColorUnspawn[1], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
+                tempColor[2] = Math.pp_interpolate(this._mySubtitleTextColorUnspawn[2], 0, this._myTimer.getPercentage(), PP.EasingFunction.easeInOut);
 
                 this._mySubtitleText.material.outlineColor = tempColor;
 
                 let easing = t => t * t;
-                let scale = Math.pp_interpolate(1, this._myHideScale, this._myTimer.getPercentage(), easing);
+                let scale = Math.pp_interpolate(this._myTitleScaleUnspawn, this._myHideScale, this._myTimer.getPercentage(), easing);
                 this._myTitlesObject.pp_setScale(scale);
             }
 
@@ -16862,11 +17703,10 @@ class TrialState extends PP.State {
         Global.myTrialDuration = 0;
         this._myTrialStartedFromBegin = false;
         Global.myStatistics.myTrialPlayCount += 1;
-        Global.myStatistics.myTrialPlayCountResettable += 1;
 
         this._myMrNotClonesDismissedOnStart = Global.myStatistics.myMrNOTClonesDismissed;
 
-        let trialPhase = Global.mySaveManager.loadNumber("trial_phase", 1);
+        let trialPhase = Global.mySaveManager.load("trial_phase", 1);
 
         Global.myIsTrialPhase1 = false;
         if (trialPhase == 1) {
@@ -16902,7 +17742,7 @@ class TrialState extends PP.State {
     end(fsm, transitionID) {
         Global.myIsTrialPhase1 = false;
 
-        Global.mySaveManager.save("trial_started_once", true);
+        Global.mySaveManager.save("trial_ended_once", true);
     }
 
     _trialPhaseCompleted(trialPhase, nextTrialPhase, fsm) {
@@ -16916,48 +17756,55 @@ class TrialState extends PP.State {
         });
 
         if (trialPhase == 4) {
-            Global.sendAnalytics("event", "trial_time", {
+            Global.sendAnalytics("event", "trial_seconds", {
                 "value": Global.myTrialDuration.toFixed(2)
             });
         }
 
-        if (Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount == Global.myStatistics.myTrialPlayCountResettable &&
-            Global.myStatistics.myTrialPlayCount <= 3 && Global.myStatistics.myMrNOTClonesDismissed > 0 && this._myMrNotClonesDismissedOnStart == 0) {
-            Global.sendAnalytics("event", "mr_NOT_clones_dismissed_first_attempt_" + Global.myStatistics.myTrialPlayCount, {
+        if (Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount <= 3 &&
+            Global.myStatistics.myMrNOTClonesDismissed > 0 && this._myMrNotClonesDismissedOnStart == 0) {
+            Global.sendAnalytics("event", "mr_NOT_clones_dismissed_first_time_attempt_" + Global.myStatistics.myTrialPlayCount, {
                 "value": 1
             });
         }
 
-        if (Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount == Global.myStatistics.myTrialPlayCountResettable &&
-            Global.myStatistics.myTrialPlayCount <= 3) {
-            Global.sendAnalytics("event", "trial_completed_phase_1_first_attempt_" + Global.myStatistics.myTrialPlayCount, {
+        let saveResetNormal = Global.mySaveManager.load("save_reset_normal", false);
+        if (!saveResetNormal && Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount <= 3) {
+            Global.sendAnalytics("event", "trial_completed_phase_1_first_time_attempt_" + Global.myStatistics.myTrialPlayCount, {
                 "value": 1
             });
         }
+
+        Global.myStatisticsManager.saveStatistics();
     }
 
     _trialPhaseLost(trialPhase, fsm) {
         Global.myIsTrialPhase1 = false;
 
+        Global.sendAnalytics("event", "trial_lost", {
+            "value": 1
+        });
+
         Global.sendAnalytics("event", "trial_lost_phase_".concat(trialPhase), {
             "value": 1
         });
 
-        Global.sendAnalytics("event", "trial_lost_time_phase_".concat(trialPhase), {
+        Global.sendAnalytics("event", "trial_lost_seconds_phase_".concat(trialPhase), {
             "value": Global.myVentDuration.toFixed(2)
         });
 
-        Global.sendAnalytics("event", "trial_time", {
+        Global.sendAnalytics("event", "trial_seconds", {
             "value": Global.myTrialDuration.toFixed(2)
         });
 
         if (Global.myStatistics.myTrialCompletedCount <= 0) {
-            Global.sendAnalytics("event", "trial_lost_time_before_completed_phase_".concat(trialPhase), {
+            Global.sendAnalytics("event", "trial_lost_seconds_before_completed_phase_".concat(trialPhase), {
                 "value": Global.myVentDuration.toFixed(2)
             });
         }
 
-        if (trialPhase == 1 && Global.myStatistics.myTrialCompletedCount <= 0 && Global.myStatistics.myTrialPlayCount == Global.myStatistics.myTrialPlayCountResettable) {
+        let saveResetNormal = Global.mySaveManager.load("save_reset_normal", false);
+        if (!saveResetNormal && trialPhase == 1 && Global.myStatistics.myTrialCompletedCount <= 0) {
             let clonesOnlyPunched = Global.myStatistics.myMrNOTClonesDismissed > 0 && Global.myStatistics.myMrNOTClonesDismissed == Global.myStatistics.myEvidencesPunched;
             if (Global.myStatistics.myMrNOTClonesDismissed <= 0 || clonesOnlyPunched) {
                 Global.sendAnalytics("event", "trial_lost_before_first_dismiss", {
@@ -16972,18 +17819,20 @@ class TrialState extends PP.State {
             }
         }
 
-        if (trialPhase == 1 && !Global.mySaveManager.loadBool("mr_NOT_clones_seen", false)) {
+        if (trialPhase == 1 && !Global.mySaveManager.load("mr_NOT_clones_seen", false)) {
             Global.sendAnalytics("event", "trial_lost_before_first_clone_seen", {
                 "value": 1
             });
         }
 
-        if (Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount == Global.myStatistics.myTrialPlayCountResettable &&
-            Global.myStatistics.myTrialPlayCount <= 3 && Global.myStatistics.myMrNOTClonesDismissed > 0 && this._myMrNotClonesDismissedOnStart == 0) {
-            Global.sendAnalytics("event", "mr_NOT_clones_dismissed_first_attempt_" + Global.myStatistics.myTrialPlayCount, {
+        if (Global.myStatistics.myTrialCompletedCount <= 0 && trialPhase == 1 && Global.myStatistics.myTrialPlayCount <= 3 &&
+            Global.myStatistics.myMrNOTClonesDismissed > 0 && this._myMrNotClonesDismissedOnStart == 0) {
+            Global.sendAnalytics("event", "mr_NOT_clones_dismissed_first_time_attempt_" + Global.myStatistics.myTrialPlayCount, {
                 "value": 1
             });
         }
+
+        Global.myStatisticsManager.saveStatistics();
     }
 
     _backToMenu(trialPhase, fsm) {
@@ -17000,7 +17849,7 @@ class TrialState extends PP.State {
                 "value": 1
             });
 
-            Global.sendAnalytics("event", "trial_completed_from_start_time", {
+            Global.sendAnalytics("event", "trial_completed_from_start_seconds", {
                 "value": Global.myTrialDuration.toFixed(2)
             });
         }
@@ -17231,6 +18080,9 @@ WL.CollisionComponent.prototype.pp_clone = function (clone, deepCloneParams, ext
 };
 
 WL.TextComponent.prototype.pp_clone = function (clone, deepCloneParams, extraData) {
+    clone.text = " ";
+    clone.text = "";
+
     if (deepCloneParams.shouldDeepCloneComponent("text")) {
         clone.text = this.text.slice(0);
     } else {
@@ -17282,6 +18134,67 @@ _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.init = function (
     this.tripleClickTimer = 0;
     this.multipleClickObject = null;
     this.multipleClickDelay = 0.3;
+};
+
+_WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.start = function () {
+    if (this.handedness == 0) {
+        const inputComp = this.object.getComponent('input');
+        if (!inputComp) {
+            console.warn('cursor component on object', this.object.name,
+                'was configured with handedness "input component", ' +
+                'but object has no input component.');
+        } else {
+            this.handedness = inputComp.handedness;
+            this.input = inputComp;
+        }
+    } else {
+        this.handedness = ['left', 'right'][this.handedness - 1];
+    }
+
+    this.globalTarget = this.object.addComponent('cursor-target');
+
+    this.origin = new Float32Array(3);
+    this.cursorObjScale = new Float32Array(3);
+    this.direction = [0, 0, 0];
+    this.tempQuat = new Float32Array(4);
+    this.viewComponent = this.object.getComponent("view");
+    /* If this object also has a view component, we will enable inverse-projected mouse clicks,
+     * otherwise just use the objects transformation */
+    if (this.viewComponent != null) {
+        WL.canvas.addEventListener("click", this.onClick.bind(this));
+        WL.canvas.addEventListener("pointermove", this.onPointerMove.bind(this));
+        WL.canvas.addEventListener("pointerdown", this.onPointerDown.bind(this));
+        WL.canvas.addEventListener("pointerup", this.onPointerUp.bind(this));
+
+        this.projectionMatrix = new Float32Array(16);
+        glMatrix.mat4.invert(this.projectionMatrix, this.viewComponent.projectionMatrix);
+        window.addEventListener("resize", this.onViewportResize.bind(this));
+    }
+    this.isHovering = false;
+    this.visible = true;
+    this.isDown = false;
+    this.lastIsDown = false;
+
+    this.cursorPos = new Float32Array(3);
+    this.hoveringObject = null;
+
+    if (WL.xrSession) {
+        this.setupVREvents(WL.xrSession);
+    }
+    WL.onXRSessionStart.push(this.setupVREvents.bind(this));
+
+    if (this.cursorRayObject) {
+        this.cursorRayScale = new Float32Array(3);
+        this.cursorRayScale.set(this.cursorRayObject.scalingLocal);
+
+        /* Set ray to a good default distance of the cursor of 1m */
+        this.object.getTranslationWorld(this.origin);
+        this.object.getForward(this.direction);
+        this._setCursorRayTransform([
+            this.origin[0] + this.direction[0],
+            this.origin[1] + this.direction[1],
+            this.origin[2] + this.direction[2]]);
+    }
 };
 
 _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.update = function (dt) {
@@ -19322,7 +20235,9 @@ WL.registerComponent('pp-easy-tune', {
         //Int: PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Lives", 3, 1));
         //Bool: PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Run", false));
 
-        PP.myEasyTuneVariables = new PP.EasyTuneVariables();
+        if (PP.myEasyTuneVariables == null) {
+            PP.myEasyTuneVariables = new PP.EasyTuneVariables();
+        }
 
         this._myWidget = new PP.EasyTuneWidget();
         PP.setEasyTuneWidgetActiveVariable = function (variableName) {
@@ -19354,13 +20269,9 @@ PP.myEasyTuneVariables = null;
 
 PP.myEasyTuneTarget = null;
 
-PP.setEasyTuneWidgetActiveVariable = function () {
-    console.log("setEasyTuneWidgetActiveVariable function not initialized yet");
-};
+PP.setEasyTuneWidgetActiveVariable = function () { };
 
-PP.refreshEasyTuneWidget = function () {
-    console.log("refreshEasyTuneWidget function not initialized yet");
-};
+PP.refreshEasyTuneWidget = function () { };
 //Variable Map
 PP.EasyTuneVariables = class EasyTuneVariables {
     constructor() {
@@ -19804,7 +20715,7 @@ class ArcadeResultState extends PP.State {
         this._myParentFSM = fsm;
         this._myFSM.perform("start");
 
-        Global.sendAnalytics("event", "arcade_time", {
+        Global.sendAnalytics("event", "arcade_seconds", {
             "value": Global.myVentDuration.toFixed(2)
         });
 
@@ -19813,7 +20724,7 @@ class ArcadeResultState extends PP.State {
                 Global.myStatistics.myDisputeBestTime = Global.myVentDuration;
             }
 
-            Global.sendAnalytics("event", "arcade_dispute_time", {
+            Global.sendAnalytics("event", "arcade_dispute_seconds", {
                 "value": Global.myVentDuration.toFixed(2)
             });
         } else {
@@ -19821,32 +20732,58 @@ class ArcadeResultState extends PP.State {
                 Global.myStatistics.myChatBestTime = Global.myVentDuration;
             }
 
-            Global.sendAnalytics("event", "arcade_chat_time", {
+            Global.sendAnalytics("event", "arcade_chat_seconds", {
                 "value": Global.myVentDuration.toFixed(2)
             });
         }
 
-        let leaderboardID = "enough-is-enough";
+        let leaderboardID = "enoughISenough";
         if (this._myIsDispute) {
-            leaderboardID = leaderboardID.concat("-dispute");
+            leaderboardID = leaderboardID.concat("_dispute");
         } else {
-            leaderboardID = leaderboardID.concat("-chat");
+            leaderboardID = leaderboardID.concat("_chat");
         }
 
         let score = Math.floor(Global.myVentDuration * 1000);
 
+        let scoreSubmittedSucceded = false;
+        let scoreStopSubmitting = false;
         let scoreSubmittedEventID = (this._myIsDispute ? "arcade_dispute" : "arcade_chat") + "_score_submitted";
-        PP.CAUtils.submitScore(leaderboardID, score, function () {
-            Global.sendAnalytics("event", "arcade_score_submitted", {
-                "value": 1
-            });
+        let submitScoreSuccessCallback = function () {
+            if (!scoreSubmittedSucceded) {
+                scoreSubmittedSucceded = true;
+                Global.sendAnalytics("event", "arcade_score_submitted", {
+                    "value": 1
+                });
 
-            Global.sendAnalytics("event", scoreSubmittedEventID, {
-                "value": 1
-            });
-        }, null, false);
+                Global.sendAnalytics("event", scoreSubmittedEventID, {
+                    "value": 1
+                });
+            }
+        };
+        let submitScoreErrorCallback = function (error) {
+            if (error != null && error.type != PP.CAUtils.CAError.SUBMIT_SCORE_FAILED) {
+                scoreStopSubmitting = true;
+            }
+        };
+
+        PP.CAUtils.submitScore(leaderboardID, score, submitScoreSuccessCallback, submitScoreErrorCallback, false);
+
+        setTimeout(function () {
+            if (!scoreSubmittedSucceded && !scoreStopSubmitting) {
+                PP.CAUtils.submitScore(leaderboardID, score, submitScoreSuccessCallback, submitScoreErrorCallback, false);
+            }
+        }, 5000);
+
+        setTimeout(function () {
+            if (!scoreSubmittedSucceded && !scoreStopSubmitting) {
+                PP.CAUtils.submitScore(leaderboardID, score, submitScoreSuccessCallback, submitScoreErrorCallback, false);
+            }
+        }, 10000);
 
         Global.myIsInArcadeResult = true;
+
+        Global.myStatisticsManager.saveStatistics();
     }
 
     end(fsm, transitionID) {
@@ -19911,8 +20848,8 @@ class BlatherState extends PP.State {
 
         this._myBlather = new Blather(sentences, isDefeat);
 
-        this._myMrNOTAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_APPEAR);
-        this._myMrNOTDisappearAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_DISAPPEAR);
+        this._myMrNOTAppearAudio = null;
+        this._myMrNOTDisappearAudio = null;
 
         //Setup
         this._myFogAlphaMax = 0.7;
@@ -20027,6 +20964,9 @@ class BlatherState extends PP.State {
     }
 
     start(fsm, transition) {
+        this._myMrNOTAppearAudio = Global.myAudioPoolMap.getAudio(SfxID.MR_NOT_APPEAR);
+        this._myMrNOTDisappearAudio = Global.myAudioPoolMap.getAudio(SfxID.MR_NOT_DISAPPEAR);
+
         this._myParentFSM = fsm;
         this._myFSM.perform("start");
     }
@@ -20035,6 +20975,11 @@ class BlatherState extends PP.State {
         if (!this._myFSM.isInState("done")) {
             this._myFSM.perform("skip");
         }
+
+        Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_APPEAR, this._myMrNOTAppearAudio);
+        Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_DISAPPEAR, this._myMrNOTDisappearAudio);
+        this._myMrNOTAppearAudio = null;
+        this._myMrNOTDisappearAudio = null;
     }
 }
 
@@ -20117,13 +21062,14 @@ class Blather {
         this._myNextTimer = new PP.Timer(0.1);
 
         this._myCharAudios = [];
-        this._myCharAudios[0] = Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_1);
-        this._myCharAudios[1] = Global.myAudioManager.createAudioPlayer(SfxID.BLATHER_0);
 
         this._myFSM.init("init");
     }
 
     start() {
+        this._myCharAudios[0] = Global.myAudioPoolMap.getAudio(SfxID.BLATHER_1);
+        this._myCharAudios[1] = Global.myAudioPoolMap.getAudio(SfxID.BLATHER_0);
+
         this._myFSM.perform("start");
     }
 
@@ -20227,6 +21173,11 @@ class Blather {
         this._myBigBlatherTextObject.pp_setActive(false);
         this._myBigBlatherPatchObject.pp_setActive(false);
         this._myIsDone = true;
+
+        Global.myAudioPoolMap.releaseAudio(SfxID.BLATHER_1, this._myCharAudios[0]);
+        Global.myAudioPoolMap.releaseAudio(SfxID.BLATHER_0, this._myCharAudios[1]);
+        this._myCharAudios[0] = null;
+        this._myCharAudios[1] = null;
     }
 
     _setBlatherPosition() {
@@ -20397,10 +21348,8 @@ class Evidence {
     }
 
     _startSpawn() {
-        if (this._myAppearAudio == null) {
-            this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_APPEAR);
-            this._myDisappearAudio = Global.myAudioManager.createAudioPlayer(SfxID.EVIDENCE_DISAPPEAR);
-        }
+        this._myAppearAudio = Global.myAudioPoolMap.getAudio(SfxID.EVIDENCE_APPEAR);
+        this._myDisappearAudio = Global.myAudioPoolMap.getAudio(SfxID.EVIDENCE_DISAPPEAR);
 
         this._myEvidenceComponent = this._myObject.pp_getComponentHierarchy("evidence-component");
         this._myEvidenceComponent.setCallbackOnHit(this._onHit.bind(this));
@@ -20550,6 +21499,11 @@ class Evidence {
             this._myPhysx.removeCollisionCallback(this._myCollisionCallbackID);
             this._myCollisionCallbackID = null;
         }
+
+        Global.myAudioPoolMap.releaseAudio(SfxID.EVIDENCE_APPEAR, this._myAppearAudio);
+        Global.myAudioPoolMap.releaseAudio(SfxID.EVIDENCE_DISAPPEAR, this._myDisappearAudio);
+        this._myAppearAudio = null;
+        this._myDisappearAudio = null;
     }
 
     _onCollision(type) {
@@ -20978,9 +21932,9 @@ class MrNOT {
         this._myPhysx = this._myObject.pp_getComponentHierarchy("physx");
         this._myCollisionsCollector = this._myObject.pp_getComponentHierarchy("physx-collector-component").getCollisionsCollector();
 
-        this._myExplodeAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_EXPLODE);
-        this._myHitAudio = Global.myAudioManager.createAudioPlayer(SfxID.CLONE_EXPLODE);
-        this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_FAST_APPEAR);
+        this._myExplodeAudio = null;
+        this._myHitAudio = null;
+        this._myAppearAudio = null;
 
         this._myRumbleScreen = new RumbleScreen();
 
@@ -21005,6 +21959,10 @@ class MrNOT {
     }
 
     start(dt) {
+        this._myExplodeAudio = Global.myAudioPoolMap.getAudio(SfxID.MR_NOT_EXPLODE);
+        this._myHitAudio = Global.myAudioPoolMap.getAudio(SfxID.CLONE_EXPLODE);
+        this._myAppearAudio = Global.myAudioPoolMap.getAudio(SfxID.MR_NOT_FAST_APPEAR);
+
         this._myFSM.perform("start");
     }
 
@@ -21031,6 +21989,13 @@ class MrNOT {
         this._myRumbleScreen.stop();
         this._myObject.pp_setActive(false);
         this._myFSM.perform("hide");
+
+        Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_EXPLODE, this._myExplodeAudio);
+        Global.myAudioPoolMap.releaseAudio(SfxID.CLONE_EXPLODE, this._myHitAudio);
+        Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_FAST_APPEAR, this._myAppearAudio);
+        this._myExplodeAudio = null;
+        this._myHitAudio = null;
+        this._myAppearAudio = null;
     }
 
     _prepareMove() {
@@ -21307,6 +22272,13 @@ class MrNOT {
                 this._myObject.pp_setActive(false);
                 this._myRumbleScreen.stop();
                 this._myFSM.perform("end");
+
+                Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_EXPLODE, this._myExplodeAudio);
+                Global.myAudioPoolMap.releaseAudio(SfxID.CLONE_EXPLODE, this._myHitAudio);
+                Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_FAST_APPEAR, this._myAppearAudio);
+                this._myExplodeAudio = null;
+                this._myHitAudio = null;
+                this._myAppearAudio = null;
             }
         }
     }
@@ -21460,8 +22432,8 @@ class MrNOTClone {
 
         this._myCollisions = this._myObject.pp_getComponentsHierarchy("collision");
 
-        this._myHitAudio = Global.myAudioManager.createAudioPlayer(SfxID.CLONE_EXPLODE);
-        this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.CLONE_APPEAR);
+        this._myHitAudio = Global.myAudioPoolMap.getAudio(SfxID.CLONE_EXPLODE);
+        this._myAppearAudio = Global.myAudioPoolMap.getAudio(SfxID.CLONE_APPEAR);
 
         this._myAppearAudioDelay = new PP.Timer(0.2);
 
@@ -21480,7 +22452,7 @@ class MrNOTClone {
 
         this._myTimerBeforeCheckingSeen = new PP.Timer(3);
         this._myTimerBeforeSettingSeen = new PP.Timer(0.75, false);
-        this._myMrNOTClonesSeen = Global.mySaveManager.loadBool("mr_NOT_clones_seen", false);
+        this._myMrNOTClonesSeen = Global.mySaveManager.load("mr_NOT_clones_seen", false);
 
         //Setup
         this._myReachTargetDistance = Global.myRingRadius * 2;
@@ -21532,10 +22504,29 @@ class MrNOTClone {
         return this._myFSM.isInState("inactive");
     }
 
+    stopSounds() {
+        /*
+        //Not doing this because the stop cause a click sadly
+        
+        if (this._myAppearAudio != null) {
+            this._myAppearAudio.stop();
+        }
+
+        if (this._myHitAudio != null) {
+            this._myHitAudio.stop();
+        }
+        */
+    }
+
     hide() {
         Global.myGameObjectPoolMap.releaseObject(GameObjectType.MR_NOT_CLONE, this._myObject);
         this._myObject = null;
         this._myFSM.perform("hide");
+
+        Global.myAudioPoolMap.releaseAudio(SfxID.CLONE_EXPLODE, this._myHitAudio);
+        Global.myAudioPoolMap.releaseAudio(SfxID.CLONE_APPEAR, this._myAppearAudio);
+        this._myHitAudio = null;
+        this._myAppearAudio = null;
     }
 
     _move(dt) {
@@ -21635,7 +22626,6 @@ class MrNOTClone {
             }
 
             Global.myStatistics.myMrNOTClonesDismissed += 1;
-            Global.myStatistics.myMrNOTClonesDismissedResettable += 1;
 
             if (Global.myIsTrialPhase1) {
                 Global.myMrNOTClonesNotDismissedPhase1PlayCount = 0;
@@ -21708,9 +22698,9 @@ class MrNOTVent {
         this._myPhysx = this._myObject.pp_getComponentHierarchy("physx");
         this._myCollisionsCollector = this._myObject.pp_getComponentHierarchy("physx-collector-component").getCollisionsCollector();
 
-        this._myExplodeAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_EXPLODE);
-        this._myHitAudio = Global.myAudioManager.createAudioPlayer(SfxID.CLONE_EXPLODE);
-        this._myAppearAudio = Global.myAudioManager.createAudioPlayer(SfxID.MR_NOT_FAST_APPEAR);
+        this._myExplodeAudio = Global.myAudioPoolMap.getAudio(SfxID.MR_NOT_EXPLODE);
+        this._myHitAudio = Global.myAudioPoolMap.getAudio(SfxID.CLONE_EXPLODE);
+        this._myAppearAudio = Global.myAudioPoolMap.getAudio(SfxID.MR_NOT_FAST_APPEAR);
 
         this._myRumbleScreen = new RumbleScreen();
 
@@ -21750,6 +22740,13 @@ class MrNOTVent {
         this._myRumbleScreen.stop();
         this._myObject.pp_setActive(false);
         this._myFSM.perform("hide");
+
+        Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_EXPLODE, this._myExplodeAudio);
+        Global.myAudioPoolMap.releaseAudio(SfxID.CLONE_EXPLODE, this._myHitAudio);
+        Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_FAST_APPEAR, this._myAppearAudio);
+        this._myExplodeAudio = null;
+        this._myHitAudio = null;
+        this._myAppearAudio = null;
     }
 
     stop() {
@@ -21951,8 +22948,16 @@ class MrNOTVent {
         if (this._myDisappearEndTimer.isRunning()) {
             this._myDisappearEndTimer.update(dt);
             if (this._myDisappearEndTimer.isDone()) {
+                this._myObject.pp_setActive(false);
                 this._myRumbleScreen.stop();
                 this._myFSM.perform("end");
+
+                Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_EXPLODE, this._myExplodeAudio);
+                Global.myAudioPoolMap.releaseAudio(SfxID.CLONE_EXPLODE, this._myHitAudio);
+                Global.myAudioPoolMap.releaseAudio(SfxID.MR_NOT_FAST_APPEAR, this._myAppearAudio);
+                this._myExplodeAudio = null;
+                this._myHitAudio = null;
+                this._myAppearAudio = null;
             }
         }
     }
@@ -22518,6 +23523,15 @@ WL.registerComponent("timer", {
         this._mySecondsTextComponent = this._mySeconds.pp_getComponent("text");
         this._myMinutesTextComponent = this._myMinutes.pp_getComponent("text");
         this._myHoursTextComponent = this._myHours.pp_getComponent("text");
+
+        this._mySecondsTextComponent.text = " ";
+        this._mySecondsTextComponent.text = "";
+
+        this._myMinutesTextComponent.text = " ";
+        this._myMinutesTextComponent.text = "";
+
+        this._myHoursTextComponent.text = " ";
+        this._myHoursTextComponent.text = "";
     },
     update: function (dt) {
         let time = Global.myVentDuration;
@@ -22525,7 +23539,8 @@ WL.registerComponent("timer", {
             time = Global.myTrialDuration;
         }
 
-        time = Math.floor(time);
+        time = Math.floor(time * 1000);
+        time = Math.floor(time / 1000);
 
         let hours = Math.floor(time / 3600);
         time -= hours * 3600;
@@ -22972,6 +23987,7 @@ class Vent {
 
     _stop() {
         for (let clone of this._myMrNOTClones) {
+            //clone.stopSounds();
             clone.hide();
         }
 
@@ -23247,7 +24263,7 @@ class Vent {
 
         //this._boosterGroupDebug();
 
-        if (!Global.mySaveManager.loadBool("mr_NOT_encountered", false)) {
+        if (!Global.mySaveManager.load("mr_NOT_encountered", false)) {
             Global.mySaveManager.save("mr_NOT_encountered", true);
 
             Global.sendAnalytics("event", "mr_NOT_encountered_before_trial", {
@@ -23702,8 +24718,8 @@ class VentState extends PP.State {
         this._myFSM.perform("completed");
     }
 }
-(()=>{var Vt=Object.create;var Ee=Object.defineProperty;var Kt=Object.getOwnPropertyDescriptor;var Xt=Object.getOwnPropertyNames;var Gt=Object.getPrototypeOf,Qt=Object.prototype.hasOwnProperty;var l=(t,e)=>()=>(e||t((e={exports:{}}).exports,e),e.exports);var Zt=(t,e,r,i)=>{if(e&&typeof e=="object"||typeof e=="function")for(let n of Xt(e))!Qt.call(t,n)&&n!==r&&Ee(t,n,{get:()=>e[n],enumerable:!(i=Kt(e,n))||i.enumerable});return t};var xe=(t,e,r)=>(r=t!=null?Vt(Gt(t)):{},Zt(e||!t||!t.__esModule?Ee(r,"default",{value:t,enumerable:!0}):r,t));var V=l((un,Oe)=>{"use strict";Oe.exports=function(e,r){return function(){for(var n=new Array(arguments.length),s=0;s<n.length;s++)n[s]=arguments[s];return e.apply(r,n)}}});var f=l((cn,Ae)=>{"use strict";var Yt=V(),X=Object.prototype.toString,G=function(t){return function(e){var r=X.call(e);return t[r]||(t[r]=r.slice(8,-1).toLowerCase())}}(Object.create(null));function C(t){return t=t.toLowerCase(),function(r){return G(r)===t}}function Q(t){return Array.isArray(t)}function U(t){return typeof t>"u"}function er(t){return t!==null&&!U(t)&&t.constructor!==null&&!U(t.constructor)&&typeof t.constructor.isBuffer=="function"&&t.constructor.isBuffer(t)}var Re=C("ArrayBuffer");function tr(t){var e;return typeof ArrayBuffer<"u"&&ArrayBuffer.isView?e=ArrayBuffer.isView(t):e=t&&t.buffer&&Re(t.buffer),e}function rr(t){return typeof t=="string"}function nr(t){return typeof t=="number"}function Ce(t){return t!==null&&typeof t=="object"}function D(t){if(G(t)!=="object")return!1;var e=Object.getPrototypeOf(t);return e===null||e===Object.prototype}var ir=C("Date"),sr=C("File"),ar=C("Blob"),or=C("FileList");function Z(t){return X.call(t)==="[object Function]"}function ur(t){return Ce(t)&&Z(t.pipe)}function cr(t){var e="[object FormData]";return t&&(typeof FormData=="function"&&t instanceof FormData||X.call(t)===e||Z(t.toString)&&t.toString()===e)}var lr=C("URLSearchParams");function dr(t){return t.trim?t.trim():t.replace(/^\s+|\s+$/g,"")}function fr(){return typeof navigator<"u"&&(navigator.product==="ReactNative"||navigator.product==="NativeScript"||navigator.product==="NS")?!1:typeof window<"u"&&typeof document<"u"}function Y(t,e){if(!(t===null||typeof t>"u"))if(typeof t!="object"&&(t=[t]),Q(t))for(var r=0,i=t.length;r<i;r++)e.call(null,t[r],r,t);else for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&e.call(null,t[n],n,t)}function K(){var t={};function e(n,s){D(t[s])&&D(n)?t[s]=K(t[s],n):D(n)?t[s]=K({},n):Q(n)?t[s]=n.slice():t[s]=n}for(var r=0,i=arguments.length;r<i;r++)Y(arguments[r],e);return t}function pr(t,e,r){return Y(e,function(n,s){r&&typeof n=="function"?t[s]=Yt(n,r):t[s]=n}),t}function hr(t){return t.charCodeAt(0)===65279&&(t=t.slice(1)),t}function mr(t,e,r,i){t.prototype=Object.create(e.prototype,i),t.prototype.constructor=t,r&&Object.assign(t.prototype,r)}function yr(t,e,r){var i,n,s,a={};e=e||{};do{for(i=Object.getOwnPropertyNames(t),n=i.length;n-- >0;)s=i[n],a[s]||(e[s]=t[s],a[s]=!0);t=Object.getPrototypeOf(t)}while(t&&(!r||r(t,e))&&t!==Object.prototype);return e}function vr(t,e,r){t=String(t),(r===void 0||r>t.length)&&(r=t.length),r-=e.length;var i=t.indexOf(e,r);return i!==-1&&i===r}function wr(t){if(!t)return null;var e=t.length;if(U(e))return null;for(var r=new Array(e);e-- >0;)r[e]=t[e];return r}var gr=function(t){return function(e){return t&&e instanceof t}}(typeof Uint8Array<"u"&&Object.getPrototypeOf(Uint8Array));Ae.exports={isArray:Q,isArrayBuffer:Re,isBuffer:er,isFormData:cr,isArrayBufferView:tr,isString:rr,isNumber:nr,isObject:Ce,isPlainObject:D,isUndefined:U,isDate:ir,isFile:sr,isBlob:ar,isFunction:Z,isStream:ur,isURLSearchParams:lr,isStandardBrowserEnv:fr,forEach:Y,merge:K,extend:pr,trim:dr,stripBOM:hr,inherits:mr,toFlatObject:yr,kindOf:G,kindOfTest:C,endsWith:vr,toArray:wr,isTypedArray:gr,isFileList:or}});var ee=l((ln,qe)=>{"use strict";var q=f();function Te(t){return encodeURIComponent(t).replace(/%3A/gi,":").replace(/%24/g,"$").replace(/%2C/gi,",").replace(/%20/g,"+").replace(/%5B/gi,"[").replace(/%5D/gi,"]")}qe.exports=function(e,r,i){if(!r)return e;var n;if(i)n=i(r);else if(q.isURLSearchParams(r))n=r.toString();else{var s=[];q.forEach(r,function(c,h){c===null||typeof c>"u"||(q.isArray(c)?h=h+"[]":c=[c],q.forEach(c,function(d){q.isDate(d)?d=d.toISOString():q.isObject(d)&&(d=JSON.stringify(d)),s.push(Te(h)+"="+Te(d))}))}),n=s.join("&")}if(n){var a=e.indexOf("#");a!==-1&&(e=e.slice(0,a)),e+=(e.indexOf("?")===-1?"?":"&")+n}return e}});var Ne=l((dn,Se)=>{"use strict";var br=f();function j(){this.handlers=[]}j.prototype.use=function(e,r,i){return this.handlers.push({fulfilled:e,rejected:r,synchronous:i?i.synchronous:!1,runWhen:i?i.runWhen:null}),this.handlers.length-1};j.prototype.eject=function(e){this.handlers[e]&&(this.handlers[e]=null)};j.prototype.forEach=function(e){br.forEach(this.handlers,function(i){i!==null&&e(i)})};Se.exports=j});var Pe=l((fn,ke)=>{"use strict";var Er=f();ke.exports=function(e,r){Er.forEach(e,function(n,s){s!==r&&s.toUpperCase()===r.toUpperCase()&&(e[r]=n,delete e[s])})}});var A=l((pn,De)=>{"use strict";var _e=f();function S(t,e,r,i,n){Error.call(this),this.message=t,this.name="AxiosError",e&&(this.code=e),r&&(this.config=r),i&&(this.request=i),n&&(this.response=n)}_e.inherits(S,Error,{toJSON:function(){return{message:this.message,name:this.name,description:this.description,number:this.number,fileName:this.fileName,lineNumber:this.lineNumber,columnNumber:this.columnNumber,stack:this.stack,config:this.config,code:this.code,status:this.response&&this.response.status?this.response.status:null}}});var Le=S.prototype,Be={};["ERR_BAD_OPTION_VALUE","ERR_BAD_OPTION","ECONNABORTED","ETIMEDOUT","ERR_NETWORK","ERR_FR_TOO_MANY_REDIRECTS","ERR_DEPRECATED","ERR_BAD_RESPONSE","ERR_BAD_REQUEST","ERR_CANCELED"].forEach(function(t){Be[t]={value:t}});Object.defineProperties(S,Be);Object.defineProperty(Le,"isAxiosError",{value:!0});S.from=function(t,e,r,i,n,s){var a=Object.create(Le);return _e.toFlatObject(t,a,function(c){return c!==Error.prototype}),S.call(a,t.message,e,r,i,n),a.name=t.name,s&&Object.assign(a,s),a};De.exports=S});var te=l((hn,Ue)=>{"use strict";Ue.exports={silentJSONParsing:!0,forcedJSONParsing:!0,clarifyTimeoutError:!1}});var re=l((mn,je)=>{"use strict";var b=f();function xr(t,e){e=e||new FormData;var r=[];function i(s){return s===null?"":b.isDate(s)?s.toISOString():b.isArrayBuffer(s)||b.isTypedArray(s)?typeof Blob=="function"?new Blob([s]):Buffer.from(s):s}function n(s,a){if(b.isPlainObject(s)||b.isArray(s)){if(r.indexOf(s)!==-1)throw Error("Circular reference detected in "+a);r.push(s),b.forEach(s,function(c,h){if(!b.isUndefined(c)){var o=a?a+"."+h:h,d;if(c&&!a&&typeof c=="object"){if(b.endsWith(h,"{}"))c=JSON.stringify(c);else if(b.endsWith(h,"[]")&&(d=b.toArray(c))){d.forEach(function(v){!b.isUndefined(v)&&e.append(o,i(v))});return}}n(c,o)}}),r.pop()}else e.append(a,i(s))}return n(t),e}je.exports=xr});var Ie=l((yn,Fe)=>{"use strict";var ne=A();Fe.exports=function(e,r,i){var n=i.config.validateStatus;!i.status||!n||n(i.status)?e(i):r(new ne("Request failed with status code "+i.status,[ne.ERR_BAD_REQUEST,ne.ERR_BAD_RESPONSE][Math.floor(i.status/100)-4],i.config,i.request,i))}});var Me=l((vn,ze)=>{"use strict";var F=f();ze.exports=F.isStandardBrowserEnv()?function(){return{write:function(r,i,n,s,a,u){var c=[];c.push(r+"="+encodeURIComponent(i)),F.isNumber(n)&&c.push("expires="+new Date(n).toGMTString()),F.isString(s)&&c.push("path="+s),F.isString(a)&&c.push("domain="+a),u===!0&&c.push("secure"),document.cookie=c.join("; ")},read:function(r){var i=document.cookie.match(new RegExp("(^|;\\s*)("+r+")=([^;]*)"));return i?decodeURIComponent(i[3]):null},remove:function(r){this.write(r,"",Date.now()-864e5)}}}():function(){return{write:function(){},read:function(){return null},remove:function(){}}}()});var We=l((wn,$e)=>{"use strict";$e.exports=function(e){return/^([a-z][a-z\d+\-.]*:)?\/\//i.test(e)}});var Je=l((gn,He)=>{"use strict";He.exports=function(e,r){return r?e.replace(/\/+$/,"")+"/"+r.replace(/^\/+/,""):e}});var ie=l((bn,Ve)=>{"use strict";var Or=We(),Rr=Je();Ve.exports=function(e,r){return e&&!Or(r)?Rr(e,r):r}});var Xe=l((En,Ke)=>{"use strict";var se=f(),Cr=["age","authorization","content-length","content-type","etag","expires","from","host","if-modified-since","if-unmodified-since","last-modified","location","max-forwards","proxy-authorization","referer","retry-after","user-agent"];Ke.exports=function(e){var r={},i,n,s;return e&&se.forEach(e.split(`
-`),function(u){if(s=u.indexOf(":"),i=se.trim(u.substr(0,s)).toLowerCase(),n=se.trim(u.substr(s+1)),i){if(r[i]&&Cr.indexOf(i)>=0)return;i==="set-cookie"?r[i]=(r[i]?r[i]:[]).concat([n]):r[i]=r[i]?r[i]+", "+n:n}}),r}});var Ze=l((xn,Qe)=>{"use strict";var Ge=f();Qe.exports=Ge.isStandardBrowserEnv()?function(){var e=/(msie|trident)/i.test(navigator.userAgent),r=document.createElement("a"),i;function n(s){var a=s;return e&&(r.setAttribute("href",a),a=r.href),r.setAttribute("href",a),{href:r.href,protocol:r.protocol?r.protocol.replace(/:$/,""):"",host:r.host,search:r.search?r.search.replace(/^\?/,""):"",hash:r.hash?r.hash.replace(/^#/,""):"",hostname:r.hostname,port:r.port,pathname:r.pathname.charAt(0)==="/"?r.pathname:"/"+r.pathname}}return i=n(window.location.href),function(a){var u=Ge.isString(a)?n(a):a;return u.protocol===i.protocol&&u.host===i.host}}():function(){return function(){return!0}}()});var L=l((On,et)=>{"use strict";var ae=A(),Ar=f();function Ye(t){ae.call(this,t??"canceled",ae.ERR_CANCELED),this.name="CanceledError"}Ar.inherits(Ye,ae,{__CANCEL__:!0});et.exports=Ye});var rt=l((Rn,tt)=>{"use strict";tt.exports=function(e){var r=/^([-+\w]{1,25})(:?\/\/|:)/.exec(e);return r&&r[1]||""}});var oe=l((Cn,nt)=>{"use strict";var B=f(),Tr=Ie(),qr=Me(),Sr=ee(),Nr=ie(),kr=Xe(),Pr=Ze(),_r=te(),E=A(),Lr=L(),Br=rt();nt.exports=function(e){return new Promise(function(i,n){var s=e.data,a=e.headers,u=e.responseType,c;function h(){e.cancelToken&&e.cancelToken.unsubscribe(c),e.signal&&e.signal.removeEventListener("abort",c)}B.isFormData(s)&&B.isStandardBrowserEnv()&&delete a["Content-Type"];var o=new XMLHttpRequest;if(e.auth){var d=e.auth.username||"",v=e.auth.password?unescape(encodeURIComponent(e.auth.password)):"";a.Authorization="Basic "+btoa(d+":"+v)}var m=Nr(e.baseURL,e.url);o.open(e.method.toUpperCase(),Sr(m,e.params,e.paramsSerializer),!0),o.timeout=e.timeout;function ge(){if(o){var g="getAllResponseHeaders"in o?kr(o.getAllResponseHeaders()):null,T=!u||u==="text"||u==="json"?o.responseText:o.response,R={data:T,status:o.status,statusText:o.statusText,headers:g,config:e,request:o};Tr(function(J){i(J),h()},function(J){n(J),h()},R),o=null}}if("onloadend"in o?o.onloadend=ge:o.onreadystatechange=function(){!o||o.readyState!==4||o.status===0&&!(o.responseURL&&o.responseURL.indexOf("file:")===0)||setTimeout(ge)},o.onabort=function(){o&&(n(new E("Request aborted",E.ECONNABORTED,e,o)),o=null)},o.onerror=function(){n(new E("Network Error",E.ERR_NETWORK,e,o,o)),o=null},o.ontimeout=function(){var T=e.timeout?"timeout of "+e.timeout+"ms exceeded":"timeout exceeded",R=e.transitional||_r;e.timeoutErrorMessage&&(T=e.timeoutErrorMessage),n(new E(T,R.clarifyTimeoutError?E.ETIMEDOUT:E.ECONNABORTED,e,o)),o=null},B.isStandardBrowserEnv()){var be=(e.withCredentials||Pr(m))&&e.xsrfCookieName?qr.read(e.xsrfCookieName):void 0;be&&(a[e.xsrfHeaderName]=be)}"setRequestHeader"in o&&B.forEach(a,function(T,R){typeof s>"u"&&R.toLowerCase()==="content-type"?delete a[R]:o.setRequestHeader(R,T)}),B.isUndefined(e.withCredentials)||(o.withCredentials=!!e.withCredentials),u&&u!=="json"&&(o.responseType=e.responseType),typeof e.onDownloadProgress=="function"&&o.addEventListener("progress",e.onDownloadProgress),typeof e.onUploadProgress=="function"&&o.upload&&o.upload.addEventListener("progress",e.onUploadProgress),(e.cancelToken||e.signal)&&(c=function(g){o&&(n(!g||g&&g.type?new Lr:g),o.abort(),o=null)},e.cancelToken&&e.cancelToken.subscribe(c),e.signal&&(e.signal.aborted?c():e.signal.addEventListener("abort",c))),s||(s=null);var H=Br(m);if(H&&["http","https","file"].indexOf(H)===-1){n(new E("Unsupported protocol "+H+":",E.ERR_BAD_REQUEST,e));return}o.send(s)})}});var st=l((An,it)=>{it.exports=null});var z=l((Tn,ct)=>{"use strict";var p=f(),at=Pe(),ot=A(),Dr=te(),Ur=re(),jr={"Content-Type":"application/x-www-form-urlencoded"};function ut(t,e){!p.isUndefined(t)&&p.isUndefined(t["Content-Type"])&&(t["Content-Type"]=e)}function Fr(){var t;return typeof XMLHttpRequest<"u"?t=oe():typeof process<"u"&&Object.prototype.toString.call(process)==="[object process]"&&(t=oe()),t}function Ir(t,e,r){if(p.isString(t))try{return(e||JSON.parse)(t),p.trim(t)}catch(i){if(i.name!=="SyntaxError")throw i}return(r||JSON.stringify)(t)}var I={transitional:Dr,adapter:Fr(),transformRequest:[function(e,r){if(at(r,"Accept"),at(r,"Content-Type"),p.isFormData(e)||p.isArrayBuffer(e)||p.isBuffer(e)||p.isStream(e)||p.isFile(e)||p.isBlob(e))return e;if(p.isArrayBufferView(e))return e.buffer;if(p.isURLSearchParams(e))return ut(r,"application/x-www-form-urlencoded;charset=utf-8"),e.toString();var i=p.isObject(e),n=r&&r["Content-Type"],s;if((s=p.isFileList(e))||i&&n==="multipart/form-data"){var a=this.env&&this.env.FormData;return Ur(s?{"files[]":e}:e,a&&new a)}else if(i||n==="application/json")return ut(r,"application/json"),Ir(e);return e}],transformResponse:[function(e){var r=this.transitional||I.transitional,i=r&&r.silentJSONParsing,n=r&&r.forcedJSONParsing,s=!i&&this.responseType==="json";if(s||n&&p.isString(e)&&e.length)try{return JSON.parse(e)}catch(a){if(s)throw a.name==="SyntaxError"?ot.from(a,ot.ERR_BAD_RESPONSE,this,null,this.response):a}return e}],timeout:0,xsrfCookieName:"XSRF-TOKEN",xsrfHeaderName:"X-XSRF-TOKEN",maxContentLength:-1,maxBodyLength:-1,env:{FormData:st()},validateStatus:function(e){return e>=200&&e<300},headers:{common:{Accept:"application/json, text/plain, */*"}}};p.forEach(["delete","get","head"],function(e){I.headers[e]={}});p.forEach(["post","put","patch"],function(e){I.headers[e]=p.merge(jr)});ct.exports=I});var dt=l((qn,lt)=>{"use strict";var zr=f(),Mr=z();lt.exports=function(e,r,i){var n=this||Mr;return zr.forEach(i,function(a){e=a.call(n,e,r)}),e}});var ue=l((Sn,ft)=>{"use strict";ft.exports=function(e){return!!(e&&e.__CANCEL__)}});var mt=l((Nn,ht)=>{"use strict";var pt=f(),ce=dt(),$r=ue(),Wr=z(),Hr=L();function le(t){if(t.cancelToken&&t.cancelToken.throwIfRequested(),t.signal&&t.signal.aborted)throw new Hr}ht.exports=function(e){le(e),e.headers=e.headers||{},e.data=ce.call(e,e.data,e.headers,e.transformRequest),e.headers=pt.merge(e.headers.common||{},e.headers[e.method]||{},e.headers),pt.forEach(["delete","get","head","post","put","patch","common"],function(n){delete e.headers[n]});var r=e.adapter||Wr.adapter;return r(e).then(function(n){return le(e),n.data=ce.call(e,n.data,n.headers,e.transformResponse),n},function(n){return $r(n)||(le(e),n&&n.response&&(n.response.data=ce.call(e,n.response.data,n.response.headers,e.transformResponse))),Promise.reject(n)})}});var de=l((kn,yt)=>{"use strict";var w=f();yt.exports=function(e,r){r=r||{};var i={};function n(o,d){return w.isPlainObject(o)&&w.isPlainObject(d)?w.merge(o,d):w.isPlainObject(d)?w.merge({},d):w.isArray(d)?d.slice():d}function s(o){if(w.isUndefined(r[o])){if(!w.isUndefined(e[o]))return n(void 0,e[o])}else return n(e[o],r[o])}function a(o){if(!w.isUndefined(r[o]))return n(void 0,r[o])}function u(o){if(w.isUndefined(r[o])){if(!w.isUndefined(e[o]))return n(void 0,e[o])}else return n(void 0,r[o])}function c(o){if(o in r)return n(e[o],r[o]);if(o in e)return n(void 0,e[o])}var h={url:a,method:a,data:a,baseURL:u,transformRequest:u,transformResponse:u,paramsSerializer:u,timeout:u,timeoutMessage:u,withCredentials:u,adapter:u,responseType:u,xsrfCookieName:u,xsrfHeaderName:u,onUploadProgress:u,onDownloadProgress:u,decompress:u,maxContentLength:u,maxBodyLength:u,beforeRedirect:u,transport:u,httpAgent:u,httpsAgent:u,cancelToken:u,socketPath:u,responseEncoding:u,validateStatus:c};return w.forEach(Object.keys(e).concat(Object.keys(r)),function(d){var v=h[d]||s,m=v(d);w.isUndefined(m)&&v!==c||(i[d]=m)}),i}});var fe=l((Pn,vt)=>{vt.exports={version:"0.27.2"}});var bt=l((_n,gt)=>{"use strict";var Jr=fe().version,O=A(),pe={};["object","boolean","number","function","string","symbol"].forEach(function(t,e){pe[t]=function(i){return typeof i===t||"a"+(e<1?"n ":" ")+t}});var wt={};pe.transitional=function(e,r,i){function n(s,a){return"[Axios v"+Jr+"] Transitional option '"+s+"'"+a+(i?". "+i:"")}return function(s,a,u){if(e===!1)throw new O(n(a," has been removed"+(r?" in "+r:"")),O.ERR_DEPRECATED);return r&&!wt[a]&&(wt[a]=!0,console.warn(n(a," has been deprecated since v"+r+" and will be removed in the near future"))),e?e(s,a,u):!0}};function Vr(t,e,r){if(typeof t!="object")throw new O("options must be an object",O.ERR_BAD_OPTION_VALUE);for(var i=Object.keys(t),n=i.length;n-- >0;){var s=i[n],a=e[s];if(a){var u=t[s],c=u===void 0||a(u,s,t);if(c!==!0)throw new O("option "+s+" must be "+c,O.ERR_BAD_OPTION_VALUE);continue}if(r!==!0)throw new O("Unknown option "+s,O.ERR_BAD_OPTION)}}gt.exports={assertOptions:Vr,validators:pe}});var At=l((Ln,Ct)=>{"use strict";var Ot=f(),Kr=ee(),Et=Ne(),xt=mt(),M=de(),Xr=ie(),Rt=bt(),N=Rt.validators;function k(t){this.defaults=t,this.interceptors={request:new Et,response:new Et}}k.prototype.request=function(e,r){typeof e=="string"?(r=r||{},r.url=e):r=e||{},r=M(this.defaults,r),r.method?r.method=r.method.toLowerCase():this.defaults.method?r.method=this.defaults.method.toLowerCase():r.method="get";var i=r.transitional;i!==void 0&&Rt.assertOptions(i,{silentJSONParsing:N.transitional(N.boolean),forcedJSONParsing:N.transitional(N.boolean),clarifyTimeoutError:N.transitional(N.boolean)},!1);var n=[],s=!0;this.interceptors.request.forEach(function(m){typeof m.runWhen=="function"&&m.runWhen(r)===!1||(s=s&&m.synchronous,n.unshift(m.fulfilled,m.rejected))});var a=[];this.interceptors.response.forEach(function(m){a.push(m.fulfilled,m.rejected)});var u;if(!s){var c=[xt,void 0];for(Array.prototype.unshift.apply(c,n),c=c.concat(a),u=Promise.resolve(r);c.length;)u=u.then(c.shift(),c.shift());return u}for(var h=r;n.length;){var o=n.shift(),d=n.shift();try{h=o(h)}catch(v){d(v);break}}try{u=xt(h)}catch(v){return Promise.reject(v)}for(;a.length;)u=u.then(a.shift(),a.shift());return u};k.prototype.getUri=function(e){e=M(this.defaults,e);var r=Xr(e.baseURL,e.url);return Kr(r,e.params,e.paramsSerializer)};Ot.forEach(["delete","get","head","options"],function(e){k.prototype[e]=function(r,i){return this.request(M(i||{},{method:e,url:r,data:(i||{}).data}))}});Ot.forEach(["post","put","patch"],function(e){function r(i){return function(s,a,u){return this.request(M(u||{},{method:e,headers:i?{"Content-Type":"multipart/form-data"}:{},url:s,data:a}))}}k.prototype[e]=r(),k.prototype[e+"Form"]=r(!0)});Ct.exports=k});var qt=l((Bn,Tt)=>{"use strict";var Gr=L();function P(t){if(typeof t!="function")throw new TypeError("executor must be a function.");var e;this.promise=new Promise(function(n){e=n});var r=this;this.promise.then(function(i){if(r._listeners){var n,s=r._listeners.length;for(n=0;n<s;n++)r._listeners[n](i);r._listeners=null}}),this.promise.then=function(i){var n,s=new Promise(function(a){r.subscribe(a),n=a}).then(i);return s.cancel=function(){r.unsubscribe(n)},s},t(function(n){r.reason||(r.reason=new Gr(n),e(r.reason))})}P.prototype.throwIfRequested=function(){if(this.reason)throw this.reason};P.prototype.subscribe=function(e){if(this.reason){e(this.reason);return}this._listeners?this._listeners.push(e):this._listeners=[e]};P.prototype.unsubscribe=function(e){if(this._listeners){var r=this._listeners.indexOf(e);r!==-1&&this._listeners.splice(r,1)}};P.source=function(){var e,r=new P(function(n){e=n});return{token:r,cancel:e}};Tt.exports=P});var Nt=l((Dn,St)=>{"use strict";St.exports=function(e){return function(i){return e.apply(null,i)}}});var Pt=l((Un,kt)=>{"use strict";var Qr=f();kt.exports=function(e){return Qr.isObject(e)&&e.isAxiosError===!0}});var Bt=l((jn,he)=>{"use strict";var _t=f(),Zr=V(),$=At(),Yr=de(),en=z();function Lt(t){var e=new $(t),r=Zr($.prototype.request,e);return _t.extend(r,$.prototype,e),_t.extend(r,e),r.create=function(n){return Lt(Yr(t,n))},r}var y=Lt(en);y.Axios=$;y.CanceledError=L();y.CancelToken=qt();y.isCancel=ue();y.VERSION=fe().version;y.toFormData=re();y.AxiosError=A();y.Cancel=y.CanceledError;y.all=function(e){return Promise.all(e)};y.spread=Nt();y.isAxiosError=Pt();he.exports=y;he.exports.default=y});var me=l((Fn,Dt)=>{Dt.exports=Bt()});var W=xe(me(),1);var x="https://zesty-storage-prod.s3.amazonaws.com/images/zesty",_={tall:{width:.75,height:1,style:{standard:`${x}/zesty-banner-tall.png`,minimal:`${x}/zesty-banner-tall-minimal.png`,transparent:`${x}/zesty-banner-tall-transparent.png`}},wide:{width:4,height:1,style:{standard:`${x}/zesty-banner-wide.png`,minimal:`${x}/zesty-banner-wide-minimal.png`,transparent:`${x}/zesty-banner-wide-transparent.png`}},square:{width:1,height:1,style:{standard:`${x}/zesty-banner-square.png`,minimal:`${x}/zesty-banner-square-minimal.png`,transparent:`${x}/zesty-banner-square-transparent.png`}}},Ut="square";var tn=xe(me(),1);var ye=()=>{let t=window.XRHand!=null&&window.XRMediaBinding!=null,e=navigator.userAgent.includes("OculusBrowser"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},ve=()=>{let t=window.mozInnerScreenX!=null&&window.speechSynthesis==null,e=navigator.userAgent.includes("Mobile VR")&&!navigator.userAgent.includes("OculusBrowser"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},jt=async()=>{let t=navigator.xr&&await navigator.xr.isSessionSupported("immersive-vr")&&await navigator.xr.isSessionSupported("immersive-ar"),e=navigator.userAgent.includes("Pico Neo 3 Link"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},Ft=()=>{let t=navigator.maxTouchPoints===0||navigator.msMaxTouchPoints===0,e=!navigator.userAgent.includes("Android")&&!navigator.userAgent.includes("Mobile"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},we=async()=>{let t={platform:"",confidence:""};return ye().match?t={platform:"Oculus",confidence:ye().confidence}:ve().match?t={platform:"Wolvic",confidence:ve().confidence}:await jt().match?t={platform:"Pico",confidence:await jt().confidence}:Ft().match?t={platform:"Desktop",confidence:Ft().confidence}:t={platform:"Unknown",confidence:"None"},t},It=t=>{if(t){if(ye().match){if(t.includes("https://www.oculus.com/experiences/quest/")){setTimeout(()=>{window.open(t,"_blank")},1e3);return}}else if(ve().match){let e=document.createElement("div"),r=document.createElement("div"),i=document.createElement("p"),n=document.createElement("button"),s=document.createElement("button");e.style.backgroundColor="rgb(0, 0, 0, 0.75)",e.style.color="white",e.style.textAlign="center",e.style.position="fixed",e.style.top="50%",e.style.left="50%",e.style.padding="5%",e.style.borderRadius="5%",e.style.transform="translate(-50%, -50%)",i.innerHTML=`<b>This billboard leads to ${t}. Continue?</b>`,n.innerText="Move cursor back into window.",n.style.width="100vw",n.style.height="100vh",n.onmouseenter=()=>{n.style.width="auto",n.style.height="auto",n.innerText="Yes"},n.onclick=()=>{window.open(t,"_blank"),e.remove()},s.innerText="No",s.onclick=()=>{e.remove()},e.append(r),r.append(i),r.append(n),r.append(s),document.body.append(e);return}window.open(t,"_blank")}};var zt="https://beacon2.zesty.market/zgraphql",rn="https://api.zesty.market/api";var Mt=async(t,e="tall",r="standard")=>{try{let i=encodeURI(window.top.location.href).replace(/\/$/,"");return(await W.default.get(`${rn}/ad?ad_unit_id=${t}&url=${i}`)).data}catch{return console.warn("No active campaign banner could be located. Displaying default banner."),{Ads:[{asset_url:_[e].style[r],cta_url:"https://www.zesty.market"}],CampaignId:"TestCampaign"}}},$t=async(t,e=null)=>{let{platform:r,confidence:i}=await we();try{await W.default.post(zt,{query:`mutation { increment(eventType: visits, spaceId: "${t}", campaignId: "${e}", platform: { name: ${r}, confidence: ${i} }) { message } }`},{headers:{"Content-Type":"application/json"}})}catch(n){console.log("Failed to emit onload event",n.message)}},Wt=async(t,e=null)=>{let{platform:r,confidence:i}=await we();try{await W.default.post(zt,{query:`mutation { increment(eventType: clicks, spaceId: "${t}", campaignId: "${e}", platform: { name: ${r}, confidence: ${i} }) { message } }`},{headers:{"Content-Type":"application/json"}})}catch(n){console.log("Failed to emit onclick event",n.message)}};var Ht="2.1.0";console.log(`Zesty SDK Version: ${Ht} (compatibility)`);var sn="https://cdn.zesty.xyz/sdk/zesty-formats.js",an="https://cdn.zesty.xyz/sdk/zesty-networking.js";WL.registerComponent("zesty-banner",{adUnit:{type:WL.Type.String},format:{type:WL.Type.Enum,values:Object.keys(_),default:Ut},style:{type:WL.Type.Enum,values:["standard","minimal","transparent"],default:"transparent"},scaleToRatio:{type:WL.Type.Bool,default:!0},textureProperty:{type:WL.Type.String,default:"auto"},beacon:{type:WL.Type.Bool,default:!0},dynamicFormats:{type:WL.Type.Bool,default:!0},createAutomaticCollision:{type:WL.Type.Bool,default:!0},dynamicNetworking:{type:WL.Type.Bool,default:!0}},{init:function(){this.formats=Object.values(_),this.formatKeys=Object.keys(_),this.styleKeys=["standard","minimal","transparent"]},start:function(){if(this.mesh=this.object.getComponent("mesh"),!this.mesh)throw new Error("'zesty-banner ' missing mesh component");if(this.createAutomaticCollision&&(this.collision=this.object.getComponent("collision")||this.object.addComponent("collision",{collider:WL.Collider.Box,group:2}),this.cursorTarget=this.object.getComponent("cursor-target")||this.object.addComponent("cursor-target"),this.cursorTarget.addClickFunction(this.onClick.bind(this))),this.dynamicFormats){let t=document.createElement("script");t.onload=()=>{this.formatsOverride=zestyFormats.formats},t.setAttribute("src",sn),t.setAttribute("crossorigin","anonymous"),document.body.appendChild(t)}this.dynamicNetworking?import(an).then(t=>{this.zestyNetworking=Object.assign({},t),this.startLoading()}).catch(()=>{console.error("Failed to dynamically retrieve networking code, falling back to bundled version."),this.dynamicNetworking=null,this.startLoading()}):this.startLoading()},startLoading:function(){this.loadBanner(this.adUnit,this.formatKeys[this.format],this.styleKeys[this.style]).then(t=>{this.banner=t,this.scaleToRatio&&(this.height=this.object.scalingLocal[1],this.object.resetScaling(),this.createAutomaticCollision&&(this.collision.extents=[this.formats[this.format].width*this.height,this.height,.1]),this.object.scale([this.formats[this.format].width*this.height,this.height,1]));let e=this.mesh.material;if(this.textureProperty==="auto"){let r=e.pipeline||e.shader;if(r==="Phong Opaque Textured")e.diffuseTexture=t.texture,e.alphaMaskThreshold=.3;else if(r==="Flat Opaque Textured")e.flatTexture=t.texture,e.alphaMaskThreshold=.8;else throw Error("'zesty-banner ' unable to apply banner texture: unsupported pipeline "+e.shader);this.mesh.material=e}else this.mesh.material[this.textureProperty]=t.texture;this.beacon&&(this.dynamicNetworking?this.zestyNetworking.sendOnLoadMetric(this.adUnit,this.banner.campaignId):$t(this.adUnit,this.banner.campaignId))})},onClick:function(){this.banner?.url&&(WL.xrSession?WL.xrSession.end().then(this.executeClick.bind(this)):this.executeClick())},executeClick:function(){this.beacon&&(this.dynamicNetworking?this.zestyNetworking.sendOnClickMetric(this.adUnit,this.banner.campaignId):Wt(this.adUnit,this.banner.campaignId))},loadBanner:async function(t,e,r){let i=this.dynamicNetworking?await this.zestyNetworking.fetchCampaignAd(t,e,r):await Mt(t,e,r),{asset_url:n,cta_url:s}=i.Ads[0];return WL.textures.load(n,"").then(a=>({texture:a,imageSrc:n,url:s,campaignId:i.CampaignId}))}});})();
+(()=>{var Vt=Object.create;var Ee=Object.defineProperty;var Kt=Object.getOwnPropertyDescriptor;var Xt=Object.getOwnPropertyNames;var Gt=Object.getPrototypeOf,Qt=Object.prototype.hasOwnProperty;var l=(t,e)=>()=>(e||t((e={exports:{}}).exports,e),e.exports);var Zt=(t,e,r,i)=>{if(e&&typeof e=="object"||typeof e=="function")for(let n of Xt(e))!Qt.call(t,n)&&n!==r&&Ee(t,n,{get:()=>e[n],enumerable:!(i=Kt(e,n))||i.enumerable});return t};var xe=(t,e,r)=>(r=t!=null?Vt(Gt(t)):{},Zt(e||!t||!t.__esModule?Ee(r,"default",{value:t,enumerable:!0}):r,t));var V=l((un,Oe)=>{"use strict";Oe.exports=function(e,r){return function(){for(var n=new Array(arguments.length),s=0;s<n.length;s++)n[s]=arguments[s];return e.apply(r,n)}}});var f=l((cn,Ae)=>{"use strict";var Yt=V(),X=Object.prototype.toString,G=function(t){return function(e){var r=X.call(e);return t[r]||(t[r]=r.slice(8,-1).toLowerCase())}}(Object.create(null));function C(t){return t=t.toLowerCase(),function(r){return G(r)===t}}function Q(t){return Array.isArray(t)}function U(t){return typeof t>"u"}function er(t){return t!==null&&!U(t)&&t.constructor!==null&&!U(t.constructor)&&typeof t.constructor.isBuffer=="function"&&t.constructor.isBuffer(t)}var Re=C("ArrayBuffer");function tr(t){var e;return typeof ArrayBuffer<"u"&&ArrayBuffer.isView?e=ArrayBuffer.isView(t):e=t&&t.buffer&&Re(t.buffer),e}function rr(t){return typeof t=="string"}function nr(t){return typeof t=="number"}function Ce(t){return t!==null&&typeof t=="object"}function D(t){if(G(t)!=="object")return!1;var e=Object.getPrototypeOf(t);return e===null||e===Object.prototype}var ir=C("Date"),sr=C("File"),ar=C("Blob"),or=C("FileList");function Z(t){return X.call(t)==="[object Function]"}function ur(t){return Ce(t)&&Z(t.pipe)}function cr(t){var e="[object FormData]";return t&&(typeof FormData=="function"&&t instanceof FormData||X.call(t)===e||Z(t.toString)&&t.toString()===e)}var lr=C("URLSearchParams");function dr(t){return t.trim?t.trim():t.replace(/^\s+|\s+$/g,"")}function fr(){return typeof navigator<"u"&&(navigator.product==="ReactNative"||navigator.product==="NativeScript"||navigator.product==="NS")?!1:typeof window<"u"&&typeof document<"u"}function Y(t,e){if(!(t===null||typeof t>"u"))if(typeof t!="object"&&(t=[t]),Q(t))for(var r=0,i=t.length;r<i;r++)e.call(null,t[r],r,t);else for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&e.call(null,t[n],n,t)}function K(){var t={};function e(n,s){D(t[s])&&D(n)?t[s]=K(t[s],n):D(n)?t[s]=K({},n):Q(n)?t[s]=n.slice():t[s]=n}for(var r=0,i=arguments.length;r<i;r++)Y(arguments[r],e);return t}function pr(t,e,r){return Y(e,function(n,s){r&&typeof n=="function"?t[s]=Yt(n,r):t[s]=n}),t}function hr(t){return t.charCodeAt(0)===65279&&(t=t.slice(1)),t}function mr(t,e,r,i){t.prototype=Object.create(e.prototype,i),t.prototype.constructor=t,r&&Object.assign(t.prototype,r)}function yr(t,e,r){var i,n,s,a={};e=e||{};do{for(i=Object.getOwnPropertyNames(t),n=i.length;n-- >0;)s=i[n],a[s]||(e[s]=t[s],a[s]=!0);t=Object.getPrototypeOf(t)}while(t&&(!r||r(t,e))&&t!==Object.prototype);return e}function vr(t,e,r){t=String(t),(r===void 0||r>t.length)&&(r=t.length),r-=e.length;var i=t.indexOf(e,r);return i!==-1&&i===r}function wr(t){if(!t)return null;var e=t.length;if(U(e))return null;for(var r=new Array(e);e-- >0;)r[e]=t[e];return r}var gr=function(t){return function(e){return t&&e instanceof t}}(typeof Uint8Array<"u"&&Object.getPrototypeOf(Uint8Array));Ae.exports={isArray:Q,isArrayBuffer:Re,isBuffer:er,isFormData:cr,isArrayBufferView:tr,isString:rr,isNumber:nr,isObject:Ce,isPlainObject:D,isUndefined:U,isDate:ir,isFile:sr,isBlob:ar,isFunction:Z,isStream:ur,isURLSearchParams:lr,isStandardBrowserEnv:fr,forEach:Y,merge:K,extend:pr,trim:dr,stripBOM:hr,inherits:mr,toFlatObject:yr,kindOf:G,kindOfTest:C,endsWith:vr,toArray:wr,isTypedArray:gr,isFileList:or}});var ee=l((ln,qe)=>{"use strict";var S=f();function Te(t){return encodeURIComponent(t).replace(/%3A/gi,":").replace(/%24/g,"$").replace(/%2C/gi,",").replace(/%20/g,"+").replace(/%5B/gi,"[").replace(/%5D/gi,"]")}qe.exports=function(e,r,i){if(!r)return e;var n;if(i)n=i(r);else if(S.isURLSearchParams(r))n=r.toString();else{var s=[];S.forEach(r,function(c,h){c===null||typeof c>"u"||(S.isArray(c)?h=h+"[]":c=[c],S.forEach(c,function(d){S.isDate(d)?d=d.toISOString():S.isObject(d)&&(d=JSON.stringify(d)),s.push(Te(h)+"="+Te(d))}))}),n=s.join("&")}if(n){var a=e.indexOf("#");a!==-1&&(e=e.slice(0,a)),e+=(e.indexOf("?")===-1?"?":"&")+n}return e}});var Ne=l((dn,Se)=>{"use strict";var br=f();function j(){this.handlers=[]}j.prototype.use=function(e,r,i){return this.handlers.push({fulfilled:e,rejected:r,synchronous:i?i.synchronous:!1,runWhen:i?i.runWhen:null}),this.handlers.length-1};j.prototype.eject=function(e){this.handlers[e]&&(this.handlers[e]=null)};j.prototype.forEach=function(e){br.forEach(this.handlers,function(i){i!==null&&e(i)})};Se.exports=j});var Pe=l((fn,ke)=>{"use strict";var Er=f();ke.exports=function(e,r){Er.forEach(e,function(n,s){s!==r&&s.toUpperCase()===r.toUpperCase()&&(e[r]=n,delete e[s])})}});var A=l((pn,De)=>{"use strict";var _e=f();function N(t,e,r,i,n){Error.call(this),this.message=t,this.name="AxiosError",e&&(this.code=e),r&&(this.config=r),i&&(this.request=i),n&&(this.response=n)}_e.inherits(N,Error,{toJSON:function(){return{message:this.message,name:this.name,description:this.description,number:this.number,fileName:this.fileName,lineNumber:this.lineNumber,columnNumber:this.columnNumber,stack:this.stack,config:this.config,code:this.code,status:this.response&&this.response.status?this.response.status:null}}});var Le=N.prototype,Be={};["ERR_BAD_OPTION_VALUE","ERR_BAD_OPTION","ECONNABORTED","ETIMEDOUT","ERR_NETWORK","ERR_FR_TOO_MANY_REDIRECTS","ERR_DEPRECATED","ERR_BAD_RESPONSE","ERR_BAD_REQUEST","ERR_CANCELED"].forEach(function(t){Be[t]={value:t}});Object.defineProperties(N,Be);Object.defineProperty(Le,"isAxiosError",{value:!0});N.from=function(t,e,r,i,n,s){var a=Object.create(Le);return _e.toFlatObject(t,a,function(c){return c!==Error.prototype}),N.call(a,t.message,e,r,i,n),a.name=t.name,s&&Object.assign(a,s),a};De.exports=N});var te=l((hn,Ue)=>{"use strict";Ue.exports={silentJSONParsing:!0,forcedJSONParsing:!0,clarifyTimeoutError:!1}});var re=l((mn,je)=>{"use strict";var b=f();function xr(t,e){e=e||new FormData;var r=[];function i(s){return s===null?"":b.isDate(s)?s.toISOString():b.isArrayBuffer(s)||b.isTypedArray(s)?typeof Blob=="function"?new Blob([s]):Buffer.from(s):s}function n(s,a){if(b.isPlainObject(s)||b.isArray(s)){if(r.indexOf(s)!==-1)throw Error("Circular reference detected in "+a);r.push(s),b.forEach(s,function(c,h){if(!b.isUndefined(c)){var o=a?a+"."+h:h,d;if(c&&!a&&typeof c=="object"){if(b.endsWith(h,"{}"))c=JSON.stringify(c);else if(b.endsWith(h,"[]")&&(d=b.toArray(c))){d.forEach(function(v){!b.isUndefined(v)&&e.append(o,i(v))});return}}n(c,o)}}),r.pop()}else e.append(a,i(s))}return n(t),e}je.exports=xr});var Ie=l((yn,Fe)=>{"use strict";var ne=A();Fe.exports=function(e,r,i){var n=i.config.validateStatus;!i.status||!n||n(i.status)?e(i):r(new ne("Request failed with status code "+i.status,[ne.ERR_BAD_REQUEST,ne.ERR_BAD_RESPONSE][Math.floor(i.status/100)-4],i.config,i.request,i))}});var Me=l((vn,ze)=>{"use strict";var F=f();ze.exports=F.isStandardBrowserEnv()?function(){return{write:function(r,i,n,s,a,u){var c=[];c.push(r+"="+encodeURIComponent(i)),F.isNumber(n)&&c.push("expires="+new Date(n).toGMTString()),F.isString(s)&&c.push("path="+s),F.isString(a)&&c.push("domain="+a),u===!0&&c.push("secure"),document.cookie=c.join("; ")},read:function(r){var i=document.cookie.match(new RegExp("(^|;\\s*)("+r+")=([^;]*)"));return i?decodeURIComponent(i[3]):null},remove:function(r){this.write(r,"",Date.now()-864e5)}}}():function(){return{write:function(){},read:function(){return null},remove:function(){}}}()});var We=l((wn,$e)=>{"use strict";$e.exports=function(e){return/^([a-z][a-z\d+\-.]*:)?\/\//i.test(e)}});var Je=l((gn,He)=>{"use strict";He.exports=function(e,r){return r?e.replace(/\/+$/,"")+"/"+r.replace(/^\/+/,""):e}});var ie=l((bn,Ve)=>{"use strict";var Or=We(),Rr=Je();Ve.exports=function(e,r){return e&&!Or(r)?Rr(e,r):r}});var Xe=l((En,Ke)=>{"use strict";var se=f(),Cr=["age","authorization","content-length","content-type","etag","expires","from","host","if-modified-since","if-unmodified-since","last-modified","location","max-forwards","proxy-authorization","referer","retry-after","user-agent"];Ke.exports=function(e){var r={},i,n,s;return e&&se.forEach(e.split(`
+`),function(u){if(s=u.indexOf(":"),i=se.trim(u.substr(0,s)).toLowerCase(),n=se.trim(u.substr(s+1)),i){if(r[i]&&Cr.indexOf(i)>=0)return;i==="set-cookie"?r[i]=(r[i]?r[i]:[]).concat([n]):r[i]=r[i]?r[i]+", "+n:n}}),r}});var Ze=l((xn,Qe)=>{"use strict";var Ge=f();Qe.exports=Ge.isStandardBrowserEnv()?function(){var e=/(msie|trident)/i.test(navigator.userAgent),r=document.createElement("a"),i;function n(s){var a=s;return e&&(r.setAttribute("href",a),a=r.href),r.setAttribute("href",a),{href:r.href,protocol:r.protocol?r.protocol.replace(/:$/,""):"",host:r.host,search:r.search?r.search.replace(/^\?/,""):"",hash:r.hash?r.hash.replace(/^#/,""):"",hostname:r.hostname,port:r.port,pathname:r.pathname.charAt(0)==="/"?r.pathname:"/"+r.pathname}}return i=n(window.location.href),function(a){var u=Ge.isString(a)?n(a):a;return u.protocol===i.protocol&&u.host===i.host}}():function(){return function(){return!0}}()});var L=l((On,et)=>{"use strict";var ae=A(),Ar=f();function Ye(t){ae.call(this,t??"canceled",ae.ERR_CANCELED),this.name="CanceledError"}Ar.inherits(Ye,ae,{__CANCEL__:!0});et.exports=Ye});var rt=l((Rn,tt)=>{"use strict";tt.exports=function(e){var r=/^([-+\w]{1,25})(:?\/\/|:)/.exec(e);return r&&r[1]||""}});var oe=l((Cn,nt)=>{"use strict";var B=f(),Tr=Ie(),qr=Me(),Sr=ee(),Nr=ie(),kr=Xe(),Pr=Ze(),_r=te(),E=A(),Lr=L(),Br=rt();nt.exports=function(e){return new Promise(function(i,n){var s=e.data,a=e.headers,u=e.responseType,c;function h(){e.cancelToken&&e.cancelToken.unsubscribe(c),e.signal&&e.signal.removeEventListener("abort",c)}B.isFormData(s)&&B.isStandardBrowserEnv()&&delete a["Content-Type"];var o=new XMLHttpRequest;if(e.auth){var d=e.auth.username||"",v=e.auth.password?unescape(encodeURIComponent(e.auth.password)):"";a.Authorization="Basic "+btoa(d+":"+v)}var m=Nr(e.baseURL,e.url);o.open(e.method.toUpperCase(),Sr(m,e.params,e.paramsSerializer),!0),o.timeout=e.timeout;function ge(){if(o){var g="getAllResponseHeaders"in o?kr(o.getAllResponseHeaders()):null,q=!u||u==="text"||u==="json"?o.responseText:o.response,R={data:q,status:o.status,statusText:o.statusText,headers:g,config:e,request:o};Tr(function(J){i(J),h()},function(J){n(J),h()},R),o=null}}if("onloadend"in o?o.onloadend=ge:o.onreadystatechange=function(){!o||o.readyState!==4||o.status===0&&!(o.responseURL&&o.responseURL.indexOf("file:")===0)||setTimeout(ge)},o.onabort=function(){o&&(n(new E("Request aborted",E.ECONNABORTED,e,o)),o=null)},o.onerror=function(){n(new E("Network Error",E.ERR_NETWORK,e,o,o)),o=null},o.ontimeout=function(){var q=e.timeout?"timeout of "+e.timeout+"ms exceeded":"timeout exceeded",R=e.transitional||_r;e.timeoutErrorMessage&&(q=e.timeoutErrorMessage),n(new E(q,R.clarifyTimeoutError?E.ETIMEDOUT:E.ECONNABORTED,e,o)),o=null},B.isStandardBrowserEnv()){var be=(e.withCredentials||Pr(m))&&e.xsrfCookieName?qr.read(e.xsrfCookieName):void 0;be&&(a[e.xsrfHeaderName]=be)}"setRequestHeader"in o&&B.forEach(a,function(q,R){typeof s>"u"&&R.toLowerCase()==="content-type"?delete a[R]:o.setRequestHeader(R,q)}),B.isUndefined(e.withCredentials)||(o.withCredentials=!!e.withCredentials),u&&u!=="json"&&(o.responseType=e.responseType),typeof e.onDownloadProgress=="function"&&o.addEventListener("progress",e.onDownloadProgress),typeof e.onUploadProgress=="function"&&o.upload&&o.upload.addEventListener("progress",e.onUploadProgress),(e.cancelToken||e.signal)&&(c=function(g){o&&(n(!g||g&&g.type?new Lr:g),o.abort(),o=null)},e.cancelToken&&e.cancelToken.subscribe(c),e.signal&&(e.signal.aborted?c():e.signal.addEventListener("abort",c))),s||(s=null);var H=Br(m);if(H&&["http","https","file"].indexOf(H)===-1){n(new E("Unsupported protocol "+H+":",E.ERR_BAD_REQUEST,e));return}o.send(s)})}});var st=l((An,it)=>{it.exports=null});var z=l((Tn,ct)=>{"use strict";var p=f(),at=Pe(),ot=A(),Dr=te(),Ur=re(),jr={"Content-Type":"application/x-www-form-urlencoded"};function ut(t,e){!p.isUndefined(t)&&p.isUndefined(t["Content-Type"])&&(t["Content-Type"]=e)}function Fr(){var t;return typeof XMLHttpRequest<"u"?t=oe():typeof process<"u"&&Object.prototype.toString.call(process)==="[object process]"&&(t=oe()),t}function Ir(t,e,r){if(p.isString(t))try{return(e||JSON.parse)(t),p.trim(t)}catch(i){if(i.name!=="SyntaxError")throw i}return(r||JSON.stringify)(t)}var I={transitional:Dr,adapter:Fr(),transformRequest:[function(e,r){if(at(r,"Accept"),at(r,"Content-Type"),p.isFormData(e)||p.isArrayBuffer(e)||p.isBuffer(e)||p.isStream(e)||p.isFile(e)||p.isBlob(e))return e;if(p.isArrayBufferView(e))return e.buffer;if(p.isURLSearchParams(e))return ut(r,"application/x-www-form-urlencoded;charset=utf-8"),e.toString();var i=p.isObject(e),n=r&&r["Content-Type"],s;if((s=p.isFileList(e))||i&&n==="multipart/form-data"){var a=this.env&&this.env.FormData;return Ur(s?{"files[]":e}:e,a&&new a)}else if(i||n==="application/json")return ut(r,"application/json"),Ir(e);return e}],transformResponse:[function(e){var r=this.transitional||I.transitional,i=r&&r.silentJSONParsing,n=r&&r.forcedJSONParsing,s=!i&&this.responseType==="json";if(s||n&&p.isString(e)&&e.length)try{return JSON.parse(e)}catch(a){if(s)throw a.name==="SyntaxError"?ot.from(a,ot.ERR_BAD_RESPONSE,this,null,this.response):a}return e}],timeout:0,xsrfCookieName:"XSRF-TOKEN",xsrfHeaderName:"X-XSRF-TOKEN",maxContentLength:-1,maxBodyLength:-1,env:{FormData:st()},validateStatus:function(e){return e>=200&&e<300},headers:{common:{Accept:"application/json, text/plain, */*"}}};p.forEach(["delete","get","head"],function(e){I.headers[e]={}});p.forEach(["post","put","patch"],function(e){I.headers[e]=p.merge(jr)});ct.exports=I});var dt=l((qn,lt)=>{"use strict";var zr=f(),Mr=z();lt.exports=function(e,r,i){var n=this||Mr;return zr.forEach(i,function(a){e=a.call(n,e,r)}),e}});var ue=l((Sn,ft)=>{"use strict";ft.exports=function(e){return!!(e&&e.__CANCEL__)}});var mt=l((Nn,ht)=>{"use strict";var pt=f(),ce=dt(),$r=ue(),Wr=z(),Hr=L();function le(t){if(t.cancelToken&&t.cancelToken.throwIfRequested(),t.signal&&t.signal.aborted)throw new Hr}ht.exports=function(e){le(e),e.headers=e.headers||{},e.data=ce.call(e,e.data,e.headers,e.transformRequest),e.headers=pt.merge(e.headers.common||{},e.headers[e.method]||{},e.headers),pt.forEach(["delete","get","head","post","put","patch","common"],function(n){delete e.headers[n]});var r=e.adapter||Wr.adapter;return r(e).then(function(n){return le(e),n.data=ce.call(e,n.data,n.headers,e.transformResponse),n},function(n){return $r(n)||(le(e),n&&n.response&&(n.response.data=ce.call(e,n.response.data,n.response.headers,e.transformResponse))),Promise.reject(n)})}});var de=l((kn,yt)=>{"use strict";var w=f();yt.exports=function(e,r){r=r||{};var i={};function n(o,d){return w.isPlainObject(o)&&w.isPlainObject(d)?w.merge(o,d):w.isPlainObject(d)?w.merge({},d):w.isArray(d)?d.slice():d}function s(o){if(w.isUndefined(r[o])){if(!w.isUndefined(e[o]))return n(void 0,e[o])}else return n(e[o],r[o])}function a(o){if(!w.isUndefined(r[o]))return n(void 0,r[o])}function u(o){if(w.isUndefined(r[o])){if(!w.isUndefined(e[o]))return n(void 0,e[o])}else return n(void 0,r[o])}function c(o){if(o in r)return n(e[o],r[o]);if(o in e)return n(void 0,e[o])}var h={url:a,method:a,data:a,baseURL:u,transformRequest:u,transformResponse:u,paramsSerializer:u,timeout:u,timeoutMessage:u,withCredentials:u,adapter:u,responseType:u,xsrfCookieName:u,xsrfHeaderName:u,onUploadProgress:u,onDownloadProgress:u,decompress:u,maxContentLength:u,maxBodyLength:u,beforeRedirect:u,transport:u,httpAgent:u,httpsAgent:u,cancelToken:u,socketPath:u,responseEncoding:u,validateStatus:c};return w.forEach(Object.keys(e).concat(Object.keys(r)),function(d){var v=h[d]||s,m=v(d);w.isUndefined(m)&&v!==c||(i[d]=m)}),i}});var fe=l((Pn,vt)=>{vt.exports={version:"0.27.2"}});var bt=l((_n,gt)=>{"use strict";var Jr=fe().version,O=A(),pe={};["object","boolean","number","function","string","symbol"].forEach(function(t,e){pe[t]=function(i){return typeof i===t||"a"+(e<1?"n ":" ")+t}});var wt={};pe.transitional=function(e,r,i){function n(s,a){return"[Axios v"+Jr+"] Transitional option '"+s+"'"+a+(i?". "+i:"")}return function(s,a,u){if(e===!1)throw new O(n(a," has been removed"+(r?" in "+r:"")),O.ERR_DEPRECATED);return r&&!wt[a]&&(wt[a]=!0,console.warn(n(a," has been deprecated since v"+r+" and will be removed in the near future"))),e?e(s,a,u):!0}};function Vr(t,e,r){if(typeof t!="object")throw new O("options must be an object",O.ERR_BAD_OPTION_VALUE);for(var i=Object.keys(t),n=i.length;n-- >0;){var s=i[n],a=e[s];if(a){var u=t[s],c=u===void 0||a(u,s,t);if(c!==!0)throw new O("option "+s+" must be "+c,O.ERR_BAD_OPTION_VALUE);continue}if(r!==!0)throw new O("Unknown option "+s,O.ERR_BAD_OPTION)}}gt.exports={assertOptions:Vr,validators:pe}});var At=l((Ln,Ct)=>{"use strict";var Ot=f(),Kr=ee(),Et=Ne(),xt=mt(),M=de(),Xr=ie(),Rt=bt(),k=Rt.validators;function P(t){this.defaults=t,this.interceptors={request:new Et,response:new Et}}P.prototype.request=function(e,r){typeof e=="string"?(r=r||{},r.url=e):r=e||{},r=M(this.defaults,r),r.method?r.method=r.method.toLowerCase():this.defaults.method?r.method=this.defaults.method.toLowerCase():r.method="get";var i=r.transitional;i!==void 0&&Rt.assertOptions(i,{silentJSONParsing:k.transitional(k.boolean),forcedJSONParsing:k.transitional(k.boolean),clarifyTimeoutError:k.transitional(k.boolean)},!1);var n=[],s=!0;this.interceptors.request.forEach(function(m){typeof m.runWhen=="function"&&m.runWhen(r)===!1||(s=s&&m.synchronous,n.unshift(m.fulfilled,m.rejected))});var a=[];this.interceptors.response.forEach(function(m){a.push(m.fulfilled,m.rejected)});var u;if(!s){var c=[xt,void 0];for(Array.prototype.unshift.apply(c,n),c=c.concat(a),u=Promise.resolve(r);c.length;)u=u.then(c.shift(),c.shift());return u}for(var h=r;n.length;){var o=n.shift(),d=n.shift();try{h=o(h)}catch(v){d(v);break}}try{u=xt(h)}catch(v){return Promise.reject(v)}for(;a.length;)u=u.then(a.shift(),a.shift());return u};P.prototype.getUri=function(e){e=M(this.defaults,e);var r=Xr(e.baseURL,e.url);return Kr(r,e.params,e.paramsSerializer)};Ot.forEach(["delete","get","head","options"],function(e){P.prototype[e]=function(r,i){return this.request(M(i||{},{method:e,url:r,data:(i||{}).data}))}});Ot.forEach(["post","put","patch"],function(e){function r(i){return function(s,a,u){return this.request(M(u||{},{method:e,headers:i?{"Content-Type":"multipart/form-data"}:{},url:s,data:a}))}}P.prototype[e]=r(),P.prototype[e+"Form"]=r(!0)});Ct.exports=P});var qt=l((Bn,Tt)=>{"use strict";var Gr=L();function _(t){if(typeof t!="function")throw new TypeError("executor must be a function.");var e;this.promise=new Promise(function(n){e=n});var r=this;this.promise.then(function(i){if(r._listeners){var n,s=r._listeners.length;for(n=0;n<s;n++)r._listeners[n](i);r._listeners=null}}),this.promise.then=function(i){var n,s=new Promise(function(a){r.subscribe(a),n=a}).then(i);return s.cancel=function(){r.unsubscribe(n)},s},t(function(n){r.reason||(r.reason=new Gr(n),e(r.reason))})}_.prototype.throwIfRequested=function(){if(this.reason)throw this.reason};_.prototype.subscribe=function(e){if(this.reason){e(this.reason);return}this._listeners?this._listeners.push(e):this._listeners=[e]};_.prototype.unsubscribe=function(e){if(this._listeners){var r=this._listeners.indexOf(e);r!==-1&&this._listeners.splice(r,1)}};_.source=function(){var e,r=new _(function(n){e=n});return{token:r,cancel:e}};Tt.exports=_});var Nt=l((Dn,St)=>{"use strict";St.exports=function(e){return function(i){return e.apply(null,i)}}});var Pt=l((Un,kt)=>{"use strict";var Qr=f();kt.exports=function(e){return Qr.isObject(e)&&e.isAxiosError===!0}});var Bt=l((jn,he)=>{"use strict";var _t=f(),Zr=V(),$=At(),Yr=de(),en=z();function Lt(t){var e=new $(t),r=Zr($.prototype.request,e);return _t.extend(r,$.prototype,e),_t.extend(r,e),r.create=function(n){return Lt(Yr(t,n))},r}var y=Lt(en);y.Axios=$;y.CanceledError=L();y.CancelToken=qt();y.isCancel=ue();y.VERSION=fe().version;y.toFormData=re();y.AxiosError=A();y.Cancel=y.CanceledError;y.all=function(e){return Promise.all(e)};y.spread=Nt();y.isAxiosError=Pt();he.exports=y;he.exports.default=y});var me=l((Fn,Dt)=>{Dt.exports=Bt()});var W=xe(me(),1);var x="https://zesty-storage-prod.s3.amazonaws.com/images/zesty",T={tall:{width:.75,height:1,style:{standard:`${x}/zesty-banner-tall.png`,minimal:`${x}/zesty-banner-tall-minimal.png`,transparent:`${x}/zesty-banner-tall-transparent.png`}},wide:{width:4,height:1,style:{standard:`${x}/zesty-banner-wide.png`,minimal:`${x}/zesty-banner-wide-minimal.png`,transparent:`${x}/zesty-banner-wide-transparent.png`}},square:{width:1,height:1,style:{standard:`${x}/zesty-banner-square.png`,minimal:`${x}/zesty-banner-square-minimal.png`,transparent:`${x}/zesty-banner-square-transparent.png`}}},Ut="square";var tn=xe(me(),1);var ye=()=>{let t=window.XRHand!=null&&window.XRMediaBinding!=null,e=navigator.userAgent.includes("OculusBrowser"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},ve=()=>{let t=window.mozInnerScreenX!=null&&window.speechSynthesis==null,e=navigator.userAgent.includes("Mobile VR")&&!navigator.userAgent.includes("OculusBrowser"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},jt=async()=>{let t=navigator.xr&&await navigator.xr.isSessionSupported("immersive-vr")&&await navigator.xr.isSessionSupported("immersive-ar"),e=navigator.userAgent.includes("Pico Neo 3 Link"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},Ft=()=>{let t=navigator.maxTouchPoints===0||navigator.msMaxTouchPoints===0,e=!navigator.userAgent.includes("Android")&&!navigator.userAgent.includes("Mobile"),r=t&&e?"Full":t||e?"Partial":"None";return{match:r!=="None",confidence:r}},we=async()=>{let t={platform:"",confidence:""};return ye().match?t={platform:"Oculus",confidence:ye().confidence}:ve().match?t={platform:"Wolvic",confidence:ve().confidence}:await jt().match?t={platform:"Pico",confidence:await jt().confidence}:Ft().match?t={platform:"Desktop",confidence:Ft().confidence}:t={platform:"Unknown",confidence:"None"},t},It=t=>{if(t){if(ye().match){if(t.includes("https://www.oculus.com/experiences/quest/")){setTimeout(()=>{window.open(t,"_blank")},1e3);return}}else if(ve().match){let e=document.createElement("div"),r=document.createElement("div"),i=document.createElement("p"),n=document.createElement("button"),s=document.createElement("button");e.style.backgroundColor="rgb(0, 0, 0, 0.75)",e.style.color="white",e.style.textAlign="center",e.style.position="fixed",e.style.top="50%",e.style.left="50%",e.style.padding="5%",e.style.borderRadius="5%",e.style.transform="translate(-50%, -50%)",i.innerHTML=`<b>This billboard leads to ${t}. Continue?</b>`,n.innerText="Move cursor back into window.",n.style.width="100vw",n.style.height="100vh",n.onmouseenter=()=>{n.style.width="auto",n.style.height="auto",n.innerText="Yes"},n.onclick=()=>{window.open(t,"_blank"),e.remove()},s.innerText="No",s.onclick=()=>{e.remove()},e.append(r),r.append(i),r.append(n),r.append(s),document.body.append(e);return}window.open(t,"_blank")}};var zt="https://beacon2.zesty.market/zgraphql",rn="https://api.zesty.market/api";var Mt=async(t,e="tall",r="standard")=>{try{let i=encodeURI(window.top.location.href).replace(/\/$/,""),n=await W.default.get(`${rn}/ad?ad_unit_id=${t}&url=${i}`);return n.data?n.data:{Ads:[{asset_url:T[e].style[r],cta_url:"https://www.zesty.market"}],CampaignId:"TestCampaign"}}catch{return console.warn("Could not retrieve an active campaign banner. Retrieving default banner."),{Ads:[{asset_url:T[e].style[r],cta_url:"https://www.zesty.market"}],CampaignId:"TestCampaign"}}},$t=async(t,e=null)=>{let{platform:r,confidence:i}=await we();try{await W.default.post(zt,{query:`mutation { increment(eventType: visits, spaceId: "${t}", campaignId: "${e}", platform: { name: ${r}, confidence: ${i} }) { message } }`},{headers:{"Content-Type":"application/json"}})}catch(n){console.log("Failed to emit onload event",n.message)}},Wt=async(t,e=null)=>{let{platform:r,confidence:i}=await we();try{await W.default.post(zt,{query:`mutation { increment(eventType: clicks, spaceId: "${t}", campaignId: "${e}", platform: { name: ${r}, confidence: ${i} }) { message } }`},{headers:{"Content-Type":"application/json"}})}catch(n){console.log("Failed to emit onclick event",n.message)}};var Ht="2.2.0";console.log(`Zesty SDK Version: ${Ht} (compatibility)`);var sn="https://cdn.zesty.xyz/sdk/zesty-formats.js",an="https://cdn.zesty.xyz/sdk/zesty-networking.js";WL.registerComponent("zesty-banner",{adUnit:{type:WL.Type.String},format:{type:WL.Type.Enum,values:Object.keys(T),default:Ut},style:{type:WL.Type.Enum,values:["standard","minimal","transparent"],default:"transparent"},scaleToRatio:{type:WL.Type.Bool,default:!0},textureProperty:{type:WL.Type.String,default:"auto"},beacon:{type:WL.Type.Bool,default:!0},dynamicFormats:{type:WL.Type.Bool,default:!0},createAutomaticCollision:{type:WL.Type.Bool,default:!0},dynamicNetworking:{type:WL.Type.Bool,default:!0}},{init:function(){this.formats=Object.values(T),this.formatKeys=Object.keys(T),this.styleKeys=["standard","minimal","transparent"]},start:function(){if(this.mesh=this.object.getComponent("mesh"),!this.mesh)throw new Error("'zesty-banner ' missing mesh component");if(this.createAutomaticCollision&&(this.collision=this.object.getComponent("collision")||this.object.addComponent("collision",{collider:WL.Collider.Box,group:2}),this.cursorTarget=this.object.getComponent("cursor-target")||this.object.addComponent("cursor-target"),this.cursorTarget.addClickFunction(this.onClick.bind(this))),this.dynamicFormats){let t=document.createElement("script");t.onload=()=>{this.formatsOverride=zestyFormats.formats},t.setAttribute("src",sn),t.setAttribute("crossorigin","anonymous"),document.body.appendChild(t)}this.dynamicNetworking?import(an).then(t=>{this.zestyNetworking=Object.assign({},t),this.startLoading()}).catch(()=>{console.error("Failed to dynamically retrieve networking code, falling back to bundled version."),this.dynamicNetworking=null,this.startLoading()}):this.startLoading()},startLoading:function(){this.loadBanner(this.adUnit,this.formatKeys[this.format],this.styleKeys[this.style]).then(t=>{this.banner=t,this.scaleToRatio&&(this.height=this.object.scalingLocal[1],this.object.resetScaling(),this.createAutomaticCollision&&(this.collision.extents=[this.formats[this.format].width*this.height,this.height,.1]),this.object.scale([this.formats[this.format].width*this.height,this.height,1]));let e=this.mesh.material;if(this.textureProperty==="auto"){let r=e.pipeline||e.shader;if(r==="Phong Opaque Textured")e.diffuseTexture=t.texture,e.alphaMaskThreshold=.3;else if(r==="Flat Opaque Textured")e.flatTexture=t.texture,e.alphaMaskThreshold=.8;else throw Error("'zesty-banner ' unable to apply banner texture: unsupported pipeline "+e.shader);this.mesh.material=e}else this.mesh.material[this.textureProperty]=t.texture;this.beacon&&(this.dynamicNetworking?this.zestyNetworking.sendOnLoadMetric(this.adUnit,this.banner.campaignId):$t(this.adUnit,this.banner.campaignId))})},onClick:function(){this.banner?.url&&(WL.xrSession?WL.xrSession.end().then(this.executeClick.bind(this)):this.executeClick())},executeClick:function(){this.beacon&&(this.dynamicNetworking?this.zestyNetworking.sendOnClickMetric(this.adUnit,this.banner.campaignId):Wt(this.adUnit,this.banner.campaignId))},loadBanner:async function(t,e,r){let i=this.dynamicNetworking?await this.zestyNetworking.fetchCampaignAd(t,e,r):await Mt(t,e,r),{asset_url:n,cta_url:s}=i.Ads[0];return WL.textures.load(n,"").then(a=>({texture:a,imageSrc:n,url:s,campaignId:i.CampaignId}))}});})();
 //# sourceMappingURL=zesty-wonderland-sdk-compat.js.map
 
 WL.registerComponent("pp-easy-light-attenuation", {
@@ -24111,8 +25127,10 @@ WL.registerComponent("pp-easy-set-tune-target-grab", {
         this._myGrabber.registerThrowEventListener(this, this._onRelease.bind(this));
     },
     onDeactivate() {
-        this._myGrabber.unregisterGrabEventListener(this);
-        this._myGrabber.unregisterThrowEventListener(this);
+        if (this._myGrabber != null) {
+            this._myGrabber.unregisterGrabEventListener(this);
+            this._myGrabber.unregisterThrowEventListener(this);
+        }
     }
 });
 WL.registerComponent("pp-easy-text-color", {
