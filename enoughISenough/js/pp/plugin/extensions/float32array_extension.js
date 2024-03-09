@@ -1006,6 +1006,58 @@ Float32Array.prototype.quat_toMatrix = function (out = glMatrix.mat3.create()) {
     return out;
 };
 
+Float32Array.prototype.quat_rotateAxisDegrees = function () {
+    let secondQuat = glMatrix.quat.create();
+    return function quat_rotateAxisDegrees(angle, axis, out = glMatrix.quat.create()) {
+        secondQuat.quat_fromAxisAngleDegrees(axis, angle);
+        return this.quat_rotateQuat(secondQuat, out);
+    };
+}();
+
+Float32Array.prototype.quat_rotateQuat = function (second, out = glMatrix.quat.create()) {
+    second.quat_mul(this, out);
+    return out;
+};
+
+Float32Array.prototype.quat_getForward = function () {
+    let rotationMatrix = glMatrix.mat3.create();
+    return function quat_getForward(out = glMatrix.vec3.create()) {
+        this.quat_toMatrix(rotationMatrix);
+
+        out.vec3_set(rotationMatrix[6], rotationMatrix[7], rotationMatrix[8]);
+
+        return out;
+    };
+}();
+
+Float32Array.prototype.quat_getLeft = function () {
+    let rotationMatrix = glMatrix.mat3.create();
+    return function quat_getLeft(out = glMatrix.vec3.create()) {
+        this.quat_toMatrix(rotationMatrix);
+
+        out.vec3_set(rotationMatrix[0], rotationMatrix[1], rotationMatrix[2]);
+
+        return out;
+    };
+}();
+
+Float32Array.prototype.quat_getRight = function (out = glMatrix.vec3.create()) {
+    this.quat_getLeft(out);
+    out.vec3_negate(out);
+    return out;
+};
+
+Float32Array.prototype.quat_getUp = function () {
+    let rotationMatrix = glMatrix.mat3.create();
+    return function quat_getUp(out = glMatrix.vec3.create()) {
+        this.quat_toMatrix(rotationMatrix);
+
+        out.vec3_set(rotationMatrix[3], rotationMatrix[4], rotationMatrix[5]);
+
+        return out;
+    };
+}();
+
 //QUAT 2
 
 //glMatrix Bridge

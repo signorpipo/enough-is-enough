@@ -77,8 +77,6 @@ class IntroState extends PP.State {
 
     waitSession(dt, fsm) {
         if (WL.xrSession && Global.myUpdateReady) {
-            console.log("Game Version:", Global.myGameVersion);
-
             Global.sendAnalytics("event", "xr_enter_session", {
                 "value": 1
             });
