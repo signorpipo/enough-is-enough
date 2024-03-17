@@ -5770,7 +5770,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         document.addEventListener("gesturestart", this._myGestureStartEventListener);
     },
     start: function () {
-        Global.myGameVersion = "1.1.1";
+        Global.myGameVersion = "1.2.0";
 
         let trialEndedOnce = Global.mySaveManager.load("trial_ended_once", false);
         let trialPhase = Global.mySaveManager.load("trial_phase", 1);
@@ -20737,11 +20737,11 @@ class ArcadeResultState extends PP.State {
             });
         }
 
-        let leaderboardID = "enoughISenough";
+        let leaderboardID = "enough-is-enough";
         if (this._myIsDispute) {
-            leaderboardID = leaderboardID.concat("_dispute");
+            leaderboardID = leaderboardID.concat("-dispute");
         } else {
-            leaderboardID = leaderboardID.concat("_chat");
+            leaderboardID = leaderboardID.concat("-chat");
         }
 
         let score = Math.floor(Global.myVentDuration * 1000);
