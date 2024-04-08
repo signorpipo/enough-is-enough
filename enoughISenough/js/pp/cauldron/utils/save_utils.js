@@ -50,7 +50,10 @@ PP.SaveUtils = {
 
         if (item != null) {
             try {
-                return JSON.parse(item);
+                const parsedValue = JSON.parse(item);
+                if (parsedValue.constructor == Object) {
+                    return parsedValue;
+                }
             } catch (error) {
                 Global.myLoadedSaveObjectParseFailed = true;
             }
