@@ -4378,7 +4378,10 @@ PP.SaveUtils = {
 
         if (item != null) {
             try {
-                return JSON.parse(item);
+                const parsedValue = JSON.parse(item);
+                if (parsedValue.constructor == Object) {
+                    return parsedValue;
+                }
             } catch (error) {
                 Global.myLoadedSaveObjectParseFailed = true;
             }
@@ -5770,7 +5773,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         document.addEventListener("gesturestart", this._myGestureStartEventListener);
     },
     start: function () {
-        Global.myGameVersion = "1.2.0";
+        Global.myGameVersion = "1.2.1";
 
         let trialEndedOnce = Global.mySaveManager.load("trial_ended_once", false);
         let trialPhase = Global.mySaveManager.load("trial_phase", 1);
