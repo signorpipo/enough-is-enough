@@ -9,6 +9,8 @@ WL.registerComponent("enough-IS-enough-gateway", {
             PP.myEasyTuneVariables = new PP.EasyTuneVariables();
         }
 
+        PP.CAUtils.initializeSDK();
+
         Global.myAnalyticsEnabled = true;
 
         Global.sendAnalytics("event", "game_init_started", {

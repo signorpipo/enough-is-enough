@@ -2,6 +2,8 @@ PP.CAUtils = {
     _myDummyServer: null,
     _myUseDummyServerOnSDKMissing: false,
     _myUseDummyServerOnError: false,
+    _myLeaderboardSDKReady: false,
+    _myViverseAppID: "kyb8susx6r",
     setUseDummyServerOnSDKMissing: function (useDummyServer) {
         PP.CAUtils._myUseDummyServerOnSDKMissing = useDummyServer;
     },
@@ -21,18 +23,74 @@ PP.CAUtils = {
         return PP.CAUtils._myDummyServer;
     },
     isSDKAvailable: function () {
+        return window.heyVR != null || window.viverseClient != null;
+    },
+    initializeSDK: async function () {
+        if (window.viverse != null) {
+            window.viverseClient = new window.viverse.client({
+                clientId: PP.CAUtils._myViverseAppID,
+                domain: "account.htcvive.com",
+            });
+
+            const accessToken = await window.viverseClient.getToken();
+
+            if (accessToken != null) {
+                window.viverseLeaderboard = new window.viverse.gameDashboard({
+                    baseURL: 'https://www.viveport.com/',
+                    communityBaseURL: 'https://www.viverse.com/',
+                    token: accessToken
+                });
+            } else {
+                window.viverseLeaderboard = null;
+            }
+        }
+
+        PP.CAUtils._myLeaderboardSDKReady = true;
+    },
+    isLeaderboardSDKReady: function () {
+        return PP.CAUtils.isSDKAvailable() && PP.CAUtils._myLeaderboardSDKReady;
+    },
+    isHeyVR: function () {
         return window.heyVR != null;
     },
+    isViverse: function () {
+        return window.viverseClient != null;
+    },
     getSDK: function () {
-        return window.heyVR;
+        if (PP.CAUtils.isHeyVR()) {
+            return window.heyVR;
+        } else if (PP.CAUtils.isViverse()) {
+            return window.viverseClient;
+        }
+
+        return null;
+    },
+    getLeaderboardSDK: function () {
+        if (PP.CAUtils.isHeyVR()) {
+            return window.heyVR.leaderboard;
+        } else if (PP.CAUtils.isViverse()) {
+            return window.viverseLeaderboard;
+        }
+
+        return null;
     },
     getLeaderboard: function (leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback = null, onErrorCallback = null, useDummyServerOverride = null) {
-        if (PP.CAUtils.isSDKAvailable()) {
+        if (PP.CAUtils.isLeaderboardSDKReady()) {
             try {
                 PP.CAUtils._getLeaderboard(leaderboardID, ascending, aroundPlayer, scoresAmount).then(function (result) {
                     if (result.leaderboard != null) {
                         if (!aroundPlayer) {
-                            if (onDoneCallback != null) {
+                            if (PP.CAUtils.isViverse() && result.leaderboard == PP.CAUtils.CAError.USER_NOT_LOGGED_IN) {
+                                if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
+                                    (PP.CAUtils._myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                                    PP.CAUtils.getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback, PP.CAUtils.CAError.USER_NOT_LOGGED_IN);
+                                } else if (onErrorCallback != null) {
+                                    let error = {};
+                                    error.reason = "User not logged in";
+                                    error.type = PP.CAUtils.CAError.USER_NOT_LOGGED_IN;
+                                    onErrorCallback(error, null);
+                                }
+                            } else if (onDoneCallback != null) {
                                 onDoneCallback(result.leaderboard);
                             }
                         } else {
@@ -47,7 +105,30 @@ PP.CAUtils = {
                                             break;
                                         }
                                     }
+
                                     if (userValid) {
+                                        if (PP.CAUtils.isViverse() && userLeaderboard.length > scoresAmount) {
+                                            let userIndex = userLeaderboard.findIndex(entry => entry.displayName === userName);
+
+                                            const half = Math.ceil(scoresAmount / 2);
+                                            let start = userIndex - (half - 1);
+                                            let end = userIndex + half + (scoresAmount % 2 === 0 ? 0 : -1);
+
+                                            if (start < 0) {
+                                                end += -start;
+                                                start = 0;
+                                            }
+
+                                            if (end >= userLeaderboard.length) {
+                                                start -= (end - userLeaderboard.length + 1);
+                                                end = userLeaderboard.length - 1;
+                                            }
+
+                                            if (start < 0) start = 0;
+
+                                            userLeaderboard = userLeaderboard.slice(start, end + 1);
+                                        }
+
                                         if (onDoneCallback != null) {
                                             onDoneCallback(userLeaderboard);
                                         }
@@ -131,7 +212,7 @@ PP.CAUtils = {
         }
     },
     submitScore(leaderboardID, scoreToSubmit, onDoneCallback = null, onErrorCallback = null, useDummyServerOverride = null) {
-        if (PP.CAUtils.isSDKAvailable()) {
+        if (PP.CAUtils.isLeaderboardSDKReady()) {
             try {
                 PP.CAUtils._submitScore(leaderboardID, scoreToSubmit).then(function (result) {
                     if (result.scoreSubmitted) {
@@ -281,57 +362,129 @@ PP.CAUtils = {
         }
     },
     _getLeaderboard(leaderboardID, ascending, aroundPlayer, scoresAmount) {
-        let heyVR = PP.CAUtils.getSDK();
+        if (PP.CAUtils.isHeyVR()) {
+            let leaderboardSDK = PP.CAUtils.getLeaderboardSDK();
 
-        if (aroundPlayer) {
-            return heyVR.leaderboard.getMy(leaderboardID, scoresAmount).then(function (result) {
-                let adjustedLeaderboard = [];
-                for (let leaderboardEntry of result) {
-                    adjustedLeaderboard.push({ rank: leaderboardEntry.rank - 1, displayName: leaderboardEntry.user, score: leaderboardEntry.score });
+            if (aroundPlayer) {
+                return leaderboardSDK.getMy(leaderboardID, scoresAmount).then(function (result) {
+                    let adjustedLeaderboard = [];
+                    for (let leaderboardEntry of result) {
+                        adjustedLeaderboard.push({ rank: leaderboardEntry.rank - 1, displayName: leaderboardEntry.user, score: leaderboardEntry.score });
+                    }
+                    return { leaderboard: adjustedLeaderboard };
+                }).catch(function (error) {
+                    if (error != null && error.status != null && error.status.debug == "err_unauthenticated") {
+                        return { leaderboard: [] };
+                    } else {
+                        return { leaderboard: null };
+                    }
+                });
+            } else {
+                return leaderboardSDK.get(leaderboardID, scoresAmount).then(function (result) {
+                    let adjustedLeaderboard = [];
+                    for (let leaderboardEntry of result) {
+                        adjustedLeaderboard.push({ rank: leaderboardEntry.rank - 1, displayName: leaderboardEntry.user, score: leaderboardEntry.score });
+                    }
+                    return { leaderboard: adjustedLeaderboard };
+                }).catch(function () {
+                    return { leaderboard: null };
+                });
+            }
+        } else if (PP.CAUtils.isViverse()) {
+            let leaderboardSDK = PP.CAUtils.getLeaderboardSDK();
+
+            if (leaderboardSDK != null) {
+                let leaderboardConfig = {
+                    name: leaderboardID,
+                    range_start: 0,
+                    range_end: scoresAmount,
+                    region: "global",
+                    time_range: "alltime",
+                    around_user: aroundPlayer
+                };
+
+                if (aroundPlayer) {
+                    leaderboardConfig = {
+                        name: leaderboardID,
+                        range_start: scoresAmount,
+                        range_end: scoresAmount,
+                        region: "global",
+                        time_range: "alltime",
+                        around_user: aroundPlayer
+                    };
                 }
-                return { leaderboard: adjustedLeaderboard };
-            }).catch(function (error) {
-                if (error != null && error.status != null && error.status.debug == "err_unauthenticated") {
+
+                leaderboardSDK.getLeaderboard(PP.CAUtils._myViverseAppID, leaderboardConfig).then(function (leaderboard) {
+                    if (!aroundPlayer) {
+                        leaderboard.ranking.length = Math.min(leaderboard.ranking.length, scoresAmount);
+                    }
+
+                    let adjustedLeaderboard = [];
+                    for (let leaderboardEntry of leaderboard.ranking) {
+                        adjustedLeaderboard.push({ rank: leaderboardEntry.rank, displayName: leaderboardEntry.name, score: leaderboardEntry.value });
+                    }
+                    return { leaderboard: adjustedLeaderboard };
+                }).catch(function () {
+                    return { leaderboard: null };
+                });
+            } else {
+                if (aroundPlayer) {
                     return { leaderboard: [] };
                 } else {
-                    return { leaderboard: null };
+                    return { leaderboard: PP.CAUtils.CAError.USER_NOT_LOGGED_IN };
                 }
-            });
-        } else {
-            return heyVR.leaderboard.get(leaderboardID, scoresAmount).then(function (result) {
-                let adjustedLeaderboard = [];
-                for (let leaderboardEntry of result) {
-                    adjustedLeaderboard.push({ rank: leaderboardEntry.rank - 1, displayName: leaderboardEntry.user, score: leaderboardEntry.score });
-                }
-                return { leaderboard: adjustedLeaderboard };
-            }).catch(function () {
-                return { leaderboard: null };
-            });
+            }
         }
     },
     _submitScore(leaderboardID, scoreToSubmit) {
-        let heyVR = PP.CAUtils.getSDK();
-        return heyVR.leaderboard.postScore(leaderboardID, scoreToSubmit).then(function () {
-            return { scoreSubmitted: true };
-        }).catch(function (error) {
-            if (error != null && error.status != null && error.status.debug == "err_unauthenticated") {
-                return { scoreSubmitted: false };
+        if (PP.CAUtils.isHeyVR()) {
+            let leaderboardSDK = PP.CAUtils.getLeaderboardSDK();
+            return leaderboardSDK.postScore(leaderboardID, scoreToSubmit).then(function () {
+                return { scoreSubmitted: true };
+            }).catch(function (error) {
+                if (error != null && error.status != null && error.status.debug == "err_unauthenticated") {
+                    return { scoreSubmitted: false };
+                } else {
+                    return { scoreSubmitted: null };
+                }
+            });
+        } else if (PP.CAUtils.isViverse()) {
+            let leaderboardSDK = PP.CAUtils.getLeaderboardSDK();
+            if (leaderboardSDK != null) {
+                return leaderboardSDK.uploadLeaderboardScore(PP.CAUtils._myViverseAppID, { name: leaderboardID, value: scoreToSubmit }).then(function () {
+                    return { scoreSubmitted: true };
+                }).catch(function (error) {
+                    return { scoreSubmitted: null };
+                });
             } else {
-                return { scoreSubmitted: null };
+                return { scoreSubmitted: false };
             }
-        });
+        }
     },
     _getUser() {
-        let heyVR = PP.CAUtils.getSDK();
-        return heyVR.user.getName().then(result => {
-            return { user: { displayName: result } };
-        }).catch(function (error) {
-            if (error != null && error.status != null && error.status.debug == "err_unauthenticated") {
-                return { user: { displayName: null } };
-            } else {
+        if (PP.CAUtils.isHeyVR()) {
+            let sdk = PP.CAUtils.getSDK();
+            return sdk.user.getName().then(result => {
+                return { user: { displayName: result } };
+            }).catch(function (error) {
+                if (error != null && error.status != null && error.status.debug == "err_unauthenticated") {
+                    return { user: { displayName: null } };
+                } else {
+                    return { user: null };
+                }
+            });
+        } else if (PP.CAUtils.isViverse()) {
+            let sdk = PP.CAUtils.getSDK();
+            return sdk.checkAuth().then(result => {
+                if (result == null) {
+                    return { user: { displayName: result.account_id } };
+                }
+
+                return { user: { displayName: result } };
+            }).catch(function (error) {
                 return { user: null };
-            }
-        });
+            });
+        }
     },
     CAError: {
         NONE: 0,
