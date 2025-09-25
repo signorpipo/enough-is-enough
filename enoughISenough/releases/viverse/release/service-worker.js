@@ -92,7 +92,7 @@ let _myResourceURLsToPrecache = [
     //"WonderlandRuntime-physx-simd-threads.js",
     //"WonderlandRuntime-physx-simd-threads.worker.js",
     "enoughISenough-bundle.js",
-    "enoughISenough.bin",
+    "enoughISenough.pipobin",
     "f0.png",
     "assets/audio/sfx/ring_rise.wav",
     "assets/audio/sfx/evidence_appear.wav",
