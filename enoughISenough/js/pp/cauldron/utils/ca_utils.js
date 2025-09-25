@@ -429,9 +429,9 @@ PP.CAUtils = {
                 });
             } else {
                 if (aroundPlayer) {
-                    return { leaderboard: [] };
+                    return Promise.resolve({ leaderboard: [] });
                 } else {
-                    return { leaderboard: PP.CAUtils.CAError.USER_NOT_LOGGED_IN };
+                    return Promise.resolve({ leaderboard: PP.CAUtils.CAError.USER_NOT_LOGGED_IN });
                 }
             }
         }
@@ -457,7 +457,7 @@ PP.CAUtils = {
                     return { scoreSubmitted: null };
                 });
             } else {
-                return { scoreSubmitted: false };
+                return Promise.resolve({ scoreSubmitted: false });
             }
         }
     },
@@ -475,15 +475,19 @@ PP.CAUtils = {
             });
         } else if (PP.CAUtils.isViverse()) {
             let sdk = PP.CAUtils.getSDK();
-            return sdk.checkAuth().then(result => {
-                if (result == null) {
-                    return { user: { displayName: result.account_id } };
-                }
+            if (sdk != null) {
+                return sdk.checkAuth().then(result => {
+                    if (result == null) {
+                        return { user: { displayName: result.account_id } };
+                    }
 
-                return { user: { displayName: result } };
-            }).catch(function (error) {
-                return { user: null };
-            });
+                    return { user: { displayName: result } };
+                }).catch(function (error) {
+                    return { user: null };
+                });
+            } else {
+                return Promise.resolve({ user: null });
+            }
         }
     },
     CAError: {
