@@ -3735,13 +3735,13 @@ PP.CAUtils = {
                 domain: "account.htcvive.com",
             });
 
-            const accessToken = await window.viverseClient.getToken();
+            const authInfo = await window.viverseClient.checkAuth();
 
-            if (accessToken != null) {
+            if (authInfo != null) {
                 window.viverseLeaderboard = new window.viverse.gameDashboard({
                     baseURL: 'https://www.viveport.com/',
                     communityBaseURL: 'https://www.viverse.com/',
-                    token: accessToken
+                    token: authInfo.access_token
                 });
             } else {
                 window.viverseLeaderboard = null;
