@@ -414,7 +414,7 @@ PP.CAUtils = {
                     };
                 }
 
-                leaderboardSDK.getLeaderboard(PP.CAUtils._myViverseAppID, leaderboardConfig).then(function (leaderboard) {
+                return leaderboardSDK.getLeaderboard(PP.CAUtils._myViverseAppID, leaderboardConfig).then(function (leaderboard) {
                     if (!aroundPlayer) {
                         leaderboard.ranking.length = Math.min(leaderboard.ranking.length, scoresAmount);
                     }
