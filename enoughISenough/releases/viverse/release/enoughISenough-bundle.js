@@ -3706,7 +3706,7 @@ PP.CAUtils = {
     _myUseDummyServerOnSDKMissing: false,
     _myUseDummyServerOnError: false,
     _myLeaderboardSDKReady: false,
-    _myViverseAppID: "kyb8susx6r",
+    _myViverseAppID: "fyqcugygwd",
     setUseDummyServerOnSDKMissing: function (useDummyServer) {
         PP.CAUtils._myUseDummyServerOnSDKMissing = useDummyServer;
     },
