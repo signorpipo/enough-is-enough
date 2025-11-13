@@ -451,7 +451,7 @@ PP.CAUtils = {
         } else if (PP.CAUtils.isViverse()) {
             let leaderboardSDK = PP.CAUtils.getLeaderboardSDK();
             if (leaderboardSDK != null) {
-                return leaderboardSDK.uploadLeaderboardScore(PP.CAUtils._myViverseAppID, { name: leaderboardID, value: scoreToSubmit }).then(function () {
+                return leaderboardSDK.uploadLeaderboardScore(PP.CAUtils._myViverseAppID, [{ name: leaderboardID, value: scoreToSubmit }]).then(function () {
                     return { scoreSubmitted: true };
                 }).catch(function (error) {
                     return { scoreSubmitted: null };
@@ -477,11 +477,11 @@ PP.CAUtils = {
             let sdk = PP.CAUtils.getSDK();
             if (sdk != null) {
                 return sdk.checkAuth().then(result => {
-                    if (result == null) {
+                    if (result != null) {
                         return { user: { displayName: result.account_id } };
                     }
 
-                    return { user: { displayName: result } };
+                    return { user: { displayName: null } };
                 }).catch(function (error) {
                     return { user: null };
                 });
