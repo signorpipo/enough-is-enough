@@ -4117,7 +4117,7 @@ PP.CAUtils = {
                     };
                 }
 
-                leaderboardSDK.getLeaderboard(PP.CAUtils._myViverseAppID, leaderboardConfig).then(function (leaderboard) {
+                return leaderboardSDK.getLeaderboard(PP.CAUtils._myViverseAppID, leaderboardConfig).then(function (leaderboard) {
                     if (!aroundPlayer) {
                         leaderboard.ranking.length = Math.min(leaderboard.ranking.length, scoresAmount);
                     }
@@ -5932,7 +5932,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         document.addEventListener("gesturestart", this._myGestureStartEventListener);
     },
     start: function () {
-        Global.myGameVersion = "1.2.1";
+        Global.myGameVersion = "1.2.2";
 
         let trialEndedOnce = Global.mySaveManager.load("trial_ended_once", false);
         let trialPhase = Global.mySaveManager.load("trial_phase", 1);
