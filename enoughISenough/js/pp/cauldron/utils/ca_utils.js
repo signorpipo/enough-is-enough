@@ -406,7 +406,7 @@ PP.CAUtils = {
                 if (aroundPlayer) {
                     leaderboardConfig = {
                         name: leaderboardID,
-                        range_start: scoresAmount,
+                        range_start: -scoresAmount,
                         range_end: scoresAmount,
                         region: "global",
                         time_range: "alltime",
