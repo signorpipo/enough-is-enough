@@ -4109,7 +4109,7 @@ PP.CAUtils = {
                 if (aroundPlayer) {
                     leaderboardConfig = {
                         name: leaderboardID,
-                        range_start: scoresAmount,
+                        range_start: -scoresAmount,
                         range_end: scoresAmount,
                         region: "global",
                         time_range: "alltime",
@@ -4154,7 +4154,9 @@ PP.CAUtils = {
         } else if (PP.CAUtils.isViverse()) {
             let leaderboardSDK = PP.CAUtils.getLeaderboardSDK();
             if (leaderboardSDK != null) {
-                return leaderboardSDK.uploadLeaderboardScore(PP.CAUtils._myViverseAppID, [{ name: leaderboardID, value: scoreToSubmit }]).then(function () {
+                return new Promise(resolve => setTimeout(resolve, 100)).then(() => {
+                    return leaderboardSDK.uploadLeaderboardScore(PP.CAUtils._myViverseAppID, [{ name: leaderboardID, value: scoreToSubmit }]);
+                }).then(function () {
                     return { scoreSubmitted: true };
                 }).catch(function (error) {
                     return { scoreSubmitted: null };
@@ -5932,7 +5934,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         document.addEventListener("gesturestart", this._myGestureStartEventListener);
     },
     start: function () {
-        Global.myGameVersion = "1.2.3";
+        Global.myGameVersion = "1.2.4";
 
         let trialEndedOnce = Global.mySaveManager.load("trial_ended_once", false);
         let trialPhase = Global.mySaveManager.load("trial_phase", 1);
