@@ -97,10 +97,12 @@ PP.CAUtils = {
                             let userLeaderboard = result.leaderboard;
                             PP.CAUtils.getUser(
                                 function (user) {
-                                    let userName = user.displayName;
+                                    let isViverse = PP.CAUtils.isViverse();
+                                    let userName = isViverse ? user.accountID : user.displayName;
                                     let userValid = false;
                                     for (let userLeaderboardEntry of userLeaderboard) {
-                                        if (userLeaderboardEntry.displayName == userName) {
+                                        if ((!isViverse && userLeaderboardEntry.displayName == userName) ||
+                                            (isViverse && userLeaderboardEntry.accountID == userName)) {
                                             userValid = true;
                                             break;
                                         }
@@ -108,7 +110,7 @@ PP.CAUtils = {
 
                                     if (userValid) {
                                         if (PP.CAUtils.isViverse() && userLeaderboard.length > scoresAmount) {
-                                            let userIndex = userLeaderboard.findIndex(entry => entry.displayName === userName);
+                                            let userIndex = userLeaderboard.findIndex(entry => entry.accountID === userName);
 
                                             const half = Math.ceil(scoresAmount / 2);
                                             let start = userIndex - (half - 1);
@@ -421,7 +423,7 @@ PP.CAUtils = {
 
                     let adjustedLeaderboard = [];
                     for (let leaderboardEntry of leaderboard.ranking) {
-                        adjustedLeaderboard.push({ rank: leaderboardEntry.rank, displayName: leaderboardEntry.name, score: leaderboardEntry.value });
+                        adjustedLeaderboard.push({ rank: leaderboardEntry.rank, displayName: leaderboardEntry.name, score: leaderboardEntry.value, accountID: leaderboardEntry.uid });
                     }
                     return { leaderboard: adjustedLeaderboard };
                 }).catch(function () {
@@ -451,9 +453,7 @@ PP.CAUtils = {
         } else if (PP.CAUtils.isViverse()) {
             let leaderboardSDK = PP.CAUtils.getLeaderboardSDK();
             if (leaderboardSDK != null) {
-                return new Promise(resolve => setTimeout(resolve, 100)).then(() => {
-                    return leaderboardSDK.uploadLeaderboardScore(PP.CAUtils._myViverseAppID, [{ name: leaderboardID, value: scoreToSubmit }]);
-                }).then(function () {
+                return leaderboardSDK.uploadLeaderboardScore(PP.CAUtils._myViverseAppID, [{ name: leaderboardID, value: scoreToSubmit }]).then(function () {
                     return { scoreSubmitted: true };
                 }).catch(function (error) {
                     return { scoreSubmitted: null };
@@ -480,7 +480,7 @@ PP.CAUtils = {
             if (sdk != null) {
                 return sdk.checkAuth().then(result => {
                     if (result != null) {
-                        return { user: { displayName: result.account_id } };
+                        return { user: { displayName: result.account_id, accountID: result.account_id } };
                     }
 
                     return { user: { displayName: null } };
