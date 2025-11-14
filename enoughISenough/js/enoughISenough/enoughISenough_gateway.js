@@ -70,7 +70,7 @@ WL.registerComponent("enough-IS-enough-gateway", {
         document.addEventListener("gesturestart", this._myGestureStartEventListener);
     },
     start: function () {
-        Global.myGameVersion = "1.2.3";
+        Global.myGameVersion = "1.2.4";
 
         let trialEndedOnce = Global.mySaveManager.load("trial_ended_once", false);
         let trialPhase = Global.mySaveManager.load("trial_phase", 1);
